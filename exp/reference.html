@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>What does this mean?</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script> 
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="initial-scale=1.0" /> 
+     <!--<meta name="viewport" content="width=device-width">  -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+
+  </head>
+  <body>
+    <div class="slide" id="instructions">
+	      <div class="row" id="objects" style="margin-top:5%"> </div>
+	      <div class="row" id="objects">
+	        <p class="block-text col-xs-offset-3 col-xs-6">Each of these objects has a label that identifies it. Your job is to learn those labels and then send messages to another player to that player to select a particular object. 
+	        <br><br>
+	        After you click the button below, you will be given a chance to learn these labels to aide you in the game. Each object will be presented one at a time with its corresponding label a few times.</p>
+	      </div>
+	      <div class="row">
+	        <br>
+	        <center> <button type="button" id="beforeStudy" onClick="this.blur(); experiment.exposure()">Start</button> </center>
+	      </div>
+    </div>
+ 
+    <div class="slide" id="exposure">
+    	<div class="container">
+	        <center> <div class="labels" id="label"> </div> </center>
+	        <center> <div class="contents" id="content"> </div> </center>
+	        <center> <div> <button type="button" id="clickme" onClick="this.blur()"> </button> </div> </center>
+    	</div>
+    </div>
+
+    <div class="slide" id="pretest">
+        <div class="container">
+            <div class="row">
+            <p style="margin-top: 50px" class="block-text col-xs-offset-2 col-xs-8">Okay, you are all done learning! 
+                <br><br>
+                Before we get started with the game, we want to give you a chance to show off what you have learned. When you click the button below, you will see each of nine objects one-at-a-time. If you remember the object's label, you may type it in the box. If you don't remember the label, just click the 'Don't Know' button instead. You won't be given any feedback about your accuracy just yet! Good luck! </p>
+            </div>
+            <center> <div> <button type="button" id="beginTest" onClick="this.blur()"> </button> </div> </center>
+        </div>
+    </div>
+
+    <div class="slide" id="test">
+        <div class="container">
+            <center> <p style="margin-top: 5%"> Do you remember the name of this object? </p> </center>
+            <div class="row"> <div class="row col-xs-6 col-xs-offset-3" id="testObject"> </div> </div>
+            <div class="row">
+	            <center> <form> <br> Type the object label here: <br>
+	            <input type="text" name="testLabel" id="testInput" autocomplete="off"><br> </center> </form>
+	            <center><input type="checkbox" id="notSure" onClick="this.blur()"> Don't Know </input></center> <br> 
+	        </div>
+            <center> <div> <button type="button" id="nextObject" onClick="this.blur()">Next Object </button> </div> </center>
+        </div>
+    </div>
+
+    <div class="slide" id="prestudy">
+    	<div class="container">
+	       	<div class="row" id="prestudy">
+		        <p style="margin-top: 50px" class="block-text col-xs-offset-2 col-xs-8">Great, you are ready to play! 
+		        <br><br>
+		        After you click the button below, you will begin the game. Remember the goal of this game is to be able to get another player to correctly select one of the nine objects. Each round of the game, you will be shown one target object and allowed to send a message to the other player. if the other player is able to correctly identify the target object based on your message, you will be given 10 points. There are two types of messages that you can send: </p>
+		        <br> <br>
+		        <p class="block-text col-xs-offset-2 col-xs-8" style="left: 20px"> -<strong> Label: </strong> You can type out the name of the item to send to your partner. If you correctly label the object, and your partner correctly understands the label, you will recieve all 10 points. <br> <br>
+		        -<strong> Click: </strong> Or, you can instead choose to click on the target object in an array showing all 9 objects and send that selection to your partner. However, you will be charged 7 points for using this method, and will thus only receive 3 points when your partner correctly identifies the target obect. <br> <br>
+		        Ready to begin? </p>
+		    </div>
+			<center> <div> <button type="button" id="beginGame" onClick="this.blur()"> </button> </div> </center>
+    	</div>
+    </div>
+
+    <div class="slide" id="referenceGame">
+    	<center> <div class="points" id="myScore"> <p style="font-size:16px"> your points: </p> </div> </center>
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="row"> <strong> <center> <p style="margin: 5% 0% 0% 20%"> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </center> </strong>
+                <div class="row"> <div style="margin-left:25%" class='hmm' id="gameTarget"> </div> <br> </div>
+                <div class="row" style="margin: 0% 0% 0% 20%"><center> <form> You may either type the object <br> label here... <br> </form> </div>
+                <div class="row" style="margin: 0% 0% 0% 20%"><center> <input type="text" name="label" id="labelInput" autocomplete="off"> </center></form></div>
+            </div>
+            <div class="col-xs-7 ">
+            	<center> <form style="margin: 7% 0 0 10%"> ... or you may click on the object here: <br> </form>
+    	       <div id="objects2" class="objectArray" style="margin-top:0%"> </div> 
+            </div>
+        </div> 
+        <center><div><button type="button" id="sendMessage" style="margin-top:27px" onClick="this.blur()">  Send Your Message</button></div></center> 
+        <center><div id="waitingForPartner" style="margin-top:20px">  Your partner is thinking.... </div> </center>
+        <center><div id="spinningWaiting">  </div> </center>
+        <strong> <center> <div id="messageFromPartner" style="margin-top:18px"> </div> </center> </strong>
+        <center><div id="nextRound"> <button> Next Round </button> </div> </center>
+    </div>
+
+    <div class="slide" id="attentionSlide">
+    	<center> <p style="margin-top: 50px" >Great job, you're all done! 
+		        <br><br>
+		        Just as a quick check, please select the objects you have seen from the array below. </p> </center>
+        <div class="row"> <div id="objects3" class="objectArray"> </div> </div>
+        <center><div style="margin-top:5px" id="endStudy" onclick="experiment.end()"> <button>  End & Submit </button> </div> </center>
+    </div>
+
+    <div class="slide" id="finished">
+    </div>
+
+    <script src="reference.js"></script>
+  </body>
+</html>

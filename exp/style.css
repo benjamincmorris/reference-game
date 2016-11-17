@@ -1,0 +1,181 @@
+/**
+## General styles
+This stuff can be ported from experiment to experiment.*/
+
+/** We want the page to sit flush inside the browser window - that means no margins or padding. Also, use a nice-looking serif font. */
+body {
+	padding: 0;
+	margin: 0;
+	font-family: Palatino Linotype, Bookman Antiqua, Palatino, serif;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+
+/** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
+/*.slide {
+	width: 95%;
+	height: 95%;
+	display: none;
+	position: absolute;
+	margin: 0;
+	margin-left: 0.5%;
+	
+	padding: 1% 2% 1% 2%;
+}*/
+
+input, select, button {font-family: Georgia, serif; font-size: 14px;}
+
+button {
+	background: url(images/button-gradient.png);
+	border: 1px solid #999;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	margin: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 29px;
+	min-width: 70px;
+}
+
+button2 {
+	background: url(images/button-gradient.png);
+	border: 1px solid #999;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	margin: 40px;
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 29px;
+	min-width: 70px;
+}
+button:active {
+	border-left: 1px solid #c9c9c9;
+	border-top: 1px solid #c9c9c9;
+	background: none;
+	background-color: #c9c9c9;
+}
+
+button[disabled] {
+	opacity: 0.4;
+	border: 1px solid #999;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	cursor: not-allowed;
+}
+
+
+
+/*some new stuff for my testing*/
+.labels {
+	font-size: 30px;
+	font-weight: bold;
+	margin-top:20%;
+}
+
+.points{
+	font-size: 30px;
+	font-weight: bold;
+	margin-top: 5%;
+}
+.toSelect{
+}
+
+.toSelect:hover{
+	border: 2px solid #cc1e1e;
+} 
+
+#spinningWaiting {
+    position: absolute; width: 100%; height: 100%; background: url('spinner.gif') no-repeat top center;
+}
+
+#imgObject:hover{
+	border: 2px solid #cc1e1e;
+} 
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for vh unit */
+  min-height: 100vh; /* You might also want to use
+                        'height' property instead.
+
+  /* Make it a flex container */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex; 
+  
+  /* Align the bootstrap's container vertically */
+    -webkit-box-align : center;
+  -webkit-align-items : center;
+       -moz-box-align : center;
+       -ms-flex-align : center;
+          align-items : center;
+  
+  /* In legacy web browsers such as Firefox 9
+     we need to specify the width of the flex container */
+  width: 100%;
+  
+  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+     hence the bootstrap's container won't be aligned to the center anymore.
+  
+     Therefore, we should use the following declarations to get it centered again */
+         -webkit-box-pack : center;
+            -moz-box-pack : center;
+            -ms-flex-pack : center;
+  -webkit-justify-content : center;
+          justify-content : center;
+}
+
+
+/**
+## Experiment-specific styles
+This stuff will vary by experiment.
+*/
+
+#logo-text {
+  font-weight: bold;
+}
+
+#instructions {
+  text-align: center;
+}
+
+
+.block-text {
+  width: 500px;
+  text-align: justify;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+#legal {
+  margin: 0 auto;
+  margin-top: 1.5em;
+  font-size: 0.8em;
+}
+
+#labelInst {
+	text-align: center;
+}
+
+/*adjust so pictures fit comfortably in the middle of the screen (as opposed to too high or too low)*/
+#objects {
+	margin-top: 20px;
+}
+
+/*left pic and right pic are large but fit comfortably in the ipad window*/
+#leftPic {
+	width: 400px;
+	height: auto;
+}
+
+#rightPic {
+	width: 400px;
+	height: auto;
+}
+
+#fillerPic {
+	width: 900px;
+	height: auto;
+}
