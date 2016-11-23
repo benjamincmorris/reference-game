@@ -1,22 +1,6 @@
-// Simple study demonstrating the use of a tablet-designed webpage. 
-// Study is designed using simple JS/HTML/CSS, with data saves to a server
-// controlled by call to a short php script. 
-
 // Overview: (i) Parameters (ii) Helper Functions (iii) Control Flow
 
 // ---------------- PARAMETERS ------------------
-
-var numTrials = 28;
-
-//amount of white space between trials
-var normalpause = 1500;
-
-//pause after picture chosen, to display red border around picture selected
-var timeafterClick = 1000;
-
-//length of filler (every time fill2 comes up, add 1sec of time)
-var fillerpause = 5000;
-
 //an array of all the novel words used in the study; used for look-up purposes in pic1type, pic2type, and trialtype
 var novelWords = ["modi", "dax", "pifo", "dofa", "toma", "fep", "wug", "kreeb", "blicket"];
 
@@ -24,6 +8,7 @@ var novelWords = ["modi", "dax", "pifo", "dofa", "toma", "fep", "wug", "kreeb", 
 var imgArray = ["2001-600.jpg", "2002-600.jpg", "2003-600.jpg", 
 				"2025-600.jpg", "2005-600.jpg", "2006-600.jpg",
 				"2007-600.jpg", "2009-600.jpg", "2023-600.jpg"];
+
 // imgs for reference game
 // shuffle this array once and never shuffle again. only used for looking up object label pair. 
 // reshuffling directly or by calling a function such as getRandomImages, which uses shuffling, will mess up the object label pairs.
@@ -31,7 +16,7 @@ var imgArrayFIXED = ["2001-600.jpg", "2002-600.jpg", "2003-600.jpg",
 					"2025-600.jpg", "2005-600.jpg", "2006-600.jpg",
 					"2007-600.jpg", "2009-600.jpg", "2023-600.jpg"];
 
-// imgs for reference game
+// imgs for attention check, targets and distractors
 var attentionArray = ["2001-600.jpg", "2002-600.jpg", "2003-600.jpg", "2004-600.jpg", "2005-600.jpg", 
 					"2006-600.jpg", "2007-600.jpg", "2009-600.jpg", "2010-600.jpg", "2011-600.jpg",
 					"2012-600.jpg", "2013-600.jpg", "2014-600.jpg", "2015-600.jpg", "2027-600.jpg", 
@@ -55,22 +40,14 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	//need to flexibily add imgObject ID because this is how we must set the hover style from the css
     	// adding here prevents hover funciton from appearing on the initial instructions slide array though. 
     	idTag= " imgObject ";
-    	// var target = randomIntFromInterval(0,8);
     }
     if (gameOrAttention=="Attention") {classes=" col-xs-2 toSelect "; offset= " col-xs-offset-1 "; idTag= " imgObject ";}
     for (var i=0; i < imgAr.length; ++i) {
     	//if were not building the array for the attention check, proceed here for a 3x3 display
     	if (gameOrAttention!="Attention") {
     		if (i==0 || i==3 || i==6) {
-    		// if (target==i) {
-    		// 	imgSet[target] = '<img class="' + classes + offset + '" id="imgTarget" src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
-    		// } else {
     			imgSet[i] = '<img class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
-    		// }
     		} else {
-    		// if (target==i) {
-    		// 	imgSet[target] = '<a> <img class="' + classes + '" id="imgTarget" src="' + path + imgAr[target] + '" alt = "'+imgAr[i]+'"> </a>';
-    		// } else {
     			imgSet[i] = '<img class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
@@ -82,14 +59,6 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     		}
     	}
     }
-    // var imgStr2 = '<img class="col-xs-2 col-sm-2 col-md-2" src="' + path + imgAr[1] + '" alt = "">';
-    // var imgStr3 = '<img class="col-xs-2 col-sm-2 col-md-2" src="' + path + imgAr[2] + '" alt = "">';
-    // var imgStr4 = '<img class="col-xs-2 col-sm-2 col-md-2 col-xs-offset-3" src="' + path + imgAr[3] + '" alt = "">';
-    // var imgStr5 = '<img class="col-xs-2 col-sm-2 col-md-2" src="' + path + imgAr[4] + '" alt = "">';
-    // var imgStr6 = '<img class="col-xs-2 col-sm-2 col-md-2" src="' + path + imgAr[5] + '" alt = "">';
-    // var imgStr7 = '<img class="col-xs-2 col-sm-2 col-md-2 col-xs-offset-3" src="' + path + imgAr[6] + '" alt = "">';
-    // var imgStr8 = '<img class="col-xs-2 col-sm-2 col-md-2" src="' + path + imgAr[7] + '" alt = "">';
-    // var imgStr9 = '<img class="col-xs-2 col-sm-2 col-md-2" src="' + path + imgAr[8] + '" alt = "">';
     output= new Array;
     for (i=0; i<imgSet.length; i++) {
     	output = output + imgSet[i];
@@ -98,7 +67,7 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
 }
 
 function getOrderedImage(imgAr, path, count) {
-	var imgStr = '<img class="col-xs-10 col-md-12" id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
+	var imgStr = '<img class="col-xs-10 " id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
 	return imgStr;
 }
 
@@ -112,17 +81,21 @@ function fillArray(value, len) {
   return arr;
 }
 
+// shifted to 1, 2, 4
+// need to output which object gets which level of exposure?
 function exposureStimuli(imgAr) {
   shuffle(imgAr);
-  arr1 = fillArray(imgAr[0], 9);
-  arr2 = fillArray(imgAr[1], 9);
-  arr3 = fillArray(imgAr[2], 9);
-  arr4 = fillArray(imgAr[3], 6);
-  arr5 = fillArray(imgAr[4], 6);
-  arr6 = fillArray(imgAr[5], 6);
-  arr7 = fillArray(imgAr[6], 3);
-  arr8 = fillArray(imgAr[7], 3);
-  arr9 = fillArray(imgAr[8], 3);
+  // set to constants
+  var exposureRate = [1, 2, 4]
+	  arr1 = fillArray(imgAr[0], exposureRate[0]);
+	  arr2 = fillArray(imgAr[1], exposureRate[0]);
+	  arr3 = fillArray(imgAr[2], exposureRate[0]);
+	  arr4 = fillArray(imgAr[3], exposureRate[1]);
+	  arr5 = fillArray(imgAr[4], exposureRate[1]);
+	  arr6 = fillArray(imgAr[5], exposureRate[1]);
+	  arr7 = fillArray(imgAr[6], exposureRate[2]);
+	  arr8 = fillArray(imgAr[7], exposureRate[2]);
+	  arr9 = fillArray(imgAr[8], exposureRate[2]);
   exposureImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
   shuffle(exposureImgs);
   //keep calling this function until weve got an array with no back to back repeats!
@@ -132,6 +105,17 @@ function exposureStimuli(imgAr) {
   	}
   }
   return exposureImgs;  
+}
+
+//function that takes and image and looks up how many times it appears in a given array
+function getOccurences(img, imgAr) {
+	var count = 0;
+    for (var i = 0; i < imgAr.length; i++) {
+        if (imgAr[i] === img) {
+            count++;
+        }
+    }
+    return count;
 }
 
 function gameStimuli(imgAr) {
@@ -172,7 +156,15 @@ function randomIntFromInterval(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
-function selectThis() {
+function preload(imgAr, index) {
+        index = index || 0;
+        if (imgAr && imgAr.length > index) {
+            var img = new Image ();
+            img.onload = function() {
+                preload(imgAr, index + 1);
+            }
+            img.src = 'tabletobjects/' + imgAr[index];
+}
 }
 
 
@@ -206,62 +198,53 @@ getCurrentTime = function() {
 	return (hours + ":" + minutes);
 }
 //-----------------------------------------------
+preload(imgArray);
+gameArray = gameStimuli(imgArray);
 
-showSlide("instructions");
+//get full number of 'slides' to increment progress bar
+var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length + 1 + 1 + gameArray.length + 1 + 1;
+// 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
+// plus a final 1 so that the final slide is not quite 100%
+
+showSlide("welcome");
+	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
+	else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
+};
+var progressBars = document.getElementsByClassName('progress-bar');
+for(var i = 0; i<progressBars.length; i++) {
+	progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
+}
 document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
 //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
 shuffle(imgArrayFIXED);
-//also construct an array for game stimuli
-// var targets = [];
-// for (var i=0; i<imgArray.length; i++) targets.push(i);
- gameArray = gameStimuli(imgArray);
+
 
 // MAIN EXPERIMENT
 var experiment = {
+	//global variables?
+	// subID: workerIda,
+	date: getCurrentDate(), //the date of the experiment
+	// arrays to store the data we are collecting for each trial
+	testTrials: [],
+	gameTrials: [],
+	attnCheck: [],
 
-	subid: "",
-		//inputed at beginning of experiment
-	trialnum: 0,
-		//trial number
-	order: 1,
-		//whether child received list 1 or list 2
-	word: "",
-		//word that child is queried on
-	pic1: "",
-		//the name of the picture on the left
-	pic2: "",
-		//the name of the picture on the right
-	pic1type: "",
-		//whether the picture on the left is familiar or novel 
-	pic2type: "",
-		//whether the picture on the right is familiar or novel
-	side: "",
-		//whether the child picked the left (L) or the right (R) picture
-	chosenpic: "",
-		//the name of the picture the child picked
-	response: "",
-		//whether the response was the correct response (Y) or the incorrect response (N)
-	trialtype: "",
-		//whether the trial was a word recognition (rec) or mutual exclusivity (me) trial;
-		// control (MEcontrol) or experimental (MEexperimental)
-	date: getCurrentDate(),
-		//the date of the experiment
-	timestamp: getCurrentTime(),
-		//the time that the trial was completed at 
-	reactiontime: 0,
-	//TODO : add reaction time variable ***** 
-	
-
-	//Checks to see whether the experimenter inputted appropriate values before moving on with the experiment
-	begin: function() {
-		document.body.style.background = "white";
-		experiment.exposure();
+	instructions: function(slideNumber) {
+		showSlide("instructions");
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
+		document.getElementById("beforeStudy").onclick = function() {experiment.exposure(slideNumber+1)};
 	},
 
-	exposure: function() {
+	//transition from instruction slide to the exposure phase
+	exposure: function(slideNumber) {
 		showSlide("exposure");
 		$("#clickme").hide();
 		$("#beginGame").hide();
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
 		var index=0;
 		exposureArray = exposureStimuli(imgArray);
 		var exposureTrial = document.createElement("img");
@@ -272,11 +255,14 @@ var experiment = {
 		document.getElementById('label').appendChild(firstlabel);
 		document.getElementById("clickme").innerHTML = "Next";
 		setTimeout(function() {$("#clickme").fadeIn()}, 1250);
-		document.getElementById("clickme").onclick = function() {experiment.exposures(0)};
+		document.getElementById("clickme").onclick = function() {experiment.exposures(0, slideNumber+1)};
 	},
 
-	exposures: function(index) {
+	exposures: function(index, slideNumber) {
 		$("#clickme").hide();
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
 		var $img = $("img"), speed = 200;
 		i= index + 1;
 		ar = exposureArray;
@@ -291,26 +277,33 @@ var experiment = {
 			$("#content").fadeIn(speed);
 			$("#label").fadeIn(speed);
 			setTimeout(function() {$("#clickme").fadeIn()}, 1250);
-			document.getElementById("clickme").onclick = function() {experiment.exposures(i)};
+			document.getElementById("clickme").onclick = function() {experiment.exposures(i, slideNumber+1)};
 		} else if (i >= lastExposure) {
-			experiment.pretest();
+			experiment.pretest(slideNumber);
 	}},
 
-	pretest: function() {
+	pretest: function(slideNumber) {
 		showSlide('pretest');
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
 		shuffle(imgArray);
 		setTimeout(function() {$("#beginTest").fadeIn()}, 2000);
 		document.getElementById("beginTest").innerHTML = "Begin Test";
-		document.getElementById("beginTest").onclick = function() {experiment.test(0)};
+		document.getElementById("beginTest").onclick = function() {experiment.test(0, slideNumber+1)};
 	},
 
-	test: function(testNumber) {
+	test: function(testNumber, slideNumber) {
 		showSlide('test');
+		document.getElementById('progressBar').style.width= String(31 + testNumber * .5) + "%" ;
 		document.getElementById('testInput').value = '';
 		document.getElementById('testInput').disabled=false;
 		document.getElementById('notSure').disabled=false;
 		document.getElementById('notSure').checked=false;
 		document.getElementById('nextObject').disabled=true;
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
 		lastExposure= imgArray.length;
 		ar = imgArray;
 		notKnown=0;
@@ -359,36 +352,71 @@ var experiment = {
 						var testCorrect=0;
 					}
 				}
-				experiment.test(testNumber+1);
+				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
+				//pass trial data for eventual output
+				testTrials= {
+					phase : "test",
+					trialnum : slideNumber,
+					targetObjectName : document.getElementById('orderedImage').alt,
+					exposureRate : getOccurences(document.getElementById('orderedImage').alt, exposureArray),
+					realLabel : pairObjectLabels(document.getElementById('orderedImage').alt),
+					typedLabel: blah,
+						//label entered by particpant, null if no label entered or if (test trial) participant selected don't know
+					responseCorrect: testCorrect,
+						//whether the response matched target, either as click or typed message. 
+					timestamp: getCurrentTime(), //the time that the trial was completed at 
+				};
+				experiment.testTrials.push(testTrials);
+				//move on to next test trial!
+				experiment.test(testNumber+1, slideNumber+1);
 			};
 		} if (testNumber >= lastExposure) {
-			experiment.prestudy();
+			experiment.prestudy(slideNumber);
 		};
 	},
 
-	prestudy: function() {
+	prestudy: function(slideNumber) {
 		showSlide("prestudy");
+
+		document.getElementById("gameReady").disabled=true;
 			// document.getElementById("clickme").removeAttribute("onclick");
-			setTimeout(function() {$("#beginGame").fadeIn()}, 2000);
+			for(var i = 0; i<progressBars.length; i++) {
+				progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+			}
 			document.getElementById("beginGame").innerHTML = "Begin Game";
 			var myPoints = document.createTextNode(0);
 				document.getElementById('myScore').appendChild(myPoints);
-			document.getElementById("beginGame").onclick = function() {experiment.game(0, 0)};
+		setTimeout(function() {document.getElementById("gameReady").disabled=false}, 3000)
+		//switch to the slide of questions about the game rules
+		document.getElementById("gameReady").onclick = function() {
+				for(var i = 0; i<progressBars.length; i++) {
+					progressBars[i].style.width = String((slideNumber+1)*100/totalSlides) + "%" ;
+				};
+				document.getElementById("pointsForClick").required=true; 
+				showSlide("gameCheck");
+				// document.getElementById("gameCheckForm").onsubmit = function() {experiment.game(0, 0, slideNumber+2)};
+				document.getElementById("GameCheckForm").onsubmit = function() {experiment.game(0, 0, slideNumber+2)};
+
+			};
 		// button.onclick("click", Functionsion() {experiment.exposures(i)});
 		// $("#clickme").on("click", function() {experiment.exposures(i)});
 	},
 
 
-	game: function(score, roundNumber) {
+	game: function(score, roundNumber, slideNumber) {
 		showSlide("referenceGame");
 		$("#sendMessage").show();
 		$("#waitingForPartner").hide();
 		$("#spinningWaiting").hide();
 		$("#messageFromPartner").hide();
 		$("#nextRound").hide();
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
 		document.getElementById('labelInput').value = '';
 		document.getElementById("sendMessage").disabled = true;
 		document.getElementById("gameTarget").innerHTML = gameArray[roundNumber];
+
 		var target = pairObjectLabels(document.getElementById("gameTargetImage").alt);
 		var message = 0; // no message
 		document.getElementById("objects2").innerHTML = getRandomImages(imgArray, basePath, "game", roundNumber);
@@ -430,6 +458,7 @@ var experiment = {
 					document.getElementById("sendMessage").disabled = false;
 					selection = pairObjectLabels(this.alt);
 					message = 1; // change message value to 1 if clicked. 
+						isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
 					return;
 				}
 		});
@@ -440,33 +469,62 @@ var experiment = {
 			//final check of what, if anything, was typed in the textbox to determine score. 
 			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
 			if (blah != '') {
+				// if the user typed a response, set the(clicked)selection var to null
+				selection=null;
+				method = "label";
 				// if user enters the appropriate label, give them all 10 points.
 				if(blah == target) {
 					message=2;
+					isCorrect = 1;
 				} if (blah != target) {
 					message=3;
+					isCorrect = 0;
 				}
 			}
 			if (blah == '') {
-				if(selection != target) {message = 3}
+				blah = null;
+				method = "click";
+				if(selection != target) {message = 3; isCorrect = 0};
 			}
 			if(message==0) {return}
+
+			//store trial data before moving on
+			gameTrials = {
+				phase : "game",
+				trialnum : slideNumber,
+				targetObjectName : document.getElementById("gameTargetImage").alt,
+				exposureRate : getOccurences(document.getElementById('gameTargetImage').alt, exposureArray),
+				realLabel : pairObjectLabels(document.getElementById("gameTargetImage").alt),
+				method: method,
+				typedLabel: blah,
+					//label entered by particpant, null if no label entered or if (test trial) participant selected don't know
+				clickedObject: selection,
+					//the object clicked on by the pariticpant during the game, null if typed response was chosen
+				responseCorrect: isCorrect,
+					//whether the response matched target, either as click or typed message. 
+				timestamp: getCurrentTime(),
+					//the time that the trial was completed at 
+			};
+			experiment.gameTrials.push(gameTrials);
+			//send message, return 'partner response'
 			if(message==1) {$("#sendMessage").hide(); 
 								document.getElementById("messageFromPartner").innerHTML = "Nice work- your partner figured it out!";
-								experiment.gameWaiting(score + 3,roundNumber+1)}
+								experiment.gameWaiting(score + 3,roundNumber+1, slideNumber+1)}
 			if(message==2) {$("#sendMessage").hide(); 
 								document.getElementById("messageFromPartner").innerHTML = "Nice work- your partner figured it out!";
-								experiment.gameWaiting(score + 10,roundNumber+1)}
+								experiment.gameWaiting(score + 10,roundNumber+1, slideNumber+1)}
 			// label or sellection is incorrect is case message = 3
 			if(message==3) {$("#sendMessage").hide(); 
 								document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like your partner chose the wrong object!";
-								experiment.gameWaiting(score,roundNumber+1)}
+								experiment.gameWaiting(score,roundNumber+1, slideNumber+1)}
 		};	
 	},
 
-	gameWaiting: function(score, count) {
+	gameWaiting: function(score, count, slideNumber) {
 		$("#waitingForPartner").show();
 		$("#spinningWaiting").show();
+		$('.toSelect').click(function() {return;});
+		$('.labelInput').disabled = true;
 		waitTime = randomIntFromInterval(1000,4000);
 		setTimeout(function() {$("#waitingForPartner").hide(); $("#spinningWaiting").hide()}, waitTime-250);
 		setTimeout(function() {$("#nextRound").show();
@@ -477,53 +535,73 @@ var experiment = {
 			}, waitTime);
 		numOfGames = gameArray.length; 
 		if (count < numOfGames) {
-			document.getElementById("nextRound").onclick = function() {experiment.game(score,count)};
-		} else {document.getElementById("nextRound").onclick = function() {experiment.attentionCheck()}}
+			document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber)};
+		} else {
+			document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)}};
 		// setTimeout(experiment.game(score, count), 5000);
 	},
 
-	attentionCheck: function() {
+	attentionCheck: function(slideNumber) {
 		showSlide('attentionSlide');
+		for(var i = 0; i<progressBars.length; i++) {
+			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
+		}
 		clicked=0;
+		recognizedItems = new Array;
 		document.getElementById("objects3").innerHTML = getRandomImages(attentionArray, basePath, "Attention");
 		$('.toSelect').click(function() {
-				//if the target has already been clicked on, assume they are 'unclicking' and revert..
+				//if the target has already been clicked on, assume they are 'unclicking' and revert styling..
 				if (this.style.border=="5px solid black") {
 					this.style.border="";
 					clicked=0;
-					return;
+					//but we also need to remove that item from the array being built of selected recognized objects
+					if (pairObjectLabels(this.alt) == undefined) {
+						var toBeRemoved = recognizedItems.indexOf(this.alt)
+					} else {
+						var toBeRemoved=recognizedItems.indexOf(pairObjectLabels(this.alt))
+					}
+					recognizedItems.splice(toBeRemoved, 1);
 				}
 				else {
 					this.style.border= '5px solid black';
-					selection = pairObjectLabels(this.alt);
+					//collect selected object name
+					selection = this.alt;
+					//mark all as incorrect
+					correct = 0;
+					//if this object has a label, selecting it is correct, overwrite that flag
+					recognizedItems.push(selection);
 					clicked = 1; // change message value to 1 if clicked. 
 					return;
 				}
 		});
+		document.getElementById("endStudy").onclick = function() {
+			//store data for the attention check.
+			for (var i = 0; i<recognizedItems.length; i++) {
+				if (pairObjectLabels(recognizedItems[i]) != undefined) {
+					correct = 1
+				} else {correct=0};
+				attnCheck= {
+					phase: "attnCheck",
+					recognizedObject : recognizedItems[i],
+					correctRecog : correct
+				}
+				experiment.attnCheck.push(attnCheck);
+			}
+			experiment.end()};
+
 	},
 
 	//the end of the experiment, where the background becomes completely black
     end: function () {
-    	setTimeout(function () {
-    		$("#stage").fadeOut();
-    	}, normalpause);
     	showSlide("finish");
     	document.body.style.background = "black";
+    	turk.submit(experiment);
     },
-
-	//concatenates all experimental variables into a string which represents one "row" of data in the eventual csv, to live in the server
-	processOneRow: function() {
-		var dataforRound = experiment.subid; 
-		dataforRound += "," + experiment.order + "," + experiment.trialnum + "," + experiment.word;
-		dataforRound += "," + experiment.pic1 + "," + experiment.pic2 + "," + experiment.pic1type + "," + experiment.pic2type;
-		dataforRound += "," + experiment.side + "," + experiment.chosenpic + "," + experiment.response + "," + experiment.trialtype;
-		dataforRound += "," + experiment.date + "," + experiment.timestamp + "," + experiment.reactiontime + "\n";
-		// $.post("http:.....php", {postresult_string : dataforRound});	
-	},
 }
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
-// experiment.prestudy();
+//breaks progressbar
+// experiment.prestudy(3);
 
 
 

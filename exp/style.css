@@ -11,6 +11,10 @@ body {
 	line-height: 20px;
 }
 
+h4 {
+	text-align: center;
+}
+
 
 /** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
 /*.slide {
@@ -70,13 +74,12 @@ button[disabled] {
 .labels {
 	font-size: 30px;
 	font-weight: bold;
-	margin-top:20%;
+	margin-top:0%;
 }
 
 .points{
 	font-size: 30px;
 	font-weight: bold;
-	margin-top: 5%;
 }
 .toSelect{
 }
@@ -86,7 +89,7 @@ button[disabled] {
 } 
 
 #spinningWaiting {
-    position: absolute; width: 100%; height: 100%; background: url('spinner.gif') no-repeat top center;
+    position: absolute; width: 100%; height: 100%; background: url('images/spinner.gif') no-repeat top center;
 }
 
 #imgObject:hover{
@@ -178,4 +181,17 @@ This stuff will vary by experiment.
 #fillerPic {
 	width: 900px;
 	height: auto;
+}
+
+#myProgress {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    background-color: grey;
+}
+#myBar {
+    position: absolute;
+    width: 1%;
+    height: 100%;
+    background-color: green;
 }
