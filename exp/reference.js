@@ -31,12 +31,12 @@ var basePath = "tabletobjects/";
 function getRandomImages(imgAr, path, gameOrAttention, count) {
     shuffle(imgAr);
     var imgSet = [];
-    classes = " col-xs-2 ";
-    offset= " col-xs-offset-3 ";
+    classes = " col-xs-4 col-lg-3 ";
+    offset= " col-xs-offset-0 col-lg-offset-2 ";
     idTag= ' "instObject" '
     if (gameOrAttention=="game") {
-    	classes = " col-xs-3 toSelect ";
-    	offset = " col-xs-offset-2 ";
+    	classes = " col-xs-3 col-lg-2 toSelect ";
+    	offset = " col-xs-offset-2 col-lg-offset-3 ";
     	//need to flexibily add imgObject ID because this is how we must set the hover style from the css
     	// adding here prevents hover funciton from appearing on the initial instructions slide array though. 
     	idTag= " imgObject ";
@@ -53,9 +53,9 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
     		if (i==0 || i==5 || i==10 || i==15 || i==20) {
-    			imgSet[i] = '<img class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	}
     }
@@ -67,7 +67,7 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
 }
 
 function getOrderedImage(imgAr, path, count) {
-	var imgStr = '<img class="col-xs-10 " id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
+	var imgStr = '<img class="col-xs-10 " style="max-width:600px" id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
 	return imgStr;
 }
 
@@ -139,7 +139,7 @@ function gameStimuli(imgAr) {
   }
   shuffledTestImgs = new Array;
   for (i=0; i < testImgs.length; i++) {
-  	shuffledTestImgs[i] = '<img class="col-xs-10 col-md-12" id="gameTargetImage" src="' + basePath + testImgs[i] + '" alt = "'+ testImgs[i] +'">';
+  	shuffledTestImgs[i] = '<img class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + testImgs[i] + '" alt = "'+ testImgs[i] +'">';
   }
   return shuffledTestImgs;
 }
@@ -226,6 +226,7 @@ var experiment = {
 	date: getCurrentDate(), //the date of the experiment
 	// arrays to store the data we are collecting for each trial
 	testTrials: [],
+	ruleQuestions: [],
 	gameTrials: [],
 	attnCheck: [],
 
@@ -383,7 +384,7 @@ var experiment = {
 			for(var i = 0; i<progressBars.length; i++) {
 				progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 			}
-			document.getElementById("beginGame").innerHTML = "Begin Game";
+			document.getElementById("beginGame").innerHTML = "Check My Answers";
 			var myPoints = document.createTextNode(0);
 				document.getElementById('myScore').appendChild(myPoints);
 		setTimeout(function() {document.getElementById("gameReady").disabled=false}, 3000)
@@ -392,12 +393,77 @@ var experiment = {
 				for(var i = 0; i<progressBars.length; i++) {
 					progressBars[i].style.width = String((slideNumber+1)*100/totalSlides) + "%" ;
 				};
-				document.getElementById("pointsForClick").required=true; 
 				showSlide("gameCheck");
-				// document.getElementById("gameCheckForm").onsubmit = function() {experiment.game(0, 0, slideNumber+2)};
-				document.getElementById("GameCheckForm").onsubmit = function() {experiment.game(0, 0, slideNumber+2)};
+				$("#beginGame").fadeIn();
+				$(".nailedIt").hide();
+				$("#clickCorrection").hide();
+				$("#labelCorrection").hide();
+				$("#wrongCorrection").hide();
+				(function() {
+				    $('.gameQuestion').change(function() {
+				        
+				        var empty = false;
+				        
+				        $('.gameQuestion').each(function() {
+				            if ($(this).val() == '') {
+				                empty = true;
+				            }
+				        });				      
+				        if (empty) {
+				        	console.log('isEmpty')
+				            $('#beginGame').attr('disabled', 'disabled');
+				        } else {
+				        	console.log('pleaseWork')
+				            $('#beginGame').removeAttr('disabled');
+				        }
+				    });
+				})()
+				
+				// a work around for the above method of trying to require inputs
+				// document.getElementById("pointsForLabel").disabled=true; 
+				// document.getElementById("pointsForWrong").disabled=true; 
+				// document.getElementById("pointsForClick").onchange = function() {
+				// 	if($(this).value()== '') {document.getElementById("beginGame").disabled=true}
+				// 	document.getElementById("pointsForLabel").disabled=false
+				// }
+				// document.getElementById("pointsForLabel").onchange = function() {
+				// 	if(this.value()== '') {document.getElementById("beginGame").disabled=true}
+				// 	document.getElementById("pointsForWrong").disabled=false
+				// }
+				// document.getElementById("pointsForWrong").onchange = function() {
+				// 	if(this.value()== '') {document.getElementById("beginGame").disabled=true}
+				// 	document.getElementById("beginGame").disabled=false
+				// }
 
-			};
+				//on submit, evaluate Ps answers
+				document.getElementById("beginGame").onclick = function() {
+					if (document.getElementById("pointsForClick").value != 3) {
+						$("#pointsForClick").addClass("incorrect");
+						$("#clickCorrection").fadeIn()
+					}
+					if (document.getElementById("pointsForLabel").value != 10) {
+						$("#pointsForLabel").addClass("incorrect");
+						$("#labelCorrection").fadeIn()
+					}
+					if (document.getElementById("pointsForWrong").value != 0) {
+						$("#pointsForWrong").addClass("incorrect");
+						$("#wrongCorrection").fadeIn()
+					}
+					//store P's responses data before moving on
+					ruleQuestions = {
+						phase: "pregameCheck",
+						pointsClick : document.getElementById("pointsForClick").value,
+						pointsLabel : document.getElementById("pointsForLabel").value,
+						pointsWrong : document.getElementById("pointsForWrong").value,
+						timestamp: getCurrentTime(),
+							//the time that the trial was completed at 
+					};
+					experiment.ruleQuestions.push(ruleQuestions);
+					document.getElementById("beginGame").innerHTML = "Begin Game";
+					document.getElementById("beginGame").onclick = function() {experiment.game(0, 0, slideNumber+2)};		
+				}
+		}
+		// experiment.game(0, 0, slideNumber+2)
 		// button.onclick("click", Functionsion() {experiment.exposures(i)});
 		// $("#clickme").on("click", function() {experiment.exposures(i)});
 	},
@@ -601,7 +667,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-// experiment.prestudy(3);
+experiment.attentionCheck(3,3,3);
 
 
 

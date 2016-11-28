@@ -31,9 +31,9 @@
 		<div class="progress">
 		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
 		</div>
-	      <div class="row" id="objects"> </div>
+	      <center> <div class="row col-xs-6 col-xs-offset-3" id="objects"> </div> </center>
 	      <div class="row" id="objects">
-	        <p class="block-text col-xs-offset-3 col-xs-6">Each of these objects has a label that identifies it. Your job is to learn those labels and then send messages to another player to that player to select a particular object. 
+	        <p class="block-text col-xs-offset-3 col-xs-6 ">Each of these objects has a label that identifies it. Your job is to learn those labels and then send messages to another player to that player to select a particular object. 
 	        <br><br>
 	        After you click the button below, you will be given a chance to learn these labels to aide you in the game. Each object will be presented one at a time with its corresponding label a few times.</p>
 	      </div>
@@ -106,23 +106,27 @@
 		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
 		</div>
     	<div class="container">
-	       	<div class="row col-xs-11" id="gameCheck">
+	       	<div class="row col-xs-11" id="gameCheck" >
 		        <div class="row"> <p style="margin-top: 50px" class="block-text col-xs-offset-2 col-xs-8"> Before you start, we want to make sure you know the rules for our game! </p> </div>
 		        <br> <br>
 		        <form form-name="gameCheckForm" id="GameCheckForm">
+                    <fieldset>
 			        <p class="col-xs-7 col-xs-offset-1">How many points do you get if you click on the target object? </p> 
-			        	<div class="row"> <center> <input required type="number" id="pointsForClick"> </div> </center>
+			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForClick"> </div> </center>
+                        <p id="clickCorrection" class="col-xs-offset-2"> <strong> Not quite, you will receive <em> 3 </em> points for clicking! </strong></p>
 			       		<br>
 			        <p class="col-xs-7 col-xs-offset-1">How many points do you get if you type the correct label for the object? </p>
-			        	<div class="row"> <center> <input  type="number" id="pointsForLabel" required> </div> </center>
+			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForLabel"> </div> </center>
+                        <p id="labelCorrection" class="col-xs-offset-2"> <strong> Actually, you will receive <em> 10 </em> points for using the right label! </strong> </p>
 			        	<br> 
 			        <p class="col-xs-7 col-xs-offset-1"> How many points do you get if you type the <em> incorrect </em> label for the object? </p>
-			        	<div class="row"> <center> <input required type="number" id="pointsForWrong"> </div> </center>
+			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForWrong"> </div> </center>
+                        <p id="wrongCorrection" class="col-xs-offset-2"> <strong> In fact, you will receive <em> 0 </em> points if your label is wrong! </strong> </p>
 			        	<br>
-			        <center> Ready to begin? </p> </center>
 		    </div>
     	</div> <br>
-    	<div class="row" > <center> <button type="submit" id="beginGame" value="Begin Game"> </button> </center> </div> </form>
+    	           <div class="row" > <center> <button type="button" id="beginGame" disabled="disabled"> </button> </center> </div> 
+               </fieldset>  </form>     
     </div> 
 
     <div class="slide" id="referenceGame">
@@ -133,12 +137,12 @@
         <div class="row">
             <div class="col-xs-5">
                 <div class="row"> <strong> <center> <p style="margin: 5% 0% 0% 20%"> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </center> </strong>
-                <div class="row"> <div style="margin-left:25%" class='hmm' id="gameTarget"> </div> <br> </div>
-                <div class="row" style="margin: 0% 0% 0% 20%"><center> <form> You may either type the object <br> label here... <br> </form> </div>
+                <div class="row"> <div class='hmm' id="gameTarget"> </div> <br> </div>
+                <div class="row " style="margin: 0% 0% 0% 20%"><center> <form> You may either type the object <br> label here... <br> </form> </div>
                 <div class="row" style="margin: 0% 0% 0% 20%"><center> <input type="text" name="label" id="labelInput" autocomplete="off"> </center></form></div>
             </div>
             <div class="col-xs-7 ">
-            	<center> <form style="margin: 7% 0 0 10%"> ... or you may click on the object here: <br> </form>
+            	<center> <form class="col-lg-offset-2" style="margin: 7% 0 0 0%"> ... or you may click on the object here: <br> </form>
     	       <div id="objects2" class="objectArray" style="margin-top:0%"> </div> 
             </div>
         </div> 
