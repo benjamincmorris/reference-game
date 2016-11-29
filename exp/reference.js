@@ -46,14 +46,14 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	//if were not building the array for the attention check, proceed here for a 3x3 display
     	if (gameOrAttention!="Attention") {
     		if (i==0 || i==3 || i==6) {
-    			imgSet[i] = '<img class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
     		if (i==0 || i==5 || i==10 || i==15 || i==20) {
-    			imgSet[i] = '<img style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '</div> <div class="row"> <img style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
     			imgSet[i] = '<img style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
@@ -667,7 +667,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-experiment.attentionCheck(3,3,3);
+// experiment.attentionCheck(3,3,3);
 
 
 
