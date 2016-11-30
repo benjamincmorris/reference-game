@@ -1,0 +1,113 @@
+---
+title: "reference-game"
+output: html_document
+---
+
+## Process MTurk Data
+
+```{r, echo=FALSE}
+library(jsonlite)
+library(dplyr)
+
+
+filenames <- list.files("production-results/", pattern="*.json", full.names = TRUE)
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+janeDoe <- NULL
+ruleCheck <- NULL
+game <- NULL
+test<- NULL
+attn <- NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[i]
+  subID <- i
+  ruleCheck <- rbind(ruleCheck, cbind(janeDoe[1][[1]]$answers$data$ruleQuestions, subID = i))
+  test <- rbind(test, cbind(janeDoe[1][[1]]$answers$data$testTrials, subID = i))
+  game <- rbind(game,cbind(janeDoe[1][[1]]$answers$data$gameTrials, subID = i))
+  attn <- rbind(attn, cbind(janeDoe[1][[1]]$answers$data$attnCheck, subID = i))
+}
+```
+
+## Simple Investigations of How Folks Are Doing
+```{r, echo=FALSE}
+### Are people paying attention?
+#cleaning the data about knowledge of the game rules
+ruleCheck <- ruleCheck %>% mutate(clickCorr = ifelse(pointsClick == 3, 1, 0)) %>%
+    mutate(labelCorr = ifelse(pointsLabel == 10, 1, 0)) %>%
+    mutate(wrongCorr = ifelse(pointsWrong == 0, 1, 0)) %>%
+    mutate(propCorr = (clickCorr + labelCorr + wrongCorr)/3) %>%
+    select(-clickCorr, -labelCorr, -wrongCorr)
+# 3/9 folks were wrong about >1 rule(s)
+# 1 of those folks was wrong about 2 rules
+
+# 1 particiapnt only named 7 objects, one of which was wrong
+attn %>% group_by(subID) %>% summarize(n())
+attn %>% group_by(subID) %>% summarize(mean(correctRecog))
+#----------
+
+### How are people learning
+# Average 1/3 correct, range from 11% - 67%
+test_score <- test %>% group_by(subID) %>% summarize(propCorr = mean(responseCorrect))
+test %>% group_by(exposureRate) %>% summarize(mean(responseCorrect))
+test %>% group_by(subID, exposureRate) %>% summarize(mean(responseCorrect))
+#----------
+
+
+### How are people doing on the game?
+# 62% of trials, people were clicking. heterogeneous clicking rate across folks
+game %>% summarize(mean(method=='click'))
+game %>% group_by(subID) %>% summarize(mean(method=='click'))
+
+# overall mostly correct (89% of trials). always correct for clicking.
+game %>% summarize(mean(responseCorrect))
+game %>% group_by(method) %>% summarize(mean(responseCorrect))
+
+# folks send a good message with more exposure. when using labels. 
+game %>% group_by(exposureRate) %>% summarize(mean(responseCorrect))
+game %>% group_by(method, exposureRate) %>% summarize(mean(responseCorrect))
+# people seem to label more with more exposure 
+game %>% group_by(method, exposureRate) %>% summarize(n())
+
+
+# label more for objects they learned?/if they learned more
+head(game)
+head(test)
+## need to join in data from test, for each trial say whether that participant knew that object...
+tmp <- left_join(game, test, by=c("subID", "targetObjectName")) %>%
+  filter(subID %in% rule_correct$subID)
+tmp %>% group_by(method, responseCorrect.y) %>% summarize(mean(responseCorrect.x))
+#big split, if known at test --> seemingly more likely ot label. 
+# need to get subject level
+tmp %>% group_by(method, responseCorrect.y) %>% summarize(n())
+
+tabulation <- tmp %>%
+  group_by(method, responseCorrect.x, responseCorrect.y, exposureRate.x) %>%
+  summarise(n = n()) %>%
+  group_by(method, exposureRate.x) %>%
+  mutate(n = n/sum(n))
+
+ggplot(tabulation, aes(y =  responseCorrect.x, x = responseCorrect.y, fill = n)) + 
+  facet_grid(exposureRate.x ~ method) + 
+  geom_tile() + 
+  theme_bw() + 
+  scale_fill_gradient(low = "white", high = "black")
+
+ggplot(tmp, aes(y =  responseCorrect.x, x = as.factor(responseCorrect.y), color = method)) + 
+  facet_grid(exposureRate.x ~ .) + 
+  geom_jitter(width = .1) +
+  theme_bw() 
+
+
+
+rule_correct <-ruleCheck %>%
+  filter(propCorr == 1) %>%
+  select(subID)
+
+```
+
+
+
+
+
+

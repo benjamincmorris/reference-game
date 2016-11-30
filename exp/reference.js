@@ -387,7 +387,7 @@ var experiment = {
 			document.getElementById("beginGame").innerHTML = "Check My Answers";
 			var myPoints = document.createTextNode(0);
 				document.getElementById('myScore').appendChild(myPoints);
-		setTimeout(function() {document.getElementById("gameReady").disabled=false}, 3000)
+		setTimeout(function() {document.getElementById("gameReady").disabled=false}, 10000)
 		//switch to the slide of questions about the game rules
 		document.getElementById("gameReady").onclick = function() {
 				for(var i = 0; i<progressBars.length; i++) {
@@ -667,7 +667,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-// experiment.attentionCheck(3,3,3);
+experiment.prestudy(3,3,3);
 
 
 
