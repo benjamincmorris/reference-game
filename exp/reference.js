@@ -399,6 +399,7 @@ var experiment = {
 				$("#clickCorrection").hide();
 				$("#labelCorrection").hide();
 				$("#wrongCorrection").hide();
+				// this functions checks all the inputs, and when they have content, enables the button
 				(function() {
 				    $('.gameQuestion').change(function() {
 				        
@@ -410,10 +411,8 @@ var experiment = {
 				            }
 				        });				      
 				        if (empty) {
-				        	console.log('isEmpty')
 				            $('#beginGame').attr('disabled', 'disabled');
 				        } else {
-				        	console.log('pleaseWork')
 				            $('#beginGame').removeAttr('disabled');
 				        }
 				    });
@@ -449,7 +448,7 @@ var experiment = {
 						$("#pointsForWrong").addClass("incorrect");
 						$("#wrongCorrection").fadeIn()
 					}
-					//store P's responses data before moving on
+					//store P's response data before moving on
 					ruleQuestions = {
 						phase: "pregameCheck",
 						pointsClick : document.getElementById("pointsForClick").value,
@@ -472,6 +471,7 @@ var experiment = {
 	game: function(score, roundNumber, slideNumber) {
 		showSlide("referenceGame");
 		$("#sendMessage").show();
+		document.getElementById("sendMessage").innerHTML = "Send Message"
 		$("#waitingForPartner").hide();
 		$("#spinningWaiting").hide();
 		$("#messageFromPartner").hide();
@@ -497,31 +497,42 @@ var experiment = {
 		});
 		document.getElementById("labelInput").disabled = false;
 		document.getElementById("labelInput").onkeyup = function() {
+			// if they have erased the text box so it is now empty
 			if (document.getElementById("labelInput").value =="") {
-				document.getElementById("sendMessage").disabled = true;
+				// if they clicked the object, leave that as the message
+				if (message==1) {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> 3 Possible Points </em> </strong>"}
+				// if they havent clicked an object and now have emptied the text box, revert to no message state and disable stuff
+				else {
+					document.getElementById("sendMessage").disabled = true;
+					document.getElementById("sendMessage").innerHTML="Send Message";
+				}
 			} else {
 				document.getElementById("sendMessage").disabled = false;
+				if (message==1) {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> 3 Possible Points </em> </strong>"}
+				else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> 10 Possible Points </em> </strong>"}
 			}
 		};
 		$('.toSelect').click(function() {
 			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
-			if (blah != '') {return}
 				//if the target has already been clicked on, assume they are 'unclicking' and revert..
 				if (message==1) {
+					// if you have selected an object, and are trying to click another object, do nothing.
 					if (this.style.border!="5px solid black") {return}
+					// otherwise, revert the selection 
 					this.style.border="";
-					// renable ability to type label
-					document.getElementById("labelInput").disabled = false;
+					// if there is a label typed out, keep the sendMessage button enabled and change it to 10 possible points
+					if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> 10 Possible Points </em> </strong>"}
+					else {
 					document.getElementById("sendMessage").disabled = true;
+					document.getElementById("sendMessage").innerHTML="Send Message";}
 					message=0;
 					return;
 				}
 				//if neither pointing nor typing has occured, select the target element and note that.
 				if (message==0) {
 					this.style.border="5px solid black";
-					// disable textbox to prevent clicking and typing in same trial
-					document.getElementById("labelInput").disabled = true;
 					document.getElementById("sendMessage").disabled = false;
+					document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> 3 Possible Points </em> </strong>";
 					selection = pairObjectLabels(this.alt);
 					message = 1; // change message value to 1 if clicked. 
 						isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
@@ -535,18 +546,23 @@ var experiment = {
 			//final check of what, if anything, was typed in the textbox to determine score. 
 			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
 			if (blah != '') {
-				// if the user typed a response, set the(clicked)selection var to null
-				selection=null;
-				method = "label";
-				// if user enters the appropriate label, give them all 10 points.
-				if(blah == target) {
-					message=2;
-					isCorrect = 1;
-				} if (blah != target) {
-					message=3;
-					isCorrect = 0;
+				// if the user typed a response AND clicked, set method to 'label_click', but follow directions as if clicked
+				if (message==1) {method="label_click";
+								if(selection != target) {message = 3; isCorrect = 0};}
+				// if they only typed, mark selection as null and flag their method
+				else {selection=null;
+					method = "label";
+					// if user enters the appropriate label, give them all 10 points.
+					if(blah == target) {
+						message=2;
+						isCorrect = 1;
+					} if (blah != target) {
+						message=3;
+						isCorrect = 0;
+					}
 				}
 			}
+			// if they havent typed a label...
 			if (blah == '') {
 				blah = null;
 				method = "click";
@@ -561,6 +577,8 @@ var experiment = {
 				targetObjectName : document.getElementById("gameTargetImage").alt,
 				exposureRate : getOccurences(document.getElementById('gameTargetImage').alt, exposureArray),
 				realLabel : pairObjectLabels(document.getElementById("gameTargetImage").alt),
+				// note special case for label_click method. click will override label to determin if message is correct.
+					// typed label will still be recorded, but whether it is wrong or right will not be!
 				method: method,
 				typedLabel: blah,
 					//label entered by particpant, null if no label entered or if (test trial) participant selected don't know
@@ -667,7 +685,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-experiment.prestudy(3,3,3);
+// experiment.game(3,3,3);
 
 
 
