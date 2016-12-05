@@ -16,6 +16,11 @@ var imgArrayFIXED = ["2001-600.jpg", "2002-600.jpg", "2003-600.jpg",
 					"2025-600.jpg", "2005-600.jpg", "2006-600.jpg",
 					"2007-600.jpg", "2009-600.jpg", "2023-600.jpg"];
 
+//imgs for the familiar objects example
+var familiarArray = ["pen.jpg", "computer.jpg", "shoe.jpg", 
+					"apple.jpg", "plant.jpg", "phone.jpg",
+					"key.jpg", "chair.jpg", "newspaper.jpg"];
+
 // imgs for attention check, targets and distractors
 var attentionArray = ["2001-600.jpg", "2002-600.jpg", "2003-600.jpg", "2004-600.jpg", "2005-600.jpg", 
 					"2006-600.jpg", "2007-600.jpg", "2009-600.jpg", "2010-600.jpg", "2011-600.jpg",
@@ -166,15 +171,15 @@ function randomIntFromInterval(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
-function preload(imgAr, index) {
+function preload(imgAr, path, index) {
         index = index || 0;
         if (imgAr && imgAr.length > index) {
             var img = new Image ();
             img.onload = function() {
                 preload(imgAr, index + 1);
             }
-            img.src = 'tabletobjects/' + imgAr[index];
-}
+            img.src = path + imgAr[index];
+	}
 }
 
 
@@ -208,8 +213,10 @@ getCurrentTime = function() {
 	return (hours + ":" + minutes);
 }
 //-----------------------------------------------
-preload(imgArray);
-preload(attentionArray);
+// alert(preload(imgArray, 'tabletobjects/', 0));
+// preload(attentionArray, 'tabletobjects/');
+// preload(familiarArray, 'images/familiar/');
+shuffle(familiarArray)
 gameArray = gameStimuli(imgArray);
 
 //get full number of 'slides' to increment progress bar
@@ -281,10 +288,18 @@ var experiment = {
 		lastExposure = ar.length;
 		if (i < lastExposure) {
 		  	newPic= ar[i];
-			$img.attr("src", "tabletobjects/" + newPic);
+		  	console.log(newPic);
+			// $("#content").src = "tabletobjects/" + newPic;
+			console.log($("#content").src)
+			document.getElementById('content').removeChild(
+				document.getElementById('content').lastChild);
 			document.getElementById('label').removeChild(
 				document.getElementById('label').lastChild);
 			var newLabel = document.createTextNode(pairObjectLabels(newPic));
+			var newImage = document.createElement("img");
+			newImage.src = "tabletobjects/" + newPic;
+			newImage.style.height = '400px';
+			document.getElementById('content').appendChild(newImage);
 			document.getElementById('label').appendChild(newLabel);
 			$("#content").fadeIn(speed);
 			$("#label").fadeIn(speed);
@@ -726,7 +741,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-experiment.prestudy(3,3,3);
+// experiment.prestudy(3,3,3);
 
 
 
