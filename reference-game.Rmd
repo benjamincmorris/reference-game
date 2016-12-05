@@ -1,0 +1,268 @@
+---
+title: "reference-game"
+output: html_document
+---
+
+## Process MTurk Data
+
+```{r, echo=FALSE}
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+
+filenames <- list.files("reference_10_3/production-results/", pattern="*.json", full.names = TRUE)
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+timing <- NULL
+ruleCheck <- NULL
+game <- NULL
+test<- NULL
+attn <- NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+  # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  condition <- "10_3"
+  subID <- i
+  timing <- rbind(timing, as.data.frame(
+      cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  ruleCheck <- rbind(ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
+  test <- rbind(test, cbind(subID, condition, janeDoe$answers$data$testTrials))
+  game <- rbind(game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
+  if (length(janeDoe$answers$data$attnCheck)!=0) 
+    {attn <- rbind(attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
+}
+
+filenames <- list.files("reference_8_5/production-results/", pattern="*.json", full.names = TRUE)
+ldf <- lapply(filenames, fromJSON)
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+  # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  condition <- "8_5"
+  subID <- nrow(ruleCheck) + 1
+  timing <- rbind(timing, as.data.frame(
+      cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  ruleCheck <- rbind(ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
+  test <- rbind(test, cbind(subID, condition, janeDoe$answers$data$testTrials))
+  game <- rbind(game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
+  if (length(janeDoe$answers$data$attnCheck)!=0) 
+    {attn <- rbind(attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
+}
+
+# p_Label <- 8
+# p_Click <- 5
+# p_Wrong <- 0
+```
+
+## Basics: Duration, Attention...
+```{r, echo=FALSE}
+# How long do people take?
+howLong <- as.duration(ymd_hms(timing$start) %--% ymd_hms(timing$stop))
+sort(howLong)
+mean(howLong)
+median(howLong)
+
+timing_good_Ps <- timing %>% filter(subID %in% rule_correct$subID)
+timing_good_Ps$duration <- as.numeric(as.duration(ymd_hms(timing_good_Ps$start) %--% ymd_hms(timing_good_Ps$stop)))
+
+under_20 <- timing_good_Ps %>%
+  filter(duration < 20*60)
+
+### Do people understand the rules?
+#cleaning the data about knowledge of the game rules
+ruleCheck <- ruleCheck %>% 
+    mutate(trueLabelPoints = ifelse(condition == "10_3", 10, 8)) %>%
+    mutate(trueClickPoints = ifelse(condition == "10_3", 3, 5))
+
+ruleCheck <- ruleCheck %>% 
+    mutate(labelCorr = ifelse(pointsLabel == trueLabelPoints, 1, 0)) %>%
+    mutate(clickCorr = ifelse(pointsClick == trueClickPoints, 1, 0)) %>%
+    mutate(wrongCorr = ifelse(pointsWrong == 0, 1, 0)) %>%
+    mutate(propQuestCorr = (clickCorr+labelCorr+wrongCorr)/3) %>%
+    select(-clickCorr, -labelCorr, -wrongCorr)
+
+ruleCheck %>% group_by(propQuestCorr) %>% summarize(n())
+
+
+# Final attention check
+attended <- attn %>% 
+    group_by(subID) %>% 
+    summarize(numObj = n(), corrObj = mean(correctRecog))
+attended <- attended %>%
+    filter(numObj == 9, corrObj == 1) %>%
+    select(subID)
+  
+attn %>% group_by(subID) %>% summarize(numObj = n(), corrObj = mean(correctRecog)) %>% group_by(numObj, corrObj) %>% summarize(n())
+
+
+# Think about filtering subjects out
+#select only those participants who knew all the rules before playing?
+rule_correct <- ruleCheck %>%
+  filter(! propQuestCorr == 1) %>%
+  select(subID)
+
+#cross section of attention check and rule check
+best_folks <- ruleCheck %>% 
+    filter(!subID %in% rule_correct$subID) %>% 
+    # filter(subID %in% 
+    # attended$subID) %>% 
+    # select(subID) %>%
+    # filter(subID %in% under_20$subID)
+
+#----------
+```
+
+
+
+
+
+```{r}
+all_data <- game %>%
+ # filter(subID %in% best_folks$subID) %>%
+  select(subID, condition, exposureRate, method, responseCorrect, realLabel) %>%
+  rename(communicationCorrect = responseCorrect) %>%
+  left_join(select(test, subID, realLabel, responseCorrect)) %>%
+  left_join(select(ruleCheck, subID, trueClickPoints, trueLabelPoints)) %>%
+  rename(known = responseCorrect) %>%
+  mutate(point_utility = trueClickPoints,
+         label_utility_perfect = trueLabelPoints*known)
+
+
+test_data <- test %>%
+   filter(subID %in% best_folks$subID) %>%
+  group_by(condition, exposureRate, subID) %>%
+  summarise(correct = mean(responseCorrect)) %>%
+  summarise(correct = mean(correct), n = n())
+
+seprop <- function(props) {
+  mean_prop = mean(props)
+  mean_prop * sqrt((1 - mean_prop)/length(props))
+}
+
+label_props <- all_data %>%
+  mutate(point_utility = 10*point_utility,
+         label_utility_perfect = 10 * label_utility_perfect) %>%
+  group_by(condition, exposureRate, subID) %>%
+  summarise(theoretical = sum(label_utility_perfect)/
+              (sum(label_utility_perfect + point_utility)),
+            empirical = mean(method == "label")) %>%
+  summarise_each(funs(mean, seprop), c(theoretical, empirical))
+
+group_ns <- all_data %>% group_by(condition, exposureRate, subID) %>%
+  distinct() %>%
+  group_by(condition, exposureRate) %>%
+  summarise(n = n())
+
+wide_label_props <- label_props %>%
+  gather(measure, value, - exposureRate, -condition) %>%
+  separate(measure, c("measure", "type")) %>%
+  spread(type, value) %>%
+  left_join(group_ns)
+
+
+ggplot(wide_label_props, aes(x = log(exposureRate), y = mean, 
+                             color = measure, shape=condition)) +
+  geom_pointrange(aes(ymax = mean + seprop, ymin = mean - seprop), 
+                  position = position_dodge(.5)) +
+  theme_bw()
+
+
+
+
+predicted_props <- old_wide_label_props %>% 
+  mutate(type = "original") %>% 
+  bind_rows(mutate(wide_label_props, type = "new"))
+
+ggplot(predicted_props, aes(x = log(exposureRate), y = mean, color = type)) +
+  facet_wrap(~ measure) +
+  geom_pointrange(aes(ymax = mean + seprop, ymin = mean - seprop))
+
+
+```
+
+
+
+
+
+
+
+
+### Old stuff for Pack-Ratting
+
+# Simple descriptives about how folks are doing...
+```{r}
+### How are people learning
+# Average 1/3 correct, range from 11% - 67%
+test_score <- test %>% group_by(subID) %>% summarize(propCorr = mean(responseCorrect))
+expKnow <- test %>% group_by(exposureRate) %>% summarize(U_label = mean(responseCorrect)) %>%
+  mutate(U2_label = U_label*U_label)
+#----------
+
+
+### How are people doing on the game?
+# 62% of trials, people were clicking. heterogeneous clicking rate across folks
+game %>% group_by(method) %>% summarize(n())
+  #need to deal with label_click trials, just drop them?
+game %>% 
+    filter(subID %in% rule_correct$subID) %>%
+    group_by(condition) %>% 
+    summarize(propGameClick = mean(method=='click'))
+
+# overall mostly correct (89% of trials). always correct for clicking.
+game %>% summarize(mean(responseCorrect))
+game %>% group_by(method) %>% summarize(mean(responseCorrect))
+
+# folks send a good message with more exposure. when using labels. 
+game %>% group_by(exposureRate) %>% summarize(mean(responseCorrect))
+game %>% group_by(method, exposureRate) %>% summarize(mean(responseCorrect))
+# people seem to label more with more exposure 
+game %>% group_by(condition, method, exposureRate) %>% summarize(n())
+
+
+#### my old bad code?
+tmp <- left_join(game, test, by=c("subID", "targetObjectName"))
+  # filter(subID %in% rule_correct$subID)
+tmp %>% group_by(method, responseCorrect.y) %>% summarize(mean(responseCorrect.x))
+#big split, if known at test --> seemingly more likely ot label. 
+# need to get subject level
+tmp %>% group_by(method, responseCorrect.y) %>% summarize(n())
+expKnow %>%
+  mutate(U_label= U_label*pointsForLabel, U2_label=U2_label*pointsForLabel) %>%
+  mutate(pLabel = (U_label)/(U_label + pointsForClick), pLabel2= (U2_label)/(U2_label + pointsForClick))
+tmp2 <- left_join(tmp, expKnow, by=c('exposureRate.x'='exposureRate')) %>%
+  mutate(U_label= U_label*pointsForLabel, U2_label=U2_label*pointsForLabel) %>%
+  mutate(pLabel = (U_label)/(U_label + pointsForClick), pLabel2= (U2_label)/(U2_label + pointsForClick))
+tmp2 %>% group_by(exposureRate.x) %>%  summarize(labelling = mean(method=='label'), avgPLabel= mean(pLabel), avgPLabel2= mean(pLabel2))
+#----------------------
+
+
+```
+
+#old Dan plots...
+```{r}
+tabulation <- tmp %>%
+  group_by(method, responseCorrect.x, responseCorrect.y, exposureRate.x) %>%
+  summarise(n = n()) %>%
+  group_by(method, exposureRate.x) %>%
+  mutate(n = n/sum(n))
+
+ggplot(tabulation, aes(y =  responseCorrect.x, x = responseCorrect.y, fill = n)) + 
+  facet_grid(exposureRate.x ~ method) + 
+  geom_tile() + 
+  theme_bw() + 
+  scale_fill_gradient(low = "white", high = "black")
+
+ggplot(tmp, aes(y =  responseCorrect.x, x = as.factor(responseCorrect.y), color = method)) + 
+  facet_grid(exposureRate.x ~ .) + 
+  geom_jitter(width = .1) +
+  theme_bw() 
+
+```
+
+
+
+
+
+
