@@ -15,6 +15,22 @@ h4 {
 	text-align: center;
 }
 
+td {
+	border: 1px solid black;
+	text-align:center;
+	padding-top: 15px;
+}
+
+th {
+	text-align:center;
+	padding-top: 15px;
+}
+
+.redText {
+	color: #ce1212;
+}
+
+
 
 /** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
 /*.slide {
