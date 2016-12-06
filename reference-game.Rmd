@@ -12,7 +12,7 @@ library(ggplot2)
 library(tidyr)
 library(lubridate)
 
-filenames <- list.files("reference_10_3/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("12.6_instructions_pilot/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -24,7 +24,7 @@ attn <- NULL
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
   # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
-  condition <- "10_3"
+  condition <- "100_30"
   subID <- i
   timing <- rbind(timing, as.data.frame(
       cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
@@ -35,12 +35,12 @@ for (i in 1:length(ldf)) {
     {attn <- rbind(attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
 }
 
-filenames <- list.files("reference_8_5/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("12.5_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
   # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
-  condition <- "8_5"
+  condition <- "80_50"
   subID <- nrow(ruleCheck) + 1
   timing <- rbind(timing, as.data.frame(
       cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
@@ -72,18 +72,25 @@ under_20 <- timing_good_Ps %>%
 
 ### Do people understand the rules?
 #cleaning the data about knowledge of the game rules
-ruleCheck <- ruleCheck %>% 
-    mutate(trueLabelPoints = ifelse(condition == "10_3", 10, 8)) %>%
-    mutate(trueClickPoints = ifelse(condition == "10_3", 3, 5))
+# ruleCheck <- ruleCheck %>% 
+#     mutate(trueLabelPoints = ifelse(condition == "100_30", 100, 80)) %>%
+#     mutate(trueClickPoints = ifelse(condition == "100_30", 30, 50))
+# 
+# ruleCheck <- ruleCheck %>% 
+#     mutate(labelCorr = ifelse(pointsLabel == trueLabelPoints, 1, 0)) %>%
+#     mutate(clickCorr = ifelse(pointsClick == trueClickPoints, 1, 0)) %>%
+#     mutate(wrongCorr = ifelse(pointsWrong == 0, 1, 0)) %>%
+#     mutate(propQuestCorr = (clickCorr+labelCorr+wrongCorr)/3) %>%
+#     select(-clickCorr, -labelCorr, -wrongCorr)
+# 
+# ruleCheck %>% group_by(propQuestCorr) %>% summarize(n())
 
-ruleCheck <- ruleCheck %>% 
-    mutate(labelCorr = ifelse(pointsLabel == trueLabelPoints, 1, 0)) %>%
-    mutate(clickCorr = ifelse(pointsClick == trueClickPoints, 1, 0)) %>%
-    mutate(wrongCorr = ifelse(pointsWrong == 0, 1, 0)) %>%
-    mutate(propQuestCorr = (clickCorr+labelCorr+wrongCorr)/3) %>%
-    select(-clickCorr, -labelCorr, -wrongCorr)
 
-ruleCheck %>% group_by(propQuestCorr) %>% summarize(n())
+# ruleCheck <- ruleCheck %>% select(subID, condition, pointsLabel, pointsClick, pointsWrong, pointsLabel, 
+#                      labelCorrect, clickCorrect, wrongCorrect, timestamp )
+ruleCheck %>% group_by(subID) %>% summarize(n())
+ruleCorrect <- ruleCheck %>% filter(labelCorrect, clickCorrect, wrongCorrect)
+
 
 
 # Final attention check
@@ -120,18 +127,19 @@ best_folks <- ruleCheck %>%
 
 ```{r}
 all_data <- game %>%
- # filter(subID %in% best_folks$subID) %>%
+  # filter(subID %in% ruleCorrect$subID) %>%
   select(subID, condition, exposureRate, method, responseCorrect, realLabel) %>%
   rename(communicationCorrect = responseCorrect) %>%
   left_join(select(test, subID, realLabel, responseCorrect)) %>%
   left_join(select(ruleCheck, subID, trueClickPoints, trueLabelPoints)) %>%
   rename(known = responseCorrect) %>%
   mutate(point_utility = trueClickPoints,
-         label_utility_perfect = trueLabelPoints*known)
+         label_utility_perfect = trueLabelPoints*known) %>%
+  left_join(expKnow)
 
 
 test_data <- test %>%
-   filter(subID %in% best_folks$subID) %>%
+#   filter(subID %in% best_folks$subID) %>%
   group_by(condition, exposureRate, subID) %>%
   summarise(correct = mean(responseCorrect)) %>%
   summarise(correct = mean(correct), n = n())
@@ -141,13 +149,18 @@ seprop <- function(props) {
   mean_prop * sqrt((1 - mean_prop)/length(props))
 }
 
+x <- 10
+
 label_props <- all_data %>%
-  mutate(point_utility = 10*point_utility,
-         label_utility_perfect = 10 * label_utility_perfect) %>%
+  mutate(point_utility = point_utility,
+         label_utility_perfect = label_utility_perfect * U_label) %>%
   group_by(condition, exposureRate, subID) %>%
-  summarise(theoretical = sum(label_utility_perfect)/
-              (sum(label_utility_perfect + point_utility)),
-            empirical = mean(method == "label")) %>%
+  summarise(theoretical = mean(label_utility_perfect > point_utility),
+         empirical = mean(method == "label")) %>%
+
+  # summarise(theoretical = sum(label_utility_perfect)/
+  #             (sum(label_utility_perfect + point_utility)),
+  #           empirical = mean(method == "label")) %>%
   summarise_each(funs(mean, seprop), c(theoretical, empirical))
 
 group_ns <- all_data %>% group_by(condition, exposureRate, subID) %>%
@@ -169,7 +182,8 @@ ggplot(wide_label_props, aes(x = log(exposureRate), y = mean,
   theme_bw()
 
 
-
+x <-.02
+(exp(x*100)) /(exp(x*100) + exp(x*30)) 
 
 predicted_props <- old_wide_label_props %>% 
   mutate(type = "original") %>% 
