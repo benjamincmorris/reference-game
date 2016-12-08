@@ -170,6 +170,9 @@ manual_remove <- as.vector(c(8, 6, 32, 38,7))
 ```{r}
 novelWords <- as.vector(c("blicket", "kreeb", "dofa", "wug", "toma", "dax", "fep", "pifo", "modi"))
 
+newNovels <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
+
+
 test2 <- test %>%
   rowwise() %>%
   mutate(testDistance = min(adist(typedLabel, novelWords))) %>%
