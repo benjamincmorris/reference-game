@@ -11,13 +11,14 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(lubridate)
+library(langcog)
+
 
 theme_set(theme_bw())
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
-filenames <- list.files("12.5_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -42,7 +43,7 @@ for (i in 1:length(ldf)) {
 
 ----------------
 
-filenames <- list.files("12.5_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
@@ -94,7 +95,7 @@ ruleCheck %>%
 
 # ruleCheck <- ruleCheck %>% select(subID, condition, pointsLabel, pointsClick, pointsWrong, pointsLabel, 
 #                      labelCorrect, clickCorrect, wrongCorrect, timestamp )
-ruleCheck %>% group_by(subID) %>% summarize(n())
+ruleCheck %>% group_by(subID) %>% summarize(n= n())
 ruleCorrect <- ruleCheck %>% filter(labelCorrect, clickCorrect, wrongCorrect)
 
 
@@ -103,18 +104,17 @@ ruleCorrect <- ruleCheck %>% filter(labelCorrect, clickCorrect, wrongCorrect)
 attended <- attn %>% 
     group_by(subID) %>% 
     summarize(numObj = n(), corrObj = mean(correctRecog))
-attended <- attended %>%
-    filter(numObj == 9, corrObj == 1) %>%
+attended %>%
+    filter(numObj == 8, corrObj == 1) %>%
     select(subID)
   
 attn %>% group_by(subID) %>% summarize(numObj = n(), corrObj = mean(correctRecog)) %>% group_by(numObj, corrObj) %>% summarize(n())
 
-
 # Think about filtering subjects out
 #select only those participants who knew all the rules before playing?
-rule_correct <- ruleCheck %>%
-  filter(! propQuestCorr == 1) %>%
-  select(subID)
+# rule_correct <- ruleCheck %>%
+#   filter(! propQuestCorr == 1) %>%
+#   select(subID)
 
 #cross section of attention check and rule check
 best_folks <- ruleCheck %>% 
@@ -137,6 +137,8 @@ best_folks <- ruleCheck %>%
 only_one_method <- game %>% group_by(subID) %>% 
   summarize(muchLabelling=mean(method=='label')) %>%
   filter(muchLabelling==1 |muchLabelling==0)
+# wow these people are doing so so well?
+
 
   #folks who respond with long(er) responses?
 too_many_letters <- game %>% 
@@ -152,8 +154,16 @@ too_many_letters$subID %in% only_one_method$subID
 
 
 ## manually dropping
-manual_remove <- as.vector(c(8, 6, 32, 38,7))
+# for 12.5
+# manual_remove <- as.vector(c(8, 6, 32, 38,7))
     # maybe also 21?             
+
+#for 12.8
+      # ehhh subID ==5?
+manual_remove <- as.vector(c(30, 17, 9, 5))
+game %>% filter(typedLabel =="crumpaper")
+game %>% filter(subID == 5) %>% select( subID, exposureRate, realLabel, typedLabel, adjLabel)
+
 ```
 
 
@@ -168,10 +178,8 @@ manual_remove <- as.vector(c(8, 6, 32, 38,7))
 
 
 ```{r}
-novelWords <- as.vector(c("blicket", "kreeb", "dofa", "wug", "toma", "dax", "fep", "pifo", "modi"))
-
-newNovels <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
-
+# oldNovelWords <- as.vector(c("blicket", "kreeb", "dofa", "wug", "toma", "dax", "fep", "pifo", "modi"))
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
 
 test2 <- test %>%
   rowwise() %>%
@@ -186,25 +194,26 @@ test2 <- test %>%
   mutate(testCorrect = ifelse(testClosest==realLabel, 1, 0),
          testCorrect = if_else(typedLabel == "UNKNOWN", as.double(NA), testCorrect))
 
+
 all_data <- game %>% 
-  filter(!subID %in% too_many_letters$subID) %>%
+  # filter(!subID %in% too_many_letters$subID) %>%
   filter(!subID %in% manual_remove) %>%
   select(subID, trialnum, condition, exposureRate, method, responseCorrect, realLabel, typedLabel) %>%
   rename(communicationCorrect = responseCorrect) %>%
   # cannot use 'which.min' because it doesn't find two minimums when of the same value
   rowwise() %>%
-  mutate(communicationDistance = min(adist(typedLabel, novelWords))) %>%
+  # mutate(communicationDistance = min(adist(typedLabel, novelWords))) %>%
   ## need ifelse because case of two identical minimums breaks the mutate by trying to return 2 elements
   ### hideous way of flipping a coin and randomly choosing that minimum in event of tie
   ###  if a three way (or more) tie is possible with these words, this code allows for it.
-  mutate(communicationClosest = ifelse(length(which(adist(typedLabel, novelWords) == communicationDistance))==1,
-           novelWords[which(adist(typedLabel, novelWords) == communicationDistance)],
-           novelWords[which(adist(typedLabel, novelWords) == communicationDistance)[sample(1:
-                        length(which(adist(typedLabel, novelWords) == communicationDistance)), 1)]])) %>%
-  mutate(communicationCorrected = ifelse(communicationClosest==realLabel, 1, 0)) %>%
-#  left_join(select(test, subID, realLabel, responseCorrect)) %>%
-   left_join(select(test2, subID, realLabel, testCorrect, responseCorrect)) %>%
-   left_join(select(ruleCheck, subID, trueClickPoints, trueLabelPoints)) %>%
+  # mutate(communicationClosest = ifelse(length(which(adist(typedLabel, novelWords) == communicationDistance))==1,
+  #          novelWords[which(adist(typedLabel, novelWords) == communicationDistance)],
+  #          novelWords[which(adist(typedLabel, novelWords) == communicationDistance)[sample(1:
+  #                       length(which(adist(typedLabel, novelWords) == communicationDistance)), 1)]])) %>%
+  # mutate(communicationCorrected = ifelse(communicationClosest==realLabel, 1, 0)) %>%
+  left_join(select(test, subID, realLabel, responseCorrect)) %>%
+   # left_join(select(test2, subID, realLabel, testCorrect, responseCorrect)) %>%
+   left_join(select(ruleCorrect, subID, trueClickPoints, trueLabelPoints)) %>%
   # if condition allows for repeated questions about rule, use line below, not above
   # left_join(select(ruleCorrect, subID, trueClickPoints, trueLabelPoints)) %>%
   rename(known = responseCorrect) %>%
@@ -227,21 +236,25 @@ game_data <- all_data_split %>%
 wrong_first_data <- all_data_split %>%
   left_join(select(game, subID, trialnum, typedLabel)) %>%
   arrange(condition, subID, exposureRate, realLabel, firstTrial) %>%
-  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"), 
+  # mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"), 
+  #                              levels = c("Label", "Point")),
+  #        lastCorrect = lag(communicationCorrected),
+  #        lastLabel = lag(typedLabel)) %>%
+  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"),
                                levels = c("Label", "Point")),
-         lastCorrect = lag(communicationCorrected),
+         lastCorrect = lag(communicationCorrect),
          lastLabel = lag(typedLabel)) %>%
   filter(lastResponse == "Label", !lastCorrect, method == "label") %>%
   ungroup() %>%
-  select(subID,realLabel, typedLabel,lastLabel) %>%
-  mutate(edit_dist = stringdist(typedLabel, realLabel, method = "lv"))
+  select(subID,realLabel, typedLabel,lastLabel)
+  # mutate(edit_dist = stringdist(typedLabel, realLabel, method = "lv"))
 
 
 second_trial_data <- all_data_split %>%
   arrange(condition, subID, exposureRate, realLabel, firstTrial) %>%
   mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"), 
                                levels = c("Label", "Point"))) %>%
-  mutate(lastCorrect = lag(communicationCorrected)) %>%
+  mutate(lastCorrect = lag(communicationCorrect)) %>%
   filter(firstTrial == "Second") %>%
   group_by(condition, exposureRate, lastResponse, lastCorrect, known, subID) %>%
   summarise(responseLabel = mean(method == "label", na.rm = T)) %>%
@@ -289,21 +302,11 @@ ggplot(game_data, aes(x = exposureRate, y = mean, color = firstTrial)) +
 
 
 
-#also seems like I could just do some careful sorting, than introduce 'first or second' directly
-novelWords <- as.vector(c("blicket", "kreeb", "dofa", "wug", "toma", "dax", "fep", "pifo", "modi"))
-all_data_split <- NULL
-for (i in 1:length(novelWords)) {
-  one_Word <- all_data %>%
-      filter(realLabel == novelWords[i]) %>%
-      mutate(firstOrSecond = rep(c(1,2), nrow(timing)))
-  all_data_split <- bind_rows(all_data_split, one_Word)
-}
 
-#for game trial two, want to take into account whether they got it right on trial one
-all_data_split <- all_data_split %>% 
-  mutate(label_utility_perfect = ifelse(firstOrSecond == 2, 
-                                        label_utility_perfect * communicationCorrect, 
-                                        label_utility_perfect))
+
+
+
+
 
 seprop <- function(props) {
   mean_prop = mean(props)
@@ -361,10 +364,66 @@ ggplot(predicted_props, aes(x = log(exposureRate), y = mean, color = type)) +
 
 ```
 
+```{r}
+model_data <- all_data_split %>%
+  mutate(known = as.character(known),
+         known = if_else(is.na(known), "NA", known),
+         known = factor(known, levels = c("NA", "0", "1")))
+
+
+glmer(as.factor(method) ~ exposureRate + condition + known + trialnum +
+        (exposureRate + trialnum|subID), data = model_data,
+    family = "binomial") %>%
+  summary()
+
+expLabel <- all_data_split %>%
+  group_by(condition, exposureRate) %>%
+  summarise(label_prop = mean(method == "label"))
+
+predictedLabelling <- expKnow %>%
+  separate(condition, into = c("labelPts", "pointPts"), sep = "_", remove = FALSE) %>%
+  mutate_each(funs(as.numeric), c(labelPts, pointPts)) %>%
+  mutate(U_pred= (U_label*labelPts)/(U_label*labelPts + pointPts),
+         U2_pred =  (U2_label*labelPts)/(U2_label*labelPts + pointPts)) %>%
+  left_join(expLabel)
+
+alpha <- 1
+
+predictTrialLabel <- all_data_split %>%
+  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"),
+                               levels = c("Label", "Point")),
+         lastCorrect = lag(communicationCorrect)) %>%
+  mutate(known = if_else(known == as.integer(0), as.integer(1), known),
+         known = if_else(is.na(known), as.integer(0), known)) %>%
+  # mutate(thinkKnow = if_else(!is.na(lastResponse) & lastResponse == "Label", lastCorrect, known)) %>%
+  mutate(thinkKnow = if_else(is.na(known), as.integer(0), known)) %>%
+   mutate(Upred= ((thinkKnow*trueLabelPoints)^alpha)/( ((thinkKnow*trueLabelPoints)^alpha) + 
+                                                         (trueClickPoints^alpha))) %>%
+  group_by(condition, exposureRate, subID) %>%
+  summarise(label = mean(method == "label"),
+                         Upred = mean(Upred)) %>%
+  summarise_each(funs(mean, sem), label, Upred)
+
+predictTrialLabelLong <- predictTrialLabel %>%
+  gather(type, value, -condition, -exposureRate) %>%
+  separate(type, into = c("type", "measure"), sep = "_") %>%
+  spread(measure, value)
+
+ggplot(predictTrialLabelLong, aes(x = exposureRate, y = mean, color = condition, linetype = type)) +
+  geom_pointrange(aes(ymin = mean - sem, ymax = mean + sem), position = position_dodge(.5))
+
+,
+         U2_pred =  (U2_label*labelPts)/(U2_label*labelPts + pointPts)) %>%
+  group_by(condition, exposureRate, subID, trueClickPoints, trueLabelPoints)
 
 
 
 
+cohen.d(as.numeric(as.factor(method)) ~ condition, data = filter(model_data,
+                                                                    known %in% c("NA","1"),
+                                                                 firstTrial == "First"))
+
+```
 
 
 
@@ -374,8 +433,12 @@ ggplot(predicted_props, aes(x = log(exposureRate), y = mean, color = type)) +
 ```{r}
 ### How are people learning
 # Average 1/3 correct, range from 11% - 67%
-test_score <- test %>% group_by(subID) %>% summarize(propCorr = mean(responseCorrect))
-expKnow <- test %>% group_by(exposureRate) %>% summarize(U_label = mean(responseCorrect)) %>%
+
+### need to adjust levDist known
+
+test_score <- test %>% group_by(subID) %>% summarize(propCorr = mean(responseCorrect,na.rm=T))
+expKnow <- test %>% group_by(condition,exposureRate) %>% 
+  summarize(U_label = sum(!is.na(responseCorrect), na.rm = T)/length(responseCorrect)) %>%
   mutate(U2_label = U_label*U_label)
 #----------
 
@@ -440,6 +503,30 @@ ggplot(tmp, aes(y =  responseCorrect.x, x = as.factor(responseCorrect.y), color 
 
 ```
 
+
+constructing input for receiver partipcants
+```{r}
+game_edit <- game %>% mutate(clickedObjectFixed = ifelse(!is.na(clickedObject), targetObjectName, NA))
+
+# are there trials where the clicked object is wrong?
+game %>% filter(clickedObject != realLabel)
+### for these, we need a separate code to tell grab the object they actually selected, since it's wrong
+### need to manually find which object it actually was because labels shuffle by particpant... 
+game_edit <- game_edit %>% mutate(clickedObjectFixed = ifelse(subID==16 & trialnum == 53, 
+                                                         "2025-600.jpg", clickedObjectFixed))
+game_edit <- game_edit %>% mutate(clickedObjectFixed = ifelse(subID==79 & trialnum == 48,
+                                                         "2007-600.jpg", clickedObjectFixed))
+game_edit <- game_edit %>% mutate(clickedObjectFixed = ifelse(subID==79 & trialnum == 51,
+                                                         "2009-600.jpg", clickedObjectFixed))
+game_edit %>% filter(clickedObject != realLabel)
+
+# check for any potentail errors if we combine with typedLabel
+game_edit  %>% filter(is.na(typedLabel)) %>% filter(is.na(clickedObjectFixed))  %>% head()
+
+game_edit <- game_edit %>% mutate(messageForPartner = ifelse(is.na(typedLabel), clickedObjectFixed, typedLabel)) %>% select(messageForPartner)
+
+messageForPartner <- game_edit$messageForPartner
+```
 
 
 
