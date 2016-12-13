@@ -44,8 +44,8 @@ messagesFromPartner = ["blicket", "mano", "2056-600.jpg", "wug", "2005-600.jpg"]
 function getRandomImages(imgAr, path, gameOrAttention, count) {
     shuffle(imgAr);
     var imgSet = [];
-    classes = " col-xs-4 col-lg-3 ";
-    offset= " col-xs-offset-0 col-lg-offset-2 ";
+    classes = " col-xs-4 ";
+    offset= " col-xs-offset-0 ";
     idTag= ' "instObject" '
     if (gameOrAttention=="game") {
     	classes = " col-xs-2 col-lg-2 toSelect ";
@@ -59,9 +59,9 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	//if were not building the array for the attention check, proceed here for a 3x3 display
     	if (gameOrAttention!="Attention") {
     		if (i==0 || i==3 || i==6) {
-    			imgSet[i] = '</div> <div class="row"><img style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '</div> <div class="row"><img class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
@@ -96,29 +96,29 @@ function fillArray(value, len) {
 
 // shifted to 1, 2, 4
 // need to output which object gets which level of exposure?
-function exposureStimuli(imgAr) {
-  shuffle(imgAr);
-  // set to constants
-  var exposureRate = [1, 2, 4]
-	  arr1 = fillArray(imgAr[0], exposureRate[0]);
-	  arr2 = fillArray(imgAr[1], exposureRate[0]);
-	  arr3 = fillArray(imgAr[2], exposureRate[0]);
-	  arr4 = fillArray(imgAr[3], exposureRate[1]);
-	  arr5 = fillArray(imgAr[4], exposureRate[1]);
-	  arr6 = fillArray(imgAr[5], exposureRate[1]);
-	  arr7 = fillArray(imgAr[6], exposureRate[2]);
-	  arr8 = fillArray(imgAr[7], exposureRate[2]);
-	  arr9 = fillArray(imgAr[8], exposureRate[2]);
-  exposureImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
-  shuffle(exposureImgs);
-  //keep calling this function until weve got an array with no back to back repeats!
-  for (i=0; i< exposureImgs.length -1 ; i++) {
-  	if (exposureImgs[i] === exposureImgs[i+1]) {
-  		exposureStimuli(imgAr);
-  	}
-  }
-  return exposureImgs;  
-}
+// function exposureStimuli(imgAr) {
+//   shuffle(imgAr);
+//   // set to constants
+//   var exposureRate = [1, 2, 4]
+// 	  arr1 = fillArray(imgAr[0], exposureRate[0]);
+// 	  arr2 = fillArray(imgAr[1], exposureRate[0]);
+// 	  arr3 = fillArray(imgAr[2], exposureRate[0]);
+// 	  arr4 = fillArray(imgAr[3], exposureRate[1]);
+// 	  arr5 = fillArray(imgAr[4], exposureRate[1]);
+// 	  arr6 = fillArray(imgAr[5], exposureRate[1]);
+// 	  arr7 = fillArray(imgAr[6], exposureRate[2]);
+// 	  arr8 = fillArray(imgAr[7], exposureRate[2]);
+// 	  arr9 = fillArray(imgAr[8], exposureRate[2]);
+//   exposureImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
+//   shuffle(exposureImgs);
+//   //keep calling this function until weve got an array with no back to back repeats!
+//   for (i=0; i< exposureImgs.length -1 ; i++) {
+//   	if (exposureImgs[i] === exposureImgs[i+1]) {
+//   		exposureStimuli(imgAr);
+//   	}
+//   }
+//   return exposureImgs;  
+// }
 
 //function that takes and image and looks up how many times it appears in a given array
 function getOccurences(img, imgAr) {
@@ -131,39 +131,39 @@ function getOccurences(img, imgAr) {
     return count;
 }
 
-function gameStimuli(imgAr) {
-  shuffle(imgAr);
-  arr1 = fillArray(imgAr[0], 2);
-  arr2 = fillArray(imgAr[1], 2);
-  arr3 = fillArray(imgAr[2], 2);
-  arr4 = fillArray(imgAr[3], 2);
-  arr5 = fillArray(imgAr[4], 2);
-  arr6 = fillArray(imgAr[5], 2);
-  arr7 = fillArray(imgAr[6], 2);
-  arr8 = fillArray(imgAr[7], 2);
-  arr9 = fillArray(imgAr[8], 2);
-  testImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
-  shuffle(testImgs);
-  //test for repreats, if they exist, redo the process
-  for (i=0; i< testImgs.length -1 ; i++) {
-  	if (testImgs[i] === testImgs[i+1]) {
-  		gameStimuli(imgAr);
-  	}
-  }
-  shuffledTestImgs = new Array;
-  for (i=0; i < testImgs.length; i++) {
-  	shuffledTestImgs[i] = '<img class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + testImgs[i] + '" alt = "'+ testImgs[i] +'">';
-  }
-  return shuffledTestImgs;
-}
+// function gameStimuli(imgAr) {
+//   shuffle(imgAr);
+//   arr1 = fillArray(imgAr[0], 2);
+//   arr2 = fillArray(imgAr[1], 2);
+//   arr3 = fillArray(imgAr[2], 2);
+//   arr4 = fillArray(imgAr[3], 2);
+//   arr5 = fillArray(imgAr[4], 2);
+//   arr6 = fillArray(imgAr[5], 2);
+//   arr7 = fillArray(imgAr[6], 2);
+//   arr8 = fillArray(imgAr[7], 2);
+//   arr9 = fillArray(imgAr[8], 2);
+//   testImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
+//   shuffle(testImgs);
+//   //test for repreats, if they exist, redo the process
+//   for (i=0; i< testImgs.length -1 ; i++) {
+//   	if (testImgs[i] === testImgs[i+1]) {
+//   		gameStimuli(imgAr);
+//   	}
+//   }
+//   shuffledTestImgs = new Array;
+//   for (i=0; i < testImgs.length; i++) {
+//   	shuffledTestImgs[i] = '<img class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + testImgs[i] + '" alt = "'+ testImgs[i] +'">';
+//   }
+//   return shuffledTestImgs;
+// }
 
-function pairObjectLabels(imgName) {
-  for (var i = 0; i < imgArrayFIXED.length; i++) {
-  	if (imgName===imgArrayFIXED[i]) {
-  		return novelWords[i]
-  	}
-  }
-}
+// function pairObjectLabels(imgName) {
+//   for (var i = 0; i < imgArrayFIXED.length; i++) {
+//   	if (imgName===imgArrayFIXED[i]) {
+//   		return novelWords[i]
+//   	}
+//   }
+// }
 
 function randomIntFromInterval(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
@@ -264,6 +264,95 @@ var levDist = function(s, t) {
     return d[n][m];
 }
 
+// function readTextFile(file)
+// {
+//     var rawFile = new XMLHttpRequest();
+//     rawFile.open("GET", file, true);
+//     rawFile.onreadystatechange = function ()
+//     {
+//         if(rawFile.readyState === 4)
+//         {
+//             if(rawFile.status === 200 || rawFile.status == 0)
+//             {
+//                 var allText = rawFile.responseText;
+//                 alert(allText);
+//             }
+//         }
+//     }
+//     rawFile.send(null);
+// }
+matchedGameArray = []
+matchedTargetArray = []
+matchedExposureArray = []
+matchedExposureLabelArray = []
+
+
+// $(document).ready(function() {
+//     $.ajax({
+//         type: "GET",
+//         url: "messagesForPartner.csv",
+//         dataType: "text",
+//         success: function(data) {processData(data,1, matchedGameArray)}
+//      });
+// });
+
+function getMatchedExposures(allText, subID) {
+    var allTextLines = allText.split(/\r\n|\n/);
+    var headers = allTextLines[0].split(',');
+    var lines = [];
+    var subjectRows = ((subID - 1) * 21) + 1
+
+    for (var i=subjectRows; i<(subjectRows+22); i++) {
+        var data = allTextLines[i].split(',');
+        if (data.length == headers.length) {
+
+            var tarr = [];
+            for (var j=0; j<headers.length; j++) {
+                tarr.push(data[j]);
+            }
+            lines.push(tarr);
+        }
+    }
+    for (var i=0; i<21; i++) {
+	    var thingOne = lines[i] + '';
+	    var cleanedOne = thingOne.split(",");
+	    var grabbedObject = cleanedOne[1].replace(/["]+/g, '')
+	    var grabbedLabel = cleanedOne[2].replace(/["]+/g, '')
+	    matchedExposureArray.push(grabbedObject)
+	    matchedExposureLabelArray.push(grabbedLabel)
+	}
+}
+
+function processData(allText, subID, array, otherArray) {
+    var allTextLines = allText.split(/\r\n|\n/);
+    var headers = allTextLines[0].split(',');
+    var lines = [];
+    var subjectRows = ((subID - 1) * 18) + 1
+
+    for (var i=subjectRows; i<(subjectRows+19); i++) {
+        var data = allTextLines[i].split(',');
+        if (data.length == headers.length) {
+
+            var tarr = [];
+            for (var j=0; j<headers.length; j++) {
+                tarr.push(data[j]);
+            }
+            lines.push(tarr);
+        }
+    }
+    for (var i=0; i<18; i++) {
+	    var thingOne = lines[i] + '';
+	    var cleanedOne = thingOne.split(",");
+	    var grabbedWord = cleanedOne[1].replace(/["]+/g, '')
+	    var grabbedTarget = cleanedOne[2].replace(/["]+/g, '')
+	    array.push(grabbedWord)
+	    otherArray.push(grabbedTarget)
+	}
+}
+
+
+    // for (var i=1; i<allTextLines.length; i++) {
+    // for (var i=(1+(subID*18)); i<(i+18); i++) {
 
 
 //-----------------------------------------------
@@ -271,11 +360,21 @@ var levDist = function(s, t) {
 // preload(attentionArray, 'tabletobjects/');
 // preload(familiarArray, 'images/familiar/');
 
+
+setTimeout(function() {						 
+						    $.ajax({
+						        type: "GET",
+						        url: "matchedExposures.csv",
+						        dataType: "text",
+						        success: function(data) {getMatchedExposures(data,20)}
+						     });
+			}, 1);
+
+
 shuffle(familiarArray)
-gameArray = gameStimuli(imgArray);
 
 //get full number of 'slides' to increment progress bar
-var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length + 1 + 1 + gameArray.length + 1 + 1;
+var totalSlides = 1 + 1 + 21 + 1 + imgArray.length + 1 + 1 + 18 + 1 + 1;
 // 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
 // plus a final 1 so that the final slide is not quite 100%
 
@@ -322,12 +421,12 @@ var experiment = {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
 		var index=0;
-		exposureArray = exposureStimuli(imgArray);
+		exposureArray = matchedExposureArray;
 		var exposureTrial = document.createElement("img");
 		exposureTrial.src = "tabletobjects/" + exposureArray[index];
 		exposureTrial.style.height = '400px';
 		document.getElementById('content').appendChild(exposureTrial);
-		var firstlabel = document.createTextNode(pairObjectLabels(exposureArray[index]));
+		var firstlabel = document.createTextNode(matchedExposureLabelArray[index]);
 		document.getElementById('label').appendChild(firstlabel);
 		document.getElementById("clickme").innerHTML = "Next";
 		setTimeout(function() {$("#clickme").fadeIn()}, 1250);
@@ -338,6 +437,7 @@ var experiment = {
 				phase : "exposure",
 				trialnum : slideNumber,
 				object: exposureArray[index],
+				realLabel: matchedExposureLabelArray[index], 
 				exposureRate : getOccurences(exposureArray[index], exposureArray),
 				timestamp: getCurrentTime(), //the time that the trial was completed at 
 				duration : time2 - time1,
@@ -362,7 +462,7 @@ var experiment = {
 				document.getElementById('content').lastChild);
 			document.getElementById('label').removeChild(
 				document.getElementById('label').lastChild);
-			var newLabel = document.createTextNode(pairObjectLabels(newPic));
+			var newLabel = document.createTextNode(matchedExposureLabelArray[i]);
 			var newImage = document.createElement("img");
 			newImage.src = "tabletobjects/" + newPic;
 			newImage.style.height = '400px';
@@ -377,6 +477,7 @@ var experiment = {
 					phase : "exposure",
 					trialnum : slideNumber,
 					object: newPic,
+					realLabel: matchedExposureLabelArray[i],
 					exposureRate : getOccurences(newPic, exposureArray),
 					timestamp: getCurrentTime(), //the time that the trial was completed at 
 					duration : time2 - time1,
@@ -496,11 +597,11 @@ var experiment = {
 						// final check, upper bound on edit distance. 
 						if (levDist(inputWord, candidate)>5) {candidate =""}
 					// if user enters the appropriate label, mark answer as correct
-					if(blah == pairObjectLabels(document.getElementById('orderedImage').alt)) {
-						var testCorrect=1;
-					} else {
-						var testCorrect=0;
-					}
+					// if(blah == pairObjectLabels(document.getElementById('orderedImage').alt)) {
+					// 	var testCorrect=1;
+					// } else {
+					// 	var testCorrect=0;
+					// }
 				}
 				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
 				//pass trial data for eventual output
@@ -509,12 +610,12 @@ var experiment = {
 					trialnum : slideNumber,
 					targetObjectName : document.getElementById('orderedImage').alt,
 					exposureRate : getOccurences(document.getElementById('orderedImage').alt, exposureArray),
-					realLabel : pairObjectLabels(document.getElementById('orderedImage').alt),
+					// realLabel : pairObjectLabels(document.getElementById('orderedImage').alt),
 					typedLabel: blah,
 						//label entered by particpant, null if no label entered or if (test trial) participant selected don't know
 					adjLabel: candidate,
 						// find closest vocab word by levDist and see if that is right
-					responseCorrect: testCorrect,
+					// responseCorrect: testCorrect,
 						//whether the response matched target, either as click or typed message. 
 					timestamp: getCurrentTime(), //the time that the trial was completed at 
 					duration: time2 - time1,
@@ -531,6 +632,7 @@ var experiment = {
 	prestudy: function(slideNumber) {
 		showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
+		document.getElementById("ifMessage").innerHTML = ""
 		$("#exampleText").show();
 		$("#howToPlay").show();
 		$("#typingExample").hide();
@@ -551,46 +653,58 @@ var experiment = {
 			$("#exampleText").hide()
 			$("#howToPlay").hide()
 			$("#ifClick").hide()
-			$("#ifRight").hide()
+			$("#ifType").hide()
 			//certain things need to be 'reset' that won't affect first viewing, but would affect Ps who get sent back to watch again.
 			document.getElementById("shoeTarget").style.border= ""
-			document.getElementById("ifTyping").value=""
-			$("#exampleTarget").fadeIn(500)
+			// document.getElementById("ifTyping").value=""
 			$("#clickArray").fadeIn(500)
 			$("#generalInst").fadeIn(500)
-			document.getElementById("clickText").innerHTML=" <br> Your partner will only see the nine objects shown on the right side of your screen."
+			document.getElementById("clickText").innerHTML="If you select the right object, you will win points."
 			//typing example, right message
-			setTimeout(function() {$("#clickText").fadeIn(500)}, 5000)			
-			document.getElementById("ifType").innerHTML="You can send a message by typing the object's label here...";
-			document.getElementById('ifTypePoints').innerHTML ="If your partner understands, <br> you will get <strong> " + trueLabelPoints + " points</strong>."
-			document.getElementById('ifRight').innerHTML ="Your job is to send them a message. <br> If your partner selects the right object based on your message, you will earn points."
-			setTimeout(function() {$("#ifRight").fadeIn(500)}, 8500)
+			setTimeout(function() {$("#clickText").fadeIn(500)
+									// fade this in as placeholder
+									document.getElementById("ifType").innerHTML="<strong> <br> </strong>"
+									$("#ifType").fadeIn(500)}, 6000)
+			setTimeout(function() {$("#clickText").fadeOut(500)}, 8501)
+			setTimeout(function() {document.getElementById("clickText").innerHTML="On some rounds, your partner will send you a label...";
+									$("#clickText").fadeIn(500)}, 9000)
+			setTimeout(function() {$("#ifType").fadeOut(500)}, 10501)
+			setTimeout(function() {document.getElementById("ifType").innerHTML="<strong> shoe </strong>"
+									$("#ifType").fadeIn(500)}, 11000)
+			setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px black solid"}, 13000)
+			setTimeout(function () {document.getElementById("ifMessage").innerHTML = "On these rounds, if you select the right object, <br> you will get <strong> " + trueLabelPoints + " points.</strong>"
+									$("#ifMessage").fadeIn(500)}, 13000)
 			setTimeout(function() {$("#clickText").fadeOut(500)
-									$("#ifRight").fadeOut(500)}, 14500)
-			setTimeout(function() {$("#typingExample").fadeIn(500)}, 15000)
-			setTimeout(function() {document.getElementById("ifTyping").value="s"}, 15500)
-			setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 15700)
-			setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 15900)
-			setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 16100)
-			setTimeout(function() {$("#typingExample").fadeOut(500)}, 20000); 
+									$("#ifMessage").fadeOut(500)
+									$("#ifType").fadeOut(500)
+									}, 17501)
 			//typing exmaple, wrong messsage
-			setTimeout(function() {$("#typingExample").fadeIn(500);
-					document.getElementById("ifTyping").value=""; 
-					document.getElementById("ifType").innerHTML="But if your partner gets it wrong based on your message...";
-					document.getElementById("ifTypePoints").innerHTML="You will get <strong> 0 points</strong>."}, 20500)
-			setTimeout(function() {document.getElementById("ifTyping").value="c"}, 20700)
-			setTimeout(function() {document.getElementById("ifTyping").value="ch"}, 20900)
-			setTimeout(function() {document.getElementById("ifTyping").value="cha"}, 21100)
-			setTimeout(function() {document.getElementById("ifTyping").value="chai"}, 21300)
-			setTimeout(function() {document.getElementById("ifTyping").value="chair";
-									document.getElementById("clickText").innerHTML="<br> You can also send a message by clicking the object here..."}, 21500)
+			setTimeout(function() {document.getElementById("shoeTarget").style.border= "";
+									document.getElementById("clickText").innerHTML="But sometimes, that label might be wrong or unhelpful...";
+									document.getElementById("ifType").innerHTML="<strong> <br> </strong>";
+									$("#clickText").fadeIn(500)
+									$("#ifType").fadeIn(500)
+									}, 18000)
+			// setTimeout(function() {$("#ifMessage").fadeIn(500)}, 19000)
+			setTimeout(function() {$("#ifType").fadeOut(500)}, 20001)
+			setTimeout(function() {document.getElementById("ifType").innerHTML="<strong> asdf </strong>";
+									$("#ifType").fadeIn(500)}, 20500)
+			setTimeout(function() {document.getElementById("distractor").style.border= "3px black solid"}, 23000)
+			setTimeout(function () {document.getElementById("ifMessage").innerHTML = "If you select the wrong object, <br> you will get <strong> 0 points.</strong>"
+									$("#ifMessage").fadeIn(500)}, 23000)
+			setTimeout(function() {$("#clickText").fadeOut(500)
+									$("#ifMessage").fadeOut(500)
+									$("#ifType").fadeOut(500)
+									document.getElementById("distractor").style.border= ""
+									document.getElementById("shoeTarget").style.border= "" }, 26001)
 			///clicking example
-			setTimeout(function() {$("#typingExample").fadeOut(500)}, 25000)
-			setTimeout(function() {$("#clickText").fadeIn(500)}, 25500)
-			setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px black solid"}, 27000)
-			setTimeout(function() {document.getElementById("ifClick").innerHTML="and you will get <strong> "+trueClickPoints+" points</strong> <br> when your partner gets it right."
-									$("#ifClick").fadeIn(500)}, 28500)
-			setTimeout(function() {$("#gameReady").fadeIn(500)}, 30000)
+			setTimeout(function() {document.getElementById("clickText").innerHTML="<br> On other rounds, your partner may click on an object <br> and you would see something like this..."}, 26500)
+			setTimeout(function() {$("#clickText").fadeIn(500)}, 26500)
+			setTimeout(function() {document.getElementById("shoeTarget").style.border= "1px black dashed"}, 28000)
+			setTimeout(function() {document.getElementById("ifMessage").innerHTML="in which case you could win <strong> "+trueClickPoints+" points</strong> <br> if you choose the right object."
+									$("#ifMessage").fadeIn(500)}, 29500)
+			setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px black solid"
+								$("#gameReady").fadeIn(500)}, 32000)
 		}
 		//switch to the slide of questions about the game rules
 		document.getElementById("gameReady").onclick = function() {
@@ -660,7 +774,14 @@ var experiment = {
 						$('#wrongCorrection').show();
 						document.getElementById("beginGame").innerHTML = "Begin Game";
 						setTimeout(function() {$('#beginGame').fadeIn(500)}, 1000);
-						document.getElementById("beginGame").onclick = function() {experiment.game(0, 0, slideNumber+2)};
+						document.getElementById("beginGame").onclick = function() {
+						    $.ajax({
+						        type: "GET",
+						        url: "matchedGameTrials.csv",
+						        dataType: "text",
+						        success: function(data) {processData(data,20, matchedGameArray, matchedTargetArray)}
+						     });
+							experiment.game(0, 0, slideNumber+2)};
 					}		
 				}
 		}
@@ -672,7 +793,16 @@ var experiment = {
 
 	game: function(score, roundNumber, slideNumber) {
 		time1 = new Date().getTime();
+		// setTimeout(function() {
+		// 					$.ajax({
+		// 				        type: "GET",
+		// 				        url: "matchedGameTrials.csv",
+		// 				        dataType: "text",
+		// 				        success: function(data) {processData(data,3, matchedGameArray, matchedTargetArray)}
+		// 				     });
+		// 			}, 1)
 		showSlide("referenceGame");
+		$("#objects2").fadeIn(500)
 		document.getElementById("myScore").innerHTML = score;
 		$("#messageFromPartner").hide()
 		$("#sendMessage").show();
@@ -689,7 +819,7 @@ var experiment = {
 								$("#spinningWaiting").hide()
 								}, waitTime);
 		setTimeout(function() {$("#yourPartnerSent").fadeIn(500);
-								$("#partnerMessage").fadeIn(500);}, waitTime)
+								$("#partnerMessage").fadeIn(500)}, waitTime)
 		$("#nextRound").hide();
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
@@ -702,11 +832,13 @@ var experiment = {
 					this.style.border="5px solid black";
 					document.getElementById("sendMessage").disabled = false;
 					// possible points determined by the type of trial, receiving a click message or label message	
-					if (getOccurences(messagesFromPartner[roundNumber], imgArray)>0) {
+					if (getOccurences(matchedGameArray[roundNumber], imgArray)>0) {
 						receivedMessage = 'click';
+						typedMessage= '';
 						document.getElementById("sendMessage").innerHTML="Select Object for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>";
 					} else {
 						receivedMessage = 'label';
+						typedMessage = matchedGameArray[roundNumber];
 						document.getElementById("sendMessage").innerHTML="Select Object for <strong> <em> " +trueLabelPoints+" Possible Points </em> </strong>";
 					}
 					selection = this.alt;
@@ -719,7 +851,7 @@ var experiment = {
 					// if you have selected an object, and are trying to click another object, do nothing.
 					if (this.style.border!="5px solid black") {return}
 					// otherwise, revert the selection, check if this is a clicked message situation and make appropriate change 
-					if (messagesFromPartner[roundNumber] == this.alt) {
+					if (matchedGameArray[roundNumber] == this.alt) {
 						this.style.border= "2px dashed black";
 					} else {this.style.border=""}
 					// if there is a label typed out, keep the sendMessage button enabled and change it to 10 possible points
@@ -731,32 +863,31 @@ var experiment = {
 		document.getElementById("sendMessage").disabled = true;
 		document.getElementById("partnerMessage").innerHTML = "";
 		setTimeout(function() {		
-			if (getOccurences(messagesFromPartner[roundNumber], imgArray)>0) {
+			if (getOccurences(matchedGameArray[roundNumber], imgArray)>0) {
 				document.getElementById("yourPartnerSent").innerHTML = "Your partner clicked on this object:";
 				$('.toSelect').each(function() {
-					if (this.alt == messagesFromPartner[roundNumber]) {
+					if (this.alt == matchedGameArray[roundNumber]) {
 						this.style.border= "2px dashed black";
 					}
 				})
 			} else {
 				document.getElementById("yourPartnerSent").innerHTML = "Your partner sent this message:";
-				document.getElementById("partnerMessage").innerHTML = messagesFromPartner[roundNumber];
+				document.getElementById("partnerMessage").innerHTML = matchedGameArray[roundNumber];
 			}
 		}, waitTime);
 		document.getElementById("sendMessage").onclick = function() {
 			time2 = new Date().getTime();
 			$('.toSelect').click(function() {return false;});
-			if(selection != targetArrayFromPartner[roundNumber]) {isCorrect = 0};
+			if(selection != matchedTargetArray[roundNumber]) {isCorrect = 0};
 			if(message==0) {return}
 
 			//store trial data before moving on
 			gameTrials = {
 				phase : "game",
 				trialnum : slideNumber,
-				targetObjectName : " ",
-				exposureRate : " ",
-				realLabel : " ",
-				receivedMessage : receivedMessage,
+				targetObjectName : matchedTargetArray[roundNumber],
+				receivedMessageType : receivedMessage,
+				typedMessage : typedMessage,
 				clickedObject: selection,
 					//the object clicked on by the pariticpant during the game, null if typed response was chosen
 				responseCorrect: isCorrect,
@@ -767,31 +898,55 @@ var experiment = {
 			};
 			experiment.gameTrials.push(gameTrials);
 			//send message, return 'partner response'
-			numOfGames = gameArray.length; 
-			if (roundNumber < numOfGames) {
+			// it went one slide too long?
+			numOfGames = matchedGameArray.length - 1; 
+			
 				if(receivedMessage=='click' & isCorrect==1) {$("#sendMessage").hide(); 
 									document.getElementById("messageFromPartner").innerHTML = "Nice work- you chose the right object!";
 									$("#messageFromPartner").fadeIn(500);
 									document.getElementById("myScore").innerHTML = score + trueClickPoints;
-									setTimeout(function() {experiment.game(score + trueClickPoints,roundNumber+1, slideNumber+1)}, 1500);
+									setTimeout(function() {$("#messageFromPartner").fadeOut(500)
+															$("#objects2").fadeOut(500)
+															$("#partnerMessage").fadeOut(500)
+															$("#yourPartnerSent").fadeOut(500)															
+															}, 1500);
+									if (roundNumber < numOfGames) {
+										setTimeout(function() {experiment.game(score + trueClickPoints,roundNumber+1, slideNumber+1)}, 2000);
+									} else {
+										setTimeout(function() {experiment.attentionCheck(slideNumber+1)}, 2000);										
+									}
 				}
 				if(receivedMessage=='label' & isCorrect==1) {$("#sendMessage").hide(); 
 									document.getElementById("messageFromPartner").innerHTML = "Nice work- you chose the right object!";
 									$("#messageFromPartner").fadeIn(500);
-									document.getElementById("myScore").innerHTML = score + trueLabelPoints;									
-									setTimeout(function() {experiment.game(score + trueLabelPoints,roundNumber+1, slideNumber+1)}, 1500);
+									document.getElementById("myScore").innerHTML = score + trueLabelPoints;
+									setTimeout(function() {$("#messageFromPartner").fadeOut(500)
+															$("#objects2").fadeOut(500)
+															$("#partnerMessage").fadeOut(500)
+															$("#yourPartnerSent").fadeOut(500)															
+															}, 1500);									
+									if (roundNumber < numOfGames) {										
+										setTimeout(function() {experiment.game(score + trueLabelPoints,roundNumber+1, slideNumber+1)}, 2000);
+									} else {
+										setTimeout(function() {experiment.attentionCheck(slideNumber+1)}, 2000);										
+									}									
 				}
 				// label or sellection is incorrect is case message = 3
 				if(isCorrect==0) {$("#sendMessage").hide(); 
 									document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like you chose the wrong object!";
 									$("#messageFromPartner").fadeIn(500);
-									document.getElementById("myScore").innerHTML = score;									
-									setTimeout(function() {experiment.game(score,roundNumber+1, slideNumber+1)}, 1500);
+									document.getElementById("myScore").innerHTML = score;
+									setTimeout(function() {$("#messageFromPartner").fadeOut(500)
+															$("#objects2").fadeOut(500)
+															$("#partnerMessage").fadeOut(500)
+															$("#yourPartnerSent").fadeOut(500)
+															}, 1500);
+									if (roundNumber < numOfGames) {										
+										setTimeout(function() {experiment.game(score,roundNumber+1, slideNumber+1)}, 2000);
+									} else {
+										setTimeout(function() {experiment.attentionCheck(slideNumber+1)}, 2000);										
+									}									
 				}
-			} else {
-				document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like your partner chose the wrong object!";
-				document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)};
-			}
 		}	
 	},
 
@@ -809,11 +964,7 @@ var experiment = {
 					this.style.border="";
 					clicked=0;
 					//but we also need to remove that item from the array being built of selected recognized objects
-					if (pairObjectLabels(this.alt) == undefined) {
-						var toBeRemoved = recognizedItems.indexOf(this.alt)
-					} else {
-						var toBeRemoved=recognizedItems.indexOf(pairObjectLabels(this.alt))
-					}
+					var toBeRemoved=recognizedItems.indexOf(this.alt)
 					recognizedItems.splice(toBeRemoved, 1);
 				}
 				else {
@@ -831,13 +982,13 @@ var experiment = {
 		document.getElementById("endStudy").onclick = function() {
 			//store data for the attention check.
 			for (var i = 0; i<recognizedItems.length; i++) {
-				if (pairObjectLabels(recognizedItems[i]) != undefined) {
-					correct = 1
-				} else {correct=0};
+				// if (pairObjectLabels(recognizedItems[i]) != undefined) {
+				// 	correct = 1
+				// } else {correct=0};
 				attnCheck= {
 					phase: "attnCheck",
 					recognizedObject : recognizedItems[i],
-					correctRecog : correct
+					// correctRecog : correct
 				}
 				experiment.attnCheck.push(attnCheck);
 			}
@@ -855,7 +1006,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-experiment.game(0,0,20);
+experiment.prestudy(0,0,20);
 
 
 

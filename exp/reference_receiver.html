@@ -35,7 +35,7 @@
 		<div class="progress">
 		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
 		</div>
-	      <center> <div class="row col-xs-6 col-xs-offset-3" id="objects"> </div> </center>
+	      <center> <div class="row col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4" id="objects"> </div> </center>
 	      <div class="row" id="objects">
 	        <p class="block-text col-xs-offset-3 col-xs-6 ">Each of these objects has a label that identifies it. Your job is to learn those labels and then send messages to another player to that player to select a particular object. 
 	        <br><br>
@@ -94,54 +94,42 @@
 		</div>
     	<div class="container">
 	       	<div class="row" id="prestudy">
-		        <p style="margin-top: 50px" id="exampleText" class="block-text col-xs-offset-2 col-xs-8 col-md-7"> You are almost ready to play our game! <br> <br> Before we start, let's walk through an example where we will communicate in English about familiar objects. But remember, in the game you will be communicating in our made up language about the objects you have just been learning about.
+		        <p style="margin-top: 50px" id="exampleText" class="block-text col-xs-offset-2 col-xs-8 col-md-7"> You are almost ready to play our game! <br> <br> Before we start, let's walk through an example where we will communicate in English about familiar objects. But remember, in the game you will receive messages in our made up language about the objects you have just been learning about.
                 <br>
                 </p>
             </div>
             <center> <div style="padding:20px"> <button id="howToPlay"> Tell Me How To Play </button> </div> <center>            
             <div class="row" id="example" style="padding: 0px">
-                <p id="generalInst"> Each round, this is what you will see. <br> Your goal is to get another player to guess the object on the left side of your screen. </p>
+                <p id="generalInst"> Each round, this is what you will see. <br> You will get a message from your partner about one of the objects. <br> Your job is to select that object - <strong> in this case, the pink sneaker. </strong> </p>
                 <div class="row" style="padding-top:20px" id="textRow">
-                    <div class="col-xs-6"> <p> <br> <br> <br> </p> </div>
-                    <div class="col-xs-6" id="clickArrayText">
+                    <div class="col-xs-10 col-xs-offset-1 col-lg-8 col-lg-offset-2" id="clickArrayText">
+                        <center> <p id="theMessage" > </p> </center>
                         <center> <p class="redText" id="clickText"> <br>  </p> </center>
+                        <center> <p id="ifType" >  </p> </center>
                     </div>
                 </div>
                 <div class="row" id="imageRow">
-                	<div class="col-xs-5">
-                		<div id="exampleTarget">
-    	            		<!-- <center> <p style="margin:20px"> This is the target object: </p> </center> -->
-    	            		<div class="row" > 
-    	            			<img style="margin-top:50px" src="images/familiar/shoe.jpg" class="col-xs-8 col-xs-offset-2 col-md-offset-1 col-md-10"> 
-    	            		</div>
-    	            			<center> <p id="ifRight" > </p> </center>
-    	            		<div id="typingExample" >
-    		            		<center> <p id="ifType" >  </p> </center>
-    		            		<center> <input type="text" id="ifTyping">  </input> </center>
-    		            		<center> <p id="ifTypePoints" > </p> </center>
-    	            		</div>
-    	            	</div>
-                	</div>
-                	<div class="col-xs-6 col-xs-offset-1" id="clickArray">
-                	
-                		<div class="row" >
-                			<img id="famObject1" src="images/familiar/pen.jpg" class="col-xs-4">
-                			<img id="famObject1" src="images/familiar/computer.jpg" class="col-xs-4">
-                			<img id="shoeTarget" src="images/familiar/shoe.jpg" class="col-xs-4">
-                		</div>
-                		<div class="row">
-                			<img src="images/familiar/phone.jpg" class="col-xs-4">
-                			<img src="images/familiar/newspaper.jpg" class="col-xs-4">
-                			<img src="images/familiar/plant.jpg" class="col-xs-4">
-                		</div>
-                		<div class="row">
-                			<img src="images/familiar/key.jpg" class="col-xs-4">
-                			<img src="images/familiar/chair.jpg" class="col-xs-4">
-                			<img src="images/familiar/apple.jpg" class="col-xs-4">
-                		</div>
-                		<center> <p id="ifClick" >  </p> </center>
+                	<div class="col-xs-8 col-xs-offset-2" id="clickArray">
+                        <div class="col-xs-10 col-xs-offset-1 col-lg-8 col-lg-offset-2">
+                    		<div class="row" >
+                    			<img id="famObject1" src="images/familiar/pen.jpg" class="col-xs-4">
+                    			<img id="famObject1" src="images/familiar/computer.jpg" class="col-xs-4">
+                    			<img id="shoeTarget" src="images/familiar/shoe.jpg" class="col-xs-4">
+                    		</div>
+                    		<div class="row">
+                    			<img src="images/familiar/phone.jpg" class="col-xs-4">
+                    			<img src="images/familiar/newspaper.jpg" class="col-xs-4">
+                    			<img src="images/familiar/plant.jpg" class="col-xs-4">
+                    		</div>
+                    		<div class="row">
+                    			<img src="images/familiar/key.jpg" class="col-xs-4">
+                    			<img id="distractor" src="images/familiar/chair.jpg" class="col-xs-4">
+                    			<img src="images/familiar/apple.jpg" class="col-xs-4">
+                    		</div>
+                        </div>
                 	</div>
                 </div>
+                <div class="row"> <center> <p id="ifMessage" >  </p> </center> </div>
             </div>            			
 			<center> <div style="padding:20px"> <button type="button"  id="gameReady" onClick="this.blur()"> I'm Ready</button> </div> </center>
     	</div>
@@ -157,15 +145,15 @@
 		        <br> <br>
 		        <form form-name="gameCheckForm" id="GameCheckForm">
                     <fieldset>
-			        <p class="col-xs-6 col-xs-offset-1">If I click on the object, and my partner gets it right, how many points will I get? </p> 
+			        <p class="col-xs-6 col-xs-offset-1">If my partner clicked on the object, and I get it right, how many points will I get? </p> 
 			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForClick"> </div> </center>
                         <p id="clickCorrection" class="col-xs-offset-2" style="font-weight:bold"></p>
 			       		<br>
-			       	<p class="col-xs-6 col-xs-offset-1">If I type the object label, and my partner gets it right, how many points will I get? </p>
+			       	<p class="col-xs-6 col-xs-offset-1">If my partner sends an object label, and I get it right, how many points will I get? </p>
                         <div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForLabel"> </div> </center>
                         <p id="labelCorrection" class="col-xs-offset-2" style="font-weight:bold"> </p>
                         <br> 
-			        <p class="col-xs-6 col-xs-offset-1"> If my partner chooses the <em> incorrect </em> object based on my message, how many points will I get? </p>
+			        <p class="col-xs-6 col-xs-offset-1"> If I choose the <em> incorrect </em> object based on my partner's message, how many points will I get? </p>
 			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForWrong"> </div> </center>
                         <center> <p id="wrongCorrection" style="padding: 20px 0 0 10px; font-weight:bold"> </p> </center>
 			        	<br>
@@ -184,10 +172,10 @@
         <div class="row">
             <div >
             	<center> <p style="margin-top: 2%" id="yourPartnerSent"> <br> </p> </center>
-                <center> <p style="font-size:25px; font-weight:bold; margin-top:-10px; margin-bottom:-20px" id="partnerMessage"> </p> </center>
+                <center> <p style="font-size:25px; font-weight:bold; margin-top:-10px; margin-bottom:-25px" id="partnerMessage"> </p> </center>
                 <center><div id="waitingForPartner" style="margin-top:20px">  Your partner is thinking.... </div> </center>
-                <div style="padding-bottom:25px"> <center><div id="spinningWaiting">  </div> </center> </div>
-    	       <div id="objects2" class="objectArray"> </div> 
+                <div style="padding:10px 0 30px 15px"> <center><div id="spinningWaiting">  </div> </center> </div>
+    	        <div class="col-xs-12 col-md-10 col-lg-8 col-lg-offset-2 col-md-offset-1"> <div id="objects2" class="objectArray"> </div> </div>
             </div>
         </div> 
         <center><div><button type="button" id="sendMessage" style="margin-top:27px" onClick="this.blur()"> </button></div></center> 

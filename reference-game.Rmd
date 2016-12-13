@@ -23,6 +23,7 @@ ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
 timing <- NULL
+exposures <- NULL
 ruleCheck <- NULL
 game <- NULL
 test<- NULL
@@ -34,6 +35,7 @@ for (i in 1:length(ldf)) {
   subID <- i
   timing <- rbind(timing, as.data.frame(
       cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  exposures <- rbind(exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
   ruleCheck <- rbind(ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
   test <- rbind(test, cbind(subID, condition, janeDoe$answers$data$testTrials))
   game <- rbind(game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
@@ -41,7 +43,7 @@ for (i in 1:length(ldf)) {
     {attn <- rbind(attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
 }
 
-----------------
+### ----------------
 
 filenames <- list.files("12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
@@ -49,9 +51,10 @@ for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
   # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
   condition <- "80_50"
-  subID <- nrow(ruleCheck) + 1
+  subID <- nrow(timing) + 1
   timing <- rbind(timing, as.data.frame(
       cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  exposures <- rbind(exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
   ruleCheck <- rbind(ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
   test <- rbind(test, cbind(subID, condition, janeDoe$answers$data$testTrials))
   game <- rbind(game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
@@ -61,6 +64,8 @@ for (i in 1:length(ldf)) {
 
 
 test <- test %>% mutate(responseCorrect = if_else(typedLabel == "UNKNOWN", as.integer(NA), responseCorrect))
+
+exposureData <- exposures %>% group_by(subID, exposureRate) %>% summarize(duration = sum(duration)) %>% spread(exposureRate,duration) %>% mutate(messyExposure = `4` - `2` - `1`)
 ```
 
 ## Basics: Duration, Attention...
@@ -160,6 +165,7 @@ too_many_letters$subID %in% only_one_method$subID
 
 #for 12.8
       # ehhh subID ==5?
+## 14? 10? 15?
 manual_remove <- as.vector(c(30, 17, 9, 5))
 game %>% filter(typedLabel =="crumpaper")
 game %>% filter(subID == 5) %>% select( subID, exposureRate, realLabel, typedLabel, adjLabel)
@@ -523,11 +529,19 @@ game_edit %>% filter(clickedObject != realLabel)
 # check for any potentail errors if we combine with typedLabel
 game_edit  %>% filter(is.na(typedLabel)) %>% filter(is.na(clickedObjectFixed))  %>% head()
 
-game_edit <- game_edit %>% mutate(messageForPartner = ifelse(is.na(typedLabel), clickedObjectFixed, typedLabel)) %>% select(messageForPartner)
+game_edited <- game_edit %>% mutate(messageForPartner = ifelse(is.na(typedLabel), clickedObjectFixed, typedLabel)) %>% select(messageForPartner, targetObjectName)
 
-messageForPartner <- game_edit$messageForPartner
+messageForPartner <- game_edited$messageForPartner
+write.csv(game_edited, "matchedGameTrials.csv")
 ```
 
+also get the exposures for receiver participants
+```{r}
+labels <- test %>% select(subID, targetObjectName, realLabel, exposureRate)
+hm <- left_join(exposures, labels, by=c("subID", "object"="targetObjectName"))
+hm <- hm %>% select(object, realLabel)
+write.csv(hm, "matchedExposures.csv")
+```
 
 
 
