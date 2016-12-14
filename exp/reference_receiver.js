@@ -38,6 +38,7 @@ targetArrayFromPartner = ["2002-600.jpg", "2001-600.jpg", "2056-600.jpg", "2005-
 
 messagesFromPartner = ["blicket", "mano", "2056-600.jpg", "wug", "2005-600.jpg"];
 
+
 // ---------------- HELPER ------------------
 
 // function to display nine random object images in a grid (uses bootstrap)
@@ -360,13 +361,34 @@ function processData(allText, subID, array, otherArray) {
 // preload(attentionArray, 'tabletobjects/');
 // preload(familiarArray, 'images/familiar/');
 
+// Condition - call the maker getter to get the cond variable 
+// try {
+//     var filename = "subIDs"
+//     var condCounts = "100_30"
+//     var xmlHttp = null;
+//     xmlHttp = new XMLHttpRequest();
+//     xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/maker_getter.php?conds=" + 
+//     condCounts +"&filename=" + filename, false );
+//     xmlHttp.send( null );
+//     var cond = xmlHttp.responseText;
+// } catch (e) {
+//     var cond = 1;
+// }
+
+try {subjectIdentifier = cond;
+} catch (e) {
+	subjectIdentifier = 20;
+}
+
+
+
 
 setTimeout(function() {						 
 						    $.ajax({
 						        type: "GET",
 						        url: "matchedExposures.csv",
 						        dataType: "text",
-						        success: function(data) {getMatchedExposures(data,20)}
+						        success: function(data) {getMatchedExposures(data,subjectIdentifier)}
 						     });
 			}, 1);
 
@@ -389,6 +411,8 @@ for(var i = 0; i<progressBars.length; i++) {
 document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
 //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
 shuffle(imgArrayFIXED);
+
+
 
 
 // MAIN EXPERIMENT
@@ -630,9 +654,8 @@ var experiment = {
 	},
 
 	prestudy: function(slideNumber) {
-		showSlide("prestudy");
+				showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
-		document.getElementById("ifMessage").innerHTML = ""
 		$("#exampleText").show();
 		$("#howToPlay").show();
 		$("#typingExample").hide();
@@ -653,58 +676,42 @@ var experiment = {
 			$("#exampleText").hide()
 			$("#howToPlay").hide()
 			$("#ifClick").hide()
-			$("#ifType").hide()
+			$("#ifRight").hide()
 			//certain things need to be 'reset' that won't affect first viewing, but would affect Ps who get sent back to watch again.
 			document.getElementById("shoeTarget").style.border= ""
-			// document.getElementById("ifTyping").value=""
+			document.getElementById("ifTyping").value=""
+			$("#exampleTarget").fadeIn(500)
 			$("#clickArray").fadeIn(500)
 			$("#generalInst").fadeIn(500)
-			document.getElementById("clickText").innerHTML="If you select the right object, you will win points."
+			document.getElementById("clickText").innerHTML=" <br> You will only see the nine objects."
 			//typing example, right message
-			setTimeout(function() {$("#clickText").fadeIn(500)
-									// fade this in as placeholder
-									document.getElementById("ifType").innerHTML="<strong> <br> </strong>"
-									$("#ifType").fadeIn(500)}, 6000)
-			setTimeout(function() {$("#clickText").fadeOut(500)}, 8501)
-			setTimeout(function() {document.getElementById("clickText").innerHTML="On some rounds, your partner will send you a label...";
-									$("#clickText").fadeIn(500)}, 9000)
-			setTimeout(function() {$("#ifType").fadeOut(500)}, 10501)
-			setTimeout(function() {document.getElementById("ifType").innerHTML="<strong> shoe </strong>"
-									$("#ifType").fadeIn(500)}, 11000)
-			setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px black solid"}, 13000)
-			setTimeout(function () {document.getElementById("ifMessage").innerHTML = "On these rounds, if you select the right object, <br> you will get <strong> " + trueLabelPoints + " points.</strong>"
-									$("#ifMessage").fadeIn(500)}, 13000)
+			setTimeout(function() {$("#clickText").fadeIn(500)}, 5000)			
+			document.getElementById("ifType").innerHTML="Your partner might send you an object label...";
+			document.getElementById('ifTypePoints').innerHTML ="If you get the right object, <br> you will get <strong> " + trueLabelPoints + " points</strong>."
+			document.getElementById('ifRight').innerHTML ="Your partner will send you a message. <br> If you figure it out and select the right object, you will earn points."
+			setTimeout(function() {$("#ifRight").fadeIn(500)}, 8500)
 			setTimeout(function() {$("#clickText").fadeOut(500)
-									$("#ifMessage").fadeOut(500)
-									$("#ifType").fadeOut(500)
-									}, 17501)
+									$("#ifRight").fadeOut(500)}, 14500)
+			setTimeout(function() {$("#typingExample").fadeIn(500)}, 15000)
+			setTimeout(function() {document.getElementById("ifTyping").value="s"}, 15500)
+			setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 15700)
+			setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 15900)
+			setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 16100)
+			setTimeout(function() {$("#typingExample").fadeOut(500)}, 20000); 
 			//typing exmaple, wrong messsage
-			setTimeout(function() {document.getElementById("shoeTarget").style.border= "";
-									document.getElementById("clickText").innerHTML="But sometimes, that label might be wrong or unhelpful...";
-									document.getElementById("ifType").innerHTML="<strong> <br> </strong>";
-									$("#clickText").fadeIn(500)
-									$("#ifType").fadeIn(500)
-									}, 18000)
-			// setTimeout(function() {$("#ifMessage").fadeIn(500)}, 19000)
-			setTimeout(function() {$("#ifType").fadeOut(500)}, 20001)
-			setTimeout(function() {document.getElementById("ifType").innerHTML="<strong> asdf </strong>";
-									$("#ifType").fadeIn(500)}, 20500)
-			setTimeout(function() {document.getElementById("distractor").style.border= "3px black solid"}, 23000)
-			setTimeout(function () {document.getElementById("ifMessage").innerHTML = "If you select the wrong object, <br> you will get <strong> 0 points.</strong>"
-									$("#ifMessage").fadeIn(500)}, 23000)
-			setTimeout(function() {$("#clickText").fadeOut(500)
-									$("#ifMessage").fadeOut(500)
-									$("#ifType").fadeOut(500)
-									document.getElementById("distractor").style.border= ""
-									document.getElementById("shoeTarget").style.border= "" }, 26001)
+			setTimeout(function() {$("#typingExample").fadeIn(500);
+					$("#ifTyping").hide(); 
+					document.getElementById("ifType").innerHTML="But if you choose an object your partner didn't mean...";
+					document.getElementById("ifTypePoints").innerHTML="You will get <strong> 0 points</strong>."}, 20500)
+			setTimeout(function() {
+									document.getElementById("clickText").innerHTML="<br> Your partner might also send a message by clicking the object..."}, 21500)
 			///clicking example
-			setTimeout(function() {document.getElementById("clickText").innerHTML="<br> On other rounds, your partner may click on an object <br> and you would see something like this..."}, 26500)
-			setTimeout(function() {$("#clickText").fadeIn(500)}, 26500)
-			setTimeout(function() {document.getElementById("shoeTarget").style.border= "1px black dashed"}, 28000)
-			setTimeout(function() {document.getElementById("ifMessage").innerHTML="in which case you could win <strong> "+trueClickPoints+" points</strong> <br> if you choose the right object."
-									$("#ifMessage").fadeIn(500)}, 29500)
-			setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px black solid"
-								$("#gameReady").fadeIn(500)}, 32000)
+			setTimeout(function() {$("#typingExample").fadeOut(500)}, 25000)
+			setTimeout(function() {$("#clickText").fadeIn(500)}, 25500)
+			setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px black solid"}, 27000)
+			setTimeout(function() {document.getElementById("ifClick").innerHTML="and you will get <strong> "+trueClickPoints+" points</strong> <br> if you get it right."
+									$("#ifClick").fadeIn(500)}, 28500)
+			setTimeout(function() {$("#gameReady").fadeIn(500)}, 30000)
 		}
 		//switch to the slide of questions about the game rules
 		document.getElementById("gameReady").onclick = function() {
@@ -779,7 +786,7 @@ var experiment = {
 						        type: "GET",
 						        url: "matchedGameTrials.csv",
 						        dataType: "text",
-						        success: function(data) {processData(data,20, matchedGameArray, matchedTargetArray)}
+						        success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
 						     });
 							experiment.game(0, 0, slideNumber+2)};
 					}		
@@ -933,7 +940,7 @@ var experiment = {
 				}
 				// label or sellection is incorrect is case message = 3
 				if(isCorrect==0) {$("#sendMessage").hide(); 
-									document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like you chose the wrong object!";
+									document.getElementById("messageFromPartner").innerHTML = "Whoops, that's not the one your partner meant!";
 									$("#messageFromPartner").fadeIn(500);
 									document.getElementById("myScore").innerHTML = score;
 									setTimeout(function() {$("#messageFromPartner").fadeOut(500)
@@ -1006,7 +1013,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-experiment.prestudy(0,0,20);
+// experiment.prestudy(0,0,20);
 
 
 
