@@ -30,14 +30,14 @@ var attentionArray = ["2001-600.jpg", "2002-600.jpg", "2005-600.jpg", "2004-600.
 
 var basePath = "tabletobjects/";
 
-var trueLabelPoints= 100; 
-
-var trueClickPoints = 30;
-
 targetArrayFromPartner = ["2002-600.jpg", "2001-600.jpg", "2056-600.jpg", "2005-600.jpg", "2056-600.jpg"]
 
 messagesFromPartner = ["blicket", "mano", "2056-600.jpg", "wug", "2005-600.jpg"];
 
+
+//default value, to be overwritten during yoking
+var trueLabelPoints= 100; 
+var trueClickPoints = 30;
 
 // ---------------- HELPER ------------------
 
@@ -121,7 +121,7 @@ function fillArray(value, len) {
 //   return exposureImgs;  
 // }
 
-//function that takes and image and looks up how many times it appears in a given array
+//function that takes an image and looks up how many times it appears in a given array
 function getOccurences(img, imgAr) {
 	var count = 0;
     for (var i = 0; i < imgAr.length; i++) {
@@ -361,24 +361,43 @@ function processData(allText, subID, array, otherArray) {
 // preload(attentionArray, 'tabletobjects/');
 // preload(familiarArray, 'images/familiar/');
 
-// Condition - call the maker getter to get the cond variable 
-// try {
-//     var filename = "subIDs"
-//     var condCounts = "100_30"
-//     var xmlHttp = null;
-//     xmlHttp = new XMLHttpRequest();
-//     xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/maker_getter.php?conds=" + 
-//     condCounts +"&filename=" + filename, false );
-//     xmlHttp.send( null );
-//     var cond = xmlHttp.responseText;
-// } catch (e) {
-//     var cond = 1;
-// }
-
-try {subjectIdentifier = cond;
+// following code from https://github.com/kemacdonald/Act-Learn/blob/master/expt/expt-code/js/act-learn-yoked.js
+/* Call Maker getter to get cond variables
+ * Takes number and counts for each condition
+ * Returns a condition number 
+ */
+try { 
+    var filename = "receiver_yoked_final_good";
+    var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/maker_getter.php?conds=" + condCounts + "&filename=" + filename, false );
+    xmlHttp.send( null );
+    var cond = xmlHttp.responseText; // For actual experimental runs
+        alert("xmlHttp.responseText returning as " + xmlHttp.responseText)
+    console.log("here we go " + cond)
+    subjectIdentifier = cond
 } catch (e) {
-	subjectIdentifier = 20;
+    var cond = 20;
 }
+
+// decrement maker-getter if this is a turker 
+if (turk.workerId.length > 0) {
+    alert("decrementing")
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest()
+    xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/decrementer.php?filename=" + filename + "&to_decrement=" + cond, false);
+    alert("xmlHttp.responseText returning as " + xmlHttp.responseText)
+    xmlHttp.send(null)
+}
+
+
+//assign to points conditions, based on subjectIdentifier number
+if(subjectIdentifier > 30) { 
+    var trueLabelPoints = 80; 
+    var trueClickPoints = 50;
+}
+
 
 
 
@@ -458,6 +477,7 @@ var experiment = {
 			time2 = new Date().getTime()
 			//pass trial data for eventual output
 			expDuration= {
+                subjectID : subjectIdentifier,
 				phase : "exposure",
 				trialnum : slideNumber,
 				object: exposureArray[index],
@@ -479,7 +499,8 @@ var experiment = {
 		var $img = $("img"), speed = 200;
 		i= index + 1;
 		ar = exposureArray;
-		lastExposure = ar.length;
+        console.log("edited exposure length...")
+		lastExposure = 4;
 		if (i < lastExposure) {
 		  	newPic= ar[i];
 			document.getElementById('content').removeChild(
@@ -498,6 +519,7 @@ var experiment = {
 			document.getElementById("clickme").onclick = function() {
 				time2 = new Date().getTime();
 				expDuration= {
+                    subjectID : subjectIdentifier,
 					phase : "exposure",
 					trialnum : slideNumber,
 					object: newPic,
@@ -630,6 +652,7 @@ var experiment = {
 				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
 				//pass trial data for eventual output
 				testTrials= {
+                    subjectID : subjectIdentifier,
 					phase : "test",
 					trialnum : slideNumber,
 					targetObjectName : document.getElementById('orderedImage').alt,
@@ -656,6 +679,7 @@ var experiment = {
 	prestudy: function(slideNumber) {
 				showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
+        $("#wrongCorrection").hide();
 		$("#exampleText").show();
 		$("#howToPlay").show();
 		$("#typingExample").hide();
@@ -693,6 +717,7 @@ var experiment = {
 			setTimeout(function() {$("#clickText").fadeOut(500)
 									$("#ifRight").fadeOut(500)}, 14500)
 			setTimeout(function() {$("#typingExample").fadeIn(500)}, 15000)
+            setTimeout(function() {$("#ifTyping").show()}, 15000)
 			setTimeout(function() {document.getElementById("ifTyping").value="s"}, 15500)
 			setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 15700)
 			setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 15900)
@@ -718,8 +743,9 @@ var experiment = {
 				for(var i = 0; i<progressBars.length; i++) {
 					progressBars[i].style.width = String((slideNumber+1)*100/totalSlides) + "%" ;
 				};
-				showSlide("gameCheck");
-				$("#wrongCorrection").hide();
+                showSlide("gameCheck");
+                // $("#prestudy").hide();
+				// $("#gameCheck").show();
 				document.getElementById('pointsForClick').value=null;
 				document.getElementById('pointsForLabel').value=null;
 				document.getElementById('pointsForWrong').value=null;
@@ -755,6 +781,7 @@ var experiment = {
 					}
 					//store P's response data before moving on
 					ruleQuestions = {
+                        subjectID : subjectIdentifier,
 						phase: "pregameCheck",
 						// lots of redundent info here, but saves time during analysis.
 						pointsClick : document.getElementById("pointsForClick").value,
@@ -890,6 +917,7 @@ var experiment = {
 
 			//store trial data before moving on
 			gameTrials = {
+                subjectID : subjectIdentifier,
 				phase : "game",
 				trialnum : slideNumber,
 				targetObjectName : matchedTargetArray[roundNumber],
@@ -978,9 +1006,6 @@ var experiment = {
 					this.style.border= '5px solid black';
 					//collect selected object name
 					selection = this.alt;
-					//mark all as incorrect
-					correct = 0;
-					//if this object has a label, selecting it is correct, overwrite that flag
 					recognizedItems.push(selection);
 					clicked = 1; // change message value to 1 if clicked. 
 					return;
@@ -989,13 +1014,13 @@ var experiment = {
 		document.getElementById("endStudy").onclick = function() {
 			//store data for the attention check.
 			for (var i = 0; i<recognizedItems.length; i++) {
-				// if (pairObjectLabels(recognizedItems[i]) != undefined) {
-				// 	correct = 1
-				// } else {correct=0};
+				if (getOccurences(recognizedItems[i], imgArray) > 0) {
+					correct = 1
+				} else {correct=0};
 				attnCheck= {
 					phase: "attnCheck",
 					recognizedObject : recognizedItems[i],
-					// correctRecog : correct
+					correctRecog : correct
 				}
 				experiment.attnCheck.push(attnCheck);
 			}
@@ -1013,7 +1038,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-// experiment.prestudy(0,0,20);
+// experiment.attentionCheck(0,0,20);
 
 
 

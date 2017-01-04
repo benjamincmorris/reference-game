@@ -18,7 +18,7 @@ theme_set(theme_bw())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
-filenames <- list.files("12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -45,7 +45,7 @@ for (i in 1:length(ldf)) {
 
 ### ----------------
 
-filenames <- list.files("12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("turk/12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
