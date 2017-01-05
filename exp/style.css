@@ -113,9 +113,9 @@ button[disabled] {
 }
 
 
-#imgObject:hover{
+/*#imgObject:hover{
 	border: 2px solid #cc1e1e;
-} 
+} */
 
 .vertical-center {
   min-height: 100%;  /* Fallback for vh unit */

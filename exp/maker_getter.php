@@ -11,15 +11,11 @@
 #?conds=unstructured-12,12;1515-12,12;2424-12,12;3333-12,12&filename=sm_unstructured_13jan
 
 header('Access-Control-Allow-Origin: *');
-echo '<script language="javascript">';
-echo 'alert("message successfully sent from maker-getter")';
-echo '</script>';
-
 if (isset($_GET['filename']) && isset($_GET['conds'])){
 	$filename = $_GET['filename'];
 	$conds_string = $_GET['conds'];
 	
-	$assignment_dir = 'experiment_files/';
+	$assignment_dir = '../../';
 	$assignment_files =  scandir($assignment_dir);
 
 	// if the filename doesn't exist yet, 
@@ -57,7 +53,7 @@ if (isset($_GET['filename']) && isset($_GET['conds'])){
 		}
 	} else {
 		//if it does exist, read it in 
-		$fid = 'experiment_files/'.$filename.".txt";
+		$fid = '../../'.$filename.".txt";
 		$fh = fopen($fid, 'r') or die("can't open file");
 		$conds_string = fread($fh, filesize($fid));
 		fclose($fh);

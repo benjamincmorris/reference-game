@@ -371,65 +371,75 @@ try {
     var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/maker_getter.php?conds=" + condCounts + "&filename=" + filename, false );
+    xmlHttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // Action to be performed when the document is read;
+                var cond = this.responseText; // For actual experimental runs
+                console.log("xmlHttp.responseText returning as " + this.responseText)
+                subjectIdentifier = cond
+            // decrement maker-getter if this is a turker 
+            if (turk.workerId.length > 0) {
+                console.log("decrementing...")
+                var xmlHttp = null;
+                xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    // Action to be performed when the document is read;
+                        do_all_the_setup();
+                    }
+                };
+                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/decrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+                xmlHttp.send(null)
+            } else {
+                console.log("not on turk, no decrementing")
+                do_all_the_setup();
+            }
+        }
+    };
+    xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/maker_getter.php?conds=" + condCounts + "&filename=" + filename, true );
     xmlHttp.send( null );
-    var cond = xmlHttp.responseText; // For actual experimental runs
-        alert("xmlHttp.responseText returning as " + xmlHttp.responseText)
-    console.log("here we go " + cond)
-    subjectIdentifier = cond
+
 } catch (e) {
     var cond = 20;
 }
 
-// decrement maker-getter if this is a turker 
-if (turk.workerId.length > 0) {
-    alert("decrementing")
-    var xmlHttp = null;
-    xmlHttp = new XMLHttpRequest()
-    xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/decrementer.php?filename=" + filename + "&to_decrement=" + cond, false);
-    alert("xmlHttp.responseText returning as " + xmlHttp.responseText)
-    xmlHttp.send(null)
-}
 
 
-//assign to points conditions, based on subjectIdentifier number
-if(subjectIdentifier > 30) { 
-    var trueLabelPoints = 80; 
-    var trueClickPoints = 50;
-}
-
-
-
-
-
-setTimeout(function() {						 
-						    $.ajax({
-						        type: "GET",
-						        url: "matchedExposures.csv",
-						        dataType: "text",
-						        success: function(data) {getMatchedExposures(data,subjectIdentifier)}
-						     });
-			}, 1);
-
-
-shuffle(familiarArray)
-
+var progressBars = document.getElementsByClassName('progress-bar');
 //get full number of 'slides' to increment progress bar
 var totalSlides = 1 + 1 + 21 + 1 + imgArray.length + 1 + 1 + 18 + 1 + 1;
-// 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
-// plus a final 1 so that the final slide is not quite 100%
+    // 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
+    // plus a final 1 so that the final slide is not quite 100%
 
-showSlide("welcome");
-	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
-	else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
-};
-var progressBars = document.getElementsByClassName('progress-bar');
-for(var i = 0; i<progressBars.length; i++) {
-	progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
+function do_all_the_setup() {
+    //assign to points conditions, based on subjectIdentifier number
+    if(subjectIdentifier > 30) { 
+        var trueLabelPoints = 80; 
+        var trueClickPoints = 50;
+    }
+
+    setTimeout(function() {                         
+                                $.ajax({
+                                    type: "GET",
+                                    url: "matchedExposures.csv",
+                                    dataType: "text",
+                                    success: function(data) {getMatchedExposures(data,subjectIdentifier)}
+                                 });
+                }, 1);
+
+
+    shuffle(familiarArray)
+    showSlide("welcome");
+        if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
+        else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
+    };
+    for(var i = 0; i<progressBars.length; i++) {
+        progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
+    }
+    document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
+    //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
+    shuffle(imgArrayFIXED);
 }
-document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
-//shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
-shuffle(imgArrayFIXED);
 
 
 
@@ -477,7 +487,7 @@ var experiment = {
 			time2 = new Date().getTime()
 			//pass trial data for eventual output
 			expDuration= {
-                subjectID : subjectIdentifier,
+                subID : subjectIdentifier,
 				phase : "exposure",
 				trialnum : slideNumber,
 				object: exposureArray[index],
@@ -499,8 +509,7 @@ var experiment = {
 		var $img = $("img"), speed = 200;
 		i= index + 1;
 		ar = exposureArray;
-        console.log("edited exposure length...")
-		lastExposure = 4;
+		lastExposure = ar.length;
 		if (i < lastExposure) {
 		  	newPic= ar[i];
 			document.getElementById('content').removeChild(
@@ -519,7 +528,7 @@ var experiment = {
 			document.getElementById("clickme").onclick = function() {
 				time2 = new Date().getTime();
 				expDuration= {
-                    subjectID : subjectIdentifier,
+                    subID : subjectIdentifier,
 					phase : "exposure",
 					trialnum : slideNumber,
 					object: newPic,
@@ -652,7 +661,7 @@ var experiment = {
 				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
 				//pass trial data for eventual output
 				testTrials= {
-                    subjectID : subjectIdentifier,
+                    subID : subjectIdentifier,
 					phase : "test",
 					trialnum : slideNumber,
 					targetObjectName : document.getElementById('orderedImage').alt,
@@ -781,7 +790,7 @@ var experiment = {
 					}
 					//store P's response data before moving on
 					ruleQuestions = {
-                        subjectID : subjectIdentifier,
+                        subID : subjectIdentifier,
 						phase: "pregameCheck",
 						// lots of redundent info here, but saves time during analysis.
 						pointsClick : document.getElementById("pointsForClick").value,
@@ -917,7 +926,7 @@ var experiment = {
 
 			//store trial data before moving on
 			gameTrials = {
-                subjectID : subjectIdentifier,
+                subID : subjectIdentifier,
 				phase : "game",
 				trialnum : slideNumber,
 				targetObjectName : matchedTargetArray[roundNumber],
