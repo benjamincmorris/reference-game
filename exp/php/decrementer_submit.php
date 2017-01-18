@@ -16,15 +16,31 @@ if (isset($_GET['filename']) && isset($_GET['to_decrement'])){
 
 	//check to make sure that there are the proper parameters-- if not filled, what will the response be?
 
-	$assignment_dir = '../../';
+	$assignment_dir = '../experiment_files/';
 	$assignment_files =  scandir($assignment_dir);
 
 	if(in_array($filename.'.txt',$assignment_files)){
-		$fid = '../../'.$filename.".txt";
+		$fid = $assignment_dir.$filename.".txt";
 		$fh = fopen($fid, 'r') or die("can't open file");
-		print($fh);
-		$conds_string = fread($fh, filesize($fid));
-		fclose($fh);
+			$count = 0;
+			$timeout_secs = 5; //number of seconds of timeout
+			$got_lock = true;
+			//while you can't get the lock, just wait, up to a point
+			while (!flock($fh, LOCK_EX | LOCK_NB, $wouldblock)) {
+				echo 'cannot get lock';
+			    if ($wouldblock && $count++ < $timeout_secs) {
+			        sleep(.01);
+			    } else {
+			        $got_lock = false;
+			        break;
+			    }
+			}
+			if ($got_lock) {
+			    // Do stuff with file
+				$conds_string = fread($fh, filesize($fid));
+				flock($fh, LOCK_UN);
+			}
+			fclose($fh);
 	
 		//is there a way to check the well-formedness of this string?
 		$conditions = explode(';',$conds_string);
@@ -34,7 +50,7 @@ if (isset($_GET['filename']) && isset($_GET['to_decrement'])){
 			$conds_array[$temp[0]] = $temp[1];
 		}
 		if (count($conds_array) >= 1){
-			$conds_array[$cond_to_decrement] = $conds_array[$cond_to_decrement]-1;
+			$conds_array[$cond_to_decrement] = 0;
 	 		$printString = '';
 			foreach ($conds_array as $key => $value){
 				$printString = $printString.$key.','.$value.';';
@@ -42,13 +58,27 @@ if (isset($_GET['filename']) && isset($_GET['to_decrement'])){
 
 			//remove the trailing newline
 			$printString = substr($printString,0,-1);
-			print($printString);
 			//write a new file with the conds
-			$fid = '../../'.$filename.".txt";
+			$fid = $assignment_dir.$filename.".txt";
 			$fh = fopen($fid, 'w') or die("can't open file");
-			print('writing '.$fh);
-			$bytes_written = fwrite($fh, $printString);
-			print('bytes '.$bytes_written);
+			$count = 0;
+			$timeout_secs = 5; //number of seconds of timeout
+			$got_lock = true;
+			//while you can't get the lock, just wait, up to a point
+			while (!flock($fh, LOCK_EX | LOCK_NB, $wouldblock)) {
+				echo 'cannot get lock';
+			    if ($wouldblock && $count++ < $timeout_secs) {
+			        sleep(.01);
+			    } else {
+			        $got_lock = false;
+			        break;
+			    }
+			}
+			if ($got_lock) {
+			    // Do stuff with file
+				fwrite($fh, $printString);
+				flock($fh, LOCK_UN);
+			}
 			fclose($fh);	
 		} else {
 			echo 'The resulting condition format is ill-formed';

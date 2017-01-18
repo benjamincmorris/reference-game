@@ -10,16 +10,42 @@
     <link rel="stylesheet" href="bootstrap.min.css">
     <script src="dictionary/wordList.min.js"></script>
     <script src="dictionary/wordBank.min.js"></script>
+    <script type="text/javascript" src="js/check_browser_close.js"></script>
 
   </head>
-  <body>
+  <body onbeforeunload="return goodbye ()">
+
+    <div class="slide" id="limbo">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+        </div>
+         <div id="waitingForAssignment" class="row"> <center> <h4 style="margin:5% 0% 0 0%">  <strong> PLEASE DON'T ACCEPT THIS HIT RIGHT NOW! </strong> </h4>  </center> </div>
+            <div class="row"> <img id="chicagoLogo" style="margin-top:7%" class="col-xs-offset-4 col-xs-4"  src="images/logo.rgb.maroon.jpg" > </div>
+            <div id="gameTitle" style="text-align:center; margin-top: 0%" class="row"> <center> <h3>  Communication Game </h3> </center> </div>
+            <div id="waitingForAssignment" class="row"> <center> <h4 style="margin:1% 15% 0 15%">  Sorry about this, but it looks like we don't actually have a task for you right now! <br> <br> Because of the way our studies work, they sometimes get caught in this limbo state. <br> <br> <br> <br>  <strong> Check back in a few minutes if you'd still like to paricipate!! </strong> </h4>  </center> </div>
+            <br> <br>
+            <center> <button type="button" id="disabledStart" onClick="this.blur()">Continue</button> </center>
+    </div> </div>
+
+    <div class="slide" id="limboAccepted">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+        </div>
+            <div class="row"> <img  style="margin-top:7%" class="col-xs-offset-4 col-xs-4"  src="images/logo.rgb.maroon.jpg" > </div>
+            <div style="text-align:center; margin-top: 0%" class="row"> <center> <h3>  Communication Game </h3> </center> </div>
+            <div class="row"> <center> <h4 style="margin:1% 15% 0 15%">  <br> <br> <br> <br> Uh oh, sorry about the confusion, but it looks like you accepted a HIT we don't quite have ready yet! <br> <br>   <strong> Unfortunately, you will need to return the hit now! </strong> </h4>  </center> </div>
+            <br> <br>
+            <center> <button type="button" id="disabledAcceptedStart" onClick="this.blur()">Continue</button> </center>
+
+    </div> 
+
 
     <div class="slide" id="welcome">
 		<div class="progress">
 		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
 		</div>
-			<div class="row"> <img style="margin-top:7%" class="col-xs-offset-4 col-xs-4"  src="images/logo.rgb.maroon.jpg" > </div>
-			<div style="text-align:center; margin-top: 0%" class="row"> <h3>  Communication Game </h3> </div>
+			<div class="row"> <img id="chicagoLogo" style="margin-top:7%" class="col-xs-offset-4 col-xs-4"  src="images/logo.rgb.maroon.jpg" > </div>
+			<div id="gameTitle" style="text-align:center; margin-top: 0%" class="row"> <h3>  Communication Game </h3> </div>
 	        <div class="row"> <h4 style="margin:1% 15% 0 15%"> In this short game, you will be introduced to some strange objects and their labels and then asked to communicate about those objects with another player. <br> <br>
             Please complete this HIT in one sitting, you will have 15 minutes to do so. You will likely not need all of that time, so don't feel the need to rush.  </h4> </div>
              <div class="row"> <h4 > Note: There are multiple versions of this game, please only complete once! </h4> </div>

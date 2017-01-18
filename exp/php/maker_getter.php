@@ -15,7 +15,7 @@ if (isset($_GET['filename']) && isset($_GET['conds'])){
 	$filename = $_GET['filename'];
 	$conds_string = $_GET['conds'];
 	
-	$assignment_dir = '../../';
+	$assignment_dir = '../experiment_files/';
 	$assignment_files =  scandir($assignment_dir);
 
 	// if the filename doesn't exist yet, 
@@ -37,10 +37,28 @@ if (isset($_GET['filename']) && isset($_GET['conds'])){
 			$printString = substr($printString,0,-1);
 	
 			//write a new file with the conds
-			$fid = '../../'.$filename.".txt";
+			$fid = $assignment_dir.$filename.".txt";
 			touch($fid);
 			$fh =  fopen($fid, 'w') or die("can't open file");
-			fwrite($fh, $printString);
+
+			$count = 0;
+			$timeout_secs = 5; //number of seconds of timeout
+			$got_lock = true;
+			//while you can't get the lock, just wait, up to a point
+			while (!flock($fh, LOCK_EX | LOCK_NB, $wouldblock)) {
+				echo 'cannot get lock';
+			    if ($wouldblock && $count++ < $timeout_secs) {
+			        sleep(.01);
+			    } else {
+			        $got_lock = false;
+			        break;
+			    }
+			}
+			if ($got_lock) {
+			    // Do stuff with file
+				fwrite($fh, $printString);
+				flock($fh, LOCK_UN);
+			}
 			fclose($fh);
 
 			//return any of the indices from conds_array
@@ -53,25 +71,53 @@ if (isset($_GET['filename']) && isset($_GET['conds'])){
 		}
 	} else {
 		//if it does exist, read it in 
-		$fid = '../../'.$filename.".txt";
+		$fid = $assignment_dir.$filename.".txt";
 		$fh = fopen($fid, 'r') or die("can't open file");
-		$conds_string = fread($fh, filesize($fid));
+
+			$count = 0;
+			$timeout_secs = 5; //number of seconds of timeout
+			$got_lock = true;
+			//while you can't get the lock, just wait, up to a point
+			while (!flock($fh, LOCK_EX | LOCK_NB, $wouldblock)) {
+				echo 'cannot get lock';
+			    if ($wouldblock && $count++ < $timeout_secs) {
+			        sleep(.01);
+			    } else {
+			        $got_lock = false;
+			        break;
+			    }
+			}
+			if ($got_lock) {
+			    // Do stuff with file
+				$conds_string = fread($fh, filesize($fid));
+				flock($fh, LOCK_UN);
+			}
 		fclose($fh);
 	
 		//parse the conds
 		$conditions = explode(';',$conds_string);
 		$conds_array = array();
 		$subj_left = array();	
+		$remaining = 0;
 
 		foreach ($conditions as $condition){
 			$temp = explode(',',$condition);
 			$conds_array[$temp[0]] = $temp[1];
 			$subj_left[count($subj_left)] = $temp[1];
+			if ($temp[1] == 1) {
+				++$remaining;
+			}
 		}
 		if (count($conds_array) >= 1){
-			//and find the lowest valued one
-			$cond_array_keys = array_keys($conds_array);	
-			echo $cond_array_keys[array_search(max($subj_left), $subj_left)];
+			if ($remaining >= 1){
+				$cond_array_keys = array_keys($conds_array);
+				echo $cond_array_keys[array_search(1, $subj_left)];
+			} else {
+				//else for the case where turk dislapys assignments, when we don't have one...
+				echo 'waiting';
+				// this should only happen when turk tries to assign a hit that should be availabe, but hasn't been 'fixed' yet
+				// we will need the js to make some statement in this case about how turkers should check back in a few minutes. 
+			}
 		} else {
 			echo 'The resulting condition format is ill-formed';
 		}

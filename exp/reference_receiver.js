@@ -36,6 +36,7 @@ messagesFromPartner = ["blicket", "mano", "2056-600.jpg", "wug", "2005-600.jpg"]
 
 
 //default value, to be overwritten during yoking
+var subCondition = "100_30";
 var trueLabelPoints= 100; 
 var trueClickPoints = 30;
 
@@ -366,41 +367,158 @@ function processData(allText, subID, array, otherArray) {
  * Takes number and counts for each condition
  * Returns a condition number 
  */
+
+
+// function goodBye()
+//         {
+//             console.log("goodbye user, resetting txt file...")
+//             var xmlHttp = null;
+//             xmlHttp = new XMLHttpRequest();
+//             cond =subjectIdentifier;
+//             xmlHttp.onreadystatechange = function() {
+//                     if (this.readyState == 4 && this.status == 200) {
+//                     // Action to be performed when the document is read;  
+//                         console.log("write file of users who quit...")
+//                         var xmlHttp = null;
+//                         xmlHttp = new XMLHttpRequest();
+//                         cond =subjectIdentifier;
+//                         xmlHttp.onreadystatechange = function() {
+//                                 if (this.readyState == 4 && this.status == 200) {
+//                                 // Action to be performed when the document is read;
+//                                 console.log("..." + xmlHttp.responseText)
+//                                 }
+//                             };
+//                         // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
+//                         xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/incrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+//                         xmlHttp.send(null)             
+//                     }
+//                 };
+//                 filename2= "participants_who_closed"
+//                 xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
+//                 // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/incrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+//                 xmlHttp.send(null)
+//                 return null;
+//         }
+// $(document).ready(function() {
+//     window.onbeforeunload = goodBye
+// });
+
+//for testing
+// var subjectIdentifier = 'waiting';
+
+$(document).ready(function() {
+        setInterval(function() {
+                    cond = subjectIdentifier;
+                    if (subjectIdentifier != 'waiting' && turk.workerId.length > 0) {
+                        var xmlHttp = null;
+                        xmlHttp = new XMLHttpRequest();
+                        xmlHttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                            // Action to be performed when the document is read;
+                                console.log('timestamped')
+                            }
+                        };
+                        xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/decrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+                        // console.log("..." + xmlHttp.responseText)
+                        xmlHttp.send(null)
+                    }
+        }, 10000)
+});
+
+// try to run this mess of nested php calls...
 try { 
-    var filename = "receiver_yoked_final_good";
-    var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
     var xmlHttp = null;
+    var filename = "receiver_yoked_final_good";
     xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             // Action to be performed when the document is read;
-                var cond = this.responseText; // For actual experimental runs
-                console.log("xmlHttp.responseText returning as " + this.responseText)
-                subjectIdentifier = cond
-            // decrement maker-getter if this is a turker 
-            if (turk.workerId.length > 0) {
-                console.log("decrementing...")
+            console.log("fixing ...")
+                // conditions for piloting (need nine 1s)
+                // var condCounts = "2,1;3,1;4,1;6,1;7,1;8,1;11,1;12,1";
+                var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1;13,0;14,1;15,0;16,1;17,0;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,0;28,1;29,1;30,0;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
+                        // note that the above condCounts are yoked for specific data, so do not include certain partiicpants e.g. 5 whose data was flawed. 
+                // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
                 var xmlHttp = null;
                 xmlHttp = new XMLHttpRequest();
                 xmlHttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                    // Action to be performed when the document is read;
-                        do_all_the_setup();
+                        // Action to be performed when the document is read;
+                            var cond = this.responseText; // For actual experimental runs
+                            console.log("xmlHttp.responseText returning as " + this.responseText)
+                            subjectIdentifier = cond
+                        // decrement maker-getter if this is a turker 
+                        if (turk.workerId.length > 0) {
+                                //if maker_getter returned 'waiting', we are in limbo where there is a mismatch between how many assignments turk thinks are left and how many we think are left
+                                // shouldn't happen often, but is possible in theory. if it happens, prevent starting and say comeback later. 
+                            if (subjectIdentifier == 'waiting') {
+                                    // if they accepted a hit they should not have, ask them to return it on this page!
+                                            showSlide("limboAccepted");
+                                            document.getElementById("disabledAcceptedStart").disabled=true;
+                                            console.log("end it now")
+                            // this else is the 'proper' case, where someone accepted the hit and there is an assignment for them.  
+                            } else {
+                                console.log("decrementing...")
+                                var xmlHttp = null;
+                                xmlHttp = new XMLHttpRequest();
+                                xmlHttp.onreadystatechange = function() {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                    // Action to be performed when the document is read;
+                                                do_all_the_setup();
+                                    }
+                                };
+                                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/decrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+                                console.log("..." + xmlHttp.responseText)
+                                xmlHttp.send(null)
+                            }
+                        // else, meaning that turk hit has not been accepted yet
+                        } else {
+                            console.log("not turk assignment, so no decrementing")
+                            // still need to check if this is a subject we can't assign yet...
+                            if (subjectIdentifier == 'waiting') {
+                                            showSlide("limbo");
+                                            document.getElementById("disabledStart").disabled=true;
+                                            console.log("be stuck!");
+                                            // need to write a file to track how many times/if this limbo state happens
+                                                var xmlHttp = null;
+                                                xmlHttp = new XMLHttpRequest();
+                                                xmlHttp.onreadystatechange = function() {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                    // Action to be performed when the document is read;
+                                                        console.log('limbo-ed')
+                                                    }
+                                                };
+                                                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/waiting_counter.php?filename=" + filename + "&timestamp=" + getCurrentTime() + '_' + new Date().getTime(), true);
+                                                // console.log("..." + xmlHttp.responseText)
+                                                xmlHttp.send(null)
+                                            setInterval(function() {
+                                                var xmlHttp = null;
+                                                xmlHttp = new XMLHttpRequest();
+                                                xmlHttp.onreadystatechange = function() {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                    // Action to be performed when the document is read;
+                                                        console.log('check for fixes... ')
+                                                    }
+                                                };
+                                                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/fixer.php?filename=" + filename, true);
+                                                xmlHttp.send(null)
+                                            }, 5000);
+                                } else {
+                                    do_all_the_setup();
+                                }
+                        }
                     }
                 };
-                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/decrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-                xmlHttp.send(null)
-            } else {
-                console.log("not on turk, no decrementing")
-                do_all_the_setup();
-            }
+                xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/php/maker_getter.php?conds=" + condCounts + "&filename=" + filename, true );
+                xmlHttp.send( null );
         }
     };
-    xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/maker_getter.php?conds=" + condCounts + "&filename=" + filename, true );
-    xmlHttp.send( null );
+    xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/fixer.php?filename=" + filename, true);
+    xmlHttp.send(null)
 
 } catch (e) {
     var cond = 20;
+    var subjectIdentifier = 20;
 }
 
 
@@ -411,9 +529,11 @@ var totalSlides = 1 + 1 + 21 + 1 + imgArray.length + 1 + 1 + 18 + 1 + 1;
     // 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
     // plus a final 1 so that the final slide is not quite 100%
 
+
 function do_all_the_setup() {
     //assign to points conditions, based on subjectIdentifier number
     if(subjectIdentifier > 30) { 
+        subCondition = "80_50";
         var trueLabelPoints = 80; 
         var trueClickPoints = 50;
     }
@@ -421,7 +541,7 @@ function do_all_the_setup() {
     setTimeout(function() {                         
                                 $.ajax({
                                     type: "GET",
-                                    url: "matchedExposures.csv",
+                                    url: "experiment_files/matchedExposures.csv",
                                     dataType: "text",
                                     success: function(data) {getMatchedExposures(data,subjectIdentifier)}
                                  });
@@ -431,7 +551,9 @@ function do_all_the_setup() {
     shuffle(familiarArray)
     showSlide("welcome");
         if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
-        else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
+        else {document.getElementById("welcomeStart").onclick = function() {
+                experiment.instructions(2)
+        };
     };
     for(var i = 0; i<progressBars.length; i++) {
         progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
@@ -447,7 +569,7 @@ function do_all_the_setup() {
 // MAIN EXPERIMENT
 var experiment = {
 	//global variables?
-	// subID: workerIda,
+	// subID: workerId,
 	date: getCurrentDate(), //the date of the experiment
 	// arrays to store the data we are collecting for each trial
 	expDuration: [],
@@ -461,7 +583,9 @@ var experiment = {
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
-		document.getElementById("beforeStudy").onclick = function() {experiment.exposure(slideNumber+1)};
+		document.getElementById("beforeStudy").onclick = function() {
+                experiment.exposure(slideNumber+1);
+            };
 	},
 
 	//transition from instruction slide to the exposure phase
@@ -529,6 +653,7 @@ var experiment = {
 				time2 = new Date().getTime();
 				expDuration= {
                     subID : subjectIdentifier,
+                    condition: subCondition,
 					phase : "exposure",
 					trialnum : slideNumber,
 					object: newPic,
@@ -650,7 +775,7 @@ var experiment = {
 								}
 						}
 						// final check, upper bound on edit distance. 
-						if (levDist(inputWord, candidate)>5) {candidate =""}
+						if (levDist(inputWord, candidate)>2) {candidate =""}
 					// if user enters the appropriate label, mark answer as correct
 					// if(blah == pairObjectLabels(document.getElementById('orderedImage').alt)) {
 					// 	var testCorrect=1;
@@ -663,6 +788,7 @@ var experiment = {
 				testTrials= {
                     subID : subjectIdentifier,
 					phase : "test",
+                    condition: subCondition,
 					trialnum : slideNumber,
 					targetObjectName : document.getElementById('orderedImage').alt,
 					exposureRate : getOccurences(document.getElementById('orderedImage').alt, exposureArray),
@@ -792,6 +918,7 @@ var experiment = {
 					ruleQuestions = {
                         subID : subjectIdentifier,
 						phase: "pregameCheck",
+                        condition: subCondition,
 						// lots of redundent info here, but saves time during analysis.
 						pointsClick : document.getElementById("pointsForClick").value,
 						pointsLabel : document.getElementById("pointsForLabel").value,
@@ -820,7 +947,7 @@ var experiment = {
 						document.getElementById("beginGame").onclick = function() {
 						    $.ajax({
 						        type: "GET",
-						        url: "matchedGameTrials.csv",
+						        url: "experiment_files/matchedGameTrials.csv",
 						        dataType: "text",
 						        success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
 						     });
@@ -928,6 +1055,7 @@ var experiment = {
 			gameTrials = {
                 subID : subjectIdentifier,
 				phase : "game",
+                condition: subCondition,
 				trialnum : slideNumber,
 				targetObjectName : matchedTargetArray[roundNumber],
 				receivedMessageType : receivedMessage,
@@ -1021,13 +1149,26 @@ var experiment = {
 				}
 		});
 		document.getElementById("endStudy").onclick = function() {
+                console.log("decrementing finalized...")
+                var xmlHttp = null;
+                xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    // Action to be performed when the document is read;
+                        console.log('submitting to cond counter file')
+                    }
+                };
+                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/decrementer_submit.php?filename=" + filename + "&to_decrement=" + subjectIdentifier, true);
+                xmlHttp.send(null)
 			//store data for the attention check.
 			for (var i = 0; i<recognizedItems.length; i++) {
 				if (getOccurences(recognizedItems[i], imgArray) > 0) {
 					correct = 1
 				} else {correct=0};
 				attnCheck= {
+                    subID : subjectIdentifier,
 					phase: "attnCheck",
+                    condition: subCondition,
 					recognizedObject : recognizedItems[i],
 					correctRecog : correct
 				}
