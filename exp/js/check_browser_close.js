@@ -22,7 +22,8 @@ var validNavigation = false;
     if (!validNavigation) {
       if (dont_confirm_leave!==1) {
         // if(!e) e = window.event;
-            if (turk.workerId.length > 0 && subjectIdentifier != 'waiting') {
+            // if (subjectIdentifier.length <= 3) {
+            if (subjectIdentifier.length <= 3 && turk.workerId.length > 0) {
                 console.log("goodbye user, resetting txt file...")
                 var xmlHttp = null;
                 xmlHttp = new XMLHttpRequest();
@@ -41,7 +42,7 @@ var validNavigation = false;
                                     }
                                 };
                             // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
-                            xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/incrementer.php?filename=" + filename + "&to_decrement=" + cond, false);
+                            xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_increment=" + cond, false);
                             xmlHttp.send(null)             
                         }
                     };

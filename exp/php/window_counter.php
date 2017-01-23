@@ -48,7 +48,7 @@ if (isset($_GET['filename']) && isset($_GET['turkid'])){
 	} else {
 		//if it does exist, read it in 
 		$fid = $assignment_dir.$filename.".txt";
-		$fh = fopen($fid, 'r') or die("can't open file");
+		$fh = fopen($fid, 'r+') or die("can't open file");
 
 			$count = 0;
 			$timeout_secs = 5; //number of seconds of timeout
@@ -57,7 +57,7 @@ if (isset($_GET['filename']) && isset($_GET['turkid'])){
 			while (!flock($fh, LOCK_EX | LOCK_NB, $wouldblock)) {
 				echo 'cannot get lock';
 			    if ($wouldblock && $count++ < $timeout_secs) {
-			        sleep(.01);
+			        sleep(.001);
 			    } else {
 			        $got_lock = false;
 			        break;
@@ -66,36 +66,12 @@ if (isset($_GET['filename']) && isset($_GET['turkid'])){
 			if ($got_lock) {
 			    // Do stuff with file
 				$conds_string = fread($fh, filesize($fid));
-				flock($fh, LOCK_UN);
-			}
-			fclose($fh);
-	
-		//parse the turkid
-		$printString = '';
-		$printString = $printString.$turkid.',';
-		//remove the trailing newline
-		// $printString = substr($printString,0,-1);
-
-
-		$fid = $assignment_dir.$filename.".txt";
-		$fh = fopen($fid, 'w') or die("can't open file");
-
-			$count = 0;
-			$timeout_secs = 5; //number of seconds of timeout
-			$got_lock = true;
-			//while you can't get the lock, just wait, up to a point
-			while (!flock($fh, LOCK_EX | LOCK_NB, $wouldblock)) {
-				echo 'cannot get lock';
-			    if ($wouldblock && $count++ < $timeout_secs) {
-			        sleep(.01);
-			    } else {
-			        $got_lock = false;
-			        break;
-			    }
-			}
-			if ($got_lock) {
-			    // Do stuff with file
-				fwrite($fh, $conds_string.$printString);
+				//parse the turkid
+				$printString = '';
+				$printString = $printString.$turkid.',';
+				//remove the trailing newline
+				// $printString = substr($printString,0,-1);
+				fwrite($fh, $printString);
 				flock($fh, LOCK_UN);
 			}
 			fclose($fh);

@@ -18,7 +18,7 @@ theme_set(theme_bw())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
-filenames <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("turk/1.18_reference_receiver/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -33,8 +33,8 @@ for (i in 1:length(ldf)) {
   # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
   condition <- "100_30"
   subID <- i
-  timing <- rbind(timing, as.data.frame(
-      cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  # timing <- rbind(timing, as.data.frame(
+      # cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
   exposures <- rbind(exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
   ruleCheck <- rbind(ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
   test <- rbind(test, cbind(subID, condition, janeDoe$answers$data$testTrials))
@@ -270,7 +270,7 @@ too_many_letters$subID %in% only_one_method$subID
 # blackwhit
 manual_remove <- as.vector(c(30, 17, 9, 5, 15, 10, 27, 13))
 game %>% filter(typedLabel =="crumpaper")
-game %>% filter(subID == 10) %>% select( subID, exposureRate, realLabel, typedLabel, adjLabel)
+game %>% filter(subID == 48) %>% select( subID, exposureRate, realLabel, typedLabel, adjLabel)
 
 ```
 
