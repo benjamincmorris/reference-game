@@ -369,168 +369,13 @@ function processData(allText, subID, array, otherArray) {
  */
 
 
-// function goodBye()
-//         {
-//             console.log("goodbye user, resetting txt file...")
-//             var xmlHttp = null;
-//             xmlHttp = new XMLHttpRequest();
-//             cond =subjectIdentifier;
-//             xmlHttp.onreadystatechange = function() {
-//                     if (this.readyState == 4 && this.status == 200) {
-//                     // Action to be performed when the document is read;  
-//                         console.log("write file of users who quit...")
-//                         var xmlHttp = null;
-//                         xmlHttp = new XMLHttpRequest();
-//                         cond =subjectIdentifier;
-//                         xmlHttp.onreadystatechange = function() {
-//                                 if (this.readyState == 4 && this.status == 200) {
-//                                 // Action to be performed when the document is read;
-//                                 console.log("..." + xmlHttp.responseText)
-//                                 }
-//                             };
-//                         // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
-//                         xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/incrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-//                         xmlHttp.send(null)             
-//                     }
-//                 };
-//                 filename2= "participants_who_closed"
-//                 xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
-//                 // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/incrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-//                 xmlHttp.send(null)
-//                 return null;
-//         }
-// $(document).ready(function() {
-//     window.onbeforeunload = goodBye
-// });
-
-//for testing
-// var subjectIdentifier = 'waiting';
-
-// $(document).ready(function() {
-//         setInterval(function() {
-//                     cond = subjectIdentifier;
-//                     // if (subjectIdentifier != 'waiting' && turk.workerId.length > 0) {
-//                     if (subjectIdentifier != 'waiting') {
-//                         var xmlHttp = null;
-//                         xmlHttp = new XMLHttpRequest();
-//                         xmlHttp.onreadystatechange = function() {
-//                             if (this.readyState == 4 && this.status == 200) {
-//                             // Action to be performed when the document is read;
-//                                 console.log('timestamped')
-//                             }
-//                         };
-//                         xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/decrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-//                         // console.log("..." + xmlHttp.responseText)
-//                         xmlHttp.send(null)
-//                     }
-//         }, 10000)
-// });
-
-// try to run this mess of nested php calls...
-// try { 
-//     var xmlHttp = null;
-//     var filename = "receiver_yoked_final_good";
-//     xmlHttp = new XMLHttpRequest();
-//     xmlHttp.onreadystatechange = function() {
-//         if (this.readyState == 4 && this.status == 200) {
-//             // Action to be performed when the document is read;
-//             console.log("fixing ...")
-//                 var condCounts= "1,0;2,1"
-//                 // conditions for piloting (need nine 1s)
-//                 // var condCounts = "2,1;3,1;4,1;6,1;7,1;8,1;11,1;12,1";
-//                 // var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1;13,0;14,1;15,0;16,1;17,0;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,0;28,1;29,1;30,0;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
-//                         // note that the above condCounts are yoked for specific data, so do not include certain partiicpants e.g. 5 whose data was flawed. 
-//                 // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
-//                 var xmlHttp = null;
-//                 xmlHttp = new XMLHttpRequest();
-//                 xmlHttp.onreadystatechange = function() {
-//                     if (this.readyState == 4 && this.status == 200) {
-//                         // Action to be performed when the document is read;
-//                             var cond = this.responseText; // For actual experimental runs
-//                             console.log("xmlHttp.responseText returning as " + this.responseText)
-//                             subjectIdentifier = cond
-//                         // decrement maker-getter if this is a turker 
-//                         if (turk.workerId.length > 0) {
-//                                 //if maker_getter returned 'waiting', we are in limbo where there is a mismatch between how many assignments turk thinks are left and how many we think are left
-//                                 // shouldn't happen often, but is possible in theory. if it happens, prevent starting and say comeback later. 
-//                             if (subjectIdentifier == 'waiting') {
-//                                     // if they accepted a hit they should not have, ask them to return it on this page!
-//                                             showSlide("limboAccepted");
-//                                             document.getElementById("disabledAcceptedStart").disabled=true;
-//                                             console.log("end it now")
-//                             // this else is the 'proper' case, where someone accepted the hit and there is an assignment for them.  
-//                             } else {
-//                                 console.log("decrementing...")
-//                                 var xmlHttp = null;
-//                                 xmlHttp = new XMLHttpRequest();
-//                                 xmlHttp.onreadystatechange = function() {
-//                                     if (this.readyState == 4 && this.status == 200) {
-//                                     // Action to be performed when the document is read;
-//                                                 do_all_the_setup();
-//                                     }
-//                                 };
-//                                 xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/decrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-//                                 console.log("..." + xmlHttp.responseText)
-//                                 xmlHttp.send(null)
-//                             }
-//                         // else, meaning that turk hit has not been accepted yet
-//                         } else {
-//                             console.log("not turk assignment, so no decrementing")
-//                             // still need to check if this is a subject we can't assign yet...
-//                             if (subjectIdentifier == 'waiting') {
-//                                             showSlide("limbo");
-//                                             document.getElementById("disabledStart").disabled=true;
-//                                             console.log("be stuck!");
-//                                             // need to write a file to track how many times/if this limbo state happens
-//                                                 var xmlHttp = null;
-//                                                 xmlHttp = new XMLHttpRequest();
-//                                                 xmlHttp.onreadystatechange = function() {
-//                                                     if (this.readyState == 4 && this.status == 200) {
-//                                                     // Action to be performed when the document is read;
-//                                                         console.log('limbo-ed')
-//                                                     }
-//                                                 };
-//                                                 xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/waiting_counter.php?filename=" + filename + "&timestamp=" + getCurrentTime() + '_' + new Date().getTime(), true);
-//                                                 // console.log("..." + xmlHttp.responseText)
-//                                                 xmlHttp.send(null)
-//                                             setInterval(function() {
-//                                                 var xmlHttp = null;
-//                                                 xmlHttp = new XMLHttpRequest();
-//                                                 xmlHttp.onreadystatechange = function() {
-//                                                     if (this.readyState == 4 && this.status == 200) {
-//                                                     // Action to be performed when the document is read;
-//                                                         console.log('check for fixes... ')
-//                                                     }
-//                                                 };
-//                                                 xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/fixer.php?filename=" + filename, true);
-//                                                 xmlHttp.send(null)
-//                                             }, 5000);
-//                                 } else {
-//                                     do_all_the_setup();
-//                                 }
-//                         }
-//                     }
-//                 };
-//                 xmlHttp.open( "GET", "https://callab.uchicago.edu/experiments/reference/php/maker_getter.php?conds=" + condCounts + "&filename=" + filename, true );
-//                 xmlHttp.send( null );
-//         }
-//     };
-//     xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/fixer.php?filename=" + filename, true);
-//     xmlHttp.send(null)
-
-// } catch (e) {
-//     var cond = 20;
-//     var subjectIdentifier = 20;
-// }
-
-
-
 try { 
     var xmlHttp = null;
     var filename = "receiver_yoked_final_good";
     // var condCounts= "1,0;2,1;3,1"
     // conditions for piloting (need nine 1s)
-    var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1";
+    // var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1";
+    var condCounts = "1,1;2,0;3,0;4,0;5,0;6,0;7,0;8,0;9,0;10,0;11,0;12,0;13,0;14,1;15,0;16,1;17,0;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,0;28,1;29,1;30,0;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
     // var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1;13,0;14,1;15,0;16,1;17,0;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,0;28,1;29,1;30,0;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
         // note that the above condCounts are yoked for specific data, so do not include certain partiicpants e.g. 5 whose data was flawed. 
     // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
@@ -538,7 +383,7 @@ try {
     xmlHttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             // Action to be performed when the document is read;
-            console.log("checking for fixes, maker_getting, timestamping ...")
+            console.log("checking for fixes, maker_getting...")
             var cond = this.responseText; // For actual experimental runs
             console.log("subjectID returning as " + this.responseText);
             subjectIdentifier = cond;
@@ -567,10 +412,13 @@ try {
     };
     if (turk.workerId.length > 0) { 
         //if we are on turk, send turker flag to the php
+        console.log("time-stamping...")
         xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts + "&turkID=true", true);
     } else {
         //if we are not on turk (or hit not accepted yet), omit this flag
-                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts, true);
+            xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts, true);
+            // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts + "&turkID=true", true);
+
     }
     xmlHttp.send(null)
 
@@ -598,6 +446,8 @@ function do_all_the_setup() {
         var trueClickPoints = 50;
     }
 
+    slide_number = 1; 
+
     setTimeout(function() {                         
                                 $.ajax({
                                     type: "GET",
@@ -612,9 +462,9 @@ function do_all_the_setup() {
     showSlide("welcome");
         if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
         else {document.getElementById("welcomeStart").onclick = function() {
-             experiment.instructions(2)
+            experiment.instructions(2)
+            };
         };
-    };
     for(var i = 0; i<progressBars.length; i++) {
         progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
     }
@@ -639,6 +489,7 @@ var experiment = {
 	attnCheck: [],
 
 	instructions: function(slideNumber) {
+        slide_number = slideNumber;
 		showSlide("instructions");
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
@@ -650,6 +501,7 @@ var experiment = {
 
 	//transition from instruction slide to the exposure phase
 	exposure: function(slideNumber) {
+        slide_number = slideNumber;
 		time1 = new Date().getTime()
 		showSlide("exposure");
 		$("#clickme").hide();
@@ -672,6 +524,7 @@ var experiment = {
 			//pass trial data for eventual output
 			expDuration= {
                 subID : subjectIdentifier,
+                condition: subCondition,
 				phase : "exposure",
 				trialnum : slideNumber,
 				object: exposureArray[index],
@@ -685,6 +538,7 @@ var experiment = {
 	},
 
 	exposures: function(index, slideNumber) {
+        slide_number = slideNumber;
 		time1 = new Date().getTime()
 		$("#clickme").hide();
 		for(var i = 0; i<progressBars.length; i++) {
@@ -729,6 +583,7 @@ var experiment = {
 	}},
 
 	pretest: function(slideNumber) {
+        slide_number = slideNumber;
 		showSlide('pretest');
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
@@ -740,6 +595,7 @@ var experiment = {
 	},
 
 	test: function(testNumber, slideNumber) {
+        slide_number = slideNumber;
 		time1 = new Date().getTime();
 		showSlide('test');
 		document.getElementById('progressBar').style.width= String(31 + testNumber * .5) + "%" ;
@@ -872,7 +728,8 @@ var experiment = {
 	},
 
 	prestudy: function(slideNumber) {
-				showSlide("prestudy");
+        slide_number = slideNumber;
+		showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
         $("#wrongCorrection").hide();
 		$("#exampleText").show();
@@ -935,6 +792,7 @@ var experiment = {
 		}
 		//switch to the slide of questions about the game rules
 		document.getElementById("gameReady").onclick = function() {
+                slide_number = slideNumber + 1;
 				for(var i = 0; i<progressBars.length; i++) {
 					progressBars[i].style.width = String((slideNumber+1)*100/totalSlides) + "%" ;
 				};
@@ -1022,6 +880,7 @@ var experiment = {
 
 
 	game: function(score, roundNumber, slideNumber) {
+        slide_number = slideNumber;
 		time1 = new Date().getTime();
 		// setTimeout(function() {
 		// 					$.ajax({
@@ -1183,6 +1042,7 @@ var experiment = {
 	},
 
 	attentionCheck: function(slideNumber) {
+        slide_number = slideNumber;
 		showSlide('attentionSlide');
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
@@ -1209,35 +1069,40 @@ var experiment = {
 				}
 		});
 		document.getElementById("endStudy").onclick = function() {
+            //store data for the attention check.
+            for (var i = 0; i<recognizedItems.length; i++) {
+                if (getOccurences(recognizedItems[i], imgArray) > 0) {
+                    correct = 1
+                } else {correct=0};
+                attnCheck= {
+                    subID : subjectIdentifier,
+                    phase: "attnCheck",
+                    condition: subCondition,
+                    recognizedObject : recognizedItems[i],
+                    correctRecog : correct
+                }
+                experiment.attnCheck.push(attnCheck);
+            }
+
                 var xmlHttp = null;
                 xmlHttp = new XMLHttpRequest();
                 xmlHttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                     // Action to be performed when the document is read;
                         console.log('truly decrementing partipcant file')
+                            // there is a potential issue where after finishing the experiment, the page is 'unloaded'
+                                // so our onbeforeunload script tries to run, which involves incrementing the subject count
+                                // changing the subId here should prevent that because the unload script has a max length conditional
+                            subjectIdentifier = 'garbage noise so that the on-close script is not run';
+                            console.log('overwriting subID before submission (testing for who wins the race)')
+                                // need to makes sure that this subID overwrite happens AFTER the decrementer call!!
+                                // otherwise paritipcants won't get zeroed out. 
+                            experiment.end()
                     }
                 };
                 xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + subjectIdentifier, true);
                 xmlHttp.send(null)
-			//store data for the attention check.
-			for (var i = 0; i<recognizedItems.length; i++) {
-				if (getOccurences(recognizedItems[i], imgArray) > 0) {
-					correct = 1
-				} else {correct=0};
-				attnCheck= {
-                    subID : subjectIdentifier,
-					phase: "attnCheck",
-                    condition: subCondition,
-					recognizedObject : recognizedItems[i],
-					correctRecog : correct
-				}
-				experiment.attnCheck.push(attnCheck);
-			}
-            // there is a potential issue where after finishing the experiment, the page is 'unloaded'
-                // so our onbeforeunload script tries to run, which involves incrementing the subject count
-                // changing the subId here should prevent that because the unload script has a max length conditional
-            subjectIdentifier = 'garbage noise so that the on-close script is not run';
-			experiment.end()};
+        };
 	},
 
 	//the end of the experiment, where the background becomes completely black

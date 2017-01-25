@@ -22,6 +22,7 @@ var validNavigation = false;
     if (!validNavigation) {
       if (dont_confirm_leave!==1) {
         // if(!e) e = window.event;
+            // console.log("pretending to be on turk here for debugging")
             // if (subjectIdentifier.length <= 3) {
             if (subjectIdentifier.length <= 3 && turk.workerId.length > 0) {
                 console.log("goodbye user, resetting txt file...")
@@ -38,7 +39,7 @@ var validNavigation = false;
                             xmlHttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
                                     // Action to be performed when the document is read;
-                                    console.log("..." + xmlHttp.responseText)
+                                      console.log("..." + xmlHttp.responseText)
                                     }
                                 };
                             // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
@@ -47,8 +48,9 @@ var validNavigation = false;
                         }
                     };
                     filename2= "participants_who_closed"
-                    xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=" + turk.workerId, false);
-                    // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/incrementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+                    xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=" + turk.workerId + "&slideNumber=" + slide_number, false);
+                        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testingggg&slideNumber=" + slide_number, false);
+
                     xmlHttp.send(null)
                     // return null;
             }

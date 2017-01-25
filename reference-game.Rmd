@@ -78,11 +78,11 @@ library(lubridate)
 library(langcog)
 
 
+
 theme_set(theme_bw())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-
-filenames <- list.files("turk/1.5_reference_receiver_pilot/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- list.files("turk/1.23_pilot/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -92,20 +92,32 @@ ruleCheck <- NULL
 game <- NULL
 test<- NULL
 attn <- NULL
+turkIds <- NULL
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
   # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
-  condition <- "100_30"
+  # condition <- "100_30"
   # subID <- i
   timing <- rbind(timing, as.data.frame(
       cbind(start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
-  exposures <- rbind(exposures, cbind(condition, janeDoe$answers$data$expDuration))
-  ruleCheck <- rbind(ruleCheck, cbind(condition, janeDoe$answers$data$ruleQuestions))
-  test <- rbind(test, cbind(condition, janeDoe$answers$data$testTrials))
-  game <- rbind(game,cbind(condition, janeDoe$answers$data$gameTrials))
+  exposures <- rbind(exposures, cbind(janeDoe$answers$data$expDuration))
+  ruleCheck <- rbind(ruleCheck, cbind(janeDoe$answers$data$ruleQuestions))
+  test <- rbind(test, cbind(janeDoe$answers$data$testTrials))
+  game <- rbind(game,cbind(janeDoe$answers$data$gameTrials))
   if (length(janeDoe$answers$data$attnCheck)!=0) 
-    {attn <- rbind(attn, cbind(condition, janeDoe$answers$data$attnCheck))}
+    {attn <- rbind(attn, cbind(janeDoe$answers$data$attnCheck))}
+  turkIds <- rbind(turkIds, janeDoe$WorkerId)
 }
+
+
+#check who closed or reloaded page against who submitted data!!
+tmp <- read.csv("~/Downloads/1.23_participants_who_closed.txt")
+tmp <- as.vector(colnames(tmp[-length(tmp)]))
+turkIds <- as.vector(turkIds)
+
+turkIds[which(turkIds %in% tmp)]
+tmp %in% turkIds
+
 
 test<- left_join(test, exposures %>% select(subID, object, realLabel) %>% distinct(), 
                 by=c('targetObjectName'='object', "subID")) %>%

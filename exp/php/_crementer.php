@@ -5,7 +5,7 @@
 
 
 header('Access-Control-Allow-Origin: *'); //in order to call this from JS on turk
-
+// ignore_user_abort(true);
 if (isset($_GET['filename'])){
 	$filename = $_GET['filename'];
 	if (isset($_GET['to_increment'])) {
@@ -21,6 +21,7 @@ if (isset($_GET['filename'])){
 
 	if(in_array($filename.'.txt',$assignment_files)){
 		$fid = $assignment_dir.$filename.".txt";
+
 		$fh = fopen($fid, 'r+') or die("can't open file");
 			$count = 0;
 			$timeout_secs = 5; //number of seconds of timeout

@@ -5,9 +5,10 @@
 
 
 header('Access-Control-Allow-Origin: *');
-if (isset($_GET['filename']) && isset($_GET['turkid'])){
+if (isset($_GET['filename']) && isset($_GET['turkid']) && isset($_GET['slideNumber'])) {
 	$filename = $_GET['filename'];
 	$turkid = $_GET['turkid'];
+	$slideNumber = $_GET['slideNumber'];
 	
 	$assignment_dir = '../experiment_files/';
 	$assignment_files =  scandir($assignment_dir);
@@ -16,7 +17,7 @@ if (isset($_GET['filename']) && isset($_GET['turkid'])){
 	if(!in_array($filename.'.txt',$assignment_files)){
 		//parse the turkid
 			$printString = '';
-			$printString = $printString.$turkid.',';
+			$printString = $printString.$turkid.','.$slideNumber.';';
 			//remove the trailing newline
 			// $printString = substr($printString,0,-1);
 	
@@ -68,7 +69,7 @@ if (isset($_GET['filename']) && isset($_GET['turkid'])){
 				$conds_string = fread($fh, filesize($fid));
 				//parse the turkid
 				$printString = '';
-				$printString = $printString.$turkid.',';
+				$printString = $printString.$turkid.','.$slideNumber.';';
 				//remove the trailing newline
 				// $printString = substr($printString,0,-1);
 				fwrite($fh, $printString);
