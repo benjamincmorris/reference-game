@@ -28,14 +28,14 @@ var validNavigation = false;
                 console.log("goodbye user, resetting txt file...")
                 var xmlHttp = null;
                 xmlHttp = new XMLHttpRequest();
-                cond =subjectIdentifier;
+                // cond = subjectIdentifier;
                 xmlHttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                         // Action to be performed when the document is read;  
                             console.log("write file of users who quit...")
                             var xmlHttp = null;
                             xmlHttp = new XMLHttpRequest();
-                            cond =subjectIdentifier;
+                            // cond =subjectIdentifier;
                             xmlHttp.onreadystatechange = function() {
                                     if (this.readyState == 4 && this.status == 200) {
                                     // Action to be performed when the document is read;
@@ -43,7 +43,7 @@ var validNavigation = false;
                                     }
                                 };
                             // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/window_counter.php?filename=" + filename2 + "&turkid=testinggggg", true);
-                            xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_increment=" + cond, false);
+                            xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_increment=" + subjectIdentifier, false);
                             xmlHttp.send(null)             
                         }
                     };

@@ -471,6 +471,9 @@ function do_all_the_setup() {
     document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
     //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
     shuffle(imgArrayFIXED);
+    
+    console.log("this function is only used for demos, comment out for turk")
+    experiment.game(0,0,31);
 }
 
 
@@ -882,14 +885,15 @@ var experiment = {
 	game: function(score, roundNumber, slideNumber) {
         slide_number = slideNumber;
 		time1 = new Date().getTime();
-		// setTimeout(function() {
-		// 					$.ajax({
-		// 				        type: "GET",
-		// 				        url: "matchedGameTrials.csv",
-		// 				        dataType: "text",
-		// 				        success: function(data) {processData(data,3, matchedGameArray, matchedTargetArray)}
-		// 				     });
-		// 			}, 1)
+        console.log("this function is only used for demos, comment out for turk")
+		setTimeout(function() {
+							$.ajax({
+						        type: "GET",
+						        url: "experiment_files/matchedGameTrials.csv",
+						        dataType: "text",
+                                success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
+						     });
+					}, 1)
 		showSlide("referenceGame");
 		$("#objects2").fadeIn(500)
 		document.getElementById("myScore").innerHTML = score;
