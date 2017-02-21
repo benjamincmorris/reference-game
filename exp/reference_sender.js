@@ -344,7 +344,9 @@ try {
 	    // if (turk.workerId.length > 0) { 
     var xmlHttp = null;
     var filename = "sender_condition_counts";
-    var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
+    // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
+    var condCounts = "11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
+
     // var condCounts = "1,0;2,0"
     // var condCounts= "100_30,30;80_50,30"
     xmlHttp = new XMLHttpRequest();
@@ -361,7 +363,52 @@ try {
                   showSlide("limbo")
                   document.getElementById("disabledStart").disabled=true;
                   return;
+                } else {
+
+                  do_all_the_setup()
+                  // for debugging, use line below to jump around the exp
+                        // experiment.partnering(0,0,30);
+
                 }
+
+        }
+    };
+    if (turk.workerId.length > 0) { 
+        //if we are on turk, send turker parameter to the php
+        console.log("decrementing the count...")
+        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+          xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts + "&turkID=true", true);
+    } else {
+        //if we are not on turk (or hit not accepted yet), omit this flag
+        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/condition_assignment_turk.php?filename=" + filename + "&conds=" + condCounts + "&to_decrement=true", true);
+        xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts, true);
+    }
+    xmlHttp.send(null)
+
+} catch (e) {
+  // this catch condition needs updating
+    var condition = "100_30";
+}
+
+
+
+var progressBars = document.getElementsByClassName('progress-bar');
+  // alert(preload(imgArray, 'tabletobjects/', 0));
+  // preload(attentionArray, 'tabletobjects/');
+  // preload(familiarArray, 'images/familiar/');
+exposureArray = exposureStimuli(imgArray);
+
+
+shuffle(familiarArray)
+gameArray = gameStimuli(imgArray);
+
+  //get full number of 'slides' to increment progress bar
+var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length + 1 + 1 + gameArray.length + 1 + 1;
+  // 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
+  // plus a final 1 so that the final slide is not quite 100%
+
+
+function do_all_the_setup() {
 
                 if(subjectIdentifier <= 30) {
                   cond = "100_30"
@@ -400,56 +447,24 @@ try {
                     cond = '100_30';
                     console.log('setting broken id tag to ' + subjectIdentifier + ' as default... ');
                 };
-        }
-    };
-    if (turk.workerId.length > 0) { 
-        //if we are on turk, send turker parameter to the php
-        console.log("decrementing the count...")
-        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-          xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts + "&turkID=true", true);
-    } else {
-        //if we are not on turk (or hit not accepted yet), omit this flag
-        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/condition_assignment_turk.php?filename=" + filename + "&conds=" + condCounts + "&to_decrement=true", true);
-        xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts, true);
-    }
-    xmlHttp.send(null)
 
-} catch (e) {
-    var condition = "100_30";
+
+
+
+
+  showSlide("welcome");
+  	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
+  	else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
+  };
+  slide_number = 1; 
+  for(var i = 0; i<progressBars.length; i++) {
+  	progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
+  }
+  document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
+  //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
+  shuffle(imgArrayFIXED);
+
 }
-
-
-
-// alert(preload(imgArray, 'tabletobjects/', 0));
-// preload(attentionArray, 'tabletobjects/');
-// preload(familiarArray, 'images/familiar/');
-exposureArray = exposureStimuli(imgArray);
-
-
-
-
-shuffle(familiarArray)
-gameArray = gameStimuli(imgArray);
-
-//get full number of 'slides' to increment progress bar
-var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length + 1 + 1 + gameArray.length + 1 + 1;
-// 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
-// plus a final 1 so that the final slide is not quite 100%
-
-showSlide("welcome");
-	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
-	else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
-};
-slide_number = 1; 
-var progressBars = document.getElementsByClassName('progress-bar');
-for(var i = 0; i<progressBars.length; i++) {
-	progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
-}
-document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
-//shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
-shuffle(imgArrayFIXED);
-
-
 
 
 
@@ -952,9 +967,9 @@ var experiment = {
 			setTimeout(function() {$("#spinner").fadeOut(250)}, searchTime - 250)
 			setTimeout(function() {
 				document.getElementById("partneringText").innerHTML= "<br><br>We found you a partner called <strong>"+partnersName+"</strong>!"
-				if (partnersExposure="0") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times </strong>."}
-        if (partnersExposure="1/2") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times </strong> as you did."}
-        if (partnersExposure="1") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times </strong> as you did."}
+				if (partnersExposure=="0") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times</strong>."}
+        if (partnersExposure=="1/2") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times </strong> as you did."}
+        if (partnersExposure=="1") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times </strong> as you did."}
 
         $("#partneringText").fadeIn(500);
         $("#exposureText").fadeIn(500);
@@ -1464,7 +1479,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-experiment.prestudy(0,0,30);
+// experiment.partnering(0,0,30);
 
 
 

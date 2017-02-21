@@ -22,9 +22,11 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 ## Process Sender MTurk Data
 
 ```{r, echo=FALSE}
-filenames_100_30 <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
-filenames_80_50 <- list.files("turk/12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
-filenames <- append(filenames_100_30, filenames_80_50)
+# filenames_100_30 <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
+# filenames_80_50 <- list.files("turk/12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
+# filenames <- append(filenames_100_30, filenames_80_50)
+
+filenames <- list.files("turk/2.20_sender/production-results/", pattern="*.json", full.names = TRUE)
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -34,21 +36,95 @@ sender_ruleCheck <- NULL
 sender_game <- NULL
 sender_test<- NULL
 sender_attn <- NULL
+sender_turkIds<-NULL
+# for (i in 1:length(ldf)) {
+#   janeDoe <- ldf[[i]]
+#   anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+#   # if (i <= 30 ) {condition <- "100_30"}
+#   # else {condition <- "80_50"}
+#   # subID <- i
+#   sender_timing <- rbind(sender_timing, as.data.frame(
+#       cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+#   sender_exposures <- rbind(sender_exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
+#   sender_ruleCheck <- rbind(sender_ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
+#   sender_test <- rbind(sender_test, cbind(subID, condition, janeDoe$answers$data$testTrials))
+#   sender_game <- rbind(sender_game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
+#   if (length(janeDoe$answers$data$attnCheck)!=0) 
+#     {sender_attn <- rbind(sender_attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
+# }
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
-  # anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
-  if (i <= 30 ) {condition <- "100_30"}
-  else {condition <- "80_50"}
-  subID <- i
+  anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  # if (i <= 30 ) {condition <- "100_30"}
+  # else {condition <- "80_50"}
+  ldf_num <- i
   sender_timing <- rbind(sender_timing, as.data.frame(
-      cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
-  sender_exposures <- rbind(sender_exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
-  sender_ruleCheck <- rbind(sender_ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
-  sender_test <- rbind(sender_test, cbind(subID, condition, janeDoe$answers$data$testTrials))
-  sender_game <- rbind(sender_game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
+      cbind(ldf_num, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  sender_exposures <- rbind(sender_exposures, janeDoe$answers$data$expDuration)
+  sender_ruleCheck <- rbind(sender_ruleCheck, janeDoe$answers$data$ruleQuestions)
+  sender_test <- rbind(sender_test,janeDoe$answers$data$testTrials)
+  sender_game <- rbind(sender_game,janeDoe$answers$data$gameTrials)
   if (length(janeDoe$answers$data$attnCheck)!=0) 
-    {sender_attn <- rbind(sender_attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
+    {sender_attn <- rbind(sender_attn, janeDoe$answers$data$attnCheck)}
+  sender_turkIds <- rbind(sender_turkIds, janeDoe$WorkerId)
 }
+
+# BIG issue with 2.20 data where pExposure conditions were overwritten
+sender_game_fixed <- sender_game %>% 
+  mutate(subID = as.numeric(subID)) %>%
+  mutate(pExposure_fixed= ifelse(subID<=60, 0, partnersExposure)) %>% 
+  mutate(pExposure_fixed= ifelse(subID<=50, "1/2", pExposure_fixed)) %>% 
+  mutate(pExposure_fixed= ifelse(subID<=40, 1, pExposure_fixed)) %>% 
+  mutate(pExposure_fixed= ifelse(subID<=30, 0, pExposure_fixed)) %>% 
+  mutate(pExposure_fixed= ifelse(subID<=20, "1/2", pExposure_fixed))
+
+tmp <- sender_game_fixed %>% distinct(subID, username)
+which(duplicated(tmp$subID))
+which(tmp$subID == 2)
+which(tmp$subID == 31)
+  # row nums are 17, 53, 3, 51
+
+sender_game %>% filter(subID == 2)
+sender_game_fixed %>% filter(subID == 31) %>% 
+  select(subID, username, condition, pExposure_fixed, trialnum, realLabel, exposureRate, 
+         method, typedLabel, clickedObject, responseCorrect)
+
+sender_teaching <- sender_game_fixed %>% 
+  filter(method == "label_click") %>% 
+  select(subID, username, condition, pExposure_fixed, trialnum, realLabel, exposureRate, 
+         method, typedLabel, clickedObject, responseCorrect) %>% 
+  filter(pExposure_fixed == 1) %>%
+  mutate(trialnum_prop = (trialnum - 36)/27)
+
+nrow(sender_teaching)
+nrow(sender_game_fixed)
+
+
+#check who closed or reloaded page against who submitted data!!
+sender_turkIds_clean <- as.vector(sender_turkIds)
+sender_turkIds_clean[which(sender_turkIds_clean %in% tmp)]
+tmp2<- read.table(textConnection(gsub(";","\n", readLines("turk/2.20_sender/2.20_participants_who_closed.txt"))))
+tmp2 <- read.table(textConnection(gsub("," , " " , tmp2$V1)))
+quit_participants <- sender_turkIds_clean[which(sender_turkIds_clean %in% tmp2$V1)]
+tmp2 %>% filter(V1 %in% quit_participants)
+
+tmp2 %>% filter(V1 %in% ldf[[53]]$WorkerId)
+
+
+howLong <- sender_timing %>% 
+  mutate(start = ymd_hms(start), 
+         stop = ymd_hms(stop),
+         howLong = as.duration(ymd_hms(sender_timing$start) %--% ymd_hms(sender_timing$stop))) 
+
+howLong %>% arrange(start)
+sender_ruleCheck[which(howLong$howLong > as.duration(15*60)),] %>%
+  select(subID)
+
+tmp <- sender_game %>% distinct(subID, username) %>% select(subID)
+cbind(howLong, tmp, sender_turkIds) %>% arrange(start) %>% filter(sender_turkIds %in% quit_participants)
+
+tmp2 %>% mutate(actualPs = ifelse(tmp2$V1 %in% quit_participants, 1 , 0))
+
 
 
 yoked_exposure = exposures %>%
@@ -611,11 +687,13 @@ ggplot(filter(second_trial_counts, lastResponse == "Label"),
 ## Basics: Duration, Attention...
 ```{r, echo=FALSE}
 # How long do people take?
-howLong <- timing %>% mutate(howLong = as.duration(ymd_hms(timing$start) %--% ymd_hms(timing$stop))) %>%
+howLong <- sender_timing %>% mutate(howLong = as.duration(ymd_hms(sender_timing$start) %--% ymd_hms(sender_timing$stop))) %>%
   select(subID, howLong)
-howsort(howLong)
-mean(howLong)/60
-median(howLong)/60
+sort(howLong$howLong)
+mean(howLong$howLong)/60
+median(howLong$howLong)/60
+hist(howLong$howLong/60)
+
 
 timing_good_Ps <- timing %>% filter(subID %in% rule_correct$subID)
 timing_good_Ps$duration <- as.numeric(as.duration(ymd_hms(timing_good_Ps$start) %--% ymd_hms(timing_good_Ps$stop)))

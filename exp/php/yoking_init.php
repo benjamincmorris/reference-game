@@ -100,7 +100,7 @@ if (isset($_GET['filename']) && isset($_GET['conds'])){
 									if ($temp[1] != 1) {
 										if ($temp[1] != 0) {
 											$candidate = ((strtotime($now)- strtotime($temp[1]))/60);
-											if ($candidate >= 15) {
+											if ($candidate >= 20) {
 												$temp[1] = 1;
 											}
 										}
