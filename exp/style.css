@@ -15,6 +15,11 @@ h4 {
 	text-align: center;
 }
 
+p {
+	font-size: 16px;
+}
+
+
 td {
 	border: 1px solid black;
 	text-align:center;
@@ -30,6 +35,35 @@ th {
 	color: #ce1212;
 }
 
+.emptySquare {
+    width: 0;
+    height: 0;
+    border-left: 9px solid #fff;
+    border-right: 9px solid #fff;
+    border-bottom: 9px solid #fff;
+    border-top: 9px solid #fff;
+    outline: 1px solid black;
+    font-size: 0;
+    line-height: 0;
+}
+.square {
+    width: 0;
+    height: 0;
+    border-left: 10px solid #ce1212;
+    border-right: 10px solid #ce1212;
+    border-bottom: 10px solid #ce1212;
+    border-top: 10px solid #ce1212;
+    font-size: 0;
+    line-height: 0;
+}
+
+.blink_me {
+  animation: blinker 1.5s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
 
 
 /** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
@@ -44,7 +78,7 @@ th {
 	padding: 1% 2% 1% 2%;
 }*/
 
-input, select, button {font-family: Georgia, serif; font-size: 14px;}
+input, select, button {font-family: Georgia, serif; font-size: 16px;}
 
 button {
 	background: url(images/button-gradient.png);
@@ -56,6 +90,7 @@ button {
 	padding-right: 5px;
 	height: 29px;
 	min-width: 70px;
+	z-index: 3;
 }
 
 button2 {
@@ -68,12 +103,14 @@ button2 {
 	padding-right: 5px;
 	height: 29px;
 	min-width: 70px;
+	z-index: 3;
 }
 button:active {
 	border-left: 1px solid #c9c9c9;
 	border-top: 1px solid #c9c9c9;
 	background: none;
 	background-color: #c9c9c9;
+	z-index: 3;
 }
 
 button[disabled] {

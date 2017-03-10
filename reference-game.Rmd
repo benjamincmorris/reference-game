@@ -19,14 +19,17 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 ```
 
 
-## Process Sender MTurk Data
+## Read in the Sender MTurk Data
 
 ```{r, echo=FALSE}
 # filenames_100_30 <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
 # filenames_80_50 <- list.files("turk/12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
 # filenames <- append(filenames_100_30, filenames_80_50)
 
-filenames <- list.files("turk/2.20_sender/production-results/", pattern="*.json", full.names = TRUE)
+filenames1 <- list.files("turk/2.20_sender/production-results/", pattern="*.json", full.names = TRUE)
+filenames2 <- list.files("turk/2.21_sender_fix/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- append(filenames1, filenames2)
+
 ldf <- lapply(filenames, fromJSON)
 res <- lapply(ldf, summary)
 
@@ -37,114 +40,170 @@ sender_game <- NULL
 sender_test<- NULL
 sender_attn <- NULL
 sender_turkIds<-NULL
-# for (i in 1:length(ldf)) {
-#   janeDoe <- ldf[[i]]
-#   anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
-#   # if (i <= 30 ) {condition <- "100_30"}
-#   # else {condition <- "80_50"}
-#   # subID <- i
-#   sender_timing <- rbind(sender_timing, as.data.frame(
-#       cbind(subID, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
-#   sender_exposures <- rbind(sender_exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
-#   sender_ruleCheck <- rbind(sender_ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
-#   sender_test <- rbind(sender_test, cbind(subID, condition, janeDoe$answers$data$testTrials))
-#   sender_game <- rbind(sender_game,cbind(subID, condition, janeDoe$answers$data$gameTrials))
-#   if (length(janeDoe$answers$data$attnCheck)!=0) 
-#     {sender_attn <- rbind(sender_attn, cbind(subID, condition, janeDoe$answers$data$attnCheck))}
-# }
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
   anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
-  # if (i <= 30 ) {condition <- "100_30"}
+  if (i <= 60) {
+    sub_id = (ldf[[i]]$answers$data$ruleQuestions$subID %>% unique() %>% as.numeric())
+    if (sub_id>10 & sub_id <= 30) {next}
+    if (sub_id>40 & sub_id <= 60) {next}
+  }
   # else {condition <- "80_50"}
   ldf_num <- i
   sender_timing <- rbind(sender_timing, as.data.frame(
       cbind(ldf_num, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
   sender_exposures <- rbind(sender_exposures, janeDoe$answers$data$expDuration)
   sender_ruleCheck <- rbind(sender_ruleCheck, janeDoe$answers$data$ruleQuestions)
-  sender_test <- rbind(sender_test,janeDoe$answers$data$testTrials)
-  sender_game <- rbind(sender_game,janeDoe$answers$data$gameTrials)
+  sender_test <- rbind(sender_test,cbind(ldf_num, janeDoe$answers$data$testTrials))
+  sender_game <- rbind(sender_game,cbind(ldf_num,janeDoe$answers$data$gameTrials))
   if (length(janeDoe$answers$data$attnCheck)!=0) 
     {sender_attn <- rbind(sender_attn, janeDoe$answers$data$attnCheck)}
   sender_turkIds <- rbind(sender_turkIds, janeDoe$WorkerId)
 }
 
-# BIG issue with 2.20 data where pExposure conditions were overwritten
-sender_game_fixed <- sender_game %>% 
-  mutate(subID = as.numeric(subID)) %>%
-  mutate(pExposure_fixed= ifelse(subID<=60, 0, partnersExposure)) %>% 
-  mutate(pExposure_fixed= ifelse(subID<=50, "1/2", pExposure_fixed)) %>% 
-  mutate(pExposure_fixed= ifelse(subID<=40, 1, pExposure_fixed)) %>% 
-  mutate(pExposure_fixed= ifelse(subID<=30, 0, pExposure_fixed)) %>% 
-  mutate(pExposure_fixed= ifelse(subID<=20, "1/2", pExposure_fixed))
 
-tmp <- sender_game_fixed %>% distinct(subID, username)
-which(duplicated(tmp$subID))
-which(tmp$subID == 2)
-which(tmp$subID == 31)
-  # row nums are 17, 53, 3, 51
+```
 
-sender_game %>% filter(subID == 2)
-sender_game_fixed %>% filter(subID == 31) %>% 
-  select(subID, username, condition, pExposure_fixed, trialnum, realLabel, exposureRate, 
-         method, typedLabel, clickedObject, responseCorrect)
-
-sender_teaching <- sender_game_fixed %>% 
-  filter(method == "label_click") %>% 
-  select(subID, username, condition, pExposure_fixed, trialnum, realLabel, exposureRate, 
-         method, typedLabel, clickedObject, responseCorrect) %>% 
-  filter(pExposure_fixed == 1) %>%
-  mutate(trialnum_prop = (trialnum - 36)/27)
-
-nrow(sender_teaching)
-nrow(sender_game_fixed)
-
-
+## Process and Clean the Sender Data
+```{r}
 #check who closed or reloaded page against who submitted data!!
+## DO THIS MANUALLY, each time check for any red flags (slidenums > 2)
 sender_turkIds_clean <- as.vector(sender_turkIds)
-sender_turkIds_clean[which(sender_turkIds_clean %in% tmp)]
-tmp2<- read.table(textConnection(gsub(";","\n", readLines("turk/2.20_sender/2.20_participants_who_closed.txt"))))
+# sender_turkIds_clean[which(sender_turkIds_clean %in% tmp)]
+# tmp2 <- read.table(textConnection(gsub(";","\n", readLines("turk/2.20_sender/2.20_participants_who_closed.txt"))))
+tmp2 <- read.table(textConnection(gsub(";","\n", readLines("turk/2.21_sender_fix/2.21_participants_who_closed.txt"))))
 tmp2 <- read.table(textConnection(gsub("," , " " , tmp2$V1)))
 quit_participants <- sender_turkIds_clean[which(sender_turkIds_clean %in% tmp2$V1)]
 tmp2 %>% filter(V1 %in% quit_participants)
+#above is broken for 2.20, 2.21 data as is
 
-tmp2 %>% filter(V1 %in% ldf[[53]]$WorkerId)
 
 
+#need to clean the timing data
 howLong <- sender_timing %>% 
   mutate(start = ymd_hms(start), 
          stop = ymd_hms(stop),
          howLong = as.duration(ymd_hms(sender_timing$start) %--% ymd_hms(sender_timing$stop))) 
+hist(howLong$howLong)
 
-howLong %>% arrange(start)
-sender_ruleCheck[which(howLong$howLong > as.duration(15*60)),] %>%
-  select(subID)
+subIDs <- sender_game %>% distinct(subID, username)
+orderedStart <- cbind(howLong, subIDs, sender_turkIds) %>% arrange(start) %>% mutate(subID =as.numeric(subID)) 
 
-tmp <- sender_game %>% distinct(subID, username) %>% select(subID)
-cbind(howLong, tmp, sender_turkIds) %>% arrange(start) %>% filter(sender_turkIds %in% quit_participants)
+# BIG issue with 2.20 data where pExposure conditions were overwritten
+# so we need to do some pruning
+tmp <- sender_game %>% distinct(subID, username)
+tmp <- sender_game %>% mutate(subID =as.numeric(subID)) %>%
+                                   mutate(toBeDropped = ifelse(10<subID & subID<=30 & partnersExposure == "1", 1, 0)) %>%
+  mutate(toBeDropped = ifelse(40<subID & subID<=60 & partnersExposure == "1", 1, toBeDropped))
 
-tmp2 %>% mutate(actualPs = ifelse(tmp2$V1 %in% quit_participants, 1 , 0))
+
+## now we need to drop the duplicate subIDs, whoever was later to the party
+all_data <- inner_join(tmp  %>% mutate(ldf_num = as.factor(ldf_num)), orderedStart)
+all_data <- all_data %>% arrange(start)
+folks_all <- all_data %>% distinct(subID, username, .keep_all=TRUE)
+folks_dropped <- folks_all %>% filter(toBeDropped == 0) 
+duplicates <- folks_dropped[duplicated(folks_dropped$subID),]
+#need to be sure that we only grab unique attempts (e.g. username could be consistent across 2 attempts/subjects)
+all_data <- all_data %>% 
+  mutate(toBeDropped = ifelse(username %in% duplicates$username & start %in% duplicates$start, 1, toBeDropped))
+## need to check for duplicated turkids too, only accept 1st attempt. 
+## already sorted by start time, so just grab the results of duplicated
+#repeatedTurkers <- folks_all[duplicated(folks_all$sender_turkIds),]
+
+all_turkIds<-NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+  ldf_num <- i
+  all_turkIds <- data.frame(rbind(all_turkIds, cbind(ldf_num, start=janeDoe$AcceptTime, sender_turkIds= janeDoe$WorkerId)))
+}
+all_turkIds <- all_turkIds %>% mutate(start = ymd_hms(start)) %>% arrange(start)
+repeatedTurkers <- all_turkIds[(duplicated(all_turkIds$sender_turkIds)),]
+all_data <- all_data %>% 
+    mutate(toBeDropped = ifelse(ldf_num %in% repeatedTurkers$ldf_num, 1, toBeDropped))
+
+#join in knowledge at Test
+sender_test_slim <- sender_test %>% mutate(subID =as.numeric(subID)) %>% 
+  select(targetObjectName, realLabel, subID, exposureRate, responseCorrect, ldf_num) %>%
+  rename(testCorrect= responseCorrect)
+all_data_fixed <- all_data %>% select(-phase) %>% 
+  left_join(sender_test_slim %>% mutate(ldf_num = as.factor(ldf_num))) 
+all_data_dropped <- all_data_fixed %>% filter(toBeDropped==0) %>% 
+  mutate(trialnum = trialnum - 36)
 
 
 
-yoked_exposure = exposures %>%
-  select(subID, condition, exposureRate, object, trialnum) %>%
-  rename(yoked_obj = object) %>%
-  mutate(subID = as.numeric(subID)) 
 
-orig_exposure = exposures2 %>%
-  filter(!is.na(subID)) %>%
-  select(subID, condition, exposureRate, object, trialnum)%>%
-  rename(orig_obj = object) %>%
-  mutate(subID = as.numeric(subID)) 
 
-together_exposure <- left_join(yoked_exposure, orig_exposure) %>%
-  filter(orig_obj != yoked_obj)
 
+
+all_data_dropped %>% 
+  group_by(method) %>% 
+  select(subID, username, condition, partnersExposure, trialnum, realLabel, exposureRate,
+         typedLabel, clickedObject, responseCorrect) %>% 
+  summarize(n=n())
+
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+## decision to do teaching behavior by conditions
+all_data_dropped %>% 
+  group_by(condition, partnersExposure, subID) %>% 
+  summarize(prop_teach = mean(method=="label_click")) %>%
+  ggplot(aes(x=prop_teach, fill=partnersExposure))+
+  facet_wrap(~partnersExposure) +
+  geom_histogram()
+
+  summarize_each(funs(mean, seprop, n()), prop_teach) %>% 
+  mutate(partnersExposure= ifelse(partnersExposure=="1/2", .5, as.numeric(partnersExposure))) %>%
+  ggplot(aes(x=partnersExposure, y=mean, color=condition)) +
+  geom_pointrange(aes(x= partnersExposure, y=mean, ymin=mean-seprop, ymax=mean+seprop), position=position_dodge(.1))
+
+teach_subs <- all_data_dropped %>%
+  group_by(subID, partnersExposure, condition) %>%
+  summarise(teach_freq = sum(method == "label_click")) %>%
+  filter(teach_freq > 0)
+
+teach_subs %>%
+  group_by(condition, partnersExposure) %>%
+  summarise(n = n())
+  
+#distribution of teaching beahvior across trialnum, function of partnersExposure
+all_data_dropped %>% 
+  filter(!(subID %in% teach_subs$subID)) %>%
+  group_by(trialnum,partnersExposure) %>% 
+  summarize(mean = mean(method=="label"), sd = sd(method=="label"), n=n()) %>%
+  ggplot(aes(x=trialnum, y=mean, color=partnersExposure)) +
+  geom_pointrange(aes(x= trialnum, y=mean, ymin=mean-sd, ymax=mean+sd), position=position_dodge(.75))
+    
+   
+#first, second, or third appearence?
+all_data_dropped %>%
+  group_by(subID, condition, exposureRate, realLabel) %>%
+  mutate(appearance = ifelse(trialnum == min(trialnum), "First", 
+                             ifelse(trialnum == max(trialnum), "Third", "Second"))) %>%
+  filter((subID %in% teach_subs$subID)) %>%
+  group_by(appearance,partnersExposure, method, subID) %>% 
+  summarize(mean = ifelse(n()>0, n()/27, 0)) %>%
+  summarize_each(funs(mean, seprop, n()), mean) %>% 
+  ggplot(aes(x=appearance, y=mean,  shape=partnersExposure, color=method)) +
+  geom_pointrange(aes(x= appearance, y=mean, ymin=mean-seprop, ymax=mean+seprop), position=position_dodge(.75))
+
+
+# something with responding to partner getting it wrong??
+all_data_dropped %>%
+  rename(senderCorrect=responseCorrect) %>%
+  mutate(partnerCorrect = ifelse(targetObjectName==partnerSelection, 1, 0)) %>%
+  head()
+
+
+ 
 
 test <- test %>% mutate(responseCorrect = if_else(typedLabel == "UNKNOWN", as.integer(NA), responseCorrect))
 
-exposureData <- exposures %>% group_by(subID, exposureRate) %>% summarize(duration = sum(duration)) %>% spread(exposureRate,duration) %>% mutate(messyExposure = `4` - `2` - `1`)
+exposureData <- exposures %>% group_by(subID, exposureRate) %>% summarize(duration = sum(duration)) %>% 
+  spread(exposureRate,duration) %>% mutate(messyExposure = `4` - `2` - `1`)
 ```
 
 

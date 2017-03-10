@@ -1,6 +1,13 @@
 // Overview: (i) Parameters (ii) Helper Functions (iii) Control Flow
 
 // ---------------- PARAMETERS ------------------
+//are we yolking or not?
+// var yoked = true
+var yoked = false
+// how many rounds of the game should we play?
+repeats = 3;
+
+
 //an array of all the novel words used in the study; used for look-up purposes in pic1type, pic2type, and trialtype
 var novelWords = ["blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv", "manu"];
 
@@ -39,6 +46,9 @@ messagesFromPartner = ["blicket", "mano", "2056-600.jpg", "wug", "2005-600.jpg"]
 var subCondition = "100_30";
 var trueLabelPoints= 100; 
 var trueClickPoints = 30;
+
+
+
 
 // ---------------- HELPER ------------------
 
@@ -98,29 +108,29 @@ function fillArray(value, len) {
 
 // shifted to 1, 2, 4
 // need to output which object gets which level of exposure?
-// function exposureStimuli(imgAr) {
-//   shuffle(imgAr);
-//   // set to constants
-//   var exposureRate = [1, 2, 4]
-// 	  arr1 = fillArray(imgAr[0], exposureRate[0]);
-// 	  arr2 = fillArray(imgAr[1], exposureRate[0]);
-// 	  arr3 = fillArray(imgAr[2], exposureRate[0]);
-// 	  arr4 = fillArray(imgAr[3], exposureRate[1]);
-// 	  arr5 = fillArray(imgAr[4], exposureRate[1]);
-// 	  arr6 = fillArray(imgAr[5], exposureRate[1]);
-// 	  arr7 = fillArray(imgAr[6], exposureRate[2]);
-// 	  arr8 = fillArray(imgAr[7], exposureRate[2]);
-// 	  arr9 = fillArray(imgAr[8], exposureRate[2]);
-//   exposureImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
-//   shuffle(exposureImgs);
-//   //keep calling this function until weve got an array with no back to back repeats!
-//   for (i=0; i< exposureImgs.length -1 ; i++) {
-//   	if (exposureImgs[i] === exposureImgs[i+1]) {
-//   		exposureStimuli(imgAr);
-//   	}
-//   }
-//   return exposureImgs;  
-// }
+function exposureStimuli(imgAr) {
+  shuffle(imgAr);
+  // set to constants
+  var exposureRate = [1, 2, 4]
+	  arr1 = fillArray(imgAr[0], exposureRate[0]);
+	  arr2 = fillArray(imgAr[1], exposureRate[0]);
+	  arr3 = fillArray(imgAr[2], exposureRate[0]);
+	  arr4 = fillArray(imgAr[3], exposureRate[1]);
+	  arr5 = fillArray(imgAr[4], exposureRate[1]);
+	  arr6 = fillArray(imgAr[5], exposureRate[1]);
+	  arr7 = fillArray(imgAr[6], exposureRate[2]);
+	  arr8 = fillArray(imgAr[7], exposureRate[2]);
+	  arr9 = fillArray(imgAr[8], exposureRate[2]);
+  exposureImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
+  shuffle(exposureImgs);
+  //keep calling this function until weve got an array with no back to back repeats!
+  for (i=0; i< exposureImgs.length -1 ; i++) {
+  	if (exposureImgs[i] === exposureImgs[i+1]) {
+  		exposureStimuli(imgAr);
+  	}
+  }
+  return exposureImgs;  
+}
 
 //function that takes an image and looks up how many times it appears in a given array
 function getOccurences(img, imgAr) {
@@ -133,39 +143,55 @@ function getOccurences(img, imgAr) {
     return count;
 }
 
-// function gameStimuli(imgAr) {
-//   shuffle(imgAr);
-//   arr1 = fillArray(imgAr[0], 2);
-//   arr2 = fillArray(imgAr[1], 2);
-//   arr3 = fillArray(imgAr[2], 2);
-//   arr4 = fillArray(imgAr[3], 2);
-//   arr5 = fillArray(imgAr[4], 2);
-//   arr6 = fillArray(imgAr[5], 2);
-//   arr7 = fillArray(imgAr[6], 2);
-//   arr8 = fillArray(imgAr[7], 2);
-//   arr9 = fillArray(imgAr[8], 2);
-//   testImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
-//   shuffle(testImgs);
-//   //test for repreats, if they exist, redo the process
-//   for (i=0; i< testImgs.length -1 ; i++) {
-//   	if (testImgs[i] === testImgs[i+1]) {
-//   		gameStimuli(imgAr);
-//   	}
-//   }
-//   shuffledTestImgs = new Array;
-//   for (i=0; i < testImgs.length; i++) {
-//   	shuffledTestImgs[i] = '<img class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + testImgs[i] + '" alt = "'+ testImgs[i] +'">';
-//   }
-//   return shuffledTestImgs;
-// }
 
-// function pairObjectLabels(imgName) {
-//   for (var i = 0; i < imgArrayFIXED.length; i++) {
-//   	if (imgName===imgArrayFIXED[i]) {
-//   		return novelWords[i]
-//   	}
-//   }
-// }
+function gameStimuli(imgAr, notTheImage) {
+  shuffle(imgAr);
+  var testingImgs = []
+  for (var i = 0; i < imgAr.length; i++) {
+    // console.log('each one ' + fillArray(imgAr[i], repeats))
+
+    testingImgs = testingImgs.concat(fillArray(imgAr[i], repeats))
+    }
+  // arr1 = fillArray(imgAr[0], repeats);
+  // arr2 = fillArray(imgAr[1], repeats);
+  // arr3 = fillArray(imgAr[2], repeats);
+  // arr4 = fillArray(imgAr[3], repeats);
+  // arr5 = fillArray(imgAr[4], repeats);
+  // arr6 = fillArray(imgAr[5], repeats);
+  // arr7 = fillArray(imgAr[6], repeats);
+  // arr8 = fillArray(imgAr[7], repeats);
+  // arr9 = fillArray(imgAr[8], repeats);
+  // testImgs = arr1.concat(arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9);
+  // console.log('array of arrays ' + testImgs)
+  // testImgs = arr0.concat(arr1, arr2, arr3, arr4, arr5, arr6, arr7, arr8);
+  testImgs = testingImgs.slice()
+  shuffle(testImgs);
+  //test for repreats, if they exist, redo the process
+  for (i=0; i< (testImgs.length - 1); i++) {
+  	if (testImgs[i] === testImgs[i+1]) {
+        // console.log(i + ' ' + testImgs[i] + " <br> " + testImgs[i+1])
+  		gameStimuli(imgAr);
+  	}
+  }
+  if (notTheImage == true) {
+    return testImgs;
+  } else {
+    shuffledTestImgs = new Array;
+    for (i=0; i < testImgs.length; i++) {
+  	 shuffledTestImgs[i] = '<img class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + testImgs[i] + '" alt = "'+ testImgs[i] +'">';
+    }
+    return shuffledTestImgs;
+  }
+}
+
+
+function pairObjectLabels(imgName) {
+  for (var i = 0; i < imgArrayFIXED.length; i++) {
+  	if (imgName===imgArrayFIXED[i]) {
+  		return novelWords[i]
+  	}
+  }
+}
 
 function randomIntFromInterval(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
@@ -375,7 +401,7 @@ try {
     // var condCounts= "1,0;2,1;3,1"
     // conditions for piloting (need nine 1s)
     // var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1";
-    var condCounts = "1,1;2,0;3,0;4,0;5,0;6,0;7,0;8,0;9,0;10,0;11,0;12,0;13,0;14,1;15,0;16,1;17,0;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,0;28,1;29,1;30,0;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
+    var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1";
     // var condCounts = "1,1;2,1;3,1;4,1;5,0;6,1;7,1;8,1;9,0;10,0;11,1;12,1;13,0;14,1;15,0;16,1;17,0;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,0;28,1;29,1;30,0;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
         // note that the above condCounts are yoked for specific data, so do not include certain partiicpants e.g. 5 whose data was flawed. 
     // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
@@ -406,7 +432,10 @@ try {
                     document.getElementById("disabledStart").disabled=true;
                 }
             } else {
+
                 do_all_the_setup();
+                // experiment.game(0,0,20);
+
             }
         }
     };
@@ -433,29 +462,56 @@ try {
 
 var progressBars = document.getElementsByClassName('progress-bar');
 //get full number of 'slides' to increment progress bar
-var totalSlides = 1 + 1 + 21 + 1 + imgArray.length + 1 + 1 + 18 + 1 + 1;
+var totalSlides = 1 + 1 + 21 + 1 + imgArray.length + 1 + 1 + repeats*(imgArray.length) + 1 + 1;
     // 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
     // plus a final 1 so that the final slide is not quite 100%
 
 
 function do_all_the_setup() {
+    console.log('is set? _ ' + turk.assignmentId + ' _')
     //assign to points conditions, based on subjectIdentifier number
-    if(subjectIdentifier > 30) { 
+    if(subjectIdentifier > 20) { 
         subCondition = "80_50";
-        var trueLabelPoints = 80; 
-        var trueClickPoints = 50;
+        trueLabelPoints = 80; 
+        trueClickPoints = 50;
     }
-
     slide_number = 1; 
 
-    setTimeout(function() {                         
+    //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
+    shuffle(imgArrayFIXED);
+
+    if (yoked==true) {
+        setTimeout(function() {                         
                                 $.ajax({
                                     type: "GET",
                                     url: "experiment_files/matchedExposures.csv",
                                     dataType: "text",
                                     success: function(data) {getMatchedExposures(data,subjectIdentifier)}
                                  });
-                }, 1);
+                exposureArray = matchedExposureArray;
+                exposureLabelArray = matchedExposureLabelArray
+                            $.ajax({
+                                type: "GET",
+                                url: "experiment_files/matchedGameTrials.csv",
+                                dataType: "text",
+                                success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
+                             });
+                            gameArray = matchedGameArray
+                            targetArray = matchedTargetArray
+                    }, 1)
+    } else {
+        // otherwise we will give them the right labels randomly
+        exposureArray = exposureStimuli(imgArray)
+        exposureLabelArray = []
+        for (var i = 0; i < exposureArray.length; i++) {
+            exposureLabelArray.push(pairObjectLabels(exposureArray[i]))
+        }
+        targetArray = gameStimuli(imgArray, true)
+        gameArray = [] 
+        for (i=0;i<targetArray.length;i++) {
+            gameArray[i] = pairObjectLabels(targetArray[i])
+        }
+    }
 
 
     shuffle(familiarArray)
@@ -469,11 +525,10 @@ function do_all_the_setup() {
         progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
     }
     document.getElementById("objects").innerHTML = getRandomImages(imgArray, basePath, false);
-    //shuffle name array so participants get random object/label pairings. placed here to ensure it only happens once.
-    shuffle(imgArrayFIXED);
+
     
-    console.log("this function is only used for demos, comment out for turk")
-    experiment.game(0,0,31);
+    // console.log("this function is only used for demos, comment out for turk")
+    // experiment.game(0,0,31);
 }
 
 
@@ -513,12 +568,11 @@ var experiment = {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
 		var index=0;
-		exposureArray = matchedExposureArray;
 		var exposureTrial = document.createElement("img");
 		exposureTrial.src = "tabletobjects/" + exposureArray[index];
 		exposureTrial.style.height = '400px';
 		document.getElementById('content').appendChild(exposureTrial);
-		var firstlabel = document.createTextNode(matchedExposureLabelArray[index]);
+		var firstlabel = document.createTextNode(exposureLabelArray[index]);
 		document.getElementById('label').appendChild(firstlabel);
 		document.getElementById("clickme").innerHTML = "Next";
 		setTimeout(function() {$("#clickme").fadeIn()}, 1250);
@@ -531,7 +585,7 @@ var experiment = {
 				phase : "exposure",
 				trialnum : slideNumber,
 				object: exposureArray[index],
-				realLabel: matchedExposureLabelArray[index], 
+				realLabel: exposureLabelArray[index], 
 				exposureRate : getOccurences(exposureArray[index], exposureArray),
 				timestamp: getCurrentTime(), //the time that the trial was completed at 
 				duration : time2 - time1,
@@ -549,6 +603,7 @@ var experiment = {
 		}
 		var $img = $("img"), speed = 200;
 		i= index + 1;
+        // exposureArray = exposureStimuli(imgArray)
 		ar = exposureArray;
 		lastExposure = ar.length;
 		if (i < lastExposure) {
@@ -557,7 +612,7 @@ var experiment = {
 				document.getElementById('content').lastChild);
 			document.getElementById('label').removeChild(
 				document.getElementById('label').lastChild);
-			var newLabel = document.createTextNode(matchedExposureLabelArray[i]);
+			var newLabel = document.createTextNode(exposureLabelArray[i]);
 			var newImage = document.createElement("img");
 			newImage.src = "tabletobjects/" + newPic;
 			newImage.style.height = '400px';
@@ -574,7 +629,7 @@ var experiment = {
 					phase : "exposure",
 					trialnum : slideNumber,
 					object: newPic,
-					realLabel: matchedExposureLabelArray[i],
+					realLabel: exposureLabelArray[i],
 					exposureRate : getOccurences(newPic, exposureArray),
 					timestamp: getCurrentTime(), //the time that the trial was completed at 
 					duration : time2 - time1,
@@ -731,6 +786,8 @@ var experiment = {
 	},
 
 	prestudy: function(slideNumber) {
+            console.log(subCondition + '  ' + trueLabelPoints)
+
         slide_number = slideNumber;
 		showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
@@ -865,14 +922,16 @@ var experiment = {
 						$('#wrongCorrection').show();
 						document.getElementById("beginGame").innerHTML = "Begin Game";
 						setTimeout(function() {$('#beginGame').fadeIn(500)}, 1000);
-						document.getElementById("beginGame").onclick = function() {
-						    $.ajax({
-						        type: "GET",
-						        url: "experiment_files/matchedGameTrials.csv",
-						        dataType: "text",
-						        success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
-						     });
-							experiment.game(0, 0, slideNumber+2)};
+    						document.getElementById("beginGame").onclick = function() {
+    						    // $.ajax({
+    						    //     type: "GET",
+    						    //     url: "experiment_files/matchedGameTrials.csv",
+    						    //     dataType: "text",
+    						    //     success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
+    						    //  });
+    							experiment.game(0, 0, slideNumber+2)
+                            };
+                         
 					}		
 				}
 		}
@@ -885,15 +944,7 @@ var experiment = {
 	game: function(score, roundNumber, slideNumber) {
         slide_number = slideNumber;
 		time1 = new Date().getTime();
-        console.log("this function is only used for demos, comment out for turk")
-		setTimeout(function() {
-							$.ajax({
-						        type: "GET",
-						        url: "experiment_files/matchedGameTrials.csv",
-						        dataType: "text",
-                                success: function(data) {processData(data,subjectIdentifier, matchedGameArray, matchedTargetArray)}
-						     });
-					}, 1)
+
 		showSlide("referenceGame");
 		$("#objects2").fadeIn(500)
 		document.getElementById("myScore").innerHTML = score;
@@ -925,16 +976,17 @@ var experiment = {
 					this.style.border="5px solid black";
 					document.getElementById("sendMessage").disabled = false;
 					// possible points determined by the type of trial, receiving a click message or label message	
-					if (getOccurences(matchedGameArray[roundNumber], imgArray)>0) {
+					if (getOccurences(gameArray[roundNumber], imgArray)>0) {
 						receivedMessage = 'click';
 						typedMessage= '';
 						document.getElementById("sendMessage").innerHTML="Select Object for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>";
 					} else {
 						receivedMessage = 'label';
-						typedMessage = matchedGameArray[roundNumber];
+						typedMessage = gameArray[roundNumber];
 						document.getElementById("sendMessage").innerHTML="Select Object for <strong> <em> " +trueLabelPoints+" Possible Points </em> </strong>";
 					}
 					selection = this.alt;
+                    // console.log(pairObjectLabels(selection))
 					message = 1; // change message value to 1 if clicked. 
 						isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
 					return;
@@ -944,7 +996,7 @@ var experiment = {
 					// if you have selected an object, and are trying to click another object, do nothing.
 					if (this.style.border!="5px solid black") {return}
 					// otherwise, revert the selection, check if this is a clicked message situation and make appropriate change 
-					if (matchedGameArray[roundNumber] == this.alt) {
+					if (gameArray[roundNumber] == this.alt) {
 						this.style.border= "2px dashed black";
 					} else {this.style.border=""}
 					// if there is a label typed out, keep the sendMessage button enabled and change it to 10 possible points
@@ -956,22 +1008,22 @@ var experiment = {
 		document.getElementById("sendMessage").disabled = true;
 		document.getElementById("partnerMessage").innerHTML = "";
 		setTimeout(function() {		
-			if (getOccurences(matchedGameArray[roundNumber], imgArray)>0) {
+			if (getOccurences(gameArray[roundNumber], imgArray)>0) {
 				document.getElementById("yourPartnerSent").innerHTML = "Your partner clicked on this object:";
 				$('.toSelect').each(function() {
-					if (this.alt == matchedGameArray[roundNumber]) {
+					if (this.alt == gameArray[roundNumber]) {
 						this.style.border= "2px dashed black";
 					}
 				})
 			} else {
 				document.getElementById("yourPartnerSent").innerHTML = "Your partner sent this message:";
-				document.getElementById("partnerMessage").innerHTML = matchedGameArray[roundNumber];
+				document.getElementById("partnerMessage").innerHTML = gameArray[roundNumber];
 			}
 		}, waitTime);
 		document.getElementById("sendMessage").onclick = function() {
 			time2 = new Date().getTime();
 			$('.toSelect').click(function() {return false;});
-			if(selection != matchedTargetArray[roundNumber]) {isCorrect = 0};
+			if(selection != targetArray[roundNumber]) {isCorrect = 0};
 			if(message==0) {return}
 
 			//store trial data before moving on
@@ -980,7 +1032,7 @@ var experiment = {
 				phase : "game",
                 condition: subCondition,
 				trialnum : slideNumber,
-				targetObjectName : matchedTargetArray[roundNumber],
+				targetObjectName : targetArray[roundNumber],
 				receivedMessageType : receivedMessage,
 				typedMessage : typedMessage,
 				clickedObject: selection,
@@ -994,7 +1046,7 @@ var experiment = {
 			experiment.gameTrials.push(gameTrials);
 			//send message, return 'partner response'
 			// it went one slide too long?
-			numOfGames = matchedGameArray.length - 1; 
+			numOfGames = gameArray.length - 1; 
 			
 				if(receivedMessage=='click' & isCorrect==1) {$("#sendMessage").hide(); 
 									document.getElementById("messageFromPartner").innerHTML = "Nice work- you chose the right object!";

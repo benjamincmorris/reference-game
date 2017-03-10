@@ -160,7 +160,6 @@ function gameStimuli(imgAr, fixing) {
         gameStimuli(imgAr);
     }
 
-
     // old code that iteratively checks the arrays, maybe useful if were doing 4 or 5 copies of each?
    //    // check to make sure we don't have 3 in a row - geeze!
    //    if (gameImgs[i+1] != gameImgs[i+2]) {
@@ -185,7 +184,6 @@ function gameStimuli(imgAr, fixing) {
    //      gameStimuli(imgAr)
    //    }
    //  }
-
 
 
   }
@@ -367,8 +365,7 @@ try {
 
                   do_all_the_setup()
                   // for debugging, use line below to jump around the exp
-                        // experiment.partnering(0,0,30);
-
+                        // experiment.game(0,0,30);
                 }
 
         }
@@ -712,6 +709,8 @@ var experiment = {
     slide_number=slideNumber;
 		showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
+    $("#tryThatAgain").hide()
+    $("#sendMessageDemo").hide();
 		$("#exampleText").show();
 		$("#howToPlay").show();
 		$("#typingExample").hide();
@@ -747,11 +746,12 @@ var experiment = {
 			
       //general rules
 			setTimeout(function() {$("#clickText").fadeIn(500)}, 4000)			
-			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn points. <br> But you will be be charged for sending different kinds of messages."
+			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn points. <br> But you will be charged for sending different kinds of messages."
 			setTimeout(function() {$("#ifRight").fadeIn(500)}, 7000)
       setTimeout(function() {$("#gameReady").fadeIn(500)}, 11000)
       document.getElementById("gameReady").innerHTML = "Got it So Far"
-    
+      
+      //typing example, right message
       document.getElementById("gameReady").onclick = function() {
         document.getElementById("ifType").innerHTML="You can send a message by typing the object's label here...";
         document.getElementById('ifTypePoints').innerHTML =""
@@ -761,20 +761,37 @@ var experiment = {
         //typing example, right message
         setTimeout(function() {
                     $("#typingExample").fadeIn(500); 
-                    document.getElementById('clickText').innerHTML ="<br> You will then be shown what your partner selected."
                     }, 500)
-  			setTimeout(function() {document.getElementById("ifTyping").value="s"}, 500)
-  			setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 700)
-  			setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 900)
-  			setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 1100)
-        // partner's selection
-        setTimeout(function() {$("#clickText").fadeIn(500)}, 3000)
-        setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px red dashed";}, 4500)
-        setTimeout(function() {document.getElementById('ifClick').innerHTML ="If your partner chose the target, <br> you will end up with <strong> " + trueLabelPoints + " points</strong>."
-            $("#ifClick").fadeIn(500)}, 5500)
-        setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
-                $("#gameReady").fadeIn(500)}, 8000)
-      
+        setTimeout(function() {document.getElementById('ifTypePoints').innerHTML ="(try typing 'shoe' in the box above!)"
+              $("#ifTypePoints").fadeIn(500);
+          }, 2000)
+  			// setTimeout(function() {document.getElementById("ifTyping").value="s"}, 500)
+  			// setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 700)
+  			// setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 900)
+  			// setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 1100)
+        // try it yourself demonstration
+        setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
+        document.getElementById("sendMessageDemo").onclick = function() {
+          // if they don't type shoe, display a little reminder
+          if (document.getElementById("ifTyping").value!= 'shoe') {
+            $("#ifTypePoints").addClass('redText');
+            $("#tryThatAgain").fadeIn(500)
+            setTimeout(function() {$("#tryThatAgain").fadeOut(500)
+              $("#ifTypePoints").removeClass('redText')
+              }, 2500)
+            return false}
+          document.getElementById("ifTypePoints").innerHTML=""
+          $("#sendMessageDemo").hide()
+          // partner's selection
+          setTimeout(function() {document.getElementById('clickText').innerHTML ="<br> You will then be shown what your partner selected."
+              $("#clickText").fadeIn(500)
+            }, 500)
+          setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px red dashed";}, 1500)
+          setTimeout(function() {document.getElementById('ifClick').innerHTML ="Since your partner chose the target, <br> you would end up with <strong> " + trueLabelPoints + " points</strong> in this example."
+              $("#ifClick").fadeIn(500)}, 2500)
+          setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
+                  $("#gameReady").fadeIn(500)}, 5000)
+        }
 
         //typing exmaple, wrong messsage
         document.getElementById("gameReady").onclick = function() {
@@ -789,21 +806,37 @@ var experiment = {
               $("#typingExample").fadeIn(500);
     					document.getElementById("ifTyping").value=""; 
     					document.getElementById("ifType").innerHTML="But if your partner gets it wrong based on your message...";
-    					document.getElementById("ifTypePoints").innerHTML="You will still be <strong> charged "+ Math.abs(pointsLabelWrong) +" points</strong>."
+              document.getElementById("ifTypePoints").innerHTML="(try typing 'chair' above)"
+              $("#ifTypePoints").fadeIn(500);
             }, 500)
-    			setTimeout(function() {document.getElementById("ifTyping").value="c"}, 700)
-    			setTimeout(function() {document.getElementById("ifTyping").value="ch"}, 900)
-    			setTimeout(function() {document.getElementById("ifTyping").value="cha"}, 1100)
-    			setTimeout(function() {document.getElementById("ifTyping").value="chai"}, 1300)
-    			setTimeout(function() {document.getElementById("ifTyping").value="chair";
-    									}, 1500)
-          setTimeout(function() {document.getElementById("chairDistractor").style.border= "3px red dashed"}, 2500)
-          setTimeout(function() {document.getElementById("gameReady").innerHTML = "Got It";
-                  $("#gameReady").fadeIn(500)}, 4000)
-   
+    			// setTimeout(function() {document.getElementById("ifTyping").value="c"}, 700)
+    			// setTimeout(function() {document.getElementById("ifTyping").value="ch"}, 900)
+    			// setTimeout(function() {document.getElementById("ifTyping").value="cha"}, 1100)
+    			// setTimeout(function() {document.getElementById("ifTyping").value="chai"}, 1300)
+    			// setTimeout(function() {document.getElementById("ifTyping").value="chair";
+    			// 						}, 1500)
+          // diy example
+          setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
+          document.getElementById("sendMessageDemo").onclick = function() {
+            // if they don't type shoe, display a little reminder
+            if (document.getElementById("ifTyping").value!= 'chair') {
+              $("#ifTypePoints").addClass('redText');
+              $("#tryThatAgain").fadeIn(500)
+              setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+              return false}
+            $("#ifTypePoints").hide()
+            $("#sendMessageDemo").hide()
+            document.getElementById("ifClick").innerHTML="You will be <strong> charged "+ Math.abs(pointsLabelWrong) +" points</strong>."
+            setTimeout(function() {$("#ifClick").fadeIn(500)}, 1500)
+            setTimeout(function() {document.getElementById("chairDistractor").style.border= "3px red dashed"}, 500)
+            setTimeout(function() {document.getElementById("gameReady").innerHTML = "Got It";
+                    $("#gameReady").fadeIn(500)}, 3000)
+          }
 
           //clicking example
           document.getElementById("gameReady").onclick = function() {
+            $('.famArray').addClass('toSelect')
+            $("#ifClick").hide()
             $("#gameReady").hide()
             document.getElementById("clickText").innerHTML="<br> You can also send a message by clicking the object here..."
             // fade out the old
@@ -811,19 +844,55 @@ var experiment = {
             setTimeout(function() {document.getElementById("chairDistractor").style.border= ""}, 500)
             //bring in the new
             setTimeout(function() {$("#clickText").fadeIn(500)}, 500)
-            setTimeout(function() {document.getElementById("shoeTarget").style.border= "5px black solid"}, 2000)
-            setTimeout(function() {document.getElementById("ifClick").innerHTML="and you will end up with <strong> "+trueClickPoints+" points</strong> <br> when your partner gets it right."
-                        $("#ifClick").fadeIn(500)}, 3000)
-            setTimeout(function() {
-                      document.getElementById("shoeTarget").style.outline= "3px red dashed"
-                      document.getElementById("shoeTarget").style.zIndex= "1"
-                    }, 5000)
-            setTimeout(function() {document.getElementById("gameReady").innerHTML = "Anything Else?";
-                  $("#gameReady").fadeIn(500)}, 6000)
+            setTimeout(function() {document.getElementById("clickText").innerHTML="<br> You can also send a message by clicking the object here... <br> <strong> Give it a try </strong>"
+                }, 2000)
+            //diy demonstration
+            //check if an element in the array is clicked on
+            clickDemo= ''
+            $(".toSelect").click(function() {
+              console.log("clicked "+ this.style.border)
+              // if this object hasn't been clicked
+              if (this.style.border == '') {
+                // check if anything has been clicked on, if so, don't do anything when there are more clicks
+                sum=0
+                $(".famArray").each(function(){
+                  if (this.style.border != '') {sum=sum+1}
+                })
+                if(sum>0) {return false}
+                // if nothing else had been clicked on, then set this to 'clicked and store it?'
+                this.style.border = "5px solid black"
+                clickDemo = this.alt 
+              } else {
+                this.style.border=''
+                console.log("unclick")
+                clickDemo = '' 
+              } 
+            })
+            setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
+            document.getElementById("sendMessageDemo").onclick = function() {
+              // if they don't type shoe, display a little reminder
+              if (clickDemo!= 'shoe') {
+                $("#ifTypePoints").addClass('redText');
+                $("#tryThatAgain").fadeIn(500)
+                setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+                return false}
+              $("#ifTypePoints").hide()
+              $("#sendMessageDemo").hide()
+              setTimeout(function() {document.getElementById("ifClick").innerHTML="and you will end up with <strong> "+trueClickPoints+" points</strong> <br> when your partner gets it right."
+                          $("#ifClick").fadeIn(500)}, 1500)
+              setTimeout(function() {
+                        document.getElementById("shoeTarget").style.outline= "3px red dashed"
+                        document.getElementById("shoeTarget").style.zIndex= "1"
+                      }, 500)
+              setTimeout(function() {document.getElementById("gameReady").innerHTML = "Anything Else?";
+                    $("#gameReady").fadeIn(500)}, 3500)
+            }
       
 
             // doing both example
             document.getElementById("gameReady").onclick = function() {
+              // need to reset this here, then when there's a click event it will be set anew.
+              clickDemo=''
               $("#gameReady").hide()
               //get rid of the old example
               $("#clickText").fadeOut(500);
@@ -832,25 +901,37 @@ var experiment = {
               $("#ifClick").fadeOut(500);
               //bring in the last example
               $("#typingExample").fadeIn(500);
-              $("#ifTypePoints").hide();
+              $("#ifTypePoints").fadeIn(500);
               document.getElementById("ifTyping").value=""; 
-              document.getElementById("ifType").innerHTML="If you choose to do both..."
-              setTimeout(function() {document.getElementById("ifTyping").value="s"}, 500)
-              setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 700)
-              setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 900)
-              setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 1100)
-              setTimeout(function() {document.getElementById("shoeTarget").style.border= "5px black solid" ; 
-                    }, 2100)
-              setTimeout(function() {document.getElementById("ifTypePoints").innerHTML="You will be charged for doing each strategy and end up with <strong> "+ doingBothPoints+" points</strong>."
-                          $("#ifTypePoints").fadeIn(500)
-                    }, 3000)
-              setTimeout(function() {
-                      document.getElementById("gameReady").innerHTML = "I'm Ready"
-                      $("#gameReady").fadeIn(500)
-                      document.getElementById("shoeTarget").style.outline= "3px red dashed"
-                    }, 5000)
-              document.getElementById("gameReady").onclick = function() {
-                experiment.gameQuestions(slideNumber)
+              document.getElementById("ifTypePoints").innerHTML="(try typing 'shoe' and clicking on that object)"; 
+              document.getElementById("ifType").innerHTML="You can choose to do both..."
+              // diy demo
+              setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
+              document.getElementById("sendMessageDemo").onclick = function() {
+                // if they don't type shoe and/or don't click the shoe, display a little reminder
+                if (clickDemo!= 'shoe' || document.getElementById("ifTyping").value != 'shoe') {
+                  $("#ifTypePoints").addClass('redText');
+                  $("#tryThatAgain").fadeIn(500)
+                  setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+                  return false}
+                $("#ifTypePoints").hide()
+                $("#sendMessageDemo").hide()
+
+
+                setTimeout(function() {
+                        document.getElementById("gameReady").innerHTML = "I'm Ready"
+                        document.getElementById("shoeTarget").style.outline= "3px red dashed"
+                      }, 500)
+                setTimeout(function() {document.getElementById("ifClick").innerHTML="You will be charged for doing each strategy and end up with <strong> "+ doingBothPoints+" points</strong>."
+                            $("#ifClick").fadeIn(500)
+                      }, 1500)
+                setTimeout(function() {$("#gameReady").fadeIn(500)
+                    // issue where if you get referred to back to watching the instructions again, the on click function call doubled up and negated itself
+                    $(".toSelect").unbind()
+                  }, 2500)
+                document.getElementById("gameReady").onclick = function() {
+                  experiment.gameQuestions(slideNumber)
+                }
               }
             }
           }
@@ -943,6 +1024,7 @@ var experiment = {
 	partnering: function(score, roundNumber, slideNumber) {
     slide_number=slideNumber;
 		showSlide("getYourPartner");
+    $("#squareExamples").hide()
 		$("#spinner").hide();
 		$('#gameStartFinal').fadeIn(1000);
 		document.getElementById("gameStartFinal").innerHTML = "Search for a Partner";
@@ -959,24 +1041,94 @@ var experiment = {
 				        }
 		});
 		document.getElementById("gameStartFinal").onclick = function() {
+      $("#partneringHeadingStuff").addClass("blink_me")
+      document.getElementById("partneringHeading").innerHTML= "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now! "
 			$("#userName").hide();
-			document.getElementById("partneringText").innerHTML = "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now!"
-			searchTime = randomIntFromInterval(4000,6000);
+			// document.getElementById("partneringText").innerHTML = "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now!"
+      document.getElementById("partneringText").innerHTML = "<br> Note that you saw the objects and their labels <strong> 21 times </strong> "
+      $("#exposureText").fadeIn(500);
+      // document.getElementById("exposureText").innerHTML = "<br> Your partner may have seen the objects fewer, the same, or more times"
+              expVisualized = ''
+
+      for(var i=0; i<exposureArray.length; i++) {
+        thisObject = '<img class="square" style="margin:1px">'
+        expVisualized= expVisualized + thisObject
+      }
+      document.getElementById('myVisual').innerHTML = expVisualized
+      // expVisualized = ''
+      // for(var i=12; i<exposureArray.length; i++) {
+      //   thisObject = '<img class="col-xs-1" src=' + basePath + exposureArray[i] + ' style="margin:0px">'
+      //   expVisualized= expVisualized + thisObject
+      // }
+      // console.log(expVisualized)
+      // document.getElementById('myVisualOther').innerHTML = expVisualized
+
+			searchTime = randomIntFromInterval(10000,12000);
 			$("#spinner").fadeIn(500);
 			$("#gameStartFinal").hide();
-			setTimeout(function() {$("#spinner").fadeOut(250)}, searchTime - 250)
-			setTimeout(function() {
-				document.getElementById("partneringText").innerHTML= "<br><br>We found you a partner called <strong>"+partnersName+"</strong>!"
-				if (partnersExposure=="0") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times</strong>."}
-        if (partnersExposure=="1/2") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times </strong> as you did."}
-        if (partnersExposure=="1") {document.getElementById("exposureText").innerHTML= " Note: <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times </strong> as you did."}
 
+      //squares example to illustrate exposure differences
+          document.getElementById('squaresSame').innerHTML = expVisualized
+          expVisualized = ''
+          for(var i=0; i<exposureArray.length; i++) {
+              thisObject = '<img class="emptySquare" style="margin:2px">'
+              expVisualized= expVisualized + thisObject
+          }
+          document.getElementById('squaresNone').innerHTML = expVisualized
+          expVisualized = ''
+          for(var i=0; i<(exposureArray.length/2); i++) {
+              thisObject = '<img class="square" style="margin:1px">'
+              expVisualized= expVisualized + thisObject
+          } for(var i=(exposureArray.length/2)+1; i<exposureArray.length; i++) {
+              thisObject = '<img class="emptySquare" style="margin:2px">'
+              expVisualized= expVisualized + thisObject
+          }
+          document.getElementById('squaresFewer').innerHTML = expVisualized
+      // bring in the examples after a few seconds
+      setTimeout(function() {$("#squareExamples").fadeIn(500)}, 3000)
+
+      // we found a partner!
+			setTimeout(function() {$("#partneringHeadingStuff").fadeOut(501)}, searchTime - 500)
+			setTimeout(function() {
+        document.getElementById("exposureText").innerHTML= "<br> We found you a partner called <strong>"+partnersName+"</strong>!"
+
+				// document.getElementById("partneringText").innerHTML= "<br><br>"
+				if (partnersExposure=="0") { 
+          // $("#fewer").css("visibility", "hidden")
+          $("#none").fadeOut(500)
+          setTimeout(function() {$("#none").fadeIn(500)
+            document.getElementById("noneText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times</strong>."
+            $("#noneText").addClass("redText")
+            }, 1500)
+          $("#fewer").fadeOut(500)
+          $("#same").fadeOut(500)
+        }
+        if (partnersExposure=="1/2") {
+          $("#fewer").fadeOut(500)
+          $("#none").fadeOut(500)
+          $("#same").fadeOut(500)
+          setTimeout(function() {
+            document.getElementById("fewerText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times</strong> as you did."
+            $("#fewer").fadeIn(500)
+            $("#fewerText").addClass("redText")}, 1500)
+        }
+        if (partnersExposure=="1") {
+          $("#none").fadeOut(500)
+          $("#fewer").fadeOut(500)
+          $("#same").fadeOut(500)
+          setTimeout(function() {
+            document.getElementById("sameText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times</strong> as you did."
+            $("#same").fadeIn(500)
+            $("#sameText").addClass("redText")}, 1500)
+        }
+        $("#partneringText").fadeTo(500, .5)
+        $("#myVisual").fadeTo(500, .5)
         $("#partneringText").fadeIn(500);
         $("#exposureText").fadeIn(500);
 				document.getElementById("gameStartFinal").innerHTML= "Begin Game!"
 				document.getElementById("gameStartFinal").onclick = function() {
 					experiment.game(0, 0, slideNumber+1, $("#userName").val())}
-				setTimeout(function() {$("#gameStartFinal").fadeIn(1000)}, 1000);
+				setTimeout(function() {$("#gameStartFinal").fadeIn(1000)}, 4000);
 			}, searchTime)
 		}
 	},
@@ -1115,6 +1267,7 @@ var experiment = {
 			// first things first. check blah. if it is an enlish word, return an error and let them click again. 
 				  //final check of what, if anything, was typed in the textbox to determine score. 
 			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+      document.getElementById('waitingForPartner').innerHTML = partnersName + " is thinking...."
 			if(blah != '') {
   				if(Word_List.isInList(blah)) {
             $("#sendMessage").show()
@@ -1314,7 +1467,8 @@ var experiment = {
       } else {document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like "+partnersName+" chose the wrong object!";}
   
 
-
+      //issue with saving the array of partner knowledge... 
+      partnerKnowsSave = partnerKnows.slice(0)
       //store trial data before moving on
       gameTrials = {
         phase : "game",
@@ -1323,7 +1477,7 @@ var experiment = {
         condition: cond,
         partnersExposure: partnersExposure,
         trialnum : slideNumber,
-        partnerVocab: partnerKnows,
+        partnerVocab: partnerKnowsSave,
         targetObjectName : document.getElementById("gameTargetImage").alt,
         exposureRate : getOccurences(document.getElementById('gameTargetImage').alt, exposureArray),
         realLabel : pairObjectLabels(document.getElementById("gameTargetImage").alt),
@@ -1391,7 +1545,7 @@ var experiment = {
       })
 		}, waitTime);
 		numOfGames = gameArray.length;  
-
+    // numOfGames = 4;  
 		if (count < numOfGames) {
 			document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber, username)};
 		} else {
