@@ -1,0 +1,447 @@
+---
+title: "12.8_reference_sender_points"
+output: html_document
+
+---
+
+<!-- #Load packages, general setup -->
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, fig.align='center', messages=FALSE)
+
+library(dplyr)
+library(jsonlite)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+library(langcog)
+
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
+theme_set(theme_bw())
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
+
+
+
+Read in the Sender MTurk Data
+```{r , include=FALSE}
+# grab the files for this version of the experiment
+filenames_100_30 <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
+filenames_80_50 <- list.files("turk/12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- append(filenames_100_30, filenames_80_50)
+
+# read the json files
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+
+# loop through the ldf and make our datasets
+sender_timing <- NULL
+sender_exposures <- NULL
+sender_ruleCheck <- NULL
+sender_game <- NULL
+sender_test<- NULL
+sender_attn <- NULL
+sender_turkIds<-NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+  anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  subID <- i
+  if (i<=30) {
+    condition= "100_30"
+  } else {
+    condition= "80_50"
+  }
+  sender_timing <- rbind(sender_timing, as.data.frame(
+      cbind(subID, condition, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  sender_exposures <- rbind(sender_exposures, cbind(subID, condition, janeDoe$answers$data$expDuration))
+  sender_ruleCheck <- rbind(sender_ruleCheck, cbind(subID, condition, janeDoe$answers$data$ruleQuestions))
+  sender_test <- rbind(sender_test,cbind(subID, condition, janeDoe$answers$data$testTrials))
+  sender_game <- rbind(sender_game,cbind(subID, condition,janeDoe$answers$data$gameTrials))
+  if (length(janeDoe$answers$data$attnCheck)!=0) 
+    {sender_attn <- rbind(sender_attn, janeDoe$answers$data$attnCheck)}
+  sender_turkIds <- rbind(sender_turkIds, cbind( subID, condition, janeDoe$WorkerId))
+}
+
+```
+
+Investigating Bad Eggs
+```{r, include=FALSE}
+#trying to weed out folks who are not doing the task as we'd expect 
+
+#for 12.8
+# looking for abberant responses e.g. pricklyy or blackwhit
+manual_remove <- as.vector(c(30, 17, 9, 5, 15, 10, 27, 13, 48))
+```
+
+
+Processing Data/ Building the full, clean set
+```{r, include=FALSE}
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
+
+# In this version, we hadn't yet put the Lev Adjustment into the js file, so we need to clean up baseline knowledge here. 
+sender_test2 <- sender_test %>%
+  rowwise() %>%
+  mutate(testDistance = min(adist(typedLabel, novelWords))) %>%
+  ## need ifelse because case of two identical minimums breaks the mutate by trying to return 2 elements
+  ### hideous way of flipping a coin and randomly choosing that minimum in event of tie
+  ###  if a three way (or more) tie is possible with these words, this code allows for it.
+    # cannot use 'which.min' because it doesn't find two minimums when of the same value
+  mutate(testClosest = ifelse(length(which(adist(typedLabel, novelWords) == testDistance))==1,
+           novelWords[which(adist(typedLabel, novelWords) == testDistance)],
+           novelWords[which(adist(typedLabel, novelWords) == testDistance)[sample(1:
+                        length(which(adist(typedLabel, novelWords) == testDistance)), 1)]])) %>%
+  mutate(testCorrect = ifelse(testClosest==realLabel, 1, 0),
+         testCorrect = if_else(typedLabel == "UNKNOWN", as.double(NA), testCorrect))
+
+# building utilities
+expKnow <- sender_test2 %>%
+  filter(!subID %in% manual_remove) %>%
+  group_by(exposureRate,condition) %>% 
+  summarize(U_label = sum(!is.na(testCorrect), na.rm = T)/length(testCorrect)) %>%
+  mutate(U2_label = U_label*U_label)
+
+#joining all the data together with appropriate renaming for distinctiveness
+sender_all_data <- sender_game %>% 
+  filter(!subID %in% manual_remove) %>%
+  select(subID, trialnum, condition, exposureRate, method, responseCorrect, realLabel, typedLabel) %>%
+  rename(communicationCorrect = responseCorrect) %>%
+  rowwise() %>%
+  left_join(select(sender_test2, subID, realLabel, responseCorrect, testClosest, testCorrect)) %>%
+  mutate(trueClickPoints= ifelse(condition == "100_30", 30, 50)) %>%
+    mutate(trueLabelPoints= ifelse(condition == "100_30", 100, 80)) %>%
+  rename(known=testCorrect) %>%
+  # mutate(point_utility = trueClickPoints,
+  #        label_utility_perfect = ifelse(is.na(known), trueLabelPoints*0, trueLabelPoints*known)) %>%
+  left_join(expKnow)
+
+# also distinguish whether this is the objects first appearance or second in the game
+sender_all_data_split <- sender_all_data %>%
+  group_by(subID, condition, exposureRate, realLabel) %>%
+  mutate(firstTrial = factor(trialnum == min(trialnum), levels = c(TRUE, FALSE), 
+                             labels = c("First", "Second")))
+  
+# too many groups...
+sender_game_data <- sender_all_data_split %>%
+  group_by(condition, exposureRate, firstTrial, known, subID) %>%
+  summarise(responseLabel = mean(method == "label")) %>%
+  summarise_each(funs(mean, sem), responseLabel)
+
+```
+
+<br> <br> 
+
+### Knowledge at Test
+
+Knowledge of Object-Label Mapping Scales with Exposure
+```{r, echo=FALSE, fig.height=5, fig.width=4, message=FALSE}
+
+
+
+#test performance and expected utility based on test knowledge
+corrects <- sender_test2 %>% 
+  filter(!subID %in% manual_remove) %>%
+  # filter(condition=="100_30") %>%
+  mutate(testCorrect = if_else(is.na(testCorrect), 0, testCorrect)) %>%
+  group_by(exposureRate) %>% 
+  summarize(avgCorr = mean(testCorrect)) %>%
+  mutate(expUtility = avgCorr*100/((avgCorr*100 + 30)))
+
+
+
+
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+# sender_test2 <- sender_test2 %>%
+  # mutate(known=as.factor(known)) %>%
+  # mutate(testCorrect=ifelse(is.na(testCorrect), "Unknown", as.character(testCorrect)))
+# sender_all_data_split$known <- factor(sender_all_data_split$known, levels = sender_all_data_split$known[order(c("Unknown","0","1"))])
+
+# quartz(width = 6, height = 7)
+sender_test2 %>%
+  filter(!subID %in% manual_remove) %>%
+  mutate(testCorrect=ifelse(is.na(testCorrect), "Unknown", as.character(testCorrect))) %>%
+  group_by(exposureRate, subID) %>%
+  summarise(performance = mean(testCorrect=="1")) %>%
+  summarize_each(funs(mean, seprop), performance) %>%
+  ggplot(aes(x = as.factor(exposureRate), y = mean)) +
+    geom_bar(stat = "identity", position="dodge", fill='palegreen4') +
+    geom_linerange(aes(ymax = mean + seprop, 
+                      ymin = mean - seprop), position=position_dodge(.9)) + 
+    theme_bw() +
+    labs(x="Exposure Rate", y="Proportion Correct") +
+    # scale_fill_discrete(name='Condition', labels=c("Talk is Cheap", "Talk is Expensive")) +
+    coord_cartesian(ylim=c(0,1))
+
+```
+
+<br><br>
+
+### Prediciting message strategy
+
+In the plot below you can see some evidence of the two main effects that we expected. (1) Participants seem to be more likely to label an object if the label is a word they were exposed to more frequently. This is sensbile, because, as we showed above, knowledge scales with exposure as well. (2) Participants in the 100_30 condition, where sending a label is relatively less costly than the other condition, seem to produce more labels than participants in the 80_50 condition, where the relative costs make labeling less advantageous than the other condition.   
+<br>
+```{r, include=FALSE, fig.height=6, fig.width=7}
+
+
+label_props <- sender_all_data_split %>%
+  group_by(condition, exposureRate, 
+           # firstTrial,  
+           subID) %>%
+  summarise(senderEstimate = sum(U_label*trueLabelPoints)/sum(U_label*trueLabelPoints + trueClickPoints),
+      receiverEstimate = sum(U2_label*trueLabelPoints)/
+              (sum(U2_label*trueLabelPoints + trueClickPoints)),
+            empirical = mean(method == "label")) %>%
+  summarize_each(funs(mean, seprop), c(senderEstimate, receiverEstimate, empirical))
+ # select(-senderEstimate_seprop, -receiverEstimate_seprop)
+
+group_ns <- sender_all_data_split %>% group_by(condition, exposureRate, 
+                                               # firstTrial, 
+                                               subID) %>%
+  distinct() %>%
+  group_by(condition, exposureRate) %>%
+  summarise(n = n())
+
+wide_label_props <- label_props %>%
+  gather(measure, value, - exposureRate, -condition) %>%
+  separate(measure, c("measure", "type")) %>%
+  spread(type, value) %>%
+  left_join(group_ns)
+
+
+### Bar Plot of Proportion of Trials where Labels Are Sent, by Condition (empirical results)
+# quartz(width = 10, height = 7)
+label_props %>% 
+  ggplot( aes(x = as.factor(exposureRate), y = empirical_mean, 
+             fill = condition)) +
+   geom_bar(stat = "identity", position="dodge") +
+  geom_linerange(aes(ymax = empirical_mean + empirical_seprop, 
+                      ymin = empirical_mean - empirical_seprop), position=position_dodge(.9)) + 
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion of Labelling Behavior", title="Propensity to Send Labels During the Game") +
+  scale_fill_discrete(name='Condition', labels=c("Talk is Cheap", "Talk is Expensive")) +
+  coord_cartesian(ylim=c(0,1))
+
+### Same plot as line range
+# label_props %>% 
+#   ggplot( aes(x = as.factor(exposureRate), y = empirical_mean, 
+#              color = condition, fill=condition)) +
+#   geom_pointrange(aes(ymax = empirical_mean + empirical_seprop, 
+#                       ymin = empirical_mean - empirical_seprop), position=position_dodge(.9)) + 
+#   geom_ribbon(aes(ymax = receiverEstimate_mean + receiverEstimate_seprop,
+#                   ymin = receiverEstimate_mean - receiverEstimate_seprop),
+#               alpha = .25, size = 0) +
+#   theme_bw() +
+#   labs(x="Exposure Rate", y="Proportion Labelling", title="Propensity to Send Labels During the Game") +
+#   scale_fill_discrete(name='Condition', labels=c("Talk is Cheap", "Talk is Expensive")) +
+#   coord_cartesian(ylim=c(0,1))
+```
+<br> <br>
+
+We can build in a simple choice axiom to quantitately predict what the data should look like and compare these predictions against the empirical data above. The plot below shows those predictions for each of our conditions based on the assumption that one's partner has perfect knowledge. 
+
+We can see that these predictions fit the data quite well. There is some evidence that people are underlabeling compared to the predicted rates, especially for the lower frequency words. 
+
+```{r, echo=FALSE, fig.height=5, fig.height=6}
+### plot comparining theoretical behavior vs. empirical results
+# quartz(width = 10, height = 7)
+
+label_props %>% 
+  # filter(condition=="100_30") %>%
+  ggplot( aes(x = log(exposureRate), y = empirical_mean)) +
+  geom_pointrange(aes(ymax = empirical_mean + empirical_seprop, 
+                      ymin = empirical_mean - empirical_seprop, color=condition)) + 
+  geom_ribbon(aes(ymax = senderEstimate_mean + senderEstimate_seprop,
+                  ymin = senderEstimate_mean - senderEstimate_seprop, fill=condition), 
+              alpha = .25, size = 0) +
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion of Labelling Behavior", title="Propensity to Send Labels During the Game") +
+  scale_fill_discrete(name='Condition', labels=c("Talk is Cheap", "Talk is Expensive")) +
+  coord_cartesian(ylim=c(0,1), xlim=c(-.15,1.5))
+```
+<br> <br>
+
+Another prediction would be that people assume their partner knows as much as they do. In this formulation, we use the same choice axiom as above but square the knowledge term (K) resulting in a more conservative estimate of what the partner is expected to know. This model seems to provide an even cleaner fit to the data, especially for the lower frequency words that the previous model didn't match as well. 
+
+```{r, echo=FALSE, fig.height=5, fig.height=6}
+label_props %>% 
+  # filter(condition=="100_30") %>%
+  ggplot( aes(x = log(exposureRate), y = empirical_mean)) +
+  geom_pointrange(aes(ymax = empirical_mean + empirical_seprop, 
+                      ymin = empirical_mean - empirical_seprop, color=condition)) + 
+  geom_ribbon(aes(ymax = receiverEstimate_mean + receiverEstimate_seprop,
+                  ymin = receiverEstimate_mean - receiverEstimate_seprop, fill=condition),
+              alpha = .25, size = 0) +
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion of Labelling Behavior", title="Propensity to Send Labels During the Game") +
+  scale_fill_discrete(name='Condition', labels=c("Talk is Cheap", "Talk is Expensive")) +
+  coord_cartesian(ylim=c(0,1))
+```
+
+
+
+
+
+###Adapting On-line: First versus. Second Trial Behavior  
+
+<br>
+We are also interested in how people adapt their decision to communicate based on the feedback they receive during the gaming. The plot below shows how often Ps label during second trials only, based on whether they correctly labeled the last appearance of that object. 
+
+People are clearly acting sensibly such that they are much less likely to produce a label after having been incorrect last time (red bars) than after correctly identifiying that object (blue bars). There is a good deal of noise here, likely because we have restricted to only second trial data where the first trial was a label. The limited available data means we cannot reliably identify whether a relationship exists with exposure rate. 
+``` {r, echo=FALSE, fig.height=7, fig.width=10}
+### plot of second trial data: option 1, by exposureRate
+second_trial_data <- sender_all_data_split %>%
+  arrange(condition, subID, exposureRate, realLabel, firstTrial) %>%
+  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"), 
+                               levels = c("Label", "Point"))) %>%
+  mutate(lastCorrect = lag(communicationCorrect)) %>%
+  filter(firstTrial == "Second") %>%
+  group_by(lastResponse, lastCorrect, exposureRate, subID) %>%
+  summarise(responseLabel = mean(method == "label", na.rm = T), n=n()) %>%
+  summarise_each(funs(mean, seprop, n()), responseLabel)
+
+# quartz(width = 10, height = 7)
+second_trial_data %>% filter(lastResponse=="Label") %>%
+  ggplot(aes(x = as.factor(exposureRate), y = mean, fill = as.factor(lastCorrect))) +
+   geom_bar(stat = "identity", position="dodge") +
+  geom_pointrange(aes(ymin = mean - seprop, ymax = mean + seprop), 
+                  position=position_dodge(.9)) + 
+  labs(x="Exposure Rate", y="Proportion of Labelling Behavior", title="Propensity to Send Labels on Object's Second Appearance") +
+  scale_fill_discrete(name='Last Time I Saw This', labels= c("Wrong", "Correct")) +
+  coord_cartesian(ylim=c(0,1))
+```
+
+
+
+
+``` {r, echo=FALSE, fig.height=7, fig.width=10}
+###### option 2, by knowledge at test
+second_trial_data_2 <- sender_all_data_split %>%
+  arrange(condition, subID, exposureRate, realLabel, firstTrial) %>%
+  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"), 
+                               levels = c("Label", "Point"))) %>%
+  mutate(lastCorrect = lag(communicationCorrect)) %>%
+  filter(firstTrial == "Second") %>%
+  group_by(lastResponse, lastCorrect, known, subID) %>%
+  summarise(responseLabel = mean(method == "label", na.rm = T)) %>%
+  summarise_each(funs(mean, seprop), responseLabel) %>%
+  mutate(known = as.character(known)) %>%
+  mutate(known = if_else(is.na(known), "unknown", known))
+
+# quartz(width = 10, height = 7)
+second_trial_data_2 %>% filter(lastResponse=='Label') %>%
+  ggplot(aes(x = known, y = mean, fill = as.factor(lastCorrect))) +
+     geom_bar(stat = "identity", position="dodge") +
+  geom_linerange(aes(ymin = mean - seprop, ymax = mean + seprop), 
+                  position = position_dodge(.9)) + 
+  scale_y_continuous(limits = c(0,1))+ 
+  labs(x="Knowledge at Test", y="Proportion Correct", title="Accuracy of Second Label Attempts") +
+  scale_fill_discrete(name='Last Time I Saw This', labels= c("Wrong", "Correct")) +
+  coord_cartesian(ylim=c(0,1))
+```
+
+
+
+``` {r, include=FALSE}
+second_trial_counts <- sender_all_data_split %>%
+  arrange(condition, subID, exposureRate, realLabel, firstTrial) %>%
+  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"), 
+                               levels = c("Label", "Point"))) %>%
+  mutate(lastCorrect = lag(communicationCorrect)) %>%
+  filter(firstTrial == "Second") %>%
+  group_by( lastResponse, lastCorrect, known, method, subID) %>%
+  summarise(n = n()) %>%
+  summarise(n = mean(n)) %>%
+  ungroup() %>%
+  mutate(known = as.character(known)) %>%
+  mutate(known = if_else(is.na(known), "unknown", known))
+
+#other plots, this one is raw counts...
+# quartz(width = 10, height = 7)
+# ggplot(filter(second_trial_counts, lastResponse == "Label"),
+#        aes(x = exposureRate, y = n, color = method,
+#                               shape = known)) +
+#   facet_grid(lastCorrect ~ condition, labeller = label_both) +
+#   geom_point(size = 2, position = position_dodge(.5))
+```
+
+
+``` {r}
+# this one is just first vs. second, but without the nuance of what happend at first
+# quartz(width = 10, height = 7)
+ggplot(sender_game_data, aes(x = exposureRate, y = mean, color = firstTrial)) +
+  facet_grid(known ~ condition) +
+  geom_pointrange(aes(ymin = mean - sem, ymax = mean + sem), 
+                  position = position_dodge(.5)) + 
+  scale_y_continuous(limits = c(0,1))
+```
+
+
+
+
+
+
+## (old stuff)
+
+<br>
+Possible condition differences in pre-game knowledge? 
+```{r, include=FALSE}
+#uh oh condition differences?
+sender_test2 %>%
+  filter(!subID %in% manual_remove) %>%
+  group_by(condition, exposureRate, subID) %>%
+  summarise(correct = mean(responseCorrect)) %>%
+  ggplot(aes(x=correct, y=..count..)) + geom_histogram() + facet_grid(.~condition)
+```
+
+
+``` {r, include=FALSE}
+#other ways of checking for badeggs
+#   do i have to do this manually
+#some proxies that are automatic
+   #folks who only use one method during the game?
+only_one_method <- sender_game %>% group_by(subID) %>% 
+  summarize(muchLabelling=mean(method=='label')) %>%
+  filter(muchLabelling==1 |muchLabelling==0)
+# wow these people are doing so so well?
+#  oh duh, this is a recognition task now...
+```
+
+
+
+``` {r, include=FALSE}
+  #folks who respond with long(er) responses?
+too_many_letters <- sender_game %>% 
+  group_by(subID) %>% 
+  mutate(nchar= ifelse(method=="label", 
+                          nchar(typedLabel, type="chars"),
+                          NA)) %>%
+  summarize(avg_nchar = mean(nchar, na.rm=T)) %>%
+  filter(avg_nchar > 5)
+```
+
+
+
+``` {r, include=FALSE}
+  #what is the overlap like?
+too_many_letters$subID %in% only_one_method$subID
+
+
+
+
+wrong_first_data <- sender_all_data_split %>%
+  arrange(condition, subID, exposureRate, realLabel, firstTrial) %>%
+  mutate(lastResponse = factor(if_else(lag(method == "label"), "Label", "Point"),
+                               levels = c("Label", "Point")),
+         lastCorrect = lag(communicationCorrect),
+         lastLabel = lag(typedLabel)) %>%
+  filter(lastResponse == "Label", !lastCorrect) %>%
+  ungroup() %>%
+  select(subID,realLabel, typedLabel,lastLabel)
+  # mutate(edit_dist = stringdist(typedLabel, realLabel, method = "lv"))
+
+
+```
+

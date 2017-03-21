@@ -1,0 +1,644 @@
+---
+title: "Reciever Reference Game: Yoked Participants"
+output: html_document
+---
+
+```{r this, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, fig.align='center', messages=FALSE)
+
+
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+library(langcog)
+library(purrr)
+
+
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
+theme_set(theme_bw())
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
+
+<br><br>
+<!-- Reading in the Receiver Version Data   -->
+  
+```{r, include=FALSE}
+# grab all the file names and join them up
+filenames <- list.files("turk/2016.1.23_pilot/production-results/", pattern="*.json", full.names = TRUE)
+filenames2 <- list.files("turk/2016.1.25_receiver/production-results/", pattern="*.json", full.names = TRUE)
+filenames <- append(filenames, filenames2)
+
+# read in the json files using jsonlite
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+# bug in the unique turker code means we had some repeats. easiest to just list and skip reading them.
+manual_removes <- c("A1Q5KU5RVDE67", "A1DIGREVLNOXT3", "A3EWR58W0SA885", "A3UUH3632AI3ZX", "A1Y0Y6U906ABT5")
+
+#set up the datasets, and then loop through the full LDF to get all the data
+timing <- NULL
+exposures <- NULL
+ruleCheck <- NULL
+game <- NULL
+test<- NULL
+attn <- NULL
+turkIds <- NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+    if(!(janeDoe$WorkerId %in% manual_removes)) {
+      # condition <- "100_30"
+      # subID <- i
+      timing <- rbind(timing, as.data.frame(
+          cbind(turkID = janeDoe$WorkerId, 
+                subID = unique(janeDoe$answers$data$expDuration$subID),
+                start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+      exposures <- rbind(exposures, cbind(janeDoe$answers$data$expDuration))
+      ruleCheck <- rbind(ruleCheck, cbind(janeDoe$answers$data$ruleQuestions))
+      test <- rbind(test, cbind(janeDoe$answers$data$testTrials))
+      game <- rbind(game,cbind(janeDoe$answers$data$gameTrials))
+      if (length(janeDoe$answers$data$attnCheck)!=0) 
+        {attn <- rbind(attn, cbind(janeDoe$answers$data$attnCheck))}
+      turkIds <- rbind(turkIds, janeDoe$WorkerId)
+    }
+}
+```
+
+
+##### Checking for Bad Eggs: 
+We need to check for folks who may have refreshed the experiment and thus received different amounts of exposure (and likely inconsistent word-object mappings). In this experiment, the people who we have data from who did refresh all did so prior to first exposure, so we don't need to worry about this.
+We have already dropped the people who managed to take one of our experiment more than once when reading in our data (our unique turker code was not functioning properly at this time - but this is always a good thing to double check).   
+  
+```{r, include=FALSE}
+#check who closed or reloaded page against who submitted data
+tmp <- read.table(textConnection(gsub(",","\n", readLines("turk/2016.1.23_pilot/1.23_participants_who_closed.txt"))))
+turkIds <- as.vector(turkIds)
+turkIds[which(turkIds %in% tmp$V1)]
+
+#slightly different reading in this data because we also collected which slide number folks quit on. 
+tmp2<- read.table(textConnection(gsub(";","\n", readLines("turk/2016.1.25_receiver/1.25_participants_who_closed.txt"))))
+tmp2 <- read.table(textConnection(gsub("," , " " , tmp2$V1)))
+quit_participants <- turkIds[which(turkIds %in% tmp2$V1)]
+tmp2 %>% filter(V1 %in% quit_participants)
+
+```
+
+
+<!-- Data Wrangling: Test   -->
+```{r, include=FALSE}
+# gathering exposure data, define correctness based on lev-adjusted entries
+test_fixed <-  left_join(test, exposures %>% select(subID, object, realLabel) %>% distinct(), 
+                by=c('targetObjectName'='object', "subID")) %>%
+      mutate(testCorrect = ifelse(typedLabel=="UNKNOWN", NA, 
+                                 ifelse(adjLabel == realLabel, 1, 0)))
+
+```
+
+<!-- Data Wrangling: Game   -->
+```{r, include=FALSE}
+game_fixing <- left_join(game, exposures %>% select(subID, object, realLabel, exposureRate) %>% distinct(), 
+                by=c('targetObjectName'='object', "subID")) %>%
+        rename(targetLabel = realLabel) %>%
+        rename(targetExposure = exposureRate) %>%
+      left_join(exposures %>% select(subID, object, realLabel) %>% distinct(), 
+                by=c('clickedObject'='object', "subID")) %>%
+      rename(clickedLabel = realLabel)
+
+game_fixed <- game_fixing %>%
+  rowwise() %>%
+  rename(typedLabel= typedMessage) %>%
+  mutate(testDistance = min(adist(typedLabel, novelWords))) %>%
+  ## need ifelse because case of two identical minimums breaks the mutate by trying to return 2 elements
+  ### hideous way of flipping a coin and randomly choosing that minimum in event of tie
+  ###  if a three way (or more) tie is possible with these words, this code allows for it.
+  mutate(gameClosest = ifelse(length(which(adist(typedLabel, novelWords) == testDistance))==1,
+           novelWords[which(adist(typedLabel, novelWords) == testDistance)],
+           novelWords[which(adist(typedLabel, novelWords) == testDistance)[sample(1:
+                        length(which(adist(typedLabel, novelWords) == testDistance)), 1)]])) %>%
+  mutate(senderCorrect = ifelse(gameClosest==targetLabel, 1, 0),
+         senderCorrect = if_else(typedLabel == "", 1, senderCorrect),
+         gameClosest = if_else(typedLabel == "", targetLabel, gameClosest)) %>%
+  # adjusting correctness to be receiver selects the object of the message (not nec. the 'target')
+  mutate(receiverCorrect = ifelse(gameClosest==clickedLabel, 1, 0)) %>%
+  left_join(rename(select(test_fixed,condition,exposureRate,subID,realLabel,testCorrect),
+                   gameClosest = realLabel)) %>%
+  rename(closestExposure = exposureRate)
+```
+
+
+<br> <br>
+
+### Receiver Data: Basics    
+Note that in these game data, we have two definitions of 'exposureRate'. One ('targetExposure') refers to how often Ps saw the true target that was originally presented to the sender (this is the target that we used to tell Ps whether they correctly interpreted the messages). The other ('closestExposure') refers to how often the object that was communicated about was seen. The two are largely similar, but the distinction is important.   
+  
+In these data, we have used 'closestExposure'. Note also that the recognition data coming from games is, of course, filtered only to game trials where labels were used.   
+```{r, echo=FALSE}
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+# people seem to be doing bizarrely well, especially with the low exposure words
+test_performance <- test_fixed %>% 
+  mutate(testCorrect = ifelse(is.na(testCorrect), 0, testCorrect)) %>%
+  group_by(exposureRate, subID) %>% 
+  summarize(corr = mean(testCorrect)) %>%
+  summarize_each(funs(mean, seprop), corr)%>%
+  cbind(phase="test")
+
+game_performance <- game_fixed %>%
+  filter(receivedMessageType == 'label') %>%
+  group_by(closestExposure,subID) %>%
+  summarise(corr  = mean(receiverCorrect==1)) %>%
+  summarize_each(funs(mean, seprop), corr) %>%
+  rename(exposureRate = closestExposure) %>%
+  cbind(phase="game")
+
+receiver_yoked_performance <- rbind(test_performance, game_performance)
+
+ggplot(data=receiver_yoked_performance, aes(x = as.factor(exposureRate), 
+                 y = mean,
+                 fill = phase
+             ))  +
+  geom_bar(stat = "identity", position="dodge") +
+  geom_linerange(aes(ymax = mean + seprop, ymin = mean - seprop), 
+                  position = position_dodge(.9)) +
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion Correct", title="Recall and Recognition by Exposure Rate")+
+  scale_fill_discrete(name='', labels=c("Recall", "Recognition"))
+```
+  
+As you can see in the plot above, the red bars show performance at initial test (a simple recall task). Here, performance scales well with exposure as we expected.  
+  
+Unexpectedly, participants are doing remarkably well at recognizing low frequency words during the game. We expect that this is likely a fluke in this sample as there knowledge of those words at test was also higher than we have seen in the other experiments using this paradigm. There are also fewer trials that involve these labels, so more possibility for a noisy estimate. A cleaner estimate would likely come from un-yoked, label-only input where all words in the lexicon were covered (a follow-up we have done [see reciever_clean]).  
+<br> <br>
+Let's see how performance in the game scales with performance at test.  
+    
+```{r, echo=FALSE, fig.height=4, fig.width=5}
+#how do receivers do as a function of their knowledge at Test
+game_fixed %>%
+  group_by(receivedMessageType, testCorrect,subID) %>%
+  summarise(correct = mean(receiverCorrect==1)) %>%
+  summarise_each(funs(mean, seprop), correct) %>%
+  ggplot(aes(x = as.factor(testCorrect), y = mean, fill=receivedMessageType))  +
+  geom_bar(stat = "identity", position="dodge") +
+  geom_linerange(aes(ymax = mean + seprop, ymin = mean - seprop), 
+                  position = position_dodge(.9)) +
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion Correct", title="Performance by Baseline Knowledge")
+```
+
+The above plot shows that recognition performance does seem to map onto knowledge at test, a nice check considering the earlier concern that it is less preditcable by exposure rate. 
+
+<br>
+<br>
+
+#### Plotting receiver version data  
+
+If we look at receiver perfomance as a function of both exposure rates and knowledge at test, these data continue to show bizarrely strong performance with the low frequency words (left most bars in the plot below), but more concerningly, the pattern based on knowledge at test seems broken for the low frequency words...
+```{r, echo=FALSE}
+# _____________________________________________________________________________
+
+
+# sqrt [ p(1 - p) / n ]
+
+expKnow <- test_fixed %>% group_by(exposureRate) %>% 
+  summarize(U_label = sum(!is.na(testCorrect), na.rm = T)/length(testCorrect)) %>%
+  mutate(U2_label = U_label*U_label)
+
+
+# fixed plot : correctness, by closestExposure + testCorrect
+receiver_labeling_data <- game_fixed %>%
+  filter(receivedMessageType == "label") %>%
+  #does it make sense to drop these potentially garbage trials? i can't tell... maybe not
+  # filter(gameClosest == targetLabel) %>%
+  group_by(closestExposure, 
+           # condition,
+           testCorrect, 
+           # firstTrial, 
+           subID) %>%
+  summarise(receiverCorrect = mean(receiverCorrect == 1)) %>%
+  summarise_each(funs(mean, seprop, length), receiverCorrect)
+
+### these data are so weird
+receiver_labeling_data %>% 
+  mutate(testCorrect = ifelse(is.na(testCorrect), 'unknown', testCorrect)) %>%
+  ggplot(aes(x = as.factor(closestExposure), 
+                y = mean, 
+                  fill= testCorrect)) +
+  geom_bar(stat = "identity", position="dodge") +
+  geom_linerange(aes(ymax = mean + seprop, ymin = mean - seprop), 
+                  position = position_dodge(.9)) +
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion Correct")
+```
+
+<br>
+<br>
+
+### Adapting Behavior On-Line 
+How do participants respond to feedback that they selected the wrong object based on the message they received?   
+<br>
+Across all the frequencies, articpants seem to be much more likely to switch the object they selected following the feedback that they were wrong when they last saw that object, compared with when they selected the correct object the previous time.
+<br>
+Again, there is not a clear pattern with exposure rate, but this should be taken with a grain of salt given the pecularities of this sample.  
+<br>
+```{r, echo=FALSE, message=FALSE, cache=TRUE}
+# Plots of swtiching behavior
+#____________________________________________________________________________________
+#working toward some plots
+  # need to drop the cases for which target label is not gameClosest?
+game_fixed_split <- game_fixed %>%
+  group_by(subID, condition, closestExposure, gameClosest) %>%
+  # filter(gameClosest == targetLabel) %>%
+  mutate(firstTrial = factor(trialnum == min(trialnum), levels = c(TRUE, FALSE), 
+                             labels = c("First", "Second")))
+  #note above code can actually be three now... or just one...
+
+# trials where receiver fails to understand first message when it was a label, and gets another chance
+# play with arranging by clickedLabel versus gameClosest!!!
+wrong_first_data <- game_fixed_split %>%
+  arrange(condition, subID, gameClosest, firstTrial) %>%
+  select(subID, closestExposure, testCorrect, typedLabel, gameClosest, clickedLabel, senderCorrect, 
+         firstTrial, trialnum, receivedMessageType, receiverCorrect) %>%
+  mutate(lastMethod = factor(if_else(lag(receivedMessageType == "label"), "Label", "Point"),
+                               levels = c("Label", "Point")),
+         lastCorrect = lag(receiverCorrect),
+         lastSelection = lag(clickedLabel)) %>%
+  mutate(switch = lastSelection != clickedLabel) 
+
+wrong_first_data  %>%
+  filter(receivedMessageType == "label", firstTrial=='Second') %>%
+  group_by(lastCorrect, closestExposure, subID) %>%
+  summarize(n=n(), switched = mean(switch==TRUE)) %>%
+  summarize_each(funs(mean,seprop), switched) %>%
+  ggplot(aes(x=as.factor(closestExposure),
+             y=mean,
+             fill=as.factor(lastCorrect))) +
+   geom_bar(stat = "identity", position="dodge") + 
+    geom_linerange(aes(ymax=mean+seprop, ymin=mean-seprop), position=position_dodge(.9)) +
+  xlab("Exposure Rate") + ylab("Proportion of Switched Selections") +
+  ggtitle("Receiver Switching Selections as a Function of Degree of Exposure") +
+  scale_fill_discrete(name='Last Trial', labels=c("Wrong", "Correct"))
+```
+
+<br> 
+<br>
+We are also interested in how likely people are to be correct in these situations where they have switched their selections following an incorrect response (blue bars).
+
+It is very difficult to establish an appropriate baseline by which to judge how notable these values are. We have given performance in general on first appearances as a frame of reference (red bars). If participants were to guess truly randomly, they would have a 12.5% (1 in 8) chance of selecting the true referent. While participants are likely guessing more inteligently, we have also plotted this baseline as a floor estimate of where performance should be (dashed line). 
+
+Participants are clearly performing better than would be expected by truly random chance (dashed line). Exposure rate is, again, not obviously related in this sample. 
+<br>
+```{r, echo=FALSE}
+
+switch_corr <- wrong_first_data  %>%
+  filter(receivedMessageType == "label", lastCorrect==0, switch==TRUE) %>%
+  group_by(closestExposure, subID) %>%
+  summarize(n=n(), corr = mean(receiverCorrect)) %>%
+  summarize_each(funs(mean,seprop), corr) %>%
+  mutate(type = "Wrong Last Time + Switch")
+
+switch_corr_baseline <- wrong_first_data  %>%
+  filter(firstTrial=='First') %>%
+  group_by(closestExposure, subID) %>%
+  summarize(n=n(), corr = mean(receiverCorrect)) %>%
+  summarize_each(funs(mean,seprop), corr) %>%
+  mutate(type = "First Try Baseline")
+
+switch_corr <- rbind(switch_corr_baseline, switch_corr)
+
+ggplot(data=switch_corr, aes(x=as.factor(closestExposure),
+             y=mean,
+             fill=as.factor(type)
+             )) +
+   geom_bar(stat = "identity", position="dodge") + 
+    geom_pointrange(aes(ymax=mean+seprop, ymin=mean-seprop), position=position_dodge(.9)) +
+  xlab("Exposure Rate") + ylab("Proportion Correct") +
+  ggtitle("Receiver Switching Selections as a Function of Degree of Exposure") + 
+  geom_hline(aes(yintercept=.125), linetype="dashed")
+```
+
+
+
+
+
+
+#---------------------------------------------------------------------------
+#--------------------------other stuff--------------------------------
+#---------------------------------------------------------------------------
+
+<br>
+
+##Lev Distance
+```{r, include=FALSE, message=FALSE}
+# some examples of people being slightly off
+test_fixed %>% filter(testCorrect == 1) %>% filter(typedLabel != realLabel) %>% head()
+
+#what 'wrong-ish' messages are receivers able to figure out 
+game_fixing %>% 
+  filter(responseCorrect==1 & receivedMessageType=='label') %>% 
+  filter(typedMessage != targetLabel) %>% 
+  select(typedMessage, targetLabel)
+```
+
+The code here may not be functioning properly with regard to the predictions. But what we can see that at a lev distance of 2 seems to be a good benchmark to use when coding receiver behavior in this game. 
+
+
+```{r, echo=FALSE, message=FALSE}
+#dan code.
+### How much Lev adjustment can people do?
+
+in_lev_set = function(word) {
+  
+  lev_frame <- data_frame(novelWord = novelWords,
+                          dist = c(adist(word, novelWords))) %>%
+      group_by(dist) %>%
+      summarize(n = n()) %>%
+      bind_rows(expand.grid(dist = 0:10, n = 0)) %>%
+      group_by(dist) %>%
+      summarize(n = max(n)) %>%
+      mutate(n = cumsum(n),
+      base = n / max(n))
+  
+  return(lev_frame)
+}
+
+lev_actual <- game_fixed %>%
+  filter(receivedMessageType == "label") %>%
+  # my unsure thought, shold this just be for correct inferences?
+  #  otherwise calculating distance in this way seems odd?
+  # filter(receiverCorrect==1) %>%
+  select(typedLabel, clickedLabel, subID) %>%
+  mutate(dist = adist(typedLabel, clickedLabel)) %>%
+  group_by(subID,dist) %>%
+  summarise(n = n()) %>%
+  bind_rows(expand.grid(subID = unique(.$subID),dist = unique(.$dist),n = 0)) %>%
+  mutate(n = n/sum(n)) %>%
+  group_by(subID,dist) %>%
+  summarise(n = max(n)) %>%
+  mutate(n = cumsum(n)) %>%
+  #summarise(mean = mean(n)) %>%
+  group_by(dist) %>%
+  multi_boot_standard("n", na.rm = T)
+
+
+
+game_fixed %>%
+  filter(testCorrect == 1, receivedMessageType == "label") %>%
+  select(typedLabel, clickedLabel, subID, receiverCorrect,gameClosest,closestExposure) %>%
+  mutate(dist = adist(gameClosest, typedLabel)) %>%
+  # filter(dist == 2)
+  group_by(dist) %>%
+  summarise(receiverCorrect = sum(receiverCorrect),
+            n = n()) %>%
+  mutate(prob = dbinom(receiverCorrect,n,1/9))
+
+  # summarise(n = n()) %>%
+  # bind_rows(expand.grid(subID = unique(.$subID),dist = unique(.$dist),n = 0)) %>%
+  # mutate(n = n/sum(n)) %>%
+  # group_by(subID,dist) %>%
+  # summarise(n = max(n)) %>%
+  # mutate(n = cumsum(n)) %>%
+  # #summarise(mean = mean(n)) %>%
+  # group_by(dist) %>%
+  # multi_boot_standard("n", na.rm = T)
+  
+lev_probs <- map(filter(game_fixed,receivedMessageType == "label")$typedLabel, in_lev_set) %>%
+  bind_rows() %>%
+  group_by(dist) %>%
+  multi_boot_standard("base")
+
+ggplot(lev_probs, aes(x = dist, y = mean,ymin = ci_lower, ymax = ci_upper)) +
+  geom_pointrange()+ 
+  theme_bw() +
+  geom_pointrange(data = lev_actual) +
+  scale_x_continuous(breaks = 1:10)
+
+
+receiver_lev <- (game_fixed_split) %>% 
+  select(subID, targetLabel, firstTrial, typedLabel, 
+            gameClosest, clickedLabel, receiverCorrect, receivedMessageType) %>%
+  # filter(gameClosest!=targetLabel) %>%
+  filter(typedLabel!=targetLabel, receivedMessageType == 'label') %>%
+  mutate(minDist = min(adist(typedLabel, novelWords))) %>%
+  mutate(n_Close = sum(adist(typedLabel, novelWords)==minDist))
+
+receiver_lev %>%
+  group_by(receiverCorrect) %>%
+  summarize(avgDist = mean(minDist), avgNeighbors =mean(n_Close), n=n())
+           
+receiver_lev %>%
+  # filter(n_Close >3) %>%
+  select(subID, targetLabel, typedLabel, gameClosest, minDist, n_Close, clickedLabel)
+   
+```
+
+
+###Duration based exposure measure? hmmm
+```{r, include=FALSE}
+###Thinking about using a summed-duration based measure of exposure?
+exposures_Dur <- exposures %>% group_by(realLabel, subID) %>% mutate(expDuration = sum(duration)) %>%
+  group_by(subID, object, realLabel, exposureRate, expDuration) %>% distinct()
+
+exposures_Dur_clean <- exposures %>% 
+  mutate(duration_pruned = ifelse(duration > (median(exposures$duration)+sd(exposures$duration)),
+                                  median(exposures$duration)+sd(exposures$duration), duration)) %>%
+  group_by(subID, realLabel, exposureRate) %>% summarize(expDuration = sum(duration_pruned))
+
+tmp <- data.frame(exposures_Dur_clean, bin=cut(exposures_Dur_clean$expDuration, c(seq(0,20000, 2500), 100000), include.lowest=TRUE))
+
+# tmp2 <- exposures_Dur_clean %>% arrange(subID, expDuration) %>% 
+#   bind_cols(data.frame(rank_exp= rep(1:9,length.out=nrow(exposures_Dur_clean))))
+
+#trying to look into expsoure duration as the IV instead of discrete rate
+game_with_dur <- game_fixed %>%
+    left_join(rename(select(tmp, subID, realLabel, expDuration, bin),
+                   gameClosest = realLabel)) %>%  rename(binned_dur = bin)
+
+receiver_game_data <- game_with_dur %>%
+  filter(receivedMessageType == "label") %>%
+  group_by(binned_dur, 
+           # condition,
+           # firstTrial, 
+           subID) %>%
+  summarise(receiverCorrect = mean(receiverCorrect == 1), n=n()) %>%
+  summarise_each(funs(mean, seprop), receiverCorrect)
+
+receiver_game_data %>% 
+  # mutate(testCorrect = ifelse(is.na(testCorrect), 'unknown', testCorrect)) %>%
+  ggplot(aes(x = as.factor(binned_dur), 
+                y = mean)) +
+  geom_pointrange(aes(ymax = mean + seprop, ymin = mean - seprop), 
+                  position = position_dodge(.5))
+```
+
+<br> <br>
+
+##### A note about lev distances....
+```{r, include=FALSE}
+# is this the right way to look just at receiver accuracy? as opposed to true target identification
+#    weird cases where the lev 'correction' just isnt so correct 
+     # (ie kaaub --> manu, when kreeb /feels/ closer and is right and what reciever clicks)
+(game_fixed_split) %>% 
+  select(subID, targetLabel, firstTrial, typedLabel, gameClosest, clickedLabel) %>%
+  filter(gameClosest!=targetLabel)  
+```
+ 
+<br> <br>
+
+##### Looking for buggy words?
+```{r, include=FALSE}
+#are some labels easier to recognize??
+tmp <- game_fixed %>% group_by(gameClosest, closestExposure) %>% filter(receivedMessageType == 'label') %>% 
+  summarize(avgCorr = mean(receiverCorrect), n=n())
+
+
+test_labels <- test_fixed %>%
+#  mutate(testCorrect = if_else(is.na(testCorrect), 0, testCorrect)) %>%
+  mutate(testCorrect = typedLabel == realLabel) %>%
+  group_by(adjLabel) %>%
+  summarise(testCorrect = mean(testCorrect)) %>%
+#  filter(adjLabel != "") %>%
+  arrange(testCorrect)# %>%
+ # mutate(realLabel = factor(realLabel, levels = .$adjLabel))
+
+qplot(x = adjLabel, y = testCorrect, color = adjLabel, geom = "point", data = test_labels)
+
+
+#confusability
+confusion_matrix <- game_fixed %>%
+  filter(receivedMessageType == "label",typedLabel %in% novelWords) %>%
+  group_by(clickedLabel, typedLabel) %>%
+  summarise(n = n()) %>%
+  group_by(typedLabel) %>%
+  mutate(n = n/sum(n)) %>%
+  spread(clickedLabel, n) %>%
+  ungroup() %>%
+  select(-typedLabel)
+
+diag(confusion_matrix) <- 0
+confusions <-colSums(confusion_matrix, na.rm = T)
+confusions/sum(confusions)
+
+```
+
+<br><br>
+
+##### timing data X phase
+how much will it add to add more game trials?
+```{r, echo=FALSE, message=FALSE}
+training_time <- exposures %>%
+  select(subID, timestamp, trialnum) %>%
+  filter(trialnum == 3) %>%
+  mutate(trialnum = 25) %>%
+  rename(exposure_start = timestamp) %>%
+  left_join(select(test, subID, timestamp, trialnum)) %>%
+  mutate(train_length = as.duration(hm(timestamp) - hm(exposure_start)))
+  
+
+pre_exposure_time <- exposures %>%
+  select(subID, timestamp, trialnum) %>%
+  filter(trialnum == 3) %>%
+  rename(exposure_start = timestamp) %>%
+  left_join(select(timing, subID, start)) %>%
+  mutate(start = ymd_hms(start)) %>%
+  mutate(start = gsub("^.*? ","",start)) %>%
+  mutate(start = gsub("^.*?:","",start)) %>%
+  mutate(exposure_start = gsub("^.*?:","",exposure_start), 
+         exposure_start = paste(exposure_start, ':30', sep='')) %>%
+  mutate(pre_start_length = as.duration(ms(exposure_start) - ms(start))) %>%
+  arrange(subID)
+
+
+game_inst_time <- test %>%
+  select(subID, timestamp, trialnum) %>%
+  filter(trialnum == 33) %>%
+  mutate(trialnum = 53) %>%
+  rename(test_end = timestamp) %>%
+  left_join(select(game, subID, timestamp, trialnum)) %>%
+  mutate(inst_length = as.duration(hm(timestamp) - hm(test_end))) %>%
+  arrange(subID)
+
+ending_time <- game %>%
+  select(subID, timestamp, trialnum) %>%
+  filter(trialnum == 53) %>%
+  rename(game_end = timestamp) %>%
+  left_join(select(timing, subID, stop)) %>%
+  # mutate(ending_length = as.duration(ymd_hms(stop) - hm(game_end))) %>%
+  arrange(subID)
+
+
+
+
+time_by_phase <- exposures %>% group_by(subID) %>% summarize(exposure_time = (sum(duration)/1000)/60) %>% 
+  left_join (test %>% group_by(subID) %>% summarize(test_time = (sum(duration)/1000)/60)) %>%
+  left_join (game %>% group_by(subID) %>% summarize(game_time = (sum(duration)/1000)/60)) %>%
+  # mutate_each(funs(./fullish_task), exp_time, test_time, game_time) %>%
+  summarise_each(funs(median, sd), exposure_time, test_time, game_time)
+```
+
+
+<br><br>
+
+##### looking for bad eggs in receiver data
+
+<br> <br>
+```{r, include=FALSE}
+# people doing badly at the game?
+game_performance <- game %>% group_by(subID) %>% summarize(avg_corr = mean(responseCorrect))
+game_performance %>% filter(avg_corr <.75)
+#24?
+game_fixed %>% filter(subID == 57) %>% 
+  select(subID, condition, trialnum, closestExposure, receivedMessageType, typedLabel, clickedLabel, receiverCorrect)
+#even they are following their own rules, wrong, but consistent...
+
+# people doing badly at test?
+test_performance <- test_fixed %>% 
+  group_by(subID) %>% 
+  mutate(testCorrect = ifelse(is.na(testCorrect), 0, testCorrect)) %>%
+  summarize(avg_corr = mean(testCorrect)) 
+hist(test_performance$avg_corr)
+test_performance %>% filter(avg_corr <.3)
+
+# the people who manage to mess up clicking?
+game %>% filter(receivedMessageType == 'click', responseCorrect == 0)
+
+
+
+#people who aren't getting the rules
+ruleCheck %>% group_by(subID) %>% summarize(attempts = n()) %>% filter(attempts > 2)
+
+#aren't paying attention
+attn %>% group_by(subID) %>% 
+  summarize(n_select = n(), corr = mean(correctRecog)) %>% 
+  filter(n_select < 9 | corr < 1)
+
+```
+
+
+
+```{r, include=FALSE}
+#also this plot?
+second_trial_counts <- game_fixed_split %>%
+  arrange(condition, subID, closestExposure, gameClosest, firstTrial) %>%
+  mutate(lastResponse = factor(if_else(lag(receivedMessageType == "label"), "Label", "Point"), 
+                               levels = c("Label", "Point"))) %>%
+  mutate(lastCorrect = lag(receiverCorrect)) %>%
+  filter(firstTrial == "Second") %>%
+  group_by(condition, closestExposure, lastResponse, lastCorrect, testCorrect, receivedMessageType, subID) %>%
+  summarise(n = n()) %>%
+  summarise(n = mean(n)) %>%
+  ungroup() %>%
+  mutate(known = as.character(testCorrect)) %>%
+  mutate(known = if_else(is.na(testCorrect), "unknown", as.character(testCorrect)))
+
+# quartz(width = 10, height = 7)
+ggplot(filter(second_trial_counts, lastResponse == "Label"),
+       aes(x = closestExposure, y = n, color = receivedMessageType,
+                              shape = known)) +
+  facet_grid(lastCorrect ~ condition, labeller = label_both) +
+  geom_point(size = 2, position = position_dodge(.5))
+
+```
