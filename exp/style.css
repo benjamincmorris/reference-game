@@ -65,6 +65,22 @@ th {
   50% { opacity: 0; }
 }
 
+#dropCenter {
+    width: 0;
+    height: 0;
+    border: 130px solid #fff;
+    outline: 1px solid black;
+
+    font-size: 0;
+    line-height: 0;
+}
+
+
+
+#gameTargetImage {
+	z-index: 1 !important;
+	opacity: .9;
+}
 
 /** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
 /*.slide {

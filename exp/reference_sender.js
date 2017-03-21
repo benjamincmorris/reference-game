@@ -67,16 +67,16 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	//if were not building the array for the attention check, proceed here for a 3x3 display
     	if (gameOrAttention!="Attention") {
     		if (i==0 || i==3 || i==6) {
-    			imgSet[i] = '<img style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  draggable="true" ondragstart="drag(event)" style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  draggable="true" ondragstart="drag(event)" style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
     		if (i==0 || i==5 || i==10 || i==15 || i==20) {
-    			imgSet[i] = '</div> <div class="row"> <img style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '</div> <div class="row"> <img  draggable="true" ondragstart="drag(event)" style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  draggable="true" ondragstart="drag(event)" style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	}
     }
@@ -87,8 +87,22 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     return output;
 }
 
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+
 function getOrderedImage(imgAr, path, count) {
-	var imgStr = '<img class="col-xs-10 " style="max-width:600px" id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
+	var imgStr = '<img  class="col-xs-10 " style="max-width:600px" id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
 	return imgStr;
 }
 
@@ -189,7 +203,7 @@ function gameStimuli(imgAr, fixing) {
   }
   shuffledGameImgs = new Array;
   for (i=0; i < gameImgs.length; i++) {
-  	shuffledGameImgs[i] = '<img class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + gameImgs[i] + '" alt = "'+ gameImgs[i] +'">';
+  	shuffledGameImgs[i] = '<img draggable="true" ondragstart="drag(event)"  class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + gameImgs[i] + '" alt = "'+ gameImgs[i] +'">';
   }
   return shuffledGameImgs;
 }
@@ -365,7 +379,7 @@ try {
 
                   do_all_the_setup()
                   // for debugging, use line below to jump around the exp
-                        // experiment.prestudy(0,0,30);
+                        experiment.game(0,0,30);
                 }
 
         }
@@ -1169,6 +1183,79 @@ var experiment = {
 		  });
 		});
 		document.getElementById("labelInput").disabled = false;
+        document.getElementById("labelInput").focus();
+
+        // Impetus.js code
+        // http://chrisbateman.github.io/impetus/
+    $('.toSelect').each(function() {
+      var moveable = this;
+      var moveableParent = moveable.offsetParent;
+      var moveImpetus = new Impetus({
+          source: moveable,
+          // initialValues: [dragParent.offsetWidth/2 - 25, 45],
+          friction: .9,
+          multiplier: .5,
+          // boundX: [-500, 300],
+          // boundY: [-350,375],
+          update: function(x, y) {
+              this.style.left = x + 'px';
+              this.style.top = y + 'px';
+          }
+      });
+    })
+    // var dragMe = document.getElementById('gameTargetImage');
+    // var dragParent = dragMe.offsetParent;
+    // var dragImpetus = new Impetus({
+    //     source: dragMe,
+    //     // initialValues: [dragParent.offsetWidth/2 - 25, 45],
+    //     friction: .9,
+    //     multiplier: .1,
+    //     // boundX: [5, 10 + dragParent.offsetWidth - dragParent.offsetWidth],
+    //     boundY: [-175,400],
+    //     update: function(x, y) {
+    //         this.style.left = x + 'px';
+    //         this.style.top = y + 'px';
+    //     }
+    // });
+
+        var dropOff = document.getElementById("dropCenter").getBoundingClientRect()
+        var rect2 = document.getElementById("dropCenter").getBoundingClientRect()
+
+
+    $(window).mouseup( function(){
+        $('.toSelect').each(function() {
+         // these need to be defined in here so they are recalucated at every drag event. 
+          var rect1 = this.getBoundingClientRect
+          var overlap = !(rect1.right < rect2.left || 
+                rect1.left > rect2.right || 
+                rect1.bottom < rect2.top || 
+                rect1.top > rect2.bottom)
+          console.log(overlap)
+        })
+
+      // // these need to be defined in here so they are recalucated at every drag event. 
+      // var rect = document.getElementById("gameTargetImage").getBoundingClientRect()
+      // topDiff = rect.top - dropOff.top
+      // leftDiff = rect.left - dropOff.left
+      // rightDiff = rect.right - dropOff.right
+      // bottomDiff = rect.bottom - dropOff.bottom
+
+      //         console.log(rect)
+      //         console.log(dropOff)
+      // console.log("rightDiff Diff is " + rightDiff) 
+      // console.log(" and bottom diff is " + bottomDiff);
+      // if (leftDiff > -25 && topDiff > -5 && rightDiff < 20 && bottomDiff < 2) {
+      //   document.getElementById("sendMessage").disabled = false;
+      //   console.log("You Dragged It!!")
+      //   document.getElementById("dropCenter").style.outline="5px solid black"
+      // } else {
+      //   document.getElementById("sendMessage").disabled = true;
+      //   document.getElementById("dropCenter").style.outline="1px solid black"
+      // }
+
+    });
+
+    // $("#gameTargetImage").mousedown(function(){ dragging = true; });
 
 		document.getElementById("labelInput").onkeyup = function() {
 			// var node = $(this);
@@ -1221,42 +1308,65 @@ var experiment = {
 		});
 
     // when user clicks on one of the objects in the array
-		$('.toSelect').click(function() {
+		$('.toSelect').mousedown(function() {
 			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
-				//if the target has already been clicked on, assume they are 'unclicking' and revert..
-				if (message==1) {
-					// if you have selected an object, and are trying to click another object, do nothing.
-					if (this.style.border!="5px solid black") {return}
-					// otherwise, revert the selection 
-					this.style.border="";
-					// if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
-					if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
-            pointChange = trueLabelPoints;
-          }
-					else {
-						document.getElementById("sendMessage").disabled = true;
-						document.getElementById("sendMessage").innerHTML="Send Message";
-					}
-					message=0;
-					return;
-				}
-				//if neither pointing nor typing has occured, select the target element and note that.
-				if (message==0) {
-          // console.log(pairObjectLabels(this.alt));
-					this.style.border="5px solid black";
-					document.getElementById("sendMessage").disabled = false;
-					if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
-                        pointChange = trueClickPoints;
-          }
-					else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
-                        pointChange = doingBothPoints;
-          }
-					selection = pairObjectLabels(this.alt);
-          selectedObject = this.alt;
-					message = 1; // change message value to 1 if clicked. 
-						isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
-					return;
-				}
+
+      var rect = this.getBoundingClientRect()
+      topDiff = rect.top - dropOff.top
+      leftDiff = rect.left - dropOff.left
+      rightDiff = rect.right - dropOff.right
+      bottomDiff = rect.bottom - dropOff.bottom
+
+              console.log(rect)
+              console.log(dropOff)
+      console.log("rightDiff Diff is " + rightDiff) 
+      console.log(" and bottom diff is " + bottomDiff);
+      if (leftDiff > -25 && topDiff > -5 && rightDiff < 20 && bottomDiff < 2) {
+        document.getElementById("sendMessage").disabled = false;
+        console.log("You Dragged It!!")
+        document.getElementById("dropCenter").style.outline="5px solid black"
+      } else {
+        document.getElementById("sendMessage").disabled = true;
+        document.getElementById("dropCenter").style.outline="1px solid black"
+      }
+				
+    //     //if the target has already been clicked on, assume they are 'unclicking' and revert..
+				// if (message==1) {
+				// 	// if you have selected an object, and are trying to click another object, do nothing.
+				// 	if (this.style.border!="5px solid black") {return}
+				// 	// otherwise, revert the selection 
+				// 	this.style.border="";
+				// 	// if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
+				// 	if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+    //         pointChange = trueLabelPoints;
+    //       }
+				// 	else {
+				// 		document.getElementById("sendMessage").disabled = true;
+				// 		document.getElementById("sendMessage").innerHTML="Send Message";
+				// 	}
+				// 	message=0;
+				// 	return;
+				// }
+				// //if neither pointing nor typing has occured, select the target element and note that.
+				// if (message==0) {
+    //       // console.log(pairObjectLabels(this.alt));
+				// 	this.style.border="5px solid black";
+    //       var thisOneIsMoving = this.getBoundingClientRect()
+    //       console.log(thisOneIsMoving)
+				// 	document.getElementById("sendMessage").disabled = false;
+				// 	if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
+    //                     pointChange = trueClickPoints;
+    //       }
+				// 	else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+    //                     pointChange = doingBothPoints;
+    //       }
+				// 	selection = pairObjectLabels(this.alt);
+    //       selectedObject = this.alt;
+				// 	message = 1; // change message value to 1 if clicked. 
+				// 		isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
+				// 	return;
+				// }
+
 		});
 		document.getElementById("sendMessage").onclick = function() {
       $("#sendMessage").hide()
