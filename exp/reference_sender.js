@@ -67,16 +67,16 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	//if were not building the array for the attention check, proceed here for a 3x3 display
     	if (gameOrAttention!="Attention") {
     		if (i==0 || i==3 || i==6) {
-    			imgSet[i] = '<img  draggable="true" ondragstart="drag(event)" style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img  draggable="true" ondragstart="drag(event)" style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
     		if (i==0 || i==5 || i==10 || i==15 || i==20) {
-    			imgSet[i] = '</div> <div class="row"> <img  draggable="true" ondragstart="drag(event)" style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '</div> <div class="row"> <img style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img  draggable="true" ondragstart="drag(event)" style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	}
     }
@@ -87,19 +87,6 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     return output;
 }
 
-    function allowDrop(ev) {
-      ev.preventDefault();
-    }
-
-    function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        ev.target.appendChild(document.getElementById(data));
-    }
 
 function getOrderedImage(imgAr, path, count) {
 	var imgStr = '<img  class="col-xs-10 " style="max-width:600px" id="orderedImage" src="' + basePath + imgAr[count] + '" alt = "'+imgAr[count]+'">';
@@ -203,7 +190,7 @@ function gameStimuli(imgAr, fixing) {
   }
   shuffledGameImgs = new Array;
   for (i=0; i < gameImgs.length; i++) {
-  	shuffledGameImgs[i] = '<img draggable="true" ondragstart="drag(event)"  class="col-xs-6 col-md-7 col-lg-5 col-xs-offset-4 col-lg-offset-5" id="gameTargetImage" src="' + basePath + gameImgs[i] + '" alt = "'+ gameImgs[i] +'">';
+  	shuffledGameImgs[i] = '<img height="200px" id="gameTargetImage" src="' + basePath + gameImgs[i] + '" alt = "'+ gameImgs[i] +'">';
   }
   return shuffledGameImgs;
 }
@@ -379,7 +366,7 @@ try {
 
                   do_all_the_setup()
                   // for debugging, use line below to jump around the exp
-                        experiment.game(0,0,30);
+                        experiment.prestudy(0,0,30);
                 }
 
         }
@@ -421,9 +408,9 @@ var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length
 
 function do_all_the_setup() {
 
-                if(subjectIdentifier <= 10) {
+                if(subjectIdentifier <= 30) {
                   cond = "100_30"
-                  partnersExposure = "0"
+                  partnersExposure = "1"
                   // if (subjectIdentifier <= 20) {
                   //   partnersExposure ="1/2"
                   // } if (subjectIdentifier<= 10) {
@@ -1148,6 +1135,21 @@ var experiment = {
 	},
 
 	game: function(score, roundNumber, slideNumber, username) {
+    console.log(imgArray.slice(0))
+    imgArrayShuffled = shuffle(imgArray.slice(0))
+    console.log(imgArrayShuffled)
+    count=0
+    $('.circleArray').each(function() {
+      this.src='tabletobjects/'+imgArrayShuffled[count]
+      this.id=imgArrayShuffled[count]
+      count=count+1
+    })
+      // make sure the pointer resets to center each time 
+        $('#box').css({
+            left: "255px",
+            top: "305px"
+        });
+
     slide_number=slideNumber;
 		time1 = new Date().getTime();
     if (roundNumber == 0) {
@@ -1157,12 +1159,17 @@ var experiment = {
         // console.log(partnerKnows)
     }
 		showSlide("referenceGame");
-		$("#sendMessage").show();
+		$("#sendMessage").hide();
 		document.getElementById("sendMessage").innerHTML = "Send Message"
 		$("#waitingForPartner").hide();
 		$("#spinningWaiting").hide();
 		$("#messageFromPartner").hide();
 		$("#nextRound").hide();
+    // clear any border formatting on objects (would be left over from previuos trials)
+          $('.circleArray').each(function() {
+            this.style.border=''
+            this.style.outline=''
+          })
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
@@ -1170,92 +1177,116 @@ var experiment = {
 		document.getElementById("sendMessage").disabled = true;
 		document.getElementById("gameTarget").innerHTML = gameArray[roundNumber];
 
+
+
+
+    var pane = $('#pane'),
+        box = $('#box'),
+        w = pane.width() - box.width(),
+        d = {},
+        x = 1;
+    function newv(v,a,b) {
+        var n = parseInt(v, 10) - (d[a] ? x : 0) + (d[b] ? x : 0);
+        return n < 0 ? 0 : n > w ? w : n;
+
+    }
+    $(window).keydown(function(e) { d[e.which] = true; });
+    $(window).keyup(function(e) { d[e.which] = false; });
+     detectMovementInterval= setInterval(function() {
+        box.css({
+            left: function(i,v) { return newv(v, 37, 39); },
+            top: function(i,v) { return newv(v, 38, 40); }
+        });
+    }, 4);
+
+
+
+
 		var target = pairObjectLabels(document.getElementById("gameTargetImage").alt);
+    console.log(target + '   ' + document.getElementById("gameTargetImage").alt)
 		var message = 0; // no message
-		document.getElementById("objects2").innerHTML = getRandomImages(imgArray, basePath, "game", roundNumber);
+
+    setInterval(function() {
+          rect1 = document.getElementById("box").getBoundingClientRect()
+          $('.circleArray').each(function() {
+            rect2 = this.getBoundingClientRect()
+            //this code determine the object that the 'pointer ' is hovering over
+            if((rect1.top > rect2.top) && (rect1.top < rect2.bottom) &&
+                          (rect1.left+10 > rect2.left) && (rect1.left+10 < rect2.right))
+              {this.style.border = "5px solid black"
+            }
+            else {this.style.border = ''}
+          })
+        }, 20)
+
+		// document.getElementById("objects2").innerHTML = getRandomImages(imgArray, basePath, "game", roundNumber);
 		//prevent enter key from default submission when typing
-		$(document).ready(function() {
-		  $(window).keydown(function(event){
-		    if(event.keyCode == 13) {
-		      event.preventDefault();
-		      return false;
-		    }
-		  });
-		});
+		// $(document).ready(function() {
+		  // $(window).keyup(function(event){
+		  //   if(event.keyCode == 13) {
+    //       console.log(evaluating)
+		  //     // event.preventDefault();
+		  //     // return false;
+    //       rect1 = document.getElementById("box").getBoundingClientRect()
+    //             var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+    //       $('.toSelect').each(function() {
+    //         rect2 = this.getBoundingClientRect()
+    //         //this code determine the object that the 'pointer ' is hovering over
+    //         if((rect1.top > rect2.top) && (rect1.top < rect2.bottom) &&
+    //                       (rect1.left+10 > rect2.left) && (rect1.left+10 < rect2.right))
+    //           {
+    //             // console.log(this)
+    //             // console.log(this.alt)
+    //             // console.log(this.id)
+
+    //                   if (message==1) {
+    //                     // if you have selected an object, and are trying to click another object, do nothing.
+    //                     if (this.style.border!="5px solid black") {return}
+    //                     // otherwise, revert the selection 
+    //                     this.style.border="";
+    //                     // if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
+    //                     if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+    //                       pointChange = trueLabelPoints;
+    //                     }
+    //                     else {
+    //                       document.getElementById("sendMessage").disabled = true;
+    //                       document.getElementById("sendMessage").innerHTML="Send Message";
+    //                     }
+    //                     message=0;
+    //                     return;
+    //                   }
+    //                   //if neither pointing nor typing has occured, select the target element and note that.
+    //                   if (message==0) {
+    //                     // console.log(pairObjectLabels(this.alt));
+    //                     this.style.border="5px solid black";
+    //                     var thisOneIsMoving = this.getBoundingClientRect()
+    //                     // console.log(thisOneIsMoving)
+    //                     document.getElementById("sendMessage").disabled = false;
+    //                     if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
+    //                                   pointChange = trueClickPoints;
+    //                     }
+    //                     else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+    //                                   pointChange = doingBothPoints;
+    //                     }
+    //                     selection = pairObjectLabels(this.id);
+    //                     selectedObject = this.id;
+    //                     // console.log(this)
+    //                     // console.log(this.id)
+    //                     // console.log("selection is " + selection + "; selected object is " + selectedObject)
+    //                     message = 1; // change message value to 1 if clicked. 
+    //                       isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
+    //                     return;
+    //                   }
+    //           }
+    //         })
+          
+
+  		//     }
+  		//   // });
+  		// });
+
 		document.getElementById("labelInput").disabled = false;
         document.getElementById("labelInput").focus();
-
-        // Impetus.js code
-        // http://chrisbateman.github.io/impetus/
-    $('.toSelect').each(function() {
-      var moveable = this;
-      var moveableParent = moveable.offsetParent;
-      var moveImpetus = new Impetus({
-          source: moveable,
-          // initialValues: [dragParent.offsetWidth/2 - 25, 45],
-          friction: .9,
-          multiplier: .5,
-          // boundX: [-500, 300],
-          // boundY: [-350,375],
-          update: function(x, y) {
-              this.style.left = x + 'px';
-              this.style.top = y + 'px';
-          }
-      });
-    })
-    // var dragMe = document.getElementById('gameTargetImage');
-    // var dragParent = dragMe.offsetParent;
-    // var dragImpetus = new Impetus({
-    //     source: dragMe,
-    //     // initialValues: [dragParent.offsetWidth/2 - 25, 45],
-    //     friction: .9,
-    //     multiplier: .1,
-    //     // boundX: [5, 10 + dragParent.offsetWidth - dragParent.offsetWidth],
-    //     boundY: [-175,400],
-    //     update: function(x, y) {
-    //         this.style.left = x + 'px';
-    //         this.style.top = y + 'px';
-    //     }
-    // });
-
-        var dropOff = document.getElementById("dropCenter").getBoundingClientRect()
-        var rect2 = document.getElementById("dropCenter").getBoundingClientRect()
-
-
-    $(window).mouseup( function(){
-        $('.toSelect').each(function() {
-         // these need to be defined in here so they are recalucated at every drag event. 
-          var rect1 = this.getBoundingClientRect
-          var overlap = !(rect1.right < rect2.left || 
-                rect1.left > rect2.right || 
-                rect1.bottom < rect2.top || 
-                rect1.top > rect2.bottom)
-          console.log(overlap)
-        })
-
-      // // these need to be defined in here so they are recalucated at every drag event. 
-      // var rect = document.getElementById("gameTargetImage").getBoundingClientRect()
-      // topDiff = rect.top - dropOff.top
-      // leftDiff = rect.left - dropOff.left
-      // rightDiff = rect.right - dropOff.right
-      // bottomDiff = rect.bottom - dropOff.bottom
-
-      //         console.log(rect)
-      //         console.log(dropOff)
-      // console.log("rightDiff Diff is " + rightDiff) 
-      // console.log(" and bottom diff is " + bottomDiff);
-      // if (leftDiff > -25 && topDiff > -5 && rightDiff < 20 && bottomDiff < 2) {
-      //   document.getElementById("sendMessage").disabled = false;
-      //   console.log("You Dragged It!!")
-      //   document.getElementById("dropCenter").style.outline="5px solid black"
-      // } else {
-      //   document.getElementById("sendMessage").disabled = true;
-      //   document.getElementById("dropCenter").style.outline="1px solid black"
-      // }
-
-    });
-
-    // $("#gameTargetImage").mousedown(function(){ dragging = true; });
 
 		document.getElementById("labelInput").onkeyup = function() {
 			// var node = $(this);
@@ -1307,261 +1338,308 @@ var experiment = {
 		  }
 		});
 
-    // when user clicks on one of the objects in the array
-		$('.toSelect').mousedown(function() {
-			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+  //   // when user clicks on one of the objects in the array
+		// $('.toSelect').mousedown(function() {
+		// 	var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+  //       //if the target has already been clicked on, assume they are 'unclicking' and revert..
+		// 		if (message==1) {
+		// 			// if you have selected an object, and are trying to click another object, do nothing.
+		// 			if (this.style.border!="5px solid black") {return}
+		// 			// otherwise, revert the selection 
+		// 			this.style.border="";
+		// 			// if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
+		// 			if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+  //           pointChange = trueLabelPoints;
+  //         }
+		// 			else {
+		// 				document.getElementById("sendMessage").disabled = true;
+		// 				document.getElementById("sendMessage").innerHTML="Send Message";
+		// 			}
+		// 			message=0;
+		// 			return;
+		// 		}
+		// 		//if neither pointing nor typing has occured, select the target element and note that.
+		// 		if (message==0) {
+  //         // console.log(pairObjectLabels(this.alt));
+		// 			this.style.border="5px solid black";
+  //         var thisOneIsMoving = this.getBoundingClientRect()
+  //         console.log(thisOneIsMoving)
+		// 			document.getElementById("sendMessage").disabled = false;
+		// 			if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
+  //                       pointChange = trueClickPoints;
+  //         }
+		// 			else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+  //                       pointChange = doingBothPoints;
+  //         }
+		// 			selection = pairObjectLabels(this.alt);
+  //         selectedObject = this.alt;
+		// 			message = 1; // change message value to 1 if clicked. 
+		// 				isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
+		// 			return;
+		// 		}
+		// });
 
-      var rect = this.getBoundingClientRect()
-      topDiff = rect.top - dropOff.top
-      leftDiff = rect.left - dropOff.left
-      rightDiff = rect.right - dropOff.right
-      bottomDiff = rect.bottom - dropOff.bottom
+		// document.getElementById("sendMessage").onclick = function() {
 
-              console.log(rect)
-              console.log(dropOff)
-      console.log("rightDiff Diff is " + rightDiff) 
-      console.log(" and bottom diff is " + bottomDiff);
-      if (leftDiff > -25 && topDiff > -5 && rightDiff < 20 && bottomDiff < 2) {
-        document.getElementById("sendMessage").disabled = false;
-        console.log("You Dragged It!!")
-        document.getElementById("dropCenter").style.outline="5px solid black"
-      } else {
-        document.getElementById("sendMessage").disabled = true;
-        document.getElementById("dropCenter").style.outline="1px solid black"
-      }
-				
-    //     //if the target has already been clicked on, assume they are 'unclicking' and revert..
-				// if (message==1) {
-				// 	// if you have selected an object, and are trying to click another object, do nothing.
-				// 	if (this.style.border!="5px solid black") {return}
-				// 	// otherwise, revert the selection 
-				// 	this.style.border="";
-				// 	// if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
-				// 	if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
-    //         pointChange = trueLabelPoints;
-    //       }
-				// 	else {
-				// 		document.getElementById("sendMessage").disabled = true;
-				// 		document.getElementById("sendMessage").innerHTML="Send Message";
-				// 	}
-				// 	message=0;
-				// 	return;
-				// }
-				// //if neither pointing nor typing has occured, select the target element and note that.
-				// if (message==0) {
-    //       // console.log(pairObjectLabels(this.alt));
-				// 	this.style.border="5px solid black";
-    //       var thisOneIsMoving = this.getBoundingClientRect()
-    //       console.log(thisOneIsMoving)
-				// 	document.getElementById("sendMessage").disabled = false;
-				// 	if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
-    //                     pointChange = trueClickPoints;
-    //       }
-				// 	else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
-    //                     pointChange = doingBothPoints;
-    //       }
-				// 	selection = pairObjectLabels(this.alt);
-    //       selectedObject = this.alt;
-				// 	message = 1; // change message value to 1 if clicked. 
-				// 		isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
-				// 	return;
-				// }
+    $(document).ready(function() {
+      $(window).keyup(function(event){
+        if(event.keyCode == 13) {
 
-		});
-		document.getElementById("sendMessage").onclick = function() {
-      $("#sendMessage").hide()
-      pseudoPartnersSelection = 'UNCAUGHT'
-        // testing setting, should be overwritten, if any are submitted, we know we missed something
-			//make sure the message about english messages is hidden
-			$("#thatIsEnglish").hide()
-			// first things first. check blah. if it is an enlish word, return an error and let them click again. 
-				  //final check of what, if anything, was typed in the textbox to determine score. 
-			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
-      document.getElementById('waitingForPartner').innerHTML = partnersName + " is thinking...."
-			if(blah != '') {
-  				if(Word_List.isInList(blah)) {
-            $("#sendMessage").show()
-  					$("#thatIsEnglish").fadeIn(500)
-  					document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
-  					return;
-  				}
-          for (i=0; i < commonWords.length; i++) {
-            searching = blah.search(commonWords[i])
-            if (searching >= 0) {
+          // event.preventDefault();
+          // return false;
+          rect1 = document.getElementById("box").getBoundingClientRect()
+                var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+          $('.circleArray').each(function() {
+            rect2 = this.getBoundingClientRect()
+            //this code determine the object that the 'pointer ' is hovering over
+            if((rect1.top > rect2.top) && (rect1.top < rect2.bottom) &&
+                          (rect1.left+10 > rect2.left) && (rect1.left+10 < rect2.right))
+              {
+                // console.log(this)
+                // console.log(this.alt)
+                // console.log(this.id)
+                      console.log("flag1")
+                      if (message==1) {
+                        // if you have selected an object, and are trying to click another object, do nothing.
+                        if (this.style.border!="5px solid black") {return}
+                        // otherwise, revert the selection 
+                        this.style.border="";
+                        // if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
+                        if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+                          pointChange = trueLabelPoints;
+                        }
+                        else {
+                          document.getElementById("sendMessage").disabled = true;
+                          document.getElementById("sendMessage").innerHTML="Send Message";
+                        }
+                        message=0;
+                        console.log("flag2")
+                        return;
+                      }
+                      //if neither pointing nor typing has occured, select the target element and note that.
+                      if (message==0) {
+                                              console.log("flag3")
+                        // console.log(pairObjectLabels(this.alt));
+                        this.style.border="5px solid black";
+                        var thisOneIsMoving = this.getBoundingClientRect()
+                        // console.log(thisOneIsMoving)
+                        document.getElementById("sendMessage").disabled = false;
+                        if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
+                                      pointChange = trueClickPoints;
+                        }
+                        else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+                                      pointChange = doingBothPoints;
+                        }
+                        console.log(this.id)
+                        selection = pairObjectLabels(this.id);
+                        selectedObject = this.id;
+                        // console.log(this)
+                        // console.log(this.id)
+                        // console.log("selection is " + selection + "; selected object is " + selectedObject)
+                        message = 1; // change message value to 1 if clicked. 
+                          isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
+                        return;
+                      }
+              }
+            })
+
+          console.log("evaluating")
+
+          $("#sendMessage").hide()
+          pseudoPartnersSelection = 'UNCAUGHT'
+            // testing setting, should be overwritten, if any are submitted, we know we missed something
+    			//make sure the message about english messages is hidden
+    			$("#thatIsEnglish").hide()
+    			// first things first. check blah. if it is an enlish word, return an error and let them click again. 
+    				  //final check of what, if anything, was typed in the textbox to determine score. 
+    			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+          document.getElementById('waitingForPartner').innerHTML = partnersName + " is thinking...."
+    			if(blah != '') {
+      				if(Word_List.isInList(blah)) {
                 $("#sendMessage").show()
-              document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
-              $("#thatIsEnglish").fadeIn(500)
-              return;
-            }
-          }
-			}
-			time2 = new Date().getTime();
-			//disable input/clicking options after message sent
-			document.getElementById("labelInput").disabled = true;
-			$('.toSelect').click(function() {return false;});
-			// set default  lev adjusted 'candidate' value to be NULL
-			candidate = '';
-					// this is overwritten below if the P has typed (and not clicked)
-			if (blah != '') {
-            // want to adjust their input according levenshtein distance to vocab words
-            for (var i=0; i<novelWords.length; i++) {
-              inputWord = blah  
-              thisOne = levDist(inputWord, novelWords[i])
-              // if this is the first round, make this word our candidate
-              if (i==0) {
-                candidate = novelWords[i]
-              // otherwise, evaluate new word versus current candidate and update candidate if needed. 
-              } else
-                // deal with the case where two candidates are as close
-                if (thisOne == levDist(inputWord, candidate)) {
-                  // flip a coin, if heads, update candidate
-                  if (randomIntFromInterval(0,1)==1) {candidate = novelWords[i]}
+      					$("#thatIsEnglish").fadeIn(500)
+      					document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
+      					return;
+      				}
+              for (i=0; i < commonWords.length; i++) {
+                searching = blah.search(commonWords[i])
+                if (searching >= 0) {
+                    $("#sendMessage").show()
+                  document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
+                  $("#thatIsEnglish").fadeIn(500)
+                  return;
                 }
-                if (thisOne < levDist(inputWord, candidate)) {
-                  candidate = novelWords[i]
+              }
+    			}
+    			time2 = new Date().getTime();
+    			//disable input/clicking options after message sent
+    			document.getElementById("labelInput").disabled = true;
+    			$('.toSelect').click(function() {return false;});
+    			// set default  lev adjusted 'candidate' value to be NULL
+    			candidate = '';
+    					// this is overwritten below if the P has typed (and not clicked)
+    			if (blah != '') {
+                // want to adjust their input according levenshtein distance to vocab words
+                for (var i=0; i<novelWords.length; i++) {
+                  inputWord = blah  
+                  thisOne = levDist(inputWord, novelWords[i])
+                  // if this is the first round, make this word our candidate
+                  if (i==0) {
+                    candidate = novelWords[i]
+                  // otherwise, evaluate new word versus current candidate and update candidate if needed. 
+                  } else
+                    // deal with the case where two candidates are as close
+                    if (thisOne == levDist(inputWord, candidate)) {
+                      // flip a coin, if heads, update candidate
+                      if (randomIntFromInterval(0,1)==1) {candidate = novelWords[i]}
+                    }
+                    if (thisOne < levDist(inputWord, candidate)) {
+                      candidate = novelWords[i]
+                    }
+                }
+              // final check, upper bound on edit distance. 
+              if (levDist(inputWord, candidate)>2) {candidate =""};
+
+    				// if the user typed a response AND clicked, set method to 'label_click', but follow directions as if clicked
+    				if (message==1) {
+                  pseudoPartnersSelection = selectedObject
+                  method="label_click"
+                  // also need to add a mapping for this word for our learner, who is now intelligent. 
+                    // if the word isn't one partner already knows
+                  if (partnerKnows.indexOf(candidate) < 0 || partnerKnows.indexOf(candidate) >= 0 && candidate!=target) {
+                    partnerKnows.push(blah)
+                    partnerKnows.push(selectedObject)
+                    novelWords.push(blah)
+                  }
+    								if(selection != target) {
+                      message = 3; 
+                      isCorrect = 0; 
+                      pointChange = pointsBothWrong
+                    } 
+            }
+    				// if they only typed, 
+    				//   then mark selection as null and flag their method
+    				else {
+    					selection=null;
+    					method = "label";
+    					// if user enters the appropriate label, give them points.
+                  // can the partner be taught something wrong? seems like it should be allowed to happen? 
+    					// if(candidate == target || getOccurences(blah, partnerKnows)>0) {
+              if(candidate == target) {
+                // need to check if 'partner' 'knows'
+                if (getOccurences(candidate, partnerKnows)>0) {
+      						message=2;
+      						isCorrect = 1;
+                  pointChange = trueLabelPoints;
+                // if this is a word we are probably going to get wrong, let partner 'guess'
+                } else {            
+                  message=3;
+                  isCorrect = 0;
+                  pointChange = pointsLabelWrong;
+                }
+    					} if (candidate != target) {
+    						message=3;
+    						isCorrect = 0;
+                pointChange = pointsLabelWrong;
+    					}               
+              partnersStartingVocab = 0
+              for (var i =0; i<arrNumKnownByExp.length; i++){
+                partnersStartingVocab = arrNumKnownByExp[i] + partnersStartingVocab
+              }
+              // special case where what you typed is a word you taught your partner (i.e. added to their vocab)
+              wordLocation = partnerKnows.indexOf(candidate)
+              // need to check for ambiguious vocab words in partner knowledge and get the most recent definition
+                // i.e. the element with the highest index for that word
+              if (getOccurences(candidate, partnerKnows) > 1) {
+                for (var i = 0; i<partnerKnows.length; i++) {
+                  if (partnerKnows[i] == candidate) {
+                    wordLocation=i
+                  }
+                }
+              }
+              if (wordLocation > partnersStartingVocab-1) {
+                // console.log('oh my partner taught me this one! ')
+                // now we check whether candiate matches the n+1 thing in list ? 
+                if (document.getElementById("gameTargetImage").alt == partnerKnows[wordLocation+1]) {
+                  message=2;
+                  isCorrect = 1;
+                  pointChange = trueLabelPoints;
+                } else {message = 3; isCorrect=0; pointChange=pointsLabelWrong; pseudoPartnersSelection = partnerKnows[wordLocation+1]} 
+              }
+    				}
+    			}
+    			// if they havent typed a label...
+    			if (blah == '') {
+    				blah = null;
+    				method = "click";
+    				if(selection != target) {console.log("click wrong evaluation   " + target + selection); message = 3; isCorrect = 0; pointChange = pointsClickWrong; pseudoPartnersSelection = selectedObject};
+    			}
+    			if(message==0) {return}
+
+
+          // some fancy stuff to try to get the 'receiver' to guess using mutual exclusivity assumption   
+          if (method == "label") {    
+            // regardless of whether the 'receiver' selects the target, they should guess smartly if it's a word they know
+            wordLocation = partnerKnows.indexOf(candidate)
+            if (wordLocation > partnersStartingVocab-1) {
+              pseudoPartnersSelection = partnerKnows[wordLocation+1]
+                        // console.log("i was taught and i choose you  " + pseudoPartnersSelection)
+
+            } if (wordLocation < partnersStartingVocab) {
+                for (var i = 0; i<imgArray.length; i++) {
+                  if (pairObjectLabels(imgArray[i]) == partnerKnows[wordLocation]) {
+                    pseudoPartnersSelection = imgArray[i]
+                    // console.log("i always knew you and i choose you  " + pseudoPartnersSelection)
+                  }
                 }
             }
-          // final check, upper bound on edit distance. 
-          if (levDist(inputWord, candidate)>2) {candidate =""};
-
-				// if the user typed a response AND clicked, set method to 'label_click', but follow directions as if clicked
-				if (message==1) {
-              pseudoPartnersSelection = selectedObject
-              method="label_click"
-              // also need to add a mapping for this word for our learner, who is now intelligent. 
-                // if the word isn't one partner already knows
-              if (partnerKnows.indexOf(candidate) < 0 || partnerKnows.indexOf(candidate) >= 0 && candidate!=target) {
-                partnerKnows.push(blah)
-                partnerKnows.push(selectedObject)
-                novelWords.push(blah)
-              }
-								if(selection != target) {
-                  message = 3; 
-                  isCorrect = 0; 
-                  pointChange = pointsBothWrong
-                } 
-        }
-				// if they only typed, 
-				//   then mark selection as null and flag their method
-				else {
-					selection=null;
-					method = "label";
-					// if user enters the appropriate label, give them points.
-              // can the partner be taught something wrong? seems like it should be allowed to happen? 
-					// if(candidate == target || getOccurences(blah, partnerKnows)>0) {
-          if(candidate == target) {
-            // need to check if 'partner' 'knows'
-            if (getOccurences(candidate, partnerKnows)>0) {
-  						message=2;
-  						isCorrect = 1;
-              pointChange = trueLabelPoints;
-            // if this is a word we are probably going to get wrong, let partner 'guess'
-            } else {            
-              message=3;
-              isCorrect = 0;
-              pointChange = pointsLabelWrong;
-            }
-					} if (candidate != target) {
-						message=3;
-						isCorrect = 0;
-            pointChange = pointsLabelWrong;
-					}               
-          partnersStartingVocab = 0
-          for (var i =0; i<arrNumKnownByExp.length; i++){
-            partnersStartingVocab = arrNumKnownByExp[i] + partnersStartingVocab
-          }
-          // special case where what you typed is a word you taught your partner (i.e. added to their vocab)
-          wordLocation = partnerKnows.indexOf(candidate)
-          // need to check for ambiguious vocab words in partner knowledge and get the most recent definition
-            // i.e. the element with the highest index for that word
-          if (getOccurences(candidate, partnerKnows) > 1) {
-            for (var i = 0; i<partnerKnows.length; i++) {
-              if (partnerKnows[i] == candidate) {
-                wordLocation=i
-              }
-            }
-          }
-          if (wordLocation > partnersStartingVocab-1) {
-            // console.log('oh my partner taught me this one! ')
-            // now we check whether candiate matches the n+1 thing in list ? 
-            if (document.getElementById("gameTargetImage").alt == partnerKnows[wordLocation+1]) {
-              message=2;
-              isCorrect = 1;
-              pointChange = trueLabelPoints;
-            } else {message = 3; isCorrect=0; pointChange=pointsLabelWrong; pseudoPartnersSelection = partnerKnows[wordLocation+1]} 
-          }
-				}
-			}
-			// if they havent typed a label...
-			if (blah == '') {
-				blah = null;
-				method = "click";
-				if(selection != target) {message = 3; isCorrect = 0; pointChange = pointsClickWrong; pseudoPartnersSelection = selectedObject};
-			}
-			if(message==0) {return}
 
 
-      // some fancy stuff to try to get the 'receiver' to guess using mutual exclusivity assumption   
-      if (method == "label") {    
-        // regardless of whether the 'receiver' selects the target, they should guess smartly if it's a word they know
-        wordLocation = partnerKnows.indexOf(candidate)
-        if (wordLocation > partnersStartingVocab-1) {
-          pseudoPartnersSelection = partnerKnows[wordLocation+1]
-                    // console.log("i was taught and i choose you  " + pseudoPartnersSelection)
+            // there is a better way of doing all of this where the state of what the partner knows is kept up to date
+            // by deleting entries that are overwritten? and formatting the list differently (as label, referent) throughout
 
-        } if (wordLocation < partnersStartingVocab) {
-            for (var i = 0; i<imgArray.length; i++) {
-              if (pairObjectLabels(imgArray[i]) == partnerKnows[wordLocation]) {
-                pseudoPartnersSelection = imgArray[i]
-                // console.log("i always knew you and i choose you  " + pseudoPartnersSelection)
-              }
-            }
-        }
-
-
-        // there is a better way of doing all of this where the state of what the partner knows is kept up to date
-        // by deleting entries that are overwritten? and formatting the list differently (as label, referent) throughout
-
-        // if it's really not a word the partner knows, then they need to guess randomly from the set of objects they don't know
-        if (wordLocation < 0) {
-          partnersUnknown = []
-          // take each of the novel objects
-          for (var i = 0; i<imgArray.length; i++) {
-            // if no version of it appears in the partnerKnows array, store it 
-            if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) == 0 && getOccurences(imgArray[i], partnerKnows) == 0) {
-              partnersUnknown.push(imgArray[i])
-            }
-            // if there are mutliple copies of one word?
-            if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) > 1) {
-              // figure out if there is a later one... 
-              count = 0
-              for (var x = 0 ; x < partnerKnows.length; x++) {
-                if (pairObjectLabels(imgArray[i]) == partnerKnows[x]) {
-                  count = count + 1;
-                  // if this isn't the last copy...
-                  if(count < getOccurences(pairObjectLabels(imgArray[i]), partnerKnows)) {
+            // if it's really not a word the partner knows, then they need to guess randomly from the set of objects they don't know
+            if (wordLocation < 0) {
+              partnersUnknown = []
+              // take each of the novel objects
+              for (var i = 0; i<imgArray.length; i++) {
+                // if no version of it appears in the partnerKnows array, store it 
+                if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) == 0 && getOccurences(imgArray[i], partnerKnows) == 0) {
+                  partnersUnknown.push(imgArray[i])
+                }
+                // if there are mutliple copies of one word?
+                if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) > 1) {
+                  // figure out if there is a later one... 
+                  count = 0
+                  for (var x = 0 ; x < partnerKnows.length; x++) {
+                    if (pairObjectLabels(imgArray[i]) == partnerKnows[x]) {
+                      count = count + 1;
+                      // if this isn't the last copy...
+                      if(count < getOccurences(pairObjectLabels(imgArray[i]), partnerKnows)) {
+                        partnersUnknown.push(imgArray[i])
+                      }
+                    }
+                  }
+                }
+                //  other case is one in which sender teaches an unknown word and teaches it wrongly
+                     // creating an array of the form "gazzer", "wug", "dax", "2001" where 2001 is not actually called "dax"
+                learnedLabelLocation = partnerKnows.indexOf(pairObjectLabels(imgArray[i]))
+                if (learnedLabelLocation >= partnersStartingVocab - 1) {
+                  if (partnerKnows[learnedLabelLocation] != pairObjectLabels(partnerKnows[learnedLabelLocation+1])) {
                     partnersUnknown.push(imgArray[i])
                   }
                 }
               }
-            }
-            //  other case is one in which sender teaches an unknown word and teaches it wrongly
-                 // creating an array of the form "gazzer", "wug", "dax", "2001" where 2001 is not actually called "dax"
-            learnedLabelLocation = partnerKnows.indexOf(pairObjectLabels(imgArray[i]))
-            if (learnedLabelLocation >= partnersStartingVocab - 1) {
-              if (partnerKnows[learnedLabelLocation] != pairObjectLabels(partnerKnows[learnedLabelLocation+1])) {
-                partnersUnknown.push(imgArray[i])
-              }
-            }
-          }
-          randomInt= randomIntFromInterval(0, partnersUnknown.length-1) 
-          pseudoPartnersSelection = partnersUnknown[randomInt]
+              randomInt= randomIntFromInterval(0, partnersUnknown.length-1) 
+              pseudoPartnersSelection = partnersUnknown[randomInt]
 
-          // this is the only such situation where there is a special case and the partner randomly gets it right. 
-          if (pseudoPartnersSelection == document.getElementById("gameTargetImage").alt) {
-            isCorrect = 1;
-            pointChange = trueLabelPoints;
-          }
+              // this is the only such situation where there is a special case and the partner randomly gets it right. 
+                // as is, a receiver doesn't 'learn' from this event, but realistically they should. 
+              if (pseudoPartnersSelection == document.getElementById("gameTargetImage").alt) {
+                isCorrect = 1;
+                pointChange = trueLabelPoints;
+              }
+
 
 
           // console.log("randomly grabbed this selection from   " + partnersUnknown)
@@ -1628,10 +1706,19 @@ var experiment = {
 			// 					document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like your partner chose the wrong object!";
 			// 					experiment.gameWaiting(score,roundNumber+1, slideNumber+1)
 			// 				}
-		};	
+		  }
+    });	
+    })
 	},
 
 	gameWaiting: function(score, count, slideNumber, selectedObject, username) {
+    // this line freezes the pointer by removing the interval that we were using to detect pointer movement, 
+     clearInterval(detectMovementInterval)
+     // need to unbind event that catches enter presses to prevent multiple sending event and
+        // and prevent stacking function definition
+          $(window).unbind("keyup")
+
+    console.log('sent to gameWaiting state')
     slide_number=slideNumber;
 		$("#waitingForPartner").show();
 		$("#spinningWaiting").show();
@@ -1639,28 +1726,29 @@ var experiment = {
 		$('.labelInput').disabled = true;
 		waitTime = randomIntFromInterval(1000,4000);
 		setTimeout(function() {$("#waitingForPartner").hide(); $("#spinningWaiting").hide()}, waitTime-250);
-		setTimeout(function() {$("#nextRound").show();
+		setTimeout(function() {
+      // $("#nextRound").show();
 			$("#messageFromPartner").show();
 			document.getElementById('myScore').removeChild(document.getElementById('myScore').lastChild);
 			var newPoints = document.createTextNode(score);
 			document.getElementById('myScore').appendChild(newPoints);
-      $('.toSelect').each(function() {
-        if(this.alt == pseudoPartnersSelection) {
+      console.log(pseudoPartnersSelection)
+      $('.circleArray').each(function() {
+        if(this.id == pseudoPartnersSelection) {
           // console.log(this.alt + "   " + pseudoPartnersSelection); 
-          if (this.style.border != '') {
-                this.style.outline="3px dashed red"; 
-                this.style.zIndex = "1"
-          } else{this.style.border='3px dashed red'}
+          this.style.outline="3px dashed red"
         }
       })
 		}, waitTime);
 		numOfGames = gameArray.length;  
     // numOfGames = 4;  
 		if (count < numOfGames) {
-			document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber, username)};
+			// document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber, username)};
+      setTimeout(function() {experiment.game(score,count, slideNumber, username)}, waitTime + 2500);
 		} else {
-			document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)}};
-		// setTimeout(experiment.game(score, count), 5000);
+			// document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)}};
+      setTimeout(function() {experiment.attentionCheck(slideNumber)}, waitTime + 2500)
+    };
 	},
 
 	attentionCheck: function(slideNumber) {

@@ -143,23 +143,18 @@
     	            		</div>
     	            	</div>
                 	</div>
-                	<div class="col-xs-6 col-xs-offset-1" id="clickArray">
-                	
-                		<div class="row" >
-                			<img id="famObject1" src="images/familiar/pen.jpg" class="col-xs-4 famArray" alt="pen">
-                			<img id="famObject1" src="images/familiar/computer.jpg" class="col-xs-4 famArray" alt="computer">
-                			<img id="shoeTarget" src="images/familiar/shoe.jpg" class="col-xs-4 famArray" alt="shoe">
-                		</div>
-                		<div class="row">
-                			<img src="images/familiar/phone.jpg" class="col-xs-4 famArray" alt="phone">
-                			<img src="images/familiar/newspaper.jpg" class="col-xs-4 famArray"  alt="newspaper">
-                			<img src="images/familiar/plant.jpg" class="col-xs-4 famArray" alt="plant">
-                		</div>
-                		<div class="row">
-                			<img src="images/familiar/key.jpg" class="col-xs-4 famArray" alt="key">
-                			<img id="chairDistractor" src="images/familiar/chair.jpg" class="col-xs-4 famArray"  alt="chair">
-                			<img src="images/familiar/apple.jpg" class="col-xs-4 famArray" alt="apple">
-                		</div>
+                	<div class="circle-container col-xs-offset-6">
+                    	<a href='#' class='deg0 ' ><img src="images/familiar/pen.jpg" alt="pen"></a>
+                        <a href='#' class='deg40 '><img src="images/familiar/computer.jpg"></a>
+                        <a href='#' class='deg80 ' ><img id="shoeTarget" src="images/familiar/shoe.jpg" alt="shoe"></a>
+                        <a href='#' class='deg120 ' ><img src="images/familiar/phone.jpg"></a>
+                        <a href='#' class='deg160 '><img src="images/familiar/newspaper.jpg"></a>
+                        <a href='#' class='deg200 '><img src="images/familiar/plant.jpg" ></a>
+                        <a href='#' class='deg240 ' ><img id="chairDistractor" src="images/familiar/chair.jpg"  alt="chair" ></a>
+                        <a href='#' class='deg280 ' ><img src="images/familiar/key.jpg"></a>
+                        <a href='#' class='deg320 '><img src="images/familiar/apple.jpg" ></a>
+
+
                 		<center> <p id="ifClick" >  </p> </center>
                 	</div>
                 </div>
@@ -245,33 +240,45 @@
 
     <div class="slide" id="referenceGame">
     	<div class="progress">
-		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" > </div>
 		</div>
     	<center> <div class="points" id="myScore"> <p style="font-size:16px"> your points: </p> </div> </center>
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="row"> <strong> <center> <p style="margin-top:10%" class="col-xs-offset-2 col-md-offset-3"> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </center> </strong>
-                <div class="row"> <div class='hmm' id="gameTarget"> </div> <br> </div>
-                <div class="row "> <form> <center> <p class="col-xs-offset-2 col-md-offset-3"> You can type the object <br> label here: <br> </p> </center> </form> </div>
-                <div class="row"> <center> <input class="col-xs-offset-2 col-md-offset-3" type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div> </center>
-            </div>
-            <div class="col-xs-1">
-              <div class="col-xs-12" id="dropCenter" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-            </div>
-            <div class="col-xs-7 ">
-            	<center> <p class="col-xs-offset-1" style="margin-top: 7%"> You can click on the object here: <br> </p> </center>
-    	       <div id="objects2" class="objectArray" style="margin-top:0%"> </div> 
+        <center> <section>
+            <section class="leftSide" style="margin: 100px 0 0 10%">
+                <div> <strong> <p> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </strong> 
+                <div class='hmm' id="gameTarget" > </div> <br> 
+                <div><form> <p > You can type the object <br> label here: <br> </p>  </form> </div>
+                <div> <input   type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div>
+            </section>
+            <section id="pane" style="margin-left:40%">
+                <div id="box"> <img src="images/pointer.png" height="30px" width="auto"> </div>
+            	<p  style="margin-top: 50px"> You can select the object here: <br> (use the arrow keys to move the pointer and <br> press enter to make a selection) </p> 
+    	       <!-- <div id="objects2" class="objectArray" style="margin-top:0%"> </div>  -->
+                <div class='circle-container'>
+                    <!-- <a href='#' class='center toSelect'><img src='tabletObjects/2002-600.jpg' alt="2002-600.jpg"></a> -->
+                    <!-- <a href='#' class='center'><img id='box' src='images/pointer.png'></a> -->
+                    <!-- <img class='deg0 toSelect' src='tabletObjects/2003-600.jpg' alt='2003-600.jpg' style="height: 75px; width: auto;"> -->
+                    <a href='#' class='deg0 toSelect' ><img class='circleArray'></a>
+                    <a href='#' class='deg40 toSelect'><img class='circleArray'></a>
+                    <a href='#' class='deg80 toSelect' ><img class='circleArray'></a>
+                    <a href='#' class='deg120 toSelect' ><img class='circleArray'></a>
+                    <a href='#' class='deg160 toSelect'><img class='circleArray'></a>
+                    <a href='#' class='deg200 toSelect'><img class='circleArray' ></a>
+                    <a href='#' class='deg240 toSelect' ><img class='circleArray'  ></a>
+                    <a href='#' class='deg280 toSelect' ><img class='circleArray'></a>
+                    <a href='#' class='deg320 toSelect'><img class='circleArray' ></a>
+                </div>
+            </section>
+        </section> </center>
 
-            </div>
-
-        </div> 
-
-        <center><div><button type="button" id="sendMessage" style="margin-top:27px" onClick="this.blur()"> </button></div></center> 
-        <center><div id="thatIsEnglish" style="margin-top:20px"> </div> </center>
-        <center><p id="waitingForPartner" style="margin:20px 0px 10px">  Your partner is thinking.... </p> </center>
-        <center><div id="spinningWaiting">  </div> </center>
-        <strong> <center> <p id="messageFromPartner" style="margin:18px 0px 10px"> </p> </center> </strong>
-        <center><div id="nextRound"> <button> Next Round </button> </div> </center>
+        <div id="bottomOfSlide" style="margin-top:600px">
+            <center><div><button type="button" id="sendMessage" onClick="this.blur()"> </button></div></center> 
+            <center><div id="thatIsEnglish" style="margin-top:20px"> </div> </center>
+            <center><p id="waitingForPartner" style="margin:20px 0px 10px">  Your partner is thinking.... </p> </center>
+            <center><div id="spinningWaiting">  </div> </center>
+            <strong> <center> <p id="messageFromPartner" style="margin:18px 0px 10px"> </p> </center> </strong>
+            <center><div id="nextRound"> <button> Next Round </button> </div> </center>
+        </div>
     </div>
 
 
