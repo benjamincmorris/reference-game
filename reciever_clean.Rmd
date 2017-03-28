@@ -1,0 +1,192 @@
+---
+title: "receiver_clean"
+output: html_document
+---
+
+<br>
+These data were on MTurk collected on March 10, 2017. 40 participants were run in receiver version of our game across two point conditions (100-label 30-point; and 80-label 30-point). We did not expect any effect of condition. 
+
+In this version of the reciever game, participants only recieve label messages and all labels are accurate productions of one of our 9 labels. We ran this version to establish a baseline of what how accurate rticipants would be at this task, in part to determine how well attuned senders were to actual reciever performance. 
+
+<br>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.align='center', messages=FALSE, fig.height = 3, fig.width=5)
+```
+
+```{r , include=FALSE}
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+library(langcog)
+
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
+theme_set(theme_bw())
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
+
+
+ <!-- Reading in the Receiver Version Data -->
+```{r, include=FALSE, warning=FALSE}
+filenames <- list.files("turk/3.10_receiver_baseline/production-results/", pattern="*.json", full.names = TRUE)
+
+# filenames <- list.files("turk/3.10_receiver_baseline/production-results/", pattern="*.json", full.names = TRUE)
+
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+# manual_removes <- c("A1Q5KU5RVDE67", "A1DIGREVLNOXT3", "A3EWR58W0SA885", "A3UUH3632AI3ZX", "A1Y0Y6U906ABT5")
+ #  probably should exclude "A1Y0Y6U906ABT5" also. P attempted+closed pilot, then completed our hit on 1.25..
+  #  at the least suggests a hole exists in unique turker, or the code isn't working
+
+
+reciever_clean_timing <- NULL
+reciever_clean_exposures <- NULL
+reciever_clean_ruleCheck <- NULL
+reciever_clean_game <- NULL
+reciever_clean_test<- NULL
+reciever_clean_attn <- NULL
+reciever_clean_turkIds <- NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+    # if(!(janeDoe$WorkerId %in% manual_removes)) {
+      # condition <- "100_30"
+      # subID <- i
+      reciever_clean_timing <- rbind(reciever_clean_timing, as.data.frame(
+          cbind(turkID = janeDoe$WorkerId, 
+                subID = unique(janeDoe$answers$data$expDuration$subID),
+                start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+      reciever_clean_exposures <- rbind(reciever_clean_exposures, cbind(janeDoe$answers$data$expDuration))
+      reciever_clean_ruleCheck <- rbind(reciever_clean_ruleCheck, cbind(janeDoe$answers$data$ruleQuestions))
+      reciever_clean_test <- rbind(reciever_clean_test, cbind(janeDoe$answers$data$testTrials))
+      reciever_clean_game <- rbind(reciever_clean_game,cbind(janeDoe$answers$data$gameTrials))
+      if (length(janeDoe$answers$data$attnCheck)!=0) 
+        {reciever_clean_attn <- rbind(reciever_clean_attn, cbind(janeDoe$answers$data$attnCheck))}
+      reciever_clean_turkIds <- rbind(reciever_clean_turkIds, janeDoe$WorkerId)
+    # }
+}
+
+reciever_clean_test <- reciever_clean_test %>% 
+  left_join(reciever_clean_exposures %>% distinct(subID, realLabel, object, exposureRate) %>% 
+                                           rename(targetObjectName=object)) %>%
+  mutate(testCorrect= ifelse(typedLabel=='UNKNOWN', NA, ifelse(adjLabel==realLabel, 1, 0)))
+
+
+```
+### How are people doing?
+
+<br>
+The plot below shows paricipants performance during initial test, which is a simple recall task (red bars), and during gameplay, which is a simple recongition task in this version (blue bars). You can see that performance scales sensibly with exposure for both recall and recognition. Sensibly, performance is higher across all exposure levels in the recognition task than the recall task.
+
+Note also, that participants do receive feedback in the recognition task as they play the game (blue bars), so they are likely still learning as the task progresses. There is no feedback in the recall task.  
+<br>
+```{r, echo=FALSE, message=FALSE}
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+reciever_clean_data <- reciever_clean_game %>%
+  left_join(reciever_clean_test %>% distinct(subID, realLabel, exposureRate, testCorrect) %>% rename(typedMessage = realLabel))
+
+reciever_clean_performance <- reciever_clean_data %>%
+  group_by(exposureRate, 
+           # condition,
+           # testCorrect, 
+           subID) %>%
+  mutate(testCorrect=ifelse(is.na(testCorrect), 0, testCorrect)) %>%
+  summarise(recieverCorrect = mean(responseCorrect == 1), testCorrect=mean(testCorrect)) %>%
+  summarise_each(funs(mean, seprop, length), recieverCorrect,testCorrect) 
+
+reciever_clean_performance <- reciever_clean_performance %>%
+  gather(measure, value, - exposureRate) %>%
+  separate(measure, c("measure", "type")) %>%
+  spread(type, value)
+
+reciever_clean_performance$measure <- 
+  factor(reciever_clean_performance$measure, levels = reciever_clean_performance$measure[order(c("testCorrect","recieverCorrect"))])
+
+### these data are less weird?
+
+# quartz(width = 10, height = 7)
+reciever_clean_performance %>% 
+  # mutate(testCorrect = ifelse(is.na(testCorrect), 'unknown', testCorrect)) %>%
+  ggplot(aes(x = as.factor(exposureRate), 
+                 y = mean , 
+                   fill= measure
+             ))  +
+   geom_bar(stat = "identity", position="dodge") +
+  geom_linerange(aes(ymax = mean + seprop, ymin = mean - seprop), 
+                  position = position_dodge(.9)) +
+  theme_bw() +
+  labs(x="Exposure Rate", y="Proportion Correct", title="Recall and Recognition by Exposure Rate")+
+  scale_fill_discrete(name='', labels=c("Recall", "Recognition"))
+```
+<br>
+
+###Online Adaptation
+
+<br> 
+We were interested in how receivers adapt to feedback and update their decision about what the sender's intended referrent is on later trials. 
+
+The plot below shows ONLY data from second or third object appearances.  The y-axis shows the proporiton of trials on which participants changed their selection from the previous trial. Participants are clearly much more likely to change their seleciton after selecting the wrong object (red bars) than after selecting the correct object (blue bars). There is not a clear effects of exposure rate. 
+```{r, echo=FALSE, message=FALSE}
+wrong_first_data <- reciever_clean_data %>%
+  group_by(subID, condition, exposureRate, typedMessage) %>%
+  mutate(appearance = ifelse(trialnum == min(trialnum), "First", 
+                             ifelse(trialnum == max(trialnum), "Third", "Second"))) %>%
+  
+  arrange(condition, subID, typedMessage, appearance) %>%
+  select(subID, exposureRate, testCorrect, typedMessage, clickedObject, 
+         appearance, trialnum, receivedMessageType, responseCorrect) %>%
+  mutate(lastMethod = factor(if_else(lag(receivedMessageType == "label"), "Label", "Point"),
+                               levels = c("Label", "Point")),
+         lastCorrect = lag(responseCorrect),
+         lastSelection = lag(clickedObject)) %>%
+  filter( receivedMessageType == "label", appearance!='First') %>%
+  ungroup() %>%
+  select(subID, typedMessage, clickedObject, responseCorrect, appearance, receivedMessageType, lastMethod, lastCorrect, lastSelection, trialnum, exposureRate) %>%
+  mutate(switch = lastSelection != clickedObject) 
+
+
+#plot of propensity to swtich
+# quartz(width = 10, height = 7)
+wrong_first_data  %>%
+  group_by(lastCorrect, exposureRate, subID) %>%
+  summarize(n=n(), switched = mean(switch==TRUE)) %>%
+  summarize_each(funs(mean,seprop), switched) %>%
+  ggplot(aes(x=as.factor(exposureRate),
+             y=mean,
+             fill=as.factor(lastCorrect))) +
+   geom_bar(stat = "identity", position="dodge") + 
+    geom_linerange(aes(ymax=mean+seprop, ymin=mean-seprop), position=position_dodge(.9)) +
+  xlab("Exposure Rate") + ylab("Proportion of Switched Selections") +
+  ggtitle("Receiver Switching Selections as a Function of Degree of Exposure") +
+  scale_fill_discrete(name='Last Trial', labels=c("Wrong", "Correct"))
+
+```
+ <br><br>
+Knowing people are sensitive to the feedback, we would also like to know about how accurate people's new selections are.  
+
+The plot below shows the propritions of trials where participants selected the correct referrent, excluding all first appearances and only considering trials where participants chose to switch after an incorrect response. 
+
+We can see that participants are right roughly 50% of the time. It is hard to establish a baseline for comparison, but assuming complete randomness, particiapnts should be correct 1/8 times in this scenario or 12.5%. Pariticpants are clearly out performing such a prediction, likely because they are sensibly utilizing their knowledge of other object-label pairs to reason by mutual exclusivity.  
+<br>
+```{r, echo=FALSE, fig.height = 4, fig.width=2}
+#plot of proportion correct
+wrong_first_data  %>%
+  filter(lastCorrect==0) %>%
+  group_by(lastCorrect, appearance, switch, subID) %>%
+  summarize(n=n(), corr = mean(responseCorrect)) %>%
+  summarize_each(funs(mean,seprop), corr)%>%
+  ggplot(aes(x=as.factor(appearance),
+             y=mean, fill=as.factor(lastCorrect))) +
+   geom_bar(stat = "identity", position="dodge") + 
+    geom_linerange(aes(ymax=mean+seprop, ymin=mean-seprop), position=position_dodge(.9)) +
+  xlab("Exposure Rate") + ylab("Proportion Correct") +
+  labs(x="Exposure Rate", y="Proportion Correct Selections", title="Second and Third Trial On-Line Adaptation")+
+  guides(fill=FALSE)
+```
+
