@@ -366,7 +366,7 @@ try {
 
                   do_all_the_setup()
                   // for debugging, use line below to jump around the exp
-                        experiment.prestudy(0,0,30);
+                        experiment.game(0,0,30);
                 }
 
         }
@@ -710,16 +710,19 @@ var experiment = {
     slide_number=slideNumber;
 		showSlide("prestudy");
 		document.getElementById('beginGame').disabled=true;
+    $("#paneEx").hide()
     $("#tryThatAgain").hide()
     $("#sendMessageDemo").hide();
 		$("#exampleText").show();
 		$("#howToPlay").show();
 		$("#typingExample").hide();
+      $("#pointerEx").hide()
 		$("#clickText").hide()
 		$("#exampleTarget").hide();
 		$("#clickArray").hide();
 		$("#generalInst").hide();
 		$("#gameReady").hide();
+    $("#pressEnterEx").hide()
 			// document.getElementById("clickme").removeAttribute("onclick");
 			for(var i = 0; i<progressBars.length; i++) {
 				progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
@@ -738,22 +741,51 @@ var experiment = {
 			$("#ifRight").hide()
 			//certain things need to be 'reset' that won't affect first viewing, but would affect Ps who get sent back to watch again.
 			document.getElementById("ifTyping").value=""
+      $("#paneEx").fadeIn(500)
 			$("#exampleTarget").fadeIn(500)
 			$("#clickArray").fadeIn(500)
 			$("#generalInst").fadeIn(500)
-			document.getElementById("clickText").innerHTML=" <br> Your partner will only see the nine objects."
-      document.getElementById("shoeTarget").style.border= ""
-      document.getElementById("shoeTarget").style.outline= ""
+			document.getElementById("clickText").innerHTML="<br> <br> Your partner will only see the nine objects."
+      document.getElementById("shoe").style.border= ""
+      document.getElementById("shoe").style.outline= ""
 			
       //general rules
 			setTimeout(function() {$("#clickText").fadeIn(500)}, 4000)			
-			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn points. <br> But you will be charged for sending different kinds of messages."
+			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn <strong> 1 point</strong>. <br> But if your partner gets it wrong, you won't get any points."
 			setTimeout(function() {$("#ifRight").fadeIn(500)}, 7000)
-      setTimeout(function() {$("#gameReady").fadeIn(500)}, 11000)
-      document.getElementById("gameReady").innerHTML = "Got it So Far"
-      
+      setTimeout(function() {
+        // $("#gameReady").fadeIn(500)
+        $("#pressEnterEx").show()
+        $(window).keyup(function(event){
+          if(event.keyCode == 13) {
+            $(window).unbind('keyup')
+            experiment.prestudyTypeRight(slideNumber)
+          }
+        })
+      }, 11000)
+      // document.getElementById("gameReady").innerHTML = "Got it So Far"
+
+      // document.getElementById("gameReady").onclick = function() {
+      //   experiment.prestudyTypeRight(slideNumber)
+      // }
+    }
+  },
+
+  prestudyTypeRight: function(slideNumber) {
+    slide_number=slideNumber;  
+    showSlide("prestudy");
+    $("#tryThatAgain").hide()
+    $("#sendMessageDemo").hide();
+    $("#exampleText").hide();
+    $("#howToPlay").hide();
+    $("#typingExample").hide();
+    $("#clickText").hide()
+      $("#exampleTarget").fadeIn(500)
+      $("#clickArray").fadeIn(500)
+      $("#generalInst").fadeIn(500)
+        $("#pressEnterEx").hide()
+
       //typing example, right message
-      document.getElementById("gameReady").onclick = function() {
         document.getElementById("ifType").innerHTML="You can send a message by typing the object's label here...";
         document.getElementById('ifTypePoints').innerHTML =""
         $("#gameReady").hide()
@@ -761,9 +793,10 @@ var experiment = {
         $("#ifRight").fadeOut(500)
         //typing example, right message
         setTimeout(function() {
-                    $("#typingExample").fadeIn(500); 
+                    $("#typingExample").fadeIn(500)
+                    document.getElementById("ifTyping").focus(); 
                     }, 500)
-        setTimeout(function() {document.getElementById('ifTypePoints').innerHTML ="(try typing 'shoe' in the box above!)"
+        setTimeout(function() {document.getElementById('ifTypePoints').innerHTML ="(try typing 'shoe' in the box above!) <br> press 'Enter' to send your message"
               $("#ifTypePoints").fadeIn(500);
           }, 2000)
   			// setTimeout(function() {document.getElementById("ifTyping").value="s"}, 500)
@@ -771,8 +804,9 @@ var experiment = {
   			// setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 900)
   			// setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 1100)
         // try it yourself demonstration
-        setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
-        document.getElementById("sendMessageDemo").onclick = function() {
+        // setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
+      $(window).keyup(function(event){
+        if(event.keyCode == 13) {
           // if they don't type shoe, display a little reminder
           if (document.getElementById("ifTyping").value!= 'shoe') {
             $("#ifTypePoints").addClass('redText');
@@ -780,22 +814,56 @@ var experiment = {
             setTimeout(function() {$("#tryThatAgain").fadeOut(500)
               $("#ifTypePoints").removeClass('redText')
               }, 2500)
-            return false}
-          document.getElementById("ifTypePoints").innerHTML=""
-          $("#sendMessageDemo").hide()
-          // partner's selection
-          setTimeout(function() {document.getElementById('clickText').innerHTML ="<br> You will then be shown what your partner selected."
-              $("#clickText").fadeIn(500)
-            }, 500)
-          setTimeout(function() {document.getElementById("shoeTarget").style.border= "3px red dashed";}, 1500)
-          setTimeout(function() {document.getElementById('ifClick').innerHTML ="Since your partner chose the target, <br> you would end up with <strong> " + trueLabelPoints + " points</strong> in this example."
-              $("#ifClick").fadeIn(500)}, 2500)
-          setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
-                  $("#gameReady").fadeIn(500)}, 5000)
+            return false
+          } else {
+            $(window).unbind('keyup')
+            document.getElementById("ifTypePoints").innerHTML=""
+            $("#sendMessageDemo").hide()
+            // partner's selection
+            setTimeout(function() {document.getElementById('clickText').innerHTML ="<br> <br> You will then be shown what your partner selected."
+                $("#clickText").fadeIn(500)
+              }, 500)
+            setTimeout(function() {document.getElementById("shoe").style.border= "3px red dashed";}, 1500)
+            setTimeout(function() {document.getElementById('ifClick').innerHTML ="Since your partner chose the target, <br> you would end up with <strong> 1 point</strong> in this example."
+                $("#ifClick").fadeIn(500)}, 2500)
+            setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
+                    // $("#gameReady").fadeIn(500)
+                  $("#pressEnterEx").show()
+              $(window).keyup(function(event){
+                if(event.keyCode == 13) {
+                  $(window).unbind('keyup')
+                  experiment.prestudyTypeWrong(slideNumber)
+                }
+              })
+            }, 5000)
+          }
+
         }
+        // document.getElementById("gameReady").onclick = function() {
+        //   experiment.prestudyTypeWrong(slideNumber)
+        // }
+      })
+  },
+
+  prestudyTypeWrong: function(slideNumber) {
+    slide_number=slideNumber;  
+    showSlide("prestudy");
+    $("#tryThatAgain").hide()
+    $("#sendMessageDemo").hide();
+    $("#exampleText").hide();
+    $("#howToPlay").hide();
+    $("#typingExample").hide();
+    $("#clickText").hide()
+      $("#exampleTarget").fadeIn(500)
+      $("#clickArray").fadeIn(500)
+      $("#generalInst").fadeIn(500)
+      $("#pressEnterEx").hide()
+      $("#pointerEx").hide()
+
+          $(window).unbind("keyup")
+
 
         //typing exmaple, wrong messsage
-        document.getElementById("gameReady").onclick = function() {
           $("#gameReady").hide()
           //fade out old stuff
     			$("#typingExample").fadeOut(500)
@@ -803,12 +871,13 @@ var experiment = {
                 $("#ifClick").fadeOut(500)
           //typing exmaple, wrong messsage
     			setTimeout(function() {
-              document.getElementById("shoeTarget").style.border= ""
+              document.getElementById("shoe").style.border= ""
               $("#typingExample").fadeIn(500);
     					document.getElementById("ifTyping").value=""; 
     					document.getElementById("ifType").innerHTML="But if your partner gets it wrong based on your message...";
-              document.getElementById("ifTypePoints").innerHTML="(try typing 'chair' above)"
+              document.getElementById("ifTypePoints").innerHTML="(try typing 'chair' above) <br> remember to press 'Enter' to send"
               $("#ifTypePoints").fadeIn(500);
+              document.getElementById("ifTyping").focus(); 
             }, 500)
     			// setTimeout(function() {document.getElementById("ifTyping").value="c"}, 700)
     			// setTimeout(function() {document.getElementById("ifTyping").value="ch"}, 900)
@@ -816,132 +885,357 @@ var experiment = {
     			// setTimeout(function() {document.getElementById("ifTyping").value="chai"}, 1300)
     			// setTimeout(function() {document.getElementById("ifTyping").value="chair";
     			// 						}, 1500)
+
           // diy example
-          setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
-          document.getElementById("sendMessageDemo").onclick = function() {
-            // if they don't type shoe, display a little reminder
-            if (document.getElementById("ifTyping").value!= 'chair') {
-              $("#ifTypePoints").addClass('redText');
-              $("#tryThatAgain").fadeIn(500)
-              setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
-              return false}
-            $("#ifTypePoints").hide()
-            $("#sendMessageDemo").hide()
-            document.getElementById("ifClick").innerHTML="You will be <strong> charged "+ Math.abs(pointsLabelWrong) +" points</strong>."
-            setTimeout(function() {$("#ifClick").fadeIn(500)}, 1500)
-            setTimeout(function() {document.getElementById("chairDistractor").style.border= "3px red dashed"}, 500)
-            setTimeout(function() {document.getElementById("gameReady").innerHTML = "Got It";
-                    $("#gameReady").fadeIn(500)}, 3000)
-          }
+          // setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
+          $(window).keyup(function(event){
+            if(event.keyCode == 13) {
+              // if they don't type chair, display a little reminder
+              if (document.getElementById("ifTyping").value!= 'chair') {
+                $("#ifTypePoints").addClass('redText');
+                $("#tryThatAgain").fadeIn(500)
+                setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+                return false
+              } else {
+                $(window).unbind("keyup")
+                $("#ifTypePoints").hide()
+                $("#sendMessageDemo").hide()
+                document.getElementById("ifClick").innerHTML="You will earn <strong> 0 points</strong>."
+                setTimeout(function() {$("#ifClick").fadeIn(500)}, 1500)
+                setTimeout(function() {document.getElementById("chairDistractor").style.border= "3px red dashed"}, 500)
+                setTimeout(function() {
+                  $("#pressEnterEx").show()
+                  $(window).keyup(function(event){
+                    if(event.keyCode == 13) {
+                      $(window).unbind("keyup")
+                      experiment.prestudyClick(slideNumber)
+                    }
+                  })
+                  // document.getElementById("gameReady").innerHTML = "Got It";
+                  // $("#gameReady").fadeIn(500)
+                }, 3000)
+              }
+              // document.getElementById("gameReady").onclick = function() {
+              //       experiment.prestudyClick(slideNumber)
+              // }
+            }
+          })
+  },
+
+  prestudyClick: function(slideNumber) {
+    document.getElementById("chairDistractor").style.border= ""
+    slide_number=slideNumber;  
+    // adding these hide/show lines allows us to jump around to this specific example during testing
+        // it seems repetative, but it needs to be so that the proper things are always showing?
+    showSlide("prestudy");
+    $("#tryThatAgain").hide()
+    $("#sendMessageDemo").hide();
+    $("#exampleText").hide();
+    $("#howToPlay").hide();
+    $("#typingExample").hide();
+    $("#clickText").hide()
+      $("#exampleTarget").fadeIn(500)
+      $("#clickArray").fadeIn(500)
+      $("#generalInst").fadeIn(500)
+          $("#pointerEx").fadeIn(500)
+          $("#pressEnterEx").hide()
+          $("#ifClick").hide()
+
+      $(window).unbind("keyup")
 
           //clicking example
-          document.getElementById("gameReady").onclick = function() {
-            $('.famArray').addClass('toSelect')
+          // diy
+
+                // this chunk of code enables the user to control the pointer now
+                enterPressed=false;
+                var paneEx = $('#paneEx'),
+                    pointerEx = $('#pointerEx'),
+                    w = 600 - pointerEx.width(),
+                    d = {},
+                    x = 1;
+                console.log("is this thing on?  " + paneEx)
+                function newv(v,a,b) {
+                    var n = parseInt(v, 10) - (d[a] ? x : 0) + (d[b] ? x : 0);
+                    return n < 0 ? 0 : n > w ? w : n;
+                }
+                $(window).keydown(function(e) { d[e.which] = true; });
+                $(window).keyup(function(e) { d[e.which] = false; });
+                 detectMovementInterval= setInterval(function() {
+                    pointerEx.css({
+                        left: function(i,v) { return newv(v, 37, 39); },
+                        top: function(i,v) { return newv(v, 38, 40); }
+                    });
+                }, 4);
+                detectHoverInterval = setInterval(function() {
+                      rect1 = document.getElementById("pointerEx").getBoundingClientRect()
+                      $('.famObjects').each(function() {
+                        rect2 = this.getBoundingClientRect()
+                        //this code determine the object that the 'pointer ' is hovering over
+                        if((rect1.top > rect2.top) && (rect1.top < rect2.bottom) &&
+                                      (rect1.left+40 > rect2.left) && (rect1.left+40 < rect2.right))
+                          {this.style.border = "5px solid black"
+                        }
+                        else {this.style.border = ''}
+                      })
+                    }, 20)
+                // detect enter events and handle
+                  $(window).keyup(function(event){
+                    if(event.keyCode == 13) {
+                      // scan each of the possible objects to figure out which one we are talking about
+                      $('.famObjects').each(function() {
+                        console.log("here")
+                        if(this.style.border== "5px solid black") {
+                          console.log("did we catch one?")
+                          demoSelection=this.id;
+
+                            if (demoSelection != 'shoe') {
+                              document.getElementById("ifTyping").focus(); 
+                              console.log("flag3")
+                              $("#ifTypePoints").addClass('redText');
+                              $("#tryThatAgain").fadeIn(500)
+                              setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+                              return false
+                            } else {
+                              enterPressed = true;
+                              // this prevents pointer movement because that is now broken
+                              clearInterval(detectMovementInterval)
+                              clearInterval(detectHoverInterval)
+                              document.getElementById("shoe").style.border= "5px solid black"
+                                $("#pointerEx").fadeOut(500)
+                                  //prevent more enter events
+                                      // this isn't the best method cause it will also break the pointer movement code, so we will have to redfine that later.
+                                      // is there a better method (i.e. that can more specifically target the enter keyup events)?
+                                $(window).unbind("keyup")
+
+
+                              $("#ifTypePoints").hide()
+                              $("#sendMessageDemo").hide()
+                              setTimeout(function() {
+                                document.getElementById("shoe").style.outline= "3px red dashed"
+                                document.getElementById("shoe").style.zIndex= "1"
+                              }, 500)
+                              setTimeout(function() {
+                                document.getElementById("ifClick").innerHTML="you will end up with <strong> 1 point </strong> <br> when your partner gets it right."
+                                $("#ifClick").fadeIn(500)
+                              }, 1000)
+                              setTimeout(function() {
+                                console.log('enter message shows')
+                                $("#pressEnterEx").show()
+                                $(window).keyup(function(event){
+                                  if(event.keyCode == 13) {
+                                    $(window).unbind("keyup")
+                                      experiment.prestudyDoingBoth(slideNumber)
+                                  }
+                                })
+                                // document.getElementById("gameReady").innerHTML = "Anything Else?";
+                                // $("#gameReady").fadeIn(500)
+                                // document.getElementById("gameReady").onclick = function() {
+                                //   experiment.prestudyDoingBoth(slideNumber)
+                                // }
+
+                              }, 3500)      
+                            }
+                          }
+                        })
+                      }
+
+                  })
+
+
+            // this is the general set up stuff for the example
+              // $('.famArray').addClass('toSelect')
             $("#ifClick").hide()
             $("#gameReady").hide()
-            document.getElementById("clickText").innerHTML="<br> You can also send a message by clicking the object here..."
+            document.getElementById("clickText").innerHTML="<br> You can also send a message by using the pointer to select the object..."
             // fade out the old
             $("#typingExample").fadeOut(500)
             setTimeout(function() {document.getElementById("chairDistractor").style.border= ""}, 500)
             //bring in the new
             setTimeout(function() {$("#clickText").fadeIn(500)}, 500)
-            setTimeout(function() {document.getElementById("clickText").innerHTML="<br> You can also send a message by clicking the object here... <br> <strong> Try clicking on the shoe </strong>"
-                }, 2000)
-            //diy demonstration
-            //check if an element in the array is clicked on
-            clickDemo= ''
-            $(".toSelect").click(function() {
-              console.log("clicked "+ this.style.border)
-              // if this object hasn't been clicked
-              if (this.style.border == '') {
-                // check if anything has been clicked on, if so, don't do anything when there are more clicks
-                sum=0
-                $(".famArray").each(function(){
-                  if (this.style.border != '') {sum=sum+1}
-                })
-                if(sum>0) {return false}
-                // if nothing else had been clicked on, then set this to 'clicked and store it?'
-                this.style.border = "5px solid black"
-                clickDemo = this.alt 
-              } else {
-                this.style.border=''
-                console.log("unclick")
-                clickDemo = '' 
-              } 
-            })
-            setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
-            document.getElementById("sendMessageDemo").onclick = function() {
-              // if they don't type shoe, display a little reminder
-              if (clickDemo!= 'shoe') {
-                $("#ifTypePoints").addClass('redText');
-                $("#tryThatAgain").fadeIn(500)
-                setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
-                return false}
-              $("#ifTypePoints").hide()
-              $("#sendMessageDemo").hide()
-              setTimeout(function() {document.getElementById("ifClick").innerHTML="and you will end up with <strong> "+trueClickPoints+" points</strong> <br> when your partner gets it right."
-                          $("#ifClick").fadeIn(500)}, 1500)
-              setTimeout(function() {
-                        document.getElementById("shoeTarget").style.outline= "3px red dashed"
-                        document.getElementById("shoeTarget").style.zIndex= "1"
-                      }, 500)
-              setTimeout(function() {document.getElementById("gameReady").innerHTML = "Anything Else?";
-                    $("#gameReady").fadeIn(500)}, 3500)
-            }
-      
+            setTimeout(function() {
+              // if someone is fast enough to do the example before this message comes in, we don't want it to show up
+              if (enterPressed==false) {
+                document.getElementById("ifClick").innerHTML="Move the pointer with the arrow keys, <br> then press 'Enter' to send your message"
+                $("#ifClick").fadeIn(500)
+              }
+            }, 3000)
+            setTimeout(function() {
+              if (enterPressed==false) {
+                // document.getElementById("clickText").innerHTML="You can also send a message by selecting the object here... <br> <strong> Try selecting the shoe </strong>"
+                document.getElementById("ifClick").innerHTML="Move the pointer with the arrow keys, <br> then press 'Enter' to send your message <br> <strong> (if the pointer doesn't move, try clicking on the window first)"
+              }
+            }, 7000)
+
+            // document.getElementById("gameReady").onclick = function() {
+            //   experiment.prestudyDoingBoth(slideNumber)
+            // }
+  },
+
+
+
+  prestudyDoingBoth: function(slideNumber) {
+        slide_number=slideNumber;  
+          // adding these hide/show lines allows us to jump around to this specific example during testing
+              // it seems repetative, but it needs to be so that the proper things are always showing?
+          showSlide("prestudy");
+          $("#tryThatAgain").hide()
+          $("#sendMessageDemo").hide();
+          $("#exampleText").hide();
+          $("#howToPlay").hide();
+          $("#typingExample").hide();
+          $("#clickText").hide()
+          $("#pressEnterEx").hide()
+          // reset pointer location for next example
+            setTimeout(function() {
+              $("#pointerEx").fadeIn(500);  
+              pointerEx.css({
+                left: "175px",
+                top: "200px"
+              });  
+            }, 500)
+
+            $(window).unbind("keyup")
+
+
+            $("#exampleTarget").fadeIn(500)
+            $("#clickArray").fadeIn(500)
+            $("#generalInst").fadeIn(500)
+
+                // need to redefine pointer movement, because we broke it above
+                var paneEx = $('#paneEx'),
+                    pointerEx = $('#pointerEx'),
+                    w = 600 - pointerEx.width(),
+                    d = {},
+                    x = 1;
+                function newv(v,a,b) {
+                    var n = parseInt(v, 10) - (d[a] ? x : 0) + (d[b] ? x : 0);
+                    return n < 0 ? 0 : n > w ? w : n;
+                }
+                $(window).keydown(function(e) { d[e.which] = true; });
+                $(window).keyup(function(e) { d[e.which] = false; });
+                detectMovementInterval= setInterval(function() {
+                    pointerEx.css({
+                        left: function(i,v) { return newv(v, 37, 39); },
+                        top: function(i,v) { return newv(v, 38, 40); }
+                    });
+                }, 4);
+                detectHoverInterval = setInterval(function() {
+                      rect1 = document.getElementById("pointerEx").getBoundingClientRect()
+                      $('.famObjects').each(function() {
+                        rect2 = this.getBoundingClientRect()
+                        //this code determine the object that the 'pointer ' is hovering over
+                        if((rect1.top > rect2.top) && (rect1.top < rect2.bottom) &&
+                                      (rect1.left+40 > rect2.left) && (rect1.left+40 < rect2.right))
+                          {this.style.border = "5px solid black"
+                        }
+                        else {this.style.border = ''}
+                      })
+                    }, 20)
+
 
             // doing both example
-            document.getElementById("gameReady").onclick = function() {
               // need to reset this here, then when there's a click event it will be set anew.
               clickDemo=''
               $("#gameReady").hide()
               //get rid of the old example
               $("#clickText").fadeOut(500);
-              document.getElementById("shoeTarget").style.border= "";
-              document.getElementById("shoeTarget").style.outline= "";
+              document.getElementById("shoe").style.border= "";
+              document.getElementById("shoe").style.outline= "";
               $("#ifClick").fadeOut(500);
               //bring in the last example
               $("#typingExample").fadeIn(500);
               $("#ifTypePoints").fadeIn(500);
+              document.getElementById("ifTyping").focus(); 
               document.getElementById("ifTyping").value=""; 
-              document.getElementById("ifTypePoints").innerHTML="(try typing 'shoe' and clicking on that object)"; 
-              document.getElementById("ifType").innerHTML="You can choose to do both..."
+              document.getElementById("ifTypePoints").innerHTML="(try typing 'shoe' and selecting that object)"; 
+              document.getElementById("ifType").innerHTML="You can also choose to do both..."
               // diy demo
-              setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
-              document.getElementById("sendMessageDemo").onclick = function() {
-                // if they don't type shoe and/or don't click the shoe, display a little reminder
-                if (clickDemo!= 'shoe' || document.getElementById("ifTyping").value != 'shoe') {
-                  $("#ifTypePoints").addClass('redText');
-                  $("#tryThatAgain").fadeIn(500)
-                  setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
-                  return false}
-                $("#ifTypePoints").hide()
-                $("#sendMessageDemo").hide()
+  
+
+                // detect enter events and handle
+                $(document).ready(function() {
+                  $(window).keyup(function(event){
+                    if(event.keyCode == 13) {
+                      hasClicked=false
+                      // scan each of the possible objects to figure out which one we are talking about
+                      $('.famObjects').each(function() {
+                        if(this.style.border== "5px solid black") {
+                          console.log("did we catch one?")
+                          hasClicked=true
+                          demoSelection=this.id;
+                            // if they don't type shoe and/or don't click the shoe, display a little reminder
+                            if (demoSelection!= 'shoe' || document.getElementById("ifTyping").value != 'shoe') {
+                              console.log("flag3")
+                              $("#ifTypePoints").addClass('redText');
+                              $("#tryThatAgain").fadeIn(500)
+                              setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+                              return false
+                            } else {
+                                // this prevents pointer movement because that is now broken
+                                clearInterval(detectMovementInterval)
+                                //also clears hovering, important because we want the 'selected' border to remain and the hovering code requires the pointer to do this
+                                clearInterval(detectHoverInterval)
+                                document.getElementById("shoe").style.border= "5px solid black"
+                                $("#pointerEx").fadeOut(500)
+                                  //prevent more enter events
+                                      // this isn't the best method cause it will also break the pointer movement code, so we will have to redfine that later.
+                                      // is there a better method (i.e. that can more specifically target the enter keyup events)?
+                                $(window).unbind("keyup")
 
 
-                setTimeout(function() {
-                        document.getElementById("gameReady").innerHTML = "I'm Ready"
-                        document.getElementById("shoeTarget").style.outline= "3px red dashed"
-                      }, 500)
-                setTimeout(function() {document.getElementById("ifClick").innerHTML="You will be charged for doing each strategy and end up with <strong> "+ doingBothPoints+" points</strong>."
-                            $("#ifClick").fadeIn(500)
-                      }, 1500)
-                setTimeout(function() {$("#gameReady").fadeIn(500)
-                    // issue where if you get referred to back to watching the instructions again, the on click function call doubled up and negated itself
-                    $(".toSelect").unbind()
-                  }, 2500)
-                document.getElementById("gameReady").onclick = function() {
-                  experiment.gameQuestions(slideNumber)
-                }
-              }
-            }
-          }
-        }			
-      }
-
-		}
+                              $("#ifTypePoints").hide()
+                              $("#sendMessageDemo").hide()
+                                setTimeout(function() {
+                                        document.getElementById("gameReady").innerHTML = "I'm Ready"
+                                        document.getElementById("shoe").style.outline= "3px red dashed"
+                                      }, 500)
+                                setTimeout(function() {
+                                        document.getElementById("ifClick").innerHTML="You would end up with <br> <strong> 1 point</strong> in this example."
+                                        $("#ifClick").fadeIn(500)
+                                      }, 1500)
+                                setTimeout(function() {
+                                  // $("#gameReady").fadeIn(500)
+                                  $("#pressEnterEx").show()
+                                  $(window).keyup(function(event){
+                                    if(event.keyCode == 13) {
+                                      $(window).unbind("keyup")
+                                        experiment.partnering(slideNumber)
+                                    }
+                                  })
+                                  // issue where if you get referred to back to watching the instructions again, the on click function call doubled up and negated itself
+                                  $(".toSelect").unbind()
+                                }, 2500)
+                                // document.getElementById("gameReady").onclick = function() {
+                                //   experiment.partnering(slideNumber)
+                                // }
+                              }
+                            } 
+                          }) 
+                            if (hasClicked == false) {
+                                if (document.getElementById("ifTyping").value != '') {
+                                  console.log("flag3")
+                                  $("#ifTypePoints").addClass('redText');
+                                  $("#tryThatAgain").fadeIn(500)
+                                  setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
+                                }
+                            }
+                        }
+                      })
+                    })          
   },
 
+      
+
+
+  //           }
+  //         }
+  //       }			
+  //     }
+
+		// }
+  // },
+
+  //no longer using this slide, because we removed point values in this version
   gameQuestions: function(slideNumber) {
 		//switch to the slide of questions about the game rules
         slide_number=slideNumber + 1;
@@ -1135,6 +1429,9 @@ var experiment = {
 	},
 
 	game: function(score, roundNumber, slideNumber, username) {
+                            // selection = null;
+                        // selectedObject = null;
+                        // message = null;
     console.log(imgArray.slice(0))
     imgArrayShuffled = shuffle(imgArray.slice(0))
     console.log(imgArrayShuffled)
@@ -1146,8 +1443,8 @@ var experiment = {
     })
       // make sure the pointer resets to center each time 
         $('#box').css({
-            left: "255px",
-            top: "305px"
+            left: "220px",
+            top: "285px"
         });
 
     slide_number=slideNumber;
@@ -1165,6 +1462,7 @@ var experiment = {
 		$("#spinningWaiting").hide();
 		$("#messageFromPartner").hide();
 		$("#nextRound").hide();
+    $("#pressEnterToMove").hide();
     // clear any border formatting on objects (would be left over from previuos trials)
           $('.circleArray').each(function() {
             this.style.border=''
@@ -1197,7 +1495,7 @@ var experiment = {
             left: function(i,v) { return newv(v, 37, 39); },
             top: function(i,v) { return newv(v, 38, 40); }
         });
-    }, 4);
+    }, 5);
 
 
 
@@ -1384,41 +1682,41 @@ var experiment = {
     $(document).ready(function() {
       $(window).keyup(function(event){
         if(event.keyCode == 13) {
-
+          clicked = false
           // event.preventDefault();
           // return false;
           rect1 = document.getElementById("box").getBoundingClientRect()
-                var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+          var blah = document.getElementById('labelInput').value.toLowerCase().trim();
           $('.circleArray').each(function() {
             rect2 = this.getBoundingClientRect()
             //this code determine the object that the 'pointer ' is hovering over
-            if((rect1.top > rect2.top) && (rect1.top < rect2.bottom) &&
-                          (rect1.left+10 > rect2.left) && (rect1.left+10 < rect2.right))
+            if (this.style.border=="5px solid black")
               {
                 // console.log(this)
                 // console.log(this.alt)
                 // console.log(this.id)
+                      clicked = true;
                       console.log("flag1")
-                      if (message==1) {
-                        // if you have selected an object, and are trying to click another object, do nothing.
-                        if (this.style.border!="5px solid black") {return}
-                        // otherwise, revert the selection 
-                        this.style.border="";
-                        // if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
-                        if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
-                          pointChange = trueLabelPoints;
-                        }
-                        else {
-                          document.getElementById("sendMessage").disabled = true;
-                          document.getElementById("sendMessage").innerHTML="Send Message";
-                        }
-                        message=0;
-                        console.log("flag2")
-                        return;
-                      }
+                      // if (message==1) {
+                      //   // if you have selected an object, and are trying to click another object, do nothing.
+                      //   if (this.style.border!="5px solid black") {return}
+                      //   // otherwise, revert the selection 
+                      //   this.style.border="";
+                      //   // if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
+                      //   if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+                      //     pointChange = trueLabelPoints;
+                      //   }
+                      //   else {
+                      //     document.getElementById("sendMessage").disabled = true;
+                      //     document.getElementById("sendMessage").innerHTML="Send Message";
+                      //   }
+                      //   message=0;
+                      //   console.log("this never happens anymore?")
+                      //   return;
+                      // }
                       //if neither pointing nor typing has occured, select the target element and note that.
-                      if (message==0) {
-                                              console.log("flag3")
+                      // if (message==0) {
+                        console.log("is this the only one that happens now?")
                         // console.log(pairObjectLabels(this.alt));
                         this.style.border="5px solid black";
                         var thisOneIsMoving = this.getBoundingClientRect()
@@ -1439,213 +1737,215 @@ var experiment = {
                         message = 1; // change message value to 1 if clicked. 
                           isCorrect = 1; // flag as correct. will be overwritten if incorrect. 
                         return;
-                      }
+                      // }
               }
             })
+          if (clicked == false && blah == '') {
+            return false
+          } else {
 
-          console.log("evaluating")
+            console.log("evaluating")
 
-          $("#sendMessage").hide()
-          pseudoPartnersSelection = 'UNCAUGHT'
-            // testing setting, should be overwritten, if any are submitted, we know we missed something
-    			//make sure the message about english messages is hidden
-    			$("#thatIsEnglish").hide()
-    			// first things first. check blah. if it is an enlish word, return an error and let them click again. 
-    				  //final check of what, if anything, was typed in the textbox to determine score. 
-    			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
-          document.getElementById('waitingForPartner').innerHTML = partnersName + " is thinking...."
-    			if(blah != '') {
-      				if(Word_List.isInList(blah)) {
-                $("#sendMessage").show()
-      					$("#thatIsEnglish").fadeIn(500)
-      					document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
-      					return;
-      				}
-              for (i=0; i < commonWords.length; i++) {
-                searching = blah.search(commonWords[i])
-                if (searching >= 0) {
-                    $("#sendMessage").show()
-                  document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
-                  $("#thatIsEnglish").fadeIn(500)
-                  return;
+            $("#sendMessage").hide()
+            pseudoPartnersSelection = 'UNCAUGHT'
+              // testing setting, should be overwritten, if any are submitted, we know we missed something
+      			//make sure the message about english messages is hidden
+      			$("#thatIsEnglish").hide()
+      			// first things first. check blah. if it is an enlish word, return an error and let them click again. 
+      				  //final check of what, if anything, was typed in the textbox to determine score. 
+      			var blah = document.getElementById('labelInput').value.toLowerCase().trim();
+            document.getElementById('waitingForPartner').innerHTML = partnersName + " is thinking...."
+      			if(blah != '') {
+        				if(Word_List.isInList(blah)) {
+                  // $("#sendMessage").show()
+        					$("#thatIsEnglish").fadeIn(500)
+        					document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
+        					return;
+        				}
+                for (i=0; i < commonWords.length; i++) {
+                  searching = blah.search(commonWords[i])
+                  if (searching >= 0) {
+                      $("#sendMessage").show()
+                    document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
+                    $("#thatIsEnglish").fadeIn(500)
+                    return;
+                  }
                 }
-              }
-    			}
-    			time2 = new Date().getTime();
-    			//disable input/clicking options after message sent
-    			document.getElementById("labelInput").disabled = true;
-    			$('.toSelect').click(function() {return false;});
-    			// set default  lev adjusted 'candidate' value to be NULL
-    			candidate = '';
-    					// this is overwritten below if the P has typed (and not clicked)
-    			if (blah != '') {
-                // want to adjust their input according levenshtein distance to vocab words
-                for (var i=0; i<novelWords.length; i++) {
-                  inputWord = blah  
-                  thisOne = levDist(inputWord, novelWords[i])
-                  // if this is the first round, make this word our candidate
-                  if (i==0) {
-                    candidate = novelWords[i]
-                  // otherwise, evaluate new word versus current candidate and update candidate if needed. 
-                  } else
-                    // deal with the case where two candidates are as close
-                    if (thisOne == levDist(inputWord, candidate)) {
-                      // flip a coin, if heads, update candidate
-                      if (randomIntFromInterval(0,1)==1) {candidate = novelWords[i]}
-                    }
-                    if (thisOne < levDist(inputWord, candidate)) {
+      			}
+      			time2 = new Date().getTime();
+      			//disable input/clicking options after message sent
+      			document.getElementById("labelInput").disabled = true;
+      			$('.toSelect').click(function() {return false;});
+      			// set default  lev adjusted 'candidate' value to be NULL
+      			candidate = '';
+      					// this is overwritten below if the P has typed (and not clicked)
+      			if (blah != '') {
+                  // want to adjust their input according levenshtein distance to vocab words
+                  for (var i=0; i<novelWords.length; i++) {
+                    inputWord = blah  
+                    thisOne = levDist(inputWord, novelWords[i])
+                    // if this is the first round, make this word our candidate
+                    if (i==0) {
                       candidate = novelWords[i]
+                    // otherwise, evaluate new word versus current candidate and update candidate if needed. 
+                    } else
+                      // deal with the case where two candidates are as close
+                      if (thisOne == levDist(inputWord, candidate)) {
+                        // flip a coin, if heads, update candidate
+                        if (randomIntFromInterval(0,1)==1) {candidate = novelWords[i]}
+                      }
+                      if (thisOne < levDist(inputWord, candidate)) {
+                        candidate = novelWords[i]
+                      }
+                  }
+                // final check, upper bound on edit distance. 
+                if (levDist(inputWord, candidate)>2) {candidate =""};
+
+      				// if the user typed a response AND clicked, set method to 'label_click', but follow directions as if clicked
+      				if (message==1) {
+                    pseudoPartnersSelection = selectedObject
+                    method="label_click"
+                    // also need to add a mapping for this word for our learner, who is now intelligent. 
+                      // if the word isn't one partner already knows
+                    if (partnerKnows.indexOf(candidate) < 0 || partnerKnows.indexOf(candidate) >= 0 && candidate!=target) {
+                      partnerKnows.push(blah)
+                      partnerKnows.push(selectedObject)
+                      novelWords.push(blah)
                     }
-                }
-              // final check, upper bound on edit distance. 
-              if (levDist(inputWord, candidate)>2) {candidate =""};
-
-    				// if the user typed a response AND clicked, set method to 'label_click', but follow directions as if clicked
-    				if (message==1) {
-                  pseudoPartnersSelection = selectedObject
-                  method="label_click"
-                  // also need to add a mapping for this word for our learner, who is now intelligent. 
-                    // if the word isn't one partner already knows
-                  if (partnerKnows.indexOf(candidate) < 0 || partnerKnows.indexOf(candidate) >= 0 && candidate!=target) {
-                    partnerKnows.push(blah)
-                    partnerKnows.push(selectedObject)
-                    novelWords.push(blah)
+      								if(selection != target) {
+                        message = 3; 
+                        isCorrect = 0; 
+                        pointChange = pointsBothWrong
+                      } 
+              }
+      				// if they only typed, 
+      				//   then mark selection as null and flag their method
+      				else {
+      					selection=null;
+      					method = "label";
+      					// if user enters the appropriate label, give them points.
+                    // can the partner be taught something wrong? seems like it should be allowed to happen? 
+      					// if(candidate == target || getOccurences(blah, partnerKnows)>0) {
+                if(candidate == target) {
+                  // need to check if 'partner' 'knows'
+                  if (getOccurences(candidate, partnerKnows)>0) {
+        						message=2;
+        						isCorrect = 1;
+                    pointChange = trueLabelPoints;
+                  // if this is a word we are probably going to get wrong, let partner 'guess'
+                  } else {            
+                    message=3;
+                    isCorrect = 0;
+                    pointChange = pointsLabelWrong;
                   }
-    								if(selection != target) {
-                      message = 3; 
-                      isCorrect = 0; 
-                      pointChange = pointsBothWrong
-                    } 
-            }
-    				// if they only typed, 
-    				//   then mark selection as null and flag their method
-    				else {
-    					selection=null;
-    					method = "label";
-    					// if user enters the appropriate label, give them points.
-                  // can the partner be taught something wrong? seems like it should be allowed to happen? 
-    					// if(candidate == target || getOccurences(blah, partnerKnows)>0) {
-              if(candidate == target) {
-                // need to check if 'partner' 'knows'
-                if (getOccurences(candidate, partnerKnows)>0) {
-      						message=2;
-      						isCorrect = 1;
-                  pointChange = trueLabelPoints;
-                // if this is a word we are probably going to get wrong, let partner 'guess'
-                } else {            
-                  message=3;
-                  isCorrect = 0;
+      					} if (candidate != target) {
+      						message=3;
+      						isCorrect = 0;
                   pointChange = pointsLabelWrong;
+      					}               
+                partnersStartingVocab = 0
+                for (var i =0; i<arrNumKnownByExp.length; i++){
+                  partnersStartingVocab = arrNumKnownByExp[i] + partnersStartingVocab
                 }
-    					} if (candidate != target) {
-    						message=3;
-    						isCorrect = 0;
-                pointChange = pointsLabelWrong;
-    					}               
-              partnersStartingVocab = 0
-              for (var i =0; i<arrNumKnownByExp.length; i++){
-                partnersStartingVocab = arrNumKnownByExp[i] + partnersStartingVocab
-              }
-              // special case where what you typed is a word you taught your partner (i.e. added to their vocab)
+                // special case where what you typed is a word you taught your partner (i.e. added to their vocab)
+                wordLocation = partnerKnows.indexOf(candidate)
+                // need to check for ambiguious vocab words in partner knowledge and get the most recent definition
+                  // i.e. the element with the highest index for that word
+                if (getOccurences(candidate, partnerKnows) > 1) {
+                  for (var i = 0; i<partnerKnows.length; i++) {
+                    if (partnerKnows[i] == candidate) {
+                      wordLocation=i
+                    }
+                  }
+                }
+                if (wordLocation > partnersStartingVocab-1) {
+                  // console.log('oh my partner taught me this one! ')
+                  // now we check whether candiate matches the n+1 thing in list ? 
+                  if (document.getElementById("gameTargetImage").alt == partnerKnows[wordLocation+1]) {
+                    message=2;
+                    isCorrect = 1;
+                    pointChange = trueLabelPoints;
+                  } else {message = 3; isCorrect=0; pointChange=pointsLabelWrong; pseudoPartnersSelection = partnerKnows[wordLocation+1]} 
+                }
+      				}
+      			}
+      			// if they havent typed a label...
+      			if (blah == '') {
+      				blah = null;
+      				method = "click";
+      				if(selection != target) {console.log("click wrong evaluation   " + target + selection); message = 3; isCorrect = 0; pointChange = pointsClickWrong; pseudoPartnersSelection = selectedObject};
+      			}
+      			if(message==0) {return}
+
+
+            // some fancy stuff to try to get the 'receiver' to guess using mutual exclusivity assumption   
+            if (method == "label") {    
+              // regardless of whether the 'receiver' selects the target, they should guess smartly if it's a word they know
               wordLocation = partnerKnows.indexOf(candidate)
-              // need to check for ambiguious vocab words in partner knowledge and get the most recent definition
-                // i.e. the element with the highest index for that word
-              if (getOccurences(candidate, partnerKnows) > 1) {
-                for (var i = 0; i<partnerKnows.length; i++) {
-                  if (partnerKnows[i] == candidate) {
-                    wordLocation=i
-                  }
-                }
-              }
               if (wordLocation > partnersStartingVocab-1) {
-                // console.log('oh my partner taught me this one! ')
-                // now we check whether candiate matches the n+1 thing in list ? 
-                if (document.getElementById("gameTargetImage").alt == partnerKnows[wordLocation+1]) {
-                  message=2;
-                  isCorrect = 1;
-                  pointChange = trueLabelPoints;
-                } else {message = 3; isCorrect=0; pointChange=pointsLabelWrong; pseudoPartnersSelection = partnerKnows[wordLocation+1]} 
-              }
-    				}
-    			}
-    			// if they havent typed a label...
-    			if (blah == '') {
-    				blah = null;
-    				method = "click";
-    				if(selection != target) {console.log("click wrong evaluation   " + target + selection); message = 3; isCorrect = 0; pointChange = pointsClickWrong; pseudoPartnersSelection = selectedObject};
-    			}
-    			if(message==0) {return}
+                pseudoPartnersSelection = partnerKnows[wordLocation+1]
+                          // console.log("i was taught and i choose you  " + pseudoPartnersSelection)
 
-
-          // some fancy stuff to try to get the 'receiver' to guess using mutual exclusivity assumption   
-          if (method == "label") {    
-            // regardless of whether the 'receiver' selects the target, they should guess smartly if it's a word they know
-            wordLocation = partnerKnows.indexOf(candidate)
-            if (wordLocation > partnersStartingVocab-1) {
-              pseudoPartnersSelection = partnerKnows[wordLocation+1]
-                        // console.log("i was taught and i choose you  " + pseudoPartnersSelection)
-
-            } if (wordLocation < partnersStartingVocab) {
-                for (var i = 0; i<imgArray.length; i++) {
-                  if (pairObjectLabels(imgArray[i]) == partnerKnows[wordLocation]) {
-                    pseudoPartnersSelection = imgArray[i]
-                    // console.log("i always knew you and i choose you  " + pseudoPartnersSelection)
+              } if (wordLocation < partnersStartingVocab) {
+                  for (var i = 0; i<imgArray.length; i++) {
+                    if (pairObjectLabels(imgArray[i]) == partnerKnows[wordLocation]) {
+                      pseudoPartnersSelection = imgArray[i]
+                      // console.log("i always knew you and i choose you  " + pseudoPartnersSelection)
+                    }
                   }
-                }
-            }
+              }
 
 
-            // there is a better way of doing all of this where the state of what the partner knows is kept up to date
-            // by deleting entries that are overwritten? and formatting the list differently (as label, referent) throughout
+              // there is a better way of doing all of this where the state of what the partner knows is kept up to date
+              // by deleting entries that are overwritten? and formatting the list differently (as label, referent) throughout
 
-            // if it's really not a word the partner knows, then they need to guess randomly from the set of objects they don't know
-            if (wordLocation < 0) {
-              partnersUnknown = []
-              // take each of the novel objects
-              for (var i = 0; i<imgArray.length; i++) {
-                // if no version of it appears in the partnerKnows array, store it 
-                if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) == 0 && getOccurences(imgArray[i], partnerKnows) == 0) {
-                  partnersUnknown.push(imgArray[i])
-                }
-                // if there are mutliple copies of one word?
-                if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) > 1) {
-                  // figure out if there is a later one... 
-                  count = 0
-                  for (var x = 0 ; x < partnerKnows.length; x++) {
-                    if (pairObjectLabels(imgArray[i]) == partnerKnows[x]) {
-                      count = count + 1;
-                      // if this isn't the last copy...
-                      if(count < getOccurences(pairObjectLabels(imgArray[i]), partnerKnows)) {
-                        partnersUnknown.push(imgArray[i])
+              // if it's really not a word the partner knows, then they need to guess randomly from the set of objects they don't know
+              if (wordLocation < 0) {
+                partnersUnknown = []
+                // take each of the novel objects
+                for (var i = 0; i<imgArray.length; i++) {
+                  // if no version of it appears in the partnerKnows array, store it 
+                  if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) == 0 && getOccurences(imgArray[i], partnerKnows) == 0) {
+                    partnersUnknown.push(imgArray[i])
+                  }
+                  // if there are mutliple copies of one word?
+                  if (getOccurences(pairObjectLabels(imgArray[i]), partnerKnows) > 1) {
+                    // figure out if there is a later one... 
+                    count = 0
+                    for (var x = 0 ; x < partnerKnows.length; x++) {
+                      if (pairObjectLabels(imgArray[i]) == partnerKnows[x]) {
+                        count = count + 1;
+                        // if this isn't the last copy...
+                        if(count < getOccurences(pairObjectLabels(imgArray[i]), partnerKnows)) {
+                          partnersUnknown.push(imgArray[i])
+                        }
                       }
                     }
                   }
-                }
-                //  other case is one in which sender teaches an unknown word and teaches it wrongly
-                     // creating an array of the form "gazzer", "wug", "dax", "2001" where 2001 is not actually called "dax"
-                learnedLabelLocation = partnerKnows.indexOf(pairObjectLabels(imgArray[i]))
-                if (learnedLabelLocation >= partnersStartingVocab - 1) {
-                  if (partnerKnows[learnedLabelLocation] != pairObjectLabels(partnerKnows[learnedLabelLocation+1])) {
-                    partnersUnknown.push(imgArray[i])
+                  //  other case is one in which sender teaches an unknown word and teaches it wrongly
+                       // creating an array of the form "gazzer", "wug", "dax", "2001" where 2001 is not actually called "dax"
+                  learnedLabelLocation = partnerKnows.indexOf(pairObjectLabels(imgArray[i]))
+                  if (learnedLabelLocation >= partnersStartingVocab - 1) {
+                    if (partnerKnows[learnedLabelLocation] != pairObjectLabels(partnerKnows[learnedLabelLocation+1])) {
+                      partnersUnknown.push(imgArray[i])
+                    }
                   }
                 }
-              }
-              randomInt= randomIntFromInterval(0, partnersUnknown.length-1) 
-              pseudoPartnersSelection = partnersUnknown[randomInt]
+                randomInt= randomIntFromInterval(0, partnersUnknown.length-1) 
+                pseudoPartnersSelection = partnersUnknown[randomInt]
 
-              // this is the only such situation where there is a special case and the partner randomly gets it right. 
-                // as is, a receiver doesn't 'learn' from this event, but realistically they should. 
-              if (pseudoPartnersSelection == document.getElementById("gameTargetImage").alt) {
-                isCorrect = 1;
-                pointChange = trueLabelPoints;
-              }
-
+                // this is the only such situation where there is a special case and the partner randomly gets it right. 
+                  // as is, a receiver doesn't 'learn' from this event, but realistically they should. 
+                if (pseudoPartnersSelection == document.getElementById("gameTargetImage").alt) {
+                  isCorrect = 1;
+                  pointChange = trueLabelPoints;
+                }
 
 
-          // console.log("randomly grabbed this selection from   " + partnersUnknown)
-
+            // console.log("randomly grabbed this selection from   " + partnersUnknown)
+            }
+          }
         }
-      }
 
 
       //send message, return 'partner response'
@@ -1725,13 +2025,17 @@ var experiment = {
 		$('.toSelect').click(function() {return;});
 		$('.labelInput').disabled = true;
 		waitTime = randomIntFromInterval(1000,4000);
-		setTimeout(function() {$("#waitingForPartner").hide(); $("#spinningWaiting").hide()}, waitTime-250);
+		setTimeout(function() {
+      $("#waitingForPartner").hide(); 
+      $("#spinningWaiting").hide()
+    }, waitTime-250);
 		setTimeout(function() {
       // $("#nextRound").show();
 			$("#messageFromPartner").show();
-			document.getElementById('myScore').removeChild(document.getElementById('myScore').lastChild);
-			var newPoints = document.createTextNode(score);
-			document.getElementById('myScore').appendChild(newPoints);
+			// document.getElementById('myScore').removeChild(document.getElementById('myScore').lastChild);
+			// var newPoints = document.createTextNode(score);
+			// document.getElementById('myScore').appendChild(newPoints);
+      document.getElementById('myScore').innerHTML = "your points: " + score;
       console.log(pseudoPartnersSelection)
       $('.circleArray').each(function() {
         if(this.id == pseudoPartnersSelection) {
@@ -1742,13 +2046,29 @@ var experiment = {
 		}, waitTime);
 		numOfGames = gameArray.length;  
     // numOfGames = 4;  
-		if (count < numOfGames) {
-			// document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber, username)};
-      setTimeout(function() {experiment.game(score,count, slideNumber, username)}, waitTime + 2500);
-		} else {
-			// document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)}};
-      setTimeout(function() {experiment.attentionCheck(slideNumber)}, waitTime + 2500)
-    };
+    setTimeout(function() {
+      $("#pressEnterToMove").show()
+      // $("#pressEnterToMove").innerHTML="(press 'Enter' to move to the next round!)"
+      if (count < numOfGames) {
+  			// document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber, username)};
+        //press enter to get to new slide
+        $(window).keyup(function(event){
+          if(event.keyCode == 13) {
+              $(window).unbind("keyup")
+            experiment.game(score,count, slideNumber, username)
+          }
+        })
+        // if this is the last trial, pressing enter sends Ps to the final attention check
+  		} else {
+  			// document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)}};
+        $(window).keyup(function(event){
+          if(event.keyCode == 13) {
+              $(window).unbind("keyup")
+            experiment.attentionCheck(slideNumber)
+          }
+        })
+      };
+    }, waitTime);
 	},
 
 	attentionCheck: function(slideNumber) {

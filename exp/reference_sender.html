@@ -116,26 +116,26 @@
 	       	<div class="row" id="prestudy">
 		        <p style="margin-top: 50px" id="exampleText" class="block-text col-xs-offset-2 col-xs-8 col-md-7"> You are almost ready to play our game! <br> <br> Before we start, let's walk through an example where we will communicate in English about familiar objects. But remember, in the game you will be communicating in our made up language about the objects you have just been learning about.
                 <br> <br>
-                <strong> BE SURE YOU PAY ATTENTION OR YOU MIGHT HAVE TO WATCH THE INSTRUCTIONS AGAIN </strong>
+                <!-- <strong> BE SURE YOU PAY ATTENTION OR YOU MIGHT HAVE TO WATCH THE INSTRUCTIONS AGAIN </strong> -->
                 </p>
             </div>
             <center> <div style="padding:20px"> <button id="howToPlay"> Tell Me How To Play </button> </div> <center>            
-            <div class="row" id="example" style="padding-top: 0px">
-                <p id="generalInst"> Each round, this is what you will see. <br> Your job is to send a message to another player to help them find the object on the left side of your screen. </p>
+            <div class="row" id="example" style="margin-top: -30px">
+                <p id="generalInst" style="position:absolute; margin:-20px 0 0 -260px; left:40%; width: 600px; text-align:center"> Each round, this is what you will see. <br> Your job is to send a message to another player to help them find the object on the left side of your screen. </p>
                 <div class="row" style="padding-top:0px" id="textRow">
-                    <div class="col-xs-6"> <p> <br> <br> <br> </p> </div>
-                    <div class="col-xs-6" id="clickArrayText">
-                        <center> <p class="redText" id="clickText"> <br>  </p> </center>
+                    <div class="col-xs-5"> <p> <br> <br> <br> </p> </div>
+                    <div  id="clickArrayText">
+                        <p class="redText" id="clickText" style="position:absolute; margin:-300px 0 0 30px; left:40%; width: 400px; text-align:center; z-index:1"> <br>  </p> 
                     </div>
                 </div>
                 <div class="row" id="imageRow">
-                	<div class="col-xs-5">
-                		<div id="exampleTarget">
+                	<div >
+                		<div id="exampleTarget" style="position:absolute; margin:150px 0 0 -300px; left:40%; width:300px">
     	            		<!-- <center> <p style="margin:20px"> This is the target object: </p> </center> -->
     	            		<div class="row" > 
-    	            			<img style="margin-top:50px" src="images/familiar/shoe.jpg" class="col-xs-8 col-xs-offset-2 col-md-offset-1 col-md-10"> 
+    	            			<img style="height: 200px; width: 200px" src="images/familiar/shoe.jpg"> 
     	            		</div>
-    	            			<center> <p id="ifRight" > </p> </center>
+    	            			<center> <p id="ifRight"> </p> </center>
     	            		<div id="typingExample" >
     		            		<center> <p id="ifType" >  </p> </center>
     		            		<center> <input type="text" id="ifTyping">  </input> </center>
@@ -143,27 +143,31 @@
     	            		</div>
     	            	</div>
                 	</div>
-                	<div class="circle-container col-xs-offset-6">
-                    	<a href='#' class='deg0 ' ><img src="images/familiar/pen.jpg" alt="pen"></a>
-                        <a href='#' class='deg40 '><img src="images/familiar/computer.jpg"></a>
-                        <a href='#' class='deg80 ' ><img id="shoeTarget" src="images/familiar/shoe.jpg" alt="shoe"></a>
-                        <a href='#' class='deg120 ' ><img src="images/familiar/phone.jpg"></a>
-                        <a href='#' class='deg160 '><img src="images/familiar/newspaper.jpg"></a>
-                        <a href='#' class='deg200 '><img src="images/familiar/plant.jpg" ></a>
-                        <a href='#' class='deg240 ' ><img id="chairDistractor" src="images/familiar/chair.jpg"  alt="chair" ></a>
-                        <a href='#' class='deg280 ' ><img src="images/familiar/key.jpg"></a>
-                        <a href='#' class='deg320 '><img src="images/familiar/apple.jpg" ></a>
-
-
-                		<center> <p id="ifClick" >  </p> </center>
-                	</div>
+                    <div id="paneEx" class="pane">
+                        <!-- <div id="pointerEx"> <img src="images/pointer.png" height="30px" width="auto"> </div> -->
+                    	<center> <div class="circle-container" style="margin-left:35px">
+                                <a href='#' class='center' id="pointerEx" class="box"><img src='images/pointer.png' style="height:30px; width:auto"></a>
+                        	<a href='#' class='deg0 famObjects' ><img src="images/familiar/pen.jpg" alt="pen"></a>
+                            <a href='#' class='deg40 famObjects' id="shoe"><img id="shoeTarget" src="images/familiar/shoe.jpg" ></a>
+                            <a href='#' class='deg80 famObjects'><img src="images/familiar/computer.jpg"></a>
+                            <a href='#' class='deg120 famObjects' ><img src="images/familiar/phone.jpg"></a>
+                            <a href='#' class='deg160 famObjects'><img src="images/familiar/newspaper.jpg"></a>
+                            <a href='#' class='deg200 famObjects'><img src="images/familiar/plant.jpg" ></a>
+                            <a href='#' class='deg240 famObjects' id="chair" ><img id="chairDistractor" src="images/familiar/chair.jpg"   ></a>
+                            <a href='#' class='deg280 famObjects' ><img src="images/familiar/key.jpg"></a>
+                            <a href='#' class='deg320 famObjects'><img src="images/familiar/apple.jpg" ></a>
+                        </div> </center>
+                    </div>
+                    <p  id="ifClick" style="position:absolute; margin:200px 0 0 40px; left:40%; width: 400px; text-align:center">  </p>
                 </div>
             </div>            			
-			<center> <div style="padding:00px"> <button type="button"  id="gameReady" onClick="this.blur()"> I'm Ready</button> </div> </center>
-            <center> <div style="padding:00px"> <button type="button"  id="sendMessageDemo" onClick="this.blur()"> Send Demo Message</button> </div> </center>
-            <center> <div style="padding:00px" id="tryThatAgain"> Whoops, that's not the message you we're supposed to send <br> try that one again </div> </center>
+
 
     	</div>
+            <div> <button type="button" id="gameReady" onClick="this.blur()" style="position:absolute; margin:-25px 0 0 -25px; left:40%"> I'm Ready</button> </div> 
+            <center> <div> <button type="button" id="sendMessageDemo" onClick="this.blur()" > Send Demo Message</button> </div> </center>
+            <center> <p id="pressEnterEx" class="blink_me" onClick="this.blur()" style="position:absolute; margin:600px 0 0 -50px; left:40%"> (press 'Enter' to move on) </p> </center>
+            <center> <div id="tryThatAgain" style="position:absolute; margin:0px 0 0 -125px; left:40% width: 400px; text-align:center"> Whoops, that's not the message you we're supposed to send <br> try that one again </div> </center>
     </div>
 
 
@@ -191,7 +195,7 @@
 			        	<br>
 		    </div>
     	</div> <br>
-    	           <div class="row" > <center> <button type="button" id="beginGame" disabled="disabled"> </button> </center> </div> 
+    	           <div class="row" > <center> <button type="button" id="beginGame" disabled="disabled"> Begin Game</button> </center> </div> 
                </fieldset>  </form>     
     </div> 
 
@@ -242,19 +246,19 @@
     	<div class="progress">
 		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" > </div>
 		</div>
-    	<center> <div class="points" id="myScore"> <p style="font-size:16px"> your points: </p> </div> </center>
-        <center> <section>
-            <section class="leftSide" style="margin: 100px 0 0 10%">
-                <div> <strong> <p> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </strong> 
+    	<div > <p class="points" id="myScore"> your points: 0 </p> </div>
+        <center> <section style="margin-top:50px">
+            <section id="leftSide" class="leftSide">
+                <div style="margin-top:75px"> <strong> <p> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </strong> 
                 <div class='hmm' id="gameTarget" > </div> <br> 
-                <div><form> <p > You can type the object <br> label here: <br> </p>  </form> </div>
-                <div> <input   type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div>
+                <!-- <div><form> <p > You can type the object <br> label here: <br> </p>  </form> </div> -->
+                <!-- <div> <input type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div> -->
             </section>
-            <section id="pane" style="margin-left:40%">
-                <div id="box"> <img src="images/pointer.png" height="30px" width="auto"> </div>
-            	<p  style="margin-top: 50px"> You can select the object here: <br> (use the arrow keys to move the pointer and <br> press enter to make a selection) </p> 
+            <section id="pane" class="pane">
+                <div id="box" class="box"> <img src="images/pointer.png" height="30px" width="auto"> </div>
+            	<p  style="margin: 25px 0 0 -75px"> You can select the object here: <br> (use the arrow keys to move the pointer and <br> press enter to make a selection) </p> 
     	       <!-- <div id="objects2" class="objectArray" style="margin-top:0%"> </div>  -->
-                <div class='circle-container'>
+                <div class='circle-container' id="gameCircleArray">
                     <!-- <a href='#' class='center toSelect'><img src='tabletObjects/2002-600.jpg' alt="2002-600.jpg"></a> -->
                     <!-- <a href='#' class='center'><img id='box' src='images/pointer.png'></a> -->
                     <!-- <img class='deg0 toSelect' src='tabletObjects/2003-600.jpg' alt='2003-600.jpg' style="height: 75px; width: auto;"> -->
@@ -269,14 +273,17 @@
                     <a href='#' class='deg320 toSelect'><img class='circleArray' ></a>
                 </div>
             </section>
+                <div style="margin:525px 0 0 100px; position:absolute; left:40%"> <form> <p > You can type the object label here: </p>  </form> 
+                <input type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div>
         </section> </center>
 
-        <div id="bottomOfSlide" style="margin-top:600px">
+        <div id="bottomOfSlide" style="margin-top:600px; position:absolute; left:40%">
             <center><div><button type="button" id="sendMessage" onClick="this.blur()"> </button></div></center> 
-            <center><div id="thatIsEnglish" style="margin-top:20px"> </div> </center>
-            <center><p id="waitingForPartner" style="margin:20px 0px 10px">  Your partner is thinking.... </p> </center>
-            <center><div id="spinningWaiting">  </div> </center>
-            <strong> <center> <p id="messageFromPartner" style="margin:18px 0px 10px"> </p> </center> </strong>
+            <div id="thatIsEnglish"  style="margin-left:-200px; width: 400px; text-align:center"> </div>
+            <p id="waitingForPartner" style="margin-left:-60px">  Your partner is thinking.... </p> 
+            <div id="spinningWaiting" style="margin-left:-10px">  </div> 
+            <strong>  <p id="messageFromPartner" style="margin-left:-200px; width: 400px; text-align:center"> </p>  </strong>
+            <p id="pressEnterToMove" class="blink_me" style="margin-left:-200px; width: 400px; text-align:center"> (press 'Enter' to move to the next round!) </p>
             <center><div id="nextRound"> <button> Next Round </button> </div> </center>
         </div>
     </div>
