@@ -4,9 +4,9 @@ output: html_document
 ---
 
 <br>
-These data were on MTurk collected on March 10, 2017. 40 participants were run in receiver version of our game across two point conditions (100-label 30-point; and 80-label 30-point). We did not expect any effect of condition. 
+These data were collected on MTurk on March 10, 2017. 40 participants were run in receiver version of our game across two point conditions (100-label 30-point; and 80-label 30-point). We did not expect any effect of condition. 
 
-In this version of the reciever game, participants only recieve label messages and all labels are accurate productions of one of our 9 labels. We ran this version to establish a baseline of what how accurate rticipants would be at this task, in part to determine how well attuned senders were to actual reciever performance. 
+In this version of the reciever game, participants only recieve label messages and all labels are accurate productions of one of our 9 labels. We ran this version to establish a baseline of what how accurate participants would be at this task, in part to determine how well attuned senders were to actual reciever performance. 
 
 <br>
 
