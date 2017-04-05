@@ -65,6 +65,89 @@ th {
   50% { opacity: 0; }
 }
 
+
+/*these classes (circle + deg...) let us arrange the objects in a circular fashion*/
+.circle-container {
+    position: relative;
+    width: 24em;
+    height: 24em;
+    padding: 2.8em;
+    /*2.8em = 2em*1.4 (2em = half the width of a link with img, 1.4 = sqrt(2))*/
+    /*border: dashed 1px;*/
+    /*border-radius: 50%;*/
+    margin: 1.75em auto 0;
+}
+.circle-container a {
+    display: block;
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 6em; height: 6em;
+    margin: -2em;
+}
+.circle-container img { display: block; width: 100%; }
+.deg0 { transform: translate(12em); } /* 12em = half the width of the wrapper */
+.deg40 { transform: rotate(40deg) translate(12em) rotate(-40deg); }
+.deg80 { transform: rotate(80deg) translate(12em) rotate(-80deg); }
+.deg120 { transform: rotate(120deg) translate(12em) rotate(-120deg); }
+.deg160 { transform: rotate(160deg) translate(12em) rotate(-160deg); }
+.deg200 { transform: rotate(200deg) translate(12em) rotate(-200deg); }
+.deg240 { transform: rotate(240deg) translate(12em) rotate(-240deg); }
+.deg280 { transform: rotate(280deg) translate(12em) rotate(-280deg); }
+.deg320 { transform: rotate(320deg) translate(12em) rotate(-320deg); }
+
+
+
+#clickText  {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    margin-top: -275px;
+    /*margin-left: -300px;*/
+}
+#ifClick  {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    margin-top: 275px;
+}
+#gameReady {
+	    position: absolute;
+    top: 90%;
+    left: 45%;
+    /*margin-top: 0px;*/
+}
+
+#tryThatAgain {
+	position: absolute;
+    top: 90%;
+    left: 35%;
+    /*margin-top: 0px;*/
+}
+#paneEx {
+	/*float: center;*/
+    /*position: absolute;*/
+        /*position: absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*margin-top: -175px;*/
+    /*width:500px; */
+    height:400px;
+    margin:50px 0 0 25px;
+    /*border-left: 2px dashed black;*/
+}
+#pointerEx {
+    position:absolute; 
+    /*top:-30px; */
+        left: 175px; top:200px;
+
+    /*left:255px;*/
+    /*width: 50px; height: 50px;          */
+	/*background: url('images/pointer.png') no-repeat top;*/
+    z-index: 2 !important;
+}
+
+
+
 #wholeThing {
 	/*float: center;*/
 	/*width: 50%;*/
@@ -77,26 +160,33 @@ th {
 .leftSide {
 	/*float: left;*/
 	position: absolute;
+	left:40%;
+	margin: 100px 0 0 -300px;
+	/*margin: 100px 0 0 10%;*/
 	/*width: 40%;*/
 }
 
-
-#pane {
+.pane {
 	/*float: center;*/
     position: absolute;
-    /*left: 300px;*/
-    width:500px; height:600px;
-    margin-left: 0px;
+    left:40%;
+    /*left: 100px;*/
+    width:525px; height:575px;
     border-left: 2px dashed black;
 }
     
-
-#box {
+/*this defines the pointer to be used in the game
+	note that the position is specified in the javascript so that it is easy to reset the pointer on each new trial*/
+.box {
     position:absolute; 
-    top:305px; left:255px;
+    /*top:305px; left:180px;*/
     /*width: 50px; height: 50px;          */
 	/*background: url('images/pointer.png') no-repeat top;*/
     z-index: 2 !important;
+}
+
+#gameCircleArray {
+	margin-left:50px;
 }
 
 /** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
@@ -158,34 +248,6 @@ button[disabled] {
 
 /*some new stuff for my testing*/
 
-.circle-container {
-    position: relative;
-    width: 24em;
-    height: 24em;
-    padding: 2.8em;
-    /*2.8em = 2em*1.4 (2em = half the width of a link with img, 1.4 = sqrt(2))*/
-    /*border: dashed 1px;*/
-    /*border-radius: 50%;*/
-    margin: 1.75em auto 0;
-}
-.circle-container a {
-    display: block;
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 6em; height: 6em;
-    margin: -2em;
-}
-.circle-container img { display: block; width: 100%; }
-.deg0 { transform: translate(12em); } /* 12em = half the width of the wrapper */
-.deg40 { transform: rotate(40deg) translate(12em) rotate(-40deg); }
-.deg80 { transform: rotate(80deg) translate(12em) rotate(-80deg); }
-.deg120 { transform: rotate(120deg) translate(12em) rotate(-120deg); }
-.deg160 { transform: rotate(160deg) translate(12em) rotate(-160deg); }
-.deg200 { transform: rotate(200deg) translate(12em) rotate(-200deg); }
-.deg240 { transform: rotate(240deg) translate(12em) rotate(-240deg); }
-.deg280 { transform: rotate(280deg) translate(12em) rotate(-280deg); }
-.deg320 { transform: rotate(320deg) translate(12em) rotate(-320deg); }
-
 
 
 
@@ -195,10 +257,15 @@ button[disabled] {
 	margin-top:0%;
 }
 
-.points{
-	font-size: 30px;
+#myScore{
+	position:absolute;
+	font-size: 18px;
 	font-weight: bold;
+	left: 40%;
+	margin-left:-60px;
 }
+
+
 .toSelect{
 	height: 50px; width: 50px;
 }
@@ -208,7 +275,7 @@ button[disabled] {
 } */
 
 #spinningWaiting {
-    position: absolute; width: 100%; height: 100%; background: url('images/spinner.gif') no-repeat top; left:4px;
+    position: absolute; width: 100%; height: 100%; background: url('images/spinner.gif') no-repeat;
 }
 
 #spinner {
