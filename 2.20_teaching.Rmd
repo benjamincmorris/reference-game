@@ -1,21 +1,27 @@
 ---
-title: "2.20_teaching"
-output: html_document
+title: "Teaching results from the pressure to communicate"
+author: "Ben Morris and Dan Yurovsky"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: tango
+    theme: flatly
+    toc: true
+    toc_float:
+      collapsed: true
+    code_folding: hide
 ---
 
-
-<br>
 These data were on MTurk collected on February 20th, 2017 and February 21st, 2017. An error in the code meant that some participants from 2.20.2017 were not run in the proper condition, thus more participants need to be run on the 21st. In the end, we had data from 60 participants. 
 
 These data are meant to be preliminary, 10 subjects were run in each of six conditions (3 partner exposure x 2 point schemes). This version of the sender game explictly told people that teaching behavior (clicking and labeling in a single trial) was allowed in the game. Our preliminary goal was simply to establish that we could provoke sensible levels of teaching behavior at all with this cue. We were also interested to see if rates of teaching behavior would scale with what participants were told about their partners exposure level. 
 
-<br>
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, fig.align='center', messages=FALSE, fig.height = 3, fig.width=5)
+knitr::opts_chunk$set(fig.align='center', messages=FALSE, warning = FALSE,
+                      fig.height = 3, fig.width=5)
 ```
 
-```{r , include=FALSE}
+```{r load_libraries, include = FALSE, results = "hide"}
 library(jsonlite)
 library(dplyr)
 library(ggplot2)
@@ -23,21 +29,26 @@ library(tidyr)
 library(lubridate)
 library(langcog)
 
-novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
-theme_set(theme_bw())
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", 
+                          "toma", "dax", "gazzer", "kiv","manu"))
+
+theme_set(theme_bw(base_size = 14) + theme(panel.grid = element_blank(),
+                  strip.background = element_blank()))
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 ```
 
+# Load Data
 
-<!-- ## Read in the Sender MTurk Data -->
-
-```{r, include=FALSE}
+```{r read_data, warning = FALSE}
 # filenames_100_30 <- list.files("turk/12.8_reference_100_30/production-results/", pattern="*.json", full.names = TRUE)
 # filenames_80_50 <- list.files("turk/12.8_reference_80_50/production-results/", pattern="*.json", full.names = TRUE)
 # filenames <- append(filenames_100_30, filenames_80_50)
 
-filenames1 <- list.files("turk/2.20_sender/production-results/", pattern="*.json", full.names = TRUE)
-filenames2 <- list.files("turk/2.21_sender_fix/production-results/", pattern="*.json", full.names = TRUE)
+filenames1 <- list.files("turk/2.20_sender/production-results/", 
+                         pattern="*.json", full.names = TRUE)
+filenames2 <- list.files("turk/2.21_sender_fix/production-results/", 
+                         pattern="*.json", full.names = TRUE)
+
 filenames <- append(filenames1, filenames2)
 
 ldf <- lapply(filenames, fromJSON)
@@ -50,14 +61,18 @@ sender_game <- NULL
 sender_test<- NULL
 sender_attn <- NULL
 sender_turkIds<-NULL
+
 for (i in 1:length(ldf)) {
   janeDoe <- ldf[[i]]
+  
   anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  
   if (i <= 60) {
     sub_id = (ldf[[i]]$answers$data$ruleQuestions$subID %>% unique() %>% as.numeric())
     if (sub_id>10 & sub_id <= 30) {next}
     if (sub_id>40 & sub_id <= 60) {next}
   }
+  
   # else {condition <- "80_50"}
   ldf_num <- i
   sender_timing <- rbind(sender_timing, as.data.frame(
@@ -70,20 +85,19 @@ for (i in 1:length(ldf)) {
     {sender_attn <- rbind(sender_attn, janeDoe$answers$data$attnCheck)}
   sender_turkIds <- rbind(sender_turkIds, janeDoe$WorkerId)
 }
-
-
 ```
 
-#### Process and Clean the Sender Data
+## Process and Clean the Sender Data
 
-<br>
 We keep track of any participants who close or refresh the page, because any participants who did so before eventually submitting data may have had an a greater number of exposures than others and also have likely been exposed to multiple sets of object-word pairings. In these data, the only participants who refreshed/closed did so on the pre-exposure slides and are thus retained for analysis. 
 
-Data from 2 participants were excluded because they submitted data on a previous version.  
-```{r, include=FALSE}
+Data from 2 participants were excluded because they submitted data on a previous version.
+
+```{r clean_data, warning = FALSE}
 #check who closed or reloaded page against who submitted data!!
 ## DO THIS MANUALLY, each time checking for any red flags 
 sender_turkIds_clean <- as.vector(sender_turkIds)
+
 tmp1 <- read.table(textConnection(gsub(";","\n", readLines("turk/2.20_sender/2.20_participants_who_closed.txt"))))
 tmp1 <- read.table(textConnection(gsub(","," ", tmp1$V1)))
 
@@ -92,7 +106,8 @@ tmp2 <- read.table(textConnection(gsub("," , " " , tmp2$V1)))
 tmp <- rbind(tmp1, tmp2)
 
 quit_participants <- sender_turkIds_clean[which(sender_turkIds_clean %in% tmp$V1)]
-tmp %>% filter(V1 %in% quit_participants)
+
+#tmp %>% filter(V1 %in% quit_participants)
 
 # also, need to check for any participants who managed to sneak through the duplicator turk code
 #  need to read in all the folks who submitted data. previous reading loop skipped the people who weren't properly assigned to condtion. technically, this should be a comparison with all previous versions?
@@ -111,17 +126,23 @@ all_data <- sender_game %>%
 sender_test_slim <- sender_test %>% mutate(subID =as.numeric(subID)) %>% 
   select(targetObjectName, realLabel, subID, exposureRate, responseCorrect, ldf_num) %>%
   rename(testCorrect= responseCorrect)
-sender_game
+#sender_game
 all_data_fixed <- all_data  %>% 
   left_join(sender_test_slim %>% mutate(ldf_num = as.integer(ldf_num), subID = as.character(subID))) 
+
 all_data_dropped <- all_data_fixed %>% filter(toBeDropped==0) %>% 
-  mutate(trialnum = trialnum - 36)
+  mutate(trialnum = trialnum - 36) %>%
+  mutate(partnersExposure = factor(partnersExposure, levels = c("0", "1/2", "1"),
+                                   labels = c("None", "Half", "Same")))
+
 ```
 
-### Basics: Knowledge at Test
+# Analysis
+
+## Test Performance
 
 As we have shown in previous versions, recall of object-label mappings scales sensibly with exposure.
-```{r, echo=FALSE, fig.height=5, fig.width=4, message=FALSE}
+```{r test_results, fig.height=5, fig.width=4, message=FALSE}
 
 seprop <- function(props) {
   mean_prop = mean(props)
@@ -135,37 +156,34 @@ seprop <- function(props) {
 
 # quartz(width = 6, height = 7)
 sender_test %>%
-  mutate(testCorrect=ifelse(typedLabel=='UNKNOWN', "Unknown", as.character(responseCorrect))) %>%
+  mutate(testCorrect=ifelse(typedLabel=='UNKNOWN', "Unknown", 
+                            as.character(responseCorrect))) %>%
   group_by(exposureRate, subID) %>%
   summarise(performance = mean(testCorrect=="1")) %>%
   summarize_each(funs(mean, seprop), performance) %>%
   ggplot(aes(x = as.factor(exposureRate), y = mean)) +
-    geom_bar(stat = "identity", position="dodge", fill='palegreen4') +
+    geom_bar(stat = "identity", position="dodge", fill="#e41a1c") +
     geom_linerange(aes(ymax = mean + seprop, 
                       ymin = mean - seprop), position=position_dodge(.9)) + 
-    theme_bw() +
     labs(x="Exposure Rate", y="Proportion Correct") +
     # scale_fill_discrete(name='Condition', labels=c("Talk is Cheap", "Talk is Expensive")) +
     coord_cartesian(ylim=c(0,1))
 ```
 
-#### Labeling Behavior
+## Labeling Behavior
 
-<br>
 As with previous versions, we can assess how the propensity to send a label in the game changes as a function of condition and exposure rate. Keeping in mind that these data are preliminary, we can examine the effect of partner's exposure- the manipulation we added in this version. 
 
 In the plot below, we can replicate our expected effect of exposure rate on proportion of labeling, which scales sensibly. While the data are noisy, the pattern is consistent with an effect of partners exposure on propensity to send labels, such that the more exposure you're told that your partner has, the more likely you are to send labels. 
 
-(Note that in this figure, the partner's exposure condition is not properly ordered.)  <br>
 
-```{r, echo=FALSE, fig.height=5, fig.width=4, message=FALSE}
+```{r label_prop, fig.height=5, fig.width=4}
 label_props <- all_data_dropped %>%
   group_by(partnersExposure, 
            exposureRate,
            subID) %>%
   summarise(empirical = mean(method == "label")) %>%
-  summarize_each(funs(mean, seprop),empirical)
-
+  summarize_each(funs(mean, seprop),empirical) 
 
 ### Bar Plot of Proportion of Trials where Labels Are Sent, by Condition (empirical results)
 # quartz(width = 10, height = 7)
@@ -175,18 +193,17 @@ label_props %>%
    geom_bar(stat = "identity", position="dodge") +
   geom_linerange(aes(ymax = mean + seprop, 
                       ymin = mean - seprop), position=position_dodge(.9)) + 
-  theme_bw() +
-  labs(x="Exposure Rate", y="Proportion of Labelling Behavior", title="Propensity to Send Labels During the Game") +
-  scale_fill_discrete(name="Partner's Exposure", labels=c("None", "Same", "Half")) +
+  labs(x="Exposure Rate", y="Proportion of Labelling Behavior", 
+       title="Propensity to Send Labels During the Game") +
+  scale_fill_brewer(name="Partner's Exposure", palette = "Set1") +
   coord_cartesian(ylim=c(0,1))
 
 
 ```
 
 
-### Message Strategy Across Condtions As a Function of Appearance
+## Message Strategy Across Condtions As a Function of Appearance
 
-<br>
 While the above plot is suggestive of our expected pattern, it does obscure some nuance in our expectations. In particular, choice of message strategy should differ dramatically across the trials. 
 
 For example, imagine you are told your partner has never seen the words before. In this case, it makes no sense to begin by producing labels, since your partner won't understand them. However, after teaching those labels, you should begin to see label-only trials. Conversely, if you are told your partner saw the words as much as you do, you should begin by labelling. However, once you enivatbly discover there are certain word-object pairs that your partner didn't learn, you could switch to teaching or clicking for those trials. 
@@ -197,12 +214,7 @@ We can see that teaching behavior (in blue) scales with partner's exposure, espe
 
 It is interesting to note that, while there is no teaching for first appearances in the same exposure condition (bottom left bar), there is teaching in the subsequent appearances (bottom three bars). This is plausibly sensible behavior considering that intially you do not know which words your parter does and doesn't know, but in subsequent appearances you could indeed attempt to teach your partner. 
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height=8}
-seprop <- function(props) {
-  mean_prop = mean(props)
-  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
-}
-
+```{r by_appearance, warning=FALSE, message=FALSE, fig.width=5, fig.height=8}
 prop_methods <- all_data_dropped %>%
   group_by(subID, condition, targetObjectName) %>%
   mutate(appearance = if_else(trialnum == min(trialnum), "First",
@@ -220,22 +232,21 @@ anti_join(all_methods, select(prop_methods, partnersExposure, appearance, method
   mutate(n = 0) %>%
   bind_rows(prop_methods) %>%
   mutate(appearance = factor(appearance, levels = c("First", "Second", "Third")),
-         method = factor(method, levels = c("click", "label", "label_click")),
-         partnersExposure = factor(partnersExposure, levels = c("0", "1/2", "1"))) %>%
+         method = factor(method, levels = c("click", "label", "label_click"))) %>%
   arrange(partnersExposure, appearance, method) %>%
   ggplot(aes(x=appearance, y=n,  fill=method)) +
        geom_bar(stat = "identity", position="stack", width = .70) +
   facet_grid(partnersExposure ~ .) +
   labs(y="Proportion of Trials", x="Appearance #") +
-  scale_fill_discrete(name = "Message Type", labels=c("Click", "Label", "Teach"))+
-  theme_bw(base_size=16)
+  scale_fill_brewer(name = "Message Type", 
+                    labels=c("Click", "Label", "Teach"),
+                    palette = "Set1")
 ```
-<br> <br>
 
-##### ... Other attempts at visualizing choice of message strategy / propensity ot teach
+## ... Other attempts at visualizing choice of message strategy / propensity ot teach
 
 This histogram shows the distribution of the propensity to teach by condition. 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
+```{r, warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
 
 ## decision to do teaching behavior by conditions
 all_data_dropped %>% 
@@ -243,7 +254,8 @@ all_data_dropped %>%
   summarize(prop_teach = mean(method=="label_click")) %>%
   ggplot(aes(x=prop_teach, fill=partnersExposure))+
   facet_wrap(~partnersExposure) +
-  geom_histogram()
+  geom_histogram() + 
+  scale_fill_brewer(palette = "Set1")
 
 
 #   summarize_each(funs(mean, seprop, n()), prop_teach) %>% 
@@ -255,7 +267,7 @@ all_data_dropped %>%
   
 <br><br>
 This histogram shows the raw rates of teaching behavior across trials, split by condition. 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height=3}
+```{r, warning=FALSE, message=FALSE, fig.width=5, fig.height=3}
   
 #distribution of teaching beahvior across trialnum, function of partnersExposure
 all_data_dropped %>% 
@@ -267,9 +279,8 @@ all_data_dropped %>%
   # coord_cartesian(ylim = c(0,1))
 ```
 
-<br> <br>
 This plot shows proprtion of message strategy as a function of partner exposure condition. This gives a sense of how noisy these data are. 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=6, fig.height=3}
+```{r,  warning=FALSE, message=FALSE, fig.width=6, fig.height=3}
 all_data_dropped %>% 
   # filter((subID %in% teach_subs$subID)) %>%
   group_by(partnersExposure, method) %>% 
@@ -277,7 +288,8 @@ all_data_dropped %>%
   ggplot(aes(x=partnersExposure, y=mean, fill=method)) +
      geom_bar(stat = "identity", position="dodge") +
   geom_linerange(aes(x= partnersExposure, y=mean, ymin=mean-sd, ymax=mean+sd), position=position_dodge(.9)) +
-  ylab("Average Trial Number")
+  ylab("Average Trial Number") +
+  scale_fill_brewer(palette = "Set1")
 ```
    
 ```{r, include=FALSE}
