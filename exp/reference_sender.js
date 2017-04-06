@@ -30,12 +30,14 @@ var attentionArray = ["2001-600.jpg", "2002-600.jpg", "2005-600.jpg", "2004-600.
 
 var basePath = "tabletobjects/";
 
-var trueLabelPoints= 100; 
-var trueClickPoints = 30;
-var doingBothPoints = 30;
-var pointsLabelWrong = -0;
-var pointsClickWrong = -70;
-var pointsBothWrong = -70;
+// var trueLabelPoints= 100; 
+// var trueClickPoints = 30;
+// var doingBothPoints = 30;
+// var pointsLabelWrong = -0;
+// var pointsClickWrong = -70;
+// var pointsBothWrong = -70;
+
+var speedAsLag = 30
 
 
 // while we outlawed producing english words, 
@@ -74,9 +76,9 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
     		if (i==0 || i==5 || i==10 || i==15 || i==20) {
-    			imgSet[i] = '</div> <div class="row"> <img style="max-width:150px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '</div> <div class="row"> <img style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
-    			imgSet[i] = '<img  style="max-width:150px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	}
     }
@@ -366,7 +368,7 @@ try {
 
                   do_all_the_setup()
                   // for debugging, use line below to jump around the exp
-                        experiment.game(0,0,30);
+                    experiment.game(0,0,30);
                 }
 
         }
@@ -408,21 +410,23 @@ var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length
 
 function do_all_the_setup() {
 
-                if(subjectIdentifier <= 30) {
-                  cond = "100_30"
-                  partnersExposure = "1"
+                if(subjectIdentifier <= 20) {
+                  // cond = "100_30"
+                  partnersExposure = "0"
                   // if (subjectIdentifier <= 20) {
                   //   partnersExposure ="1/2"
                   // } if (subjectIdentifier<= 10) {
                   //   partnersExposure = "1"
                   // }
-                } else {cond="80_50";
-                        trueLabelPoints = 80;
-                        trueClickPoints = 50;
-                        doingBothPoints = 30;
-                        pointsLabelWrong = -20;
-                        pointsClickWrong = -50;
-                        pointsBothWrong = -70;
+                } else {
+                  speedAsLag = 30
+                      // cond="80_50";
+                      //   trueLabelPoints = 80;
+                      //   trueClickPoints = 50;
+                      //   doingBothPoints = 30;
+                      //   pointsLabelWrong = -20;
+                      //   pointsClickWrong = -50;
+                      //   pointsBothWrong = -70;
                   partnersExposure = "0"
                   // if (subjectIdentifier <= 50) {
                   //   partnersExposure ="1/2"
@@ -440,9 +444,10 @@ function do_all_the_setup() {
                   arrNumKnownByExp = [0,0,0]
                 }
 
-                console.log("cond set to " + cond + "    partnersExposure set to " +partnersExposure)
+                console.log("speed (as lag time) set to " + speedAsLag + "    partnersExposure set to " +partnersExposure)
                 if (subjectIdentifier.length > 7) {
-                    cond = '100_30';
+                    // cond = '100_30';
+
                     console.log('setting broken id tag to ' + subjectIdentifier + ' as default... ');
                 };
 
@@ -484,7 +489,13 @@ var experiment = {
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
-		document.getElementById("beforeStudy").onclick = function() {experiment.exposure(slideNumber+1)};
+
+        $(window).keyup(function(event){
+          if(event.keyCode == 13) {
+            $(window).unbind('keyup')
+            experiment.exposure(slideNumber+1)
+          }
+        })
 	},
 
 	//transition from instruction slide to the exposure phase
@@ -505,23 +516,29 @@ var experiment = {
 		document.getElementById('content').appendChild(exposureTrial);
 		var firstlabel = document.createTextNode(pairObjectLabels(exposureArray[index]));
 		document.getElementById('label').appendChild(firstlabel);
-		document.getElementById("clickme").innerHTML = "Next";
-		setTimeout(function() {$("#clickme").fadeIn()}, 1250);
-		document.getElementById("clickme").onclick = function() {
-			time2 = new Date().getTime()
-			//pass trial data for eventual output
-			expDuration= {
-                phase : "exposure",
-        subID : subjectIdentifier,
-        condition: cond,
-				trialnum : slideNumber,
-				object: exposureArray[index],
-				exposureRate : getOccurences(exposureArray[index], exposureArray),
-				timestamp: getCurrentTime(), //the time that the trial was completed at 
-				duration : time2 - time1,
-				};
-			experiment.expDuration.push(expDuration);
-			experiment.exposures(0, slideNumber+1)};
+		// document.getElementById("clickme").innerHTML = "Next";
+		setTimeout(function() {
+      $("#clickme").fadeIn(500)
+      $(window).keyup(function(event){
+        if(event.keyCode == 13) {
+          $(window).unbind('keyup')
+    			time2 = new Date().getTime()
+    			//pass trial data for eventual output
+    			expDuration= {
+                    phase : "exposure",
+            subID : subjectIdentifier,
+            condition: cond,
+    				trialnum : slideNumber,
+    				object: exposureArray[index],
+    				exposureRate : getOccurences(exposureArray[index], exposureArray),
+    				timestamp: getCurrentTime(), //the time that the trial was completed at 
+    				duration : time2 - time1,
+    				};
+    			experiment.expDuration.push(expDuration);
+    			experiment.exposures(0, slideNumber+1)
+        };
+      })
+    }, 1250);
 	},
 
 	exposures: function(index, slideNumber) {
@@ -551,21 +568,28 @@ var experiment = {
 			document.getElementById('label').appendChild(newLabel);
 			$("#content").fadeIn(speed);
 			$("#label").fadeIn(speed);
-			setTimeout(function() {$("#clickme").fadeIn()}, 1250);
-			document.getElementById("clickme").onclick = function() {
-				time2 = new Date().getTime();
-				expDuration= {
-					phase : "exposure",
-            subID : subjectIdentifier,
-            condition: cond,
-					trialnum : slideNumber,
-					object: newPic,
-					exposureRate : getOccurences(newPic, exposureArray),
-					timestamp: getCurrentTime(), //the time that the trial was completed at 
-					duration : time2 - time1,
-					};
-				experiment.expDuration.push(expDuration);
-				experiment.exposures(i, slideNumber+1)};
+
+			setTimeout(function() {
+        $("#clickme").fadeIn(500)
+        $(window).keyup(function(event){
+          if(event.keyCode == 13) {
+              $(window).unbind('keyup')
+      				time2 = new Date().getTime();
+      				expDuration= {
+      					phase : "exposure",
+                  subID : subjectIdentifier,
+                  condition: cond,
+      					trialnum : slideNumber,
+      					object: newPic,
+      					exposureRate : getOccurences(newPic, exposureArray),
+      					timestamp: getCurrentTime(), //the time that the trial was completed at 
+      					duration : time2 - time1,
+      					};
+      				experiment.expDuration.push(expDuration);
+      				experiment.exposures(i, slideNumber+1)
+          }
+        })
+      }, 1250);
 		} else if (i >= lastExposure) {
 			experiment.pretest(slideNumber);
 	}},
@@ -573,25 +597,33 @@ var experiment = {
 	pretest: function(slideNumber) {
     slide_number=slideNumber;
 		showSlide('pretest');
+    $("#beginTest").hide()
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
 		shuffle(imgArray);
-		setTimeout(function() {$("#beginTest").fadeIn()}, 2000);
-		document.getElementById("beginTest").innerHTML = "Begin Test";
-		document.getElementById("beginTest").onclick = function() {experiment.test(0, slideNumber+1)};
+		setTimeout(function() {
+      $("#beginTest").fadeIn()
+      $(window).keyup(function(event){
+        if(event.keyCode == 13) {
+          $(window).unbind('keyup')
+          experiment.test(0, slideNumber+1)
+        }
+      })
+    }, 2000);
 	},
 
 	test: function(testNumber, slideNumber) {
     slide_number=slideNumber;
 		time1 = new Date().getTime();
 		showSlide('test');
+    $("#nextObject").hide()
 		document.getElementById('progressBar').style.width= String(31 + testNumber * .5) + "%" ;
 		document.getElementById('testInput').value = '';
 		document.getElementById('testInput').disabled=false;
 		document.getElementById('notSure').disabled=false;
 		document.getElementById('notSure').checked=false;
-		document.getElementById('nextObject').disabled=true;
+		// document.getElementById('nextObject').disabled=true;
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
@@ -625,20 +657,20 @@ var experiment = {
 			document.getElementById("testInput").onkeyup = function() {
 				if (document.getElementById("testInput").value =="") {
 					document.getElementById('notSure').disabled = false;
-					document.getElementById('nextObject').disabled=true;
+          $("#nextObject").fadeOut()
 				} else {
 					document.getElementById('notSure').disabled = true;
-					document.getElementById('nextObject').disabled=false;				
+          $("#nextObject").fadeIn()
 				}
 			};
 			document.getElementById('notSure').onchange = function() {
 				if(document.getElementById('notSure').checked) {
 					document.getElementById('testInput').disabled=true;
-					document.getElementById('nextObject').disabled=false;
+          $("#nextObject").fadeIn()
 					notKnown=1;
 				} else {
 					document.getElementById('testInput').disabled=false;
-					document.getElementById('nextObject').disabled=true;
+          $("#nextObject").fadeOut()
 					notKnown=0;
 				}
 			}
@@ -646,61 +678,67 @@ var experiment = {
 			// if (blah != '') {
 			// 	document.getElementById("nextObject").disabled = true;
 			// }
-			document.getElementById("nextObject").onclick = function() {
-				candidate='';
-				time2 = new Date().getTime();
-				var blah = document.getElementById('testInput').value.toLowerCase().trim();
-				if (blah != '') {
-					// adjusting input for levDist
-						for (var i=0; i<novelWords.length; i++){
-							inputWord = blah
-							thisOne = levDist(inputWord, novelWords[i])
-							// if this is the first round, make this word our candidate
-							if (i==0) {
-								candidate = novelWords[i]
-							// otherwise, evaluate new word versus current candidate and update candidate if needed. 
-							} else
-								// deal with the case where two candidates are as close
-								if (thisOne == levDist(inputWord, candidate)) {
-									// flip a coin, if heads, update candidate
-									if (randomIntFromInterval(0,1)==1) {candidate = novelWords[i]}
-								}
-								if (thisOne < levDist(inputWord, candidate)) {
-									candidate = novelWords[i]
-								}
-						}
-						// final check, upper bound on edit distance. 
-						if (levDist(inputWord, candidate)>2) {candidate =""}
-					// if user enters the appropriate label, mark answer as correct
-					if(blah == pairObjectLabels(document.getElementById('orderedImage').alt)) {
-						var testCorrect=1;
-					} else {
-						var testCorrect=0;
-					}
-				}
-				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
-				//pass trial data for eventual output
-				testTrials= {
-					phase : "test",
-              subID : subjectIdentifier,
-              condition: cond,
-					trialnum : slideNumber,
-					targetObjectName : document.getElementById('orderedImage').alt,
-					exposureRate : getOccurences(document.getElementById('orderedImage').alt, exposureArray),
-					realLabel : pairObjectLabels(document.getElementById('orderedImage').alt),
-					typedLabel: blah,
-						//label entered by particpant, null if no label entered or if (test trial) participant selected don't know
-					adjLabel: candidate,
-						// find closest vocab word by levDist and see if that is right
-					responseCorrect: testCorrect,
-						//whether the response matched target, either as click or typed message. 
-					timestamp: getCurrentTime(), //the time that the trial was completed at 
-					duration: time2 - time1,
-				};
-				experiment.testTrials.push(testTrials);
-				//move on to next test trial!
-				experiment.test(testNumber+1, slideNumber+1);
-			};
+      $(window).keyup(function(event){
+        var blah = document.getElementById('testInput').value.toLowerCase().trim();
+        if(event.keyCode == 13) {
+          if(blah == '' && (document.getElementById('notSure').checked==false)) {return false
+          } else {
+            $(window).unbind('keyup')
+    				candidate='';
+    				time2 = new Date().getTime();
+    				if (blah != '') {
+    					// adjusting input for levDist
+    						for (var i=0; i<novelWords.length; i++){
+    							inputWord = blah
+    							thisOne = levDist(inputWord, novelWords[i])
+    							// if this is the first round, make this word our candidate
+    							if (i==0) {
+    								candidate = novelWords[i]
+    							// otherwise, evaluate new word versus current candidate and update candidate if needed. 
+    							} else
+    								// deal with the case where two candidates are as close
+    								if (thisOne == levDist(inputWord, candidate)) {
+    									// flip a coin, if heads, update candidate
+    									if (randomIntFromInterval(0,1)==1) {candidate = novelWords[i]}
+    								}
+    								if (thisOne < levDist(inputWord, candidate)) {
+    									candidate = novelWords[i]
+    								}
+    						}
+    						// final check, upper bound on edit distance. 
+    						if (levDist(inputWord, candidate)>2) {candidate =""}
+    					// if user enters the appropriate label, mark answer as correct
+    					if(blah == pairObjectLabels(document.getElementById('orderedImage').alt)) {
+    						var testCorrect=1;
+    					} else {
+    						var testCorrect=0;
+    					}
+    				}
+    				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
+    				//pass trial data for eventual output
+    				testTrials= {
+    					phase : "test",
+                  subID : subjectIdentifier,
+                  condition: cond,
+    					trialnum : slideNumber,
+    					targetObjectName : document.getElementById('orderedImage').alt,
+    					exposureRate : getOccurences(document.getElementById('orderedImage').alt, exposureArray),
+    					realLabel : pairObjectLabels(document.getElementById('orderedImage').alt),
+    					typedLabel: blah,
+    						//label entered by particpant, null if no label entered or if (test trial) participant selected don't know
+    					adjLabel: candidate,
+    						// find closest vocab word by levDist and see if that is right
+    					responseCorrect: testCorrect,
+    						//whether the response matched target, either as click or typed message. 
+    					timestamp: getCurrentTime(), //the time that the trial was completed at 
+    					duration: time2 - time1,
+    				};
+    				experiment.testTrials.push(testTrials);
+    				//move on to next test trial!
+    				experiment.test(testNumber+1, slideNumber+1);
+          }
+  			};
+      })
 		} if (testNumber >= lastExposure) {
 			experiment.prestudy(slideNumber);
 		};
@@ -714,7 +752,6 @@ var experiment = {
     $("#tryThatAgain").hide()
     $("#sendMessageDemo").hide();
 		$("#exampleText").show();
-		$("#howToPlay").show();
 		$("#typingExample").hide();
       $("#pointerEx").hide()
 		$("#clickText").hide()
@@ -722,7 +759,7 @@ var experiment = {
 		$("#clickArray").hide();
 		$("#generalInst").hide();
 		$("#gameReady").hide();
-    $("#pressEnterEx").hide()
+    $("#pressEnterEx").hide();
 			// document.getElementById("clickme").removeAttribute("onclick");
 			for(var i = 0; i<progressBars.length; i++) {
 				progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
@@ -734,41 +771,46 @@ var experiment = {
     // (hideous) series of timing events to walk through examples that illustrate the game rules
     // creates a little 'video.' would be so much easier to adjust if we could pass a variable TIMER as the ms for the timeout,
     //      but i haven't been able to write it that way because of the way setTimeout operates. 
-		document.getElementById("howToPlay").onclick = function() {
-			$("#exampleText").hide()
-			$("#howToPlay").hide()
-			$("#ifClick").hide()
-			$("#ifRight").hide()
-			//certain things need to be 'reset' that won't affect first viewing, but would affect Ps who get sent back to watch again.
-			document.getElementById("ifTyping").value=""
-      $("#paneEx").fadeIn(500)
-			$("#exampleTarget").fadeIn(500)
-			$("#clickArray").fadeIn(500)
-			$("#generalInst").fadeIn(500)
-			document.getElementById("clickText").innerHTML="<br> <br> Your partner will only see the nine objects."
-      document.getElementById("shoe").style.border= ""
-      document.getElementById("shoe").style.outline= ""
-			
-      //general rules
-			setTimeout(function() {$("#clickText").fadeIn(500)}, 4000)			
-			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn <strong> 1 point</strong>. <br> But if your partner gets it wrong, you won't get any points."
-			setTimeout(function() {$("#ifRight").fadeIn(500)}, 7000)
-      setTimeout(function() {
-        // $("#gameReady").fadeIn(500)
-        $("#pressEnterEx").show()
-        $(window).keyup(function(event){
-          if(event.keyCode == 13) {
-            $(window).unbind('keyup')
-            experiment.prestudyTypeRight(slideNumber)
-          }
-        })
-      }, 11000)
+    $(window).keyup(function(event){
+      var blah = document.getElementById('testInput').value.toLowerCase().trim();
+      if(event.keyCode == 13) {
+        $(window).unbind('keyup')
+        $("#pressEnterEx").hide()
+  			$("#exampleText").hide()
+  			$("#howToPlay").hide()
+  			$("#ifClick").hide()
+  			$("#ifRight").hide()
+  			//certain things need to be 'reset' that won't affect first viewing, but would affect Ps who get sent back to watch again.
+  			document.getElementById("ifTyping").value=""
+        $("#paneEx").fadeIn(500)
+  			$("#exampleTarget").fadeIn(500)
+  			$("#clickArray").fadeIn(500)
+  			$("#generalInst").fadeIn(500)
+  			document.getElementById("clickText").innerHTML="<br> <br> Your partner will only see the nine objects."
+        document.getElementById("shoe").style.border= ""
+        document.getElementById("shoe").style.outline= ""
+  			
+        //general rules
+  			setTimeout(function() {$("#clickText").fadeIn(500)}, 4000)			
+  			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn <strong> 10 points</strong>. <br> But if your partner gets it wrong, you won't get any points."
+  			setTimeout(function() {$("#ifRight").fadeIn(500)}, 7000)
+        setTimeout(function() {
+          // $("#gameReady").fadeIn(500)
+          $("#pressEnterEx").show()
+          $(window).keyup(function(event){
+            if(event.keyCode == 13) {
+              $(window).unbind('keyup')
+              experiment.prestudyTypeRight(slideNumber)
+            }
+          })
+        }, 11000)
+      }
       // document.getElementById("gameReady").innerHTML = "Got it So Far"
 
       // document.getElementById("gameReady").onclick = function() {
       //   experiment.prestudyTypeRight(slideNumber)
       // }
-    }
+    })
   },
 
   prestudyTypeRight: function(slideNumber) {
@@ -824,7 +866,7 @@ var experiment = {
                 $("#clickText").fadeIn(500)
               }, 500)
             setTimeout(function() {document.getElementById("shoe").style.border= "3px red dashed";}, 1500)
-            setTimeout(function() {document.getElementById('ifClick').innerHTML ="Since your partner chose the target, <br> you would end up with <strong> 1 point</strong> in this example."
+            setTimeout(function() {document.getElementById('ifClick').innerHTML ="Since your partner chose the target, <br> you would end up with <strong> 10 points</strong> in this example."
                 $("#ifClick").fadeIn(500)}, 2500)
             setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
                     // $("#gameReady").fadeIn(500)
@@ -965,7 +1007,7 @@ var experiment = {
                         left: function(i,v) { return newv(v, 37, 39); },
                         top: function(i,v) { return newv(v, 38, 40); }
                     });
-                }, 4);
+                }, speedAsLag);
                 detectHoverInterval = setInterval(function() {
                       rect1 = document.getElementById("pointerEx").getBoundingClientRect()
                       $('.famObjects').each(function() {
@@ -1015,7 +1057,7 @@ var experiment = {
                                 document.getElementById("shoe").style.zIndex= "1"
                               }, 500)
                               setTimeout(function() {
-                                document.getElementById("ifClick").innerHTML="you will end up with <strong> 1 point </strong> <br> when your partner gets it right."
+                                document.getElementById("ifClick").innerHTML="you will end up with <strong> 10 points </strong> <br> when your partner gets it right."
                                 $("#ifClick").fadeIn(500)
                               }, 1000)
                               setTimeout(function() {
@@ -1118,7 +1160,7 @@ var experiment = {
                         left: function(i,v) { return newv(v, 37, 39); },
                         top: function(i,v) { return newv(v, 38, 40); }
                     });
-                }, 4);
+                }, speedAsLag);
                 detectHoverInterval = setInterval(function() {
                       rect1 = document.getElementById("pointerEx").getBoundingClientRect()
                       $('.famObjects').each(function() {
@@ -1190,7 +1232,7 @@ var experiment = {
                                         document.getElementById("shoe").style.outline= "3px red dashed"
                                       }, 500)
                                 setTimeout(function() {
-                                        document.getElementById("ifClick").innerHTML="You would end up with <br> <strong> 1 point</strong> in this example."
+                                        document.getElementById("ifClick").innerHTML="You would end up with <br> <strong> 10 points</strong> in this example."
                                         $("#ifClick").fadeIn(500)
                                       }, 1500)
                                 setTimeout(function() {
@@ -1321,8 +1363,9 @@ var experiment = {
 		showSlide("getYourPartner");
     $("#squareExamples").hide()
 		$("#spinner").hide();
-		$('#gameStartFinal').fadeIn(1000);
-		document.getElementById("gameStartFinal").innerHTML = "Search for a Partner";
+    $('#userName').focus()
+    $('#gameStartFinal').hide()
+		document.getElementById("gameStartFinal").innerHTML = "Press 'Enter' to Find a Partner";
 		// this event handler checks the input, and when they have content, enables the button
 		$('#userName').bind("keyup click change", function() {
 				        var empty = false;
@@ -1330,102 +1373,113 @@ var experiment = {
 				                empty = true;
 				            }				      
 				        if (empty) {
-				            $('#gameStartFinal').attr('disabled', 'disabled');
+                    $('#gameStartFinal').fadeOut();
 				        } else {
-				            $('#gameStartFinal').removeAttr('disabled');
+                    $('#gameStartFinal').show();
 				        }
 		});
-		document.getElementById("gameStartFinal").onclick = function() {
-      $("#partneringHeadingStuff").addClass("blink_me")
-      document.getElementById("partneringHeading").innerHTML= "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now! "
-			$("#userName").hide();
-			// document.getElementById("partneringText").innerHTML = "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now!"
-      document.getElementById("partneringText").innerHTML = "<br> Note that you saw the objects and their labels <strong> 21 times </strong> "
-      $("#exposureText").fadeIn(500);
-      // document.getElementById("exposureText").innerHTML = "<br> Your partner may have seen the objects fewer, the same, or more times"
-              expVisualized = ''
+    $(window).keyup(function(event){
+      if(event.keyCode == 13) {
+        if($('#userName').val() != '') {
+          $(window).unbind("keyup")      
+          $('#gameStartFinal').hide()
+          $("#partneringHeadingStuff").addClass("blink_me")
+          document.getElementById("partneringHeading").innerHTML= "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now! "
+    			$("#userName").hide();
+    			// document.getElementById("partneringText").innerHTML = "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now!"
+          document.getElementById("partneringText").innerHTML = "<br> Note that you saw the objects and their labels <strong> 21 times </strong> "
+          $("#exposureText").fadeIn(500);
+          // document.getElementById("exposureText").innerHTML = "<br> Your partner may have seen the objects fewer, the same, or more times"
+                  expVisualized = ''
 
-      for(var i=0; i<exposureArray.length; i++) {
-        thisObject = '<img class="square" style="margin:1px">'
-        expVisualized= expVisualized + thisObject
-      }
-      document.getElementById('myVisual').innerHTML = expVisualized
-      // expVisualized = ''
-      // for(var i=12; i<exposureArray.length; i++) {
-      //   thisObject = '<img class="col-xs-1" src=' + basePath + exposureArray[i] + ' style="margin:0px">'
-      //   expVisualized= expVisualized + thisObject
-      // }
-      // console.log(expVisualized)
-      // document.getElementById('myVisualOther').innerHTML = expVisualized
-
-			searchTime = randomIntFromInterval(10000,12000);
-			$("#spinner").fadeIn(500);
-			$("#gameStartFinal").hide();
-
-      //squares example to illustrate exposure differences
-          document.getElementById('squaresSame').innerHTML = expVisualized
-          expVisualized = ''
           for(var i=0; i<exposureArray.length; i++) {
-              thisObject = '<img class="emptySquare" style="margin:2px">'
-              expVisualized= expVisualized + thisObject
+            thisObject = '<img class="square" style="margin:1px">'
+            expVisualized= expVisualized + thisObject
           }
-          document.getElementById('squaresNone').innerHTML = expVisualized
-          expVisualized = ''
-          for(var i=0; i<(exposureArray.length/2); i++) {
-              thisObject = '<img class="square" style="margin:1px">'
-              expVisualized= expVisualized + thisObject
-          } for(var i=(exposureArray.length/2)+1; i<exposureArray.length; i++) {
-              thisObject = '<img class="emptySquare" style="margin:2px">'
-              expVisualized= expVisualized + thisObject
-          }
-          document.getElementById('squaresFewer').innerHTML = expVisualized
-      // bring in the examples after a few seconds
-      setTimeout(function() {$("#squareExamples").fadeIn(500)}, 3000)
+          document.getElementById('myVisual').innerHTML = expVisualized
+          // expVisualized = ''
+          // for(var i=12; i<exposureArray.length; i++) {
+          //   thisObject = '<img class="col-xs-1" src=' + basePath + exposureArray[i] + ' style="margin:0px">'
+          //   expVisualized= expVisualized + thisObject
+          // }
+          // console.log(expVisualized)
+          // document.getElementById('myVisualOther').innerHTML = expVisualized
 
-      // we found a partner!
-			setTimeout(function() {$("#partneringHeadingStuff").fadeOut(501)}, searchTime - 500)
-			setTimeout(function() {
-        document.getElementById("exposureText").innerHTML= "<br> We found you a partner called <strong>"+partnersName+"</strong>!"
+    			searchTime = randomIntFromInterval(10000,12000);
+    			$("#spinner").fadeIn(500);
+    			$("#gameStartFinal").hide();
 
-				// document.getElementById("partneringText").innerHTML= "<br><br>"
-				if (partnersExposure=="0") { 
-          // $("#fewer").css("visibility", "hidden")
-          $("#none").fadeOut(500)
-          setTimeout(function() {$("#none").fadeIn(500)
-            document.getElementById("noneText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times</strong>."
-            $("#noneText").addClass("redText")
-            }, 1500)
-          $("#fewer").fadeOut(500)
-          $("#same").fadeOut(500)
+          //squares example to illustrate exposure differences
+              document.getElementById('squaresSame').innerHTML = expVisualized
+              expVisualized = ''
+              for(var i=0; i<exposureArray.length; i++) {
+                  thisObject = '<img class="emptySquare" style="margin:2px">'
+                  expVisualized= expVisualized + thisObject
+              }
+              document.getElementById('squaresNone').innerHTML = expVisualized
+              expVisualized = ''
+              for(var i=0; i<(exposureArray.length/2); i++) {
+                  thisObject = '<img class="square" style="margin:1px">'
+                  expVisualized= expVisualized + thisObject
+              } for(var i=(exposureArray.length/2)+1; i<exposureArray.length; i++) {
+                  thisObject = '<img class="emptySquare" style="margin:2px">'
+                  expVisualized= expVisualized + thisObject
+              }
+              document.getElementById('squaresFewer').innerHTML = expVisualized
+          // bring in the examples after a few seconds
+          setTimeout(function() {$("#squareExamples").fadeIn(500)}, 3000)
+
+          // we found a partner!
+    			setTimeout(function() {$("#partneringHeadingStuff").fadeOut(501)}, searchTime - 500)
+    			setTimeout(function() {
+            document.getElementById("exposureText").innerHTML= "<br> We found you a partner called <strong>"+partnersName+"</strong>!"
+
+    				// document.getElementById("partneringText").innerHTML= "<br><br>"
+    				if (partnersExposure=="0") { 
+              // $("#fewer").css("visibility", "hidden")
+              $("#none").fadeOut(500)
+              setTimeout(function() {$("#none").fadeIn(500)
+                document.getElementById("noneText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times</strong>."
+                $("#noneText").addClass("redText")
+                }, 1500)
+              $("#fewer").fadeOut(500)
+              $("#same").fadeOut(500)
+            }
+            if (partnersExposure=="1/2") {
+              $("#fewer").fadeOut(500)
+              $("#none").fadeOut(500)
+              $("#same").fadeOut(500)
+              setTimeout(function() {
+                document.getElementById("fewerText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times</strong> as you did."
+                $("#fewer").fadeIn(500)
+                $("#fewerText").addClass("redText")}, 1500)
+            }
+            if (partnersExposure=="1") {
+              $("#none").fadeOut(500)
+              $("#fewer").fadeOut(500)
+              $("#same").fadeOut(500)
+              setTimeout(function() {
+                document.getElementById("sameText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times</strong> as you did."
+                $("#same").fadeIn(500)
+                $("#sameText").addClass("redText")}, 1500)
+            }
+            $("#partneringText").fadeTo(500, .5)
+            $("#myVisual").fadeTo(500, .5)
+            $("#partneringText").fadeIn(500);
+            $("#exposureText").fadeIn(500);
+    				document.getElementById("gameStartFinal").innerHTML= "Press 'Enter' to Begin the Game!"
+    				setTimeout(function() {$("#gameStartFinal").fadeIn(1000)
+              $(window).keyup(function(event){
+                if(event.keyCode == 13) {
+                  $(window).unbind("keyup")
+                     experiment.game(0, 0, slideNumber+1, $("#userName").val())
+                }
+              })
+            }, 4000);
+    			}, searchTime)
         }
-        if (partnersExposure=="1/2") {
-          $("#fewer").fadeOut(500)
-          $("#none").fadeOut(500)
-          $("#same").fadeOut(500)
-          setTimeout(function() {
-            document.getElementById("fewerText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times</strong> as you did."
-            $("#fewer").fadeIn(500)
-            $("#fewerText").addClass("redText")}, 1500)
-        }
-        if (partnersExposure=="1") {
-          $("#none").fadeOut(500)
-          $("#fewer").fadeOut(500)
-          $("#same").fadeOut(500)
-          setTimeout(function() {
-            document.getElementById("sameText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times</strong> as you did."
-            $("#same").fadeIn(500)
-            $("#sameText").addClass("redText")}, 1500)
-        }
-        $("#partneringText").fadeTo(500, .5)
-        $("#myVisual").fadeTo(500, .5)
-        $("#partneringText").fadeIn(500);
-        $("#exposureText").fadeIn(500);
-				document.getElementById("gameStartFinal").innerHTML= "Begin Game!"
-				document.getElementById("gameStartFinal").onclick = function() {
-					experiment.game(0, 0, slideNumber+1, $("#userName").val())}
-				setTimeout(function() {$("#gameStartFinal").fadeIn(1000)}, 4000);
-			}, searchTime)
-		}
+		  }
+    })
 	},
 
 	game: function(score, roundNumber, slideNumber, username) {
@@ -1443,8 +1497,8 @@ var experiment = {
     })
       // make sure the pointer resets to center each time 
         $('#box').css({
-            left: "220px",
-            top: "285px"
+            left: "222px",
+            top: "295px"
         });
 
     slide_number=slideNumber;
@@ -1456,8 +1510,6 @@ var experiment = {
         // console.log(partnerKnows)
     }
 		showSlide("referenceGame");
-		$("#sendMessage").hide();
-		document.getElementById("sendMessage").innerHTML = "Send Message"
 		$("#waitingForPartner").hide();
 		$("#spinningWaiting").hide();
 		$("#messageFromPartner").hide();
@@ -1472,7 +1524,6 @@ var experiment = {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
 		document.getElementById('labelInput').value = '';
-		document.getElementById("sendMessage").disabled = true;
 		document.getElementById("gameTarget").innerHTML = gameArray[roundNumber];
 
 
@@ -1495,7 +1546,7 @@ var experiment = {
             left: function(i,v) { return newv(v, 37, 39); },
             top: function(i,v) { return newv(v, 38, 40); }
         });
-    }, 5);
+    }, speedAsLag);
 
 
 
@@ -1586,33 +1637,33 @@ var experiment = {
 		document.getElementById("labelInput").disabled = false;
         document.getElementById("labelInput").focus();
 
-		document.getElementById("labelInput").onkeyup = function() {
-			// var node = $(this);
-			// node.value(node.val().replace(/[^a-z ]/g,'') );
-			// if they have erased the text box so it is now empty
-			if (document.getElementById("labelInput").value =="") {
-				// if they clicked the object, leave that as the message
-				if (message==1) {
-          document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> "+ trueClickPoints +" Possible Points </em> </strong>"
-          pointChange = trueClickPoints;
-        }
-				// if they havent clicked an object and now have emptied the text box, revert to no message state and disable stuff
-				else {
-					document.getElementById("sendMessage").disabled = true;
-					document.getElementById("sendMessage").innerHTML="Send Message";
-				}
-			} else {
-				document.getElementById("sendMessage").disabled = false;
-				if (message==1) {
-          document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
-          pointChange = doingBothPoints;
-        }
-				else {
-          document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
-          pointChange = trueLabelPoints;
-        }
-			}
-		};
+		// document.getElementById("labelInput").onkeyup = function() {
+		// 	// var node = $(this);
+		// 	// node.value(node.val().replace(/[^a-z ]/g,'') );
+		// 	// if they have erased the text box so it is now empty
+		// 	if (document.getElementById("labelInput").value =="") {
+		// 		// if they clicked the object, leave that as the message
+		// 		if (message==1) {
+  //         document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> "+ trueClickPoints +" Possible Points </em> </strong>"
+  //         pointChange = trueClickPoints;
+  //       }
+		// 		// if they havent clicked an object and now have emptied the text box, revert to no message state and disable stuff
+		// 		else {
+		// 			document.getElementById("sendMessage").disabled = true;
+		// 			document.getElementById("sendMessage").innerHTML="Send Message";
+		// 		}
+		// 	} else {
+		// 		document.getElementById("sendMessage").disabled = false;
+		// 		if (message==1) {
+  //         document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+  //         pointChange = doingBothPoints;
+  //       }
+		// 		else {
+  //         document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+  //         pointChange = trueLabelPoints;
+  //       }
+		// 	}
+		// };
 		// another event tag which prevents the typing of non letters!
 		$("#labelInput").bind("keydown", function(event){
 		  // Allow controls such as backspace
@@ -1721,13 +1772,12 @@ var experiment = {
                         this.style.border="5px solid black";
                         var thisOneIsMoving = this.getBoundingClientRect()
                         // console.log(thisOneIsMoving)
-                        document.getElementById("sendMessage").disabled = false;
-                        if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
-                                      pointChange = trueClickPoints;
-                        }
-                        else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
-                                      pointChange = doingBothPoints;
-                        }
+                        // if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
+                        //               pointChange = trueClickPoints;
+                        // }
+                        // else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+                        //               pointChange = doingBothPoints;
+                        // }
                         console.log(this.id)
                         selection = pairObjectLabels(this.id);
                         selectedObject = this.id;
@@ -1746,7 +1796,6 @@ var experiment = {
 
             console.log("evaluating")
 
-            $("#sendMessage").hide()
             pseudoPartnersSelection = 'UNCAUGHT'
               // testing setting, should be overwritten, if any are submitted, we know we missed something
       			//make sure the message about english messages is hidden
@@ -1765,7 +1814,6 @@ var experiment = {
                 for (i=0; i < commonWords.length; i++) {
                   searching = blah.search(commonWords[i])
                   if (searching >= 0) {
-                      $("#sendMessage").show()
                     document.getElementById("thatIsEnglish").innerHTML = "Oops, looks like you might be typing in English. Remember, you need to send your message in our new language! <br> Try that one again!"
                     $("#thatIsEnglish").fadeIn(500)
                     return;
@@ -1815,7 +1863,7 @@ var experiment = {
       								if(selection != target) {
                         message = 3; 
                         isCorrect = 0; 
-                        pointChange = pointsBothWrong
+                        // pointChange = pointsBothWrong
                       } 
               }
       				// if they only typed, 
@@ -1831,17 +1879,17 @@ var experiment = {
                   if (getOccurences(candidate, partnerKnows)>0) {
         						message=2;
         						isCorrect = 1;
-                    pointChange = trueLabelPoints;
+                    // pointChange = trueLabelPoints;
                   // if this is a word we are probably going to get wrong, let partner 'guess'
                   } else {            
                     message=3;
                     isCorrect = 0;
-                    pointChange = pointsLabelWrong;
+                    // pointChange = pointsLabelWrong;
                   }
       					} if (candidate != target) {
       						message=3;
       						isCorrect = 0;
-                  pointChange = pointsLabelWrong;
+                  // pointChange = pointsLabelWrong;
       					}               
                 partnersStartingVocab = 0
                 for (var i =0; i<arrNumKnownByExp.length; i++){
@@ -1864,8 +1912,10 @@ var experiment = {
                   if (document.getElementById("gameTargetImage").alt == partnerKnows[wordLocation+1]) {
                     message=2;
                     isCorrect = 1;
-                    pointChange = trueLabelPoints;
-                  } else {message = 3; isCorrect=0; pointChange=pointsLabelWrong; pseudoPartnersSelection = partnerKnows[wordLocation+1]} 
+                    // pointChange = trueLabelPoints;
+                  } else {message = 3; isCorrect=0; 
+                    // pointChange=pointsLabelWrong;
+                    pseudoPartnersSelection = partnerKnows[wordLocation+1]} 
                 }
       				}
       			}
@@ -1873,7 +1923,9 @@ var experiment = {
       			if (blah == '') {
       				blah = null;
       				method = "click";
-      				if(selection != target) {console.log("click wrong evaluation   " + target + selection); message = 3; isCorrect = 0; pointChange = pointsClickWrong; pseudoPartnersSelection = selectedObject};
+      				if(selection != target) {console.log("click wrong evaluation   " + target + selection); message = 3; isCorrect = 0;
+                // pointChange = pointsClickWrong; 
+                pseudoPartnersSelection = selectedObject};
       			}
       			if(message==0) {return}
 
@@ -1938,7 +1990,7 @@ var experiment = {
                   // as is, a receiver doesn't 'learn' from this event, but realistically they should. 
                 if (pseudoPartnersSelection == document.getElementById("gameTargetImage").alt) {
                   isCorrect = 1;
-                  pointChange = trueLabelPoints;
+                  // pointChange = trueLabelPoints;
                 }
 
 
@@ -1950,10 +2002,21 @@ var experiment = {
 
       //send message, return 'partner response'
       if (isCorrect == 1) {
+        pointChange = 10;
         pseudoPartnersSelection = document.getElementById("gameTargetImage").alt
         document.getElementById("messageFromPartner").innerHTML = "Nice work- "+partnersName+" figured it out!";
-      } else {document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like "+partnersName+" chose the wrong object!";}
+      } else {
+        document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like "+partnersName+" chose the wrong object!";
+        pointChange = 0;
+      }
   
+      console.log('hellllo')
+      $('.circleArray').each(function() {
+        // console.log('this')
+        if(this.id == document.getElementById("gameTargetImage").alt) {
+          targetDeg = this.name
+        }
+      })
 
       //issue with saving the array of partner knowledge... 
       partnerKnowsSave = partnerKnows.slice(0)
@@ -1962,11 +2025,13 @@ var experiment = {
         phase : "game",
         subID : subjectIdentifier,
         username: username,
-        condition: cond,
+        speed: speedAsLag,
         partnersExposure: partnersExposure,
         trialnum : slideNumber,
+        score: score + pointChange,
         partnerVocab: partnerKnowsSave,
         targetObjectName : document.getElementById("gameTargetImage").alt,
+        targetPosition: targetDeg,
         exposureRate : getOccurences(document.getElementById('gameTargetImage').alt, exposureArray),
         realLabel : pairObjectLabels(document.getElementById("gameTargetImage").alt),
         // note special case for label_click method. click will override label to determin if message is correct.

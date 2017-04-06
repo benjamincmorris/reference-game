@@ -62,7 +62,7 @@
 	      </div>
 	      <div class="row">
 	        <br>
-	        <center> <button type="button" id="beforeStudy" onClick="this.blur()">Start</button> </center>
+            <center> <p id="beforeStudy" class="blink_me" onClick="this.blur()"> <br> (press 'Enter' to move on) </p> </center>
 	      </div>
     </div>
  
@@ -73,7 +73,8 @@
     	<div class="container">
 	        <center> <div class="labels" style="margin-top:50px" id="label"> </div> </center>
 	        <center> <div class="contents" id="content"> </div> </center>
-	        <center> <div> <button type="button" id="clickme" onClick="this.blur()"> </button> </div> </center>
+            <center> <p id="clickme" onClick="this.blur()"> <br> <br> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+	        <!-- <center> <div> <button type="button" id="clickme" onClick="this.blur()"> </button> </div> </center> -->
     	</div>
     </div>
 
@@ -87,8 +88,9 @@
                 <br><br>
                 Before we get started with the game, we want to give you a chance to show off what you have learned. When you click the button below, you will see each of nine objects one-at-a-time. If you remember the object's label, you may type it in the box. If you don't remember the label, just click the 'Don't Know' button instead. You won't be given any feedback about your accuracy just yet! Good luck! </p>
             </div>
-            <center> <div> <button type="button" id="beginTest" onClick="this.blur()"> </button> </div> </center>
-        </div>
+            <center> <p id="beginTest" class="blink_me" onClick="this.blur()"> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+<!--             <center> <div> <button type="button" id="beginTest" onClick="this.blur()"> </button> </div> </center>
+ -->        </div>
     </div>
 
     <div class="slide" id="test">
@@ -103,7 +105,8 @@
 	            <input type="text" name="testLabel" id="testInput" autocomplete="off" maxlength="9"><br> </center> </form>
 	            <center><label> <input type="checkbox" id="notSure" onClick="this.blur()"> Don't Know </input></label></center> <br> 
 	        </div>
-            <center> <div> <button type="button" id="nextObject" onClick="this.blur()">Next Object </button> </div> </center>
+            <center> <p id="nextObject" class="blink_me" onClick="this.blur()"> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+            <!-- <center> <div> <button type="button" id="nextObject" onClick="this.blur()">Next Object </button> </div> </center> -->
         </div>
     </div>
 
@@ -114,18 +117,19 @@
 		</div>
     	<div class="container">
 	       	<div class="row" id="prestudy">
-		        <p style="margin-top: 50px" id="exampleText" class="block-text col-xs-offset-2 col-xs-8 col-md-7"> You are almost ready to play our game! <br> <br> Before we start, let's walk through an example where we will communicate in English about familiar objects. But remember, in the game you will be communicating in our made up language about the objects you have just been learning about.
+		        <p style="margin-top: 50px" id="exampleText" class="block-text col-xs-offset-2 col-xs-8 "> You are almost ready to play our game! <br> <br> Before we start, let's walk through an example where we will communicate in English about familiar objects. But remember, in the game you will be communicating in our made up language about the objects you have just been learning about.
                 <br> <br>
                 <!-- <strong> BE SURE YOU PAY ATTENTION OR YOU MIGHT HAVE TO WATCH THE INSTRUCTIONS AGAIN </strong> -->
                 </p>
             </div>
-            <center> <div style="padding:20px"> <button id="howToPlay"> Tell Me How To Play </button> </div> <center>            
-            <div class="row" id="example" style="margin-top: -30px">
+            <center> <p id="howToPlay" class="blink_me" onClick="this.blur()"> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+            <!-- <center> <div style="padding:20px"> <button id="howToPlay"> Tell Me How To Play </button> </div> <center>             -->
+            <div class="row" id="example" style="margin-top: 15px">
                 <p id="generalInst" style="position:absolute; margin:-20px 0 0 -260px; left:40%; width: 600px; text-align:center"> Each round, this is what you will see. <br> Your job is to send a message to another player to help them find the object on the left side of your screen. </p>
                 <div class="row" style="padding-top:0px" id="textRow">
                     <div class="col-xs-5"> <p> <br> <br> <br> </p> </div>
                     <div  id="clickArrayText">
-                        <p class="redText" id="clickText" style="position:absolute; margin:-300px 0 0 30px; left:40%; width: 400px; text-align:center; z-index:1"> <br>  </p> 
+                        <p class="redText" id="clickText" style="position:absolute; margin:-325px 0 0 30px; left:40%; width: 400px; text-align:center; z-index:1"> <br>  </p> 
                     </div>
                 </div>
                 <div class="row" id="imageRow">
@@ -133,7 +137,7 @@
                 		<div id="exampleTarget" style="position:absolute; margin:150px 0 0 -300px; left:40%; width:300px">
     	            		<!-- <center> <p style="margin:20px"> This is the target object: </p> </center> -->
     	            		<div class="row" > 
-    	            			<img style="height: 200px; width: 200px" src="images/familiar/shoe.jpg"> 
+    	            			<img style="height: 200px; width: 200px; margin-left:75px" src="images/familiar/shoe.jpg"> 
     	            		</div>
     	            			<center> <p id="ifRight"> </p> </center>
     	            		<div id="typingExample" >
@@ -238,7 +242,8 @@
             <div class="col-xs-10 col-xs-offset-1" id="partnersVisual"> </div>
 
         </div> </center> <br>
-        <div class="row" > <center> <button type="button" id="gameStartFinal" disabled="disabled"> </button> </center> </div> 
+        <center> <p id="gameStartFinal" class="blink_me" onClick="this.blur()"> <br> <br> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+        <!-- <div class="row" > <center> <button type="button" id="gameStartFinal" disabled="disabled"> </button> </center> </div>  -->
     </div>
 
 
@@ -258,19 +263,22 @@
                 <div id="box" class="box"> <img src="images/pointer.png" height="30px" width="auto"> </div>
             	<p  style="margin: 25px 0 0 -75px"> You can select the object here: <br> (use the arrow keys to move the pointer and <br> press enter to make a selection) </p> 
     	       <!-- <div id="objects2" class="objectArray" style="margin-top:0%"> </div>  -->
+                    <a href='#' class=' crosshatch' style="; transform: rotate(45deg)"></a>
+                    <a href='#' class=' crosshatch' style=" transform: rotate(135deg)"></a>
                 <div class='circle-container' id="gameCircleArray">
                     <!-- <a href='#' class='center toSelect'><img src='tabletObjects/2002-600.jpg' alt="2002-600.jpg"></a> -->
                     <!-- <a href='#' class='center'><img id='box' src='images/pointer.png'></a> -->
                     <!-- <img class='deg0 toSelect' src='tabletObjects/2003-600.jpg' alt='2003-600.jpg' style="height: 75px; width: auto;"> -->
-                    <a href='#' class='deg0 toSelect' ><img class='circleArray'></a>
-                    <a href='#' class='deg40 toSelect'><img class='circleArray'></a>
-                    <a href='#' class='deg80 toSelect' ><img class='circleArray'></a>
-                    <a href='#' class='deg120 toSelect' ><img class='circleArray'></a>
-                    <a href='#' class='deg160 toSelect'><img class='circleArray'></a>
-                    <a href='#' class='deg200 toSelect'><img class='circleArray' ></a>
-                    <a href='#' class='deg240 toSelect' ><img class='circleArray'  ></a>
-                    <a href='#' class='deg280 toSelect' ><img class='circleArray'></a>
-                    <a href='#' class='deg320 toSelect'><img class='circleArray' ></a>
+
+                    <a href='#' class=' toSelect2' ><img class='deg0 circleArray' name='deg0'></a>
+                    <a href='#' class=' toSelect2'><img class='deg40 circleArray' name='deg40'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg80 circleArray' name='deg80'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg120 circleArray' name='deg120'></a>
+                    <a href='#' class=' toSelect2'><img class=' deg160 circleArray' name='deg160'></a>
+                    <a href='#' class=' toSelect2'><img class='deg200 circleArray' name='deg200'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg240 circleArray'  name='deg240'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg280 circleArray' name='deg280'></a>
+                    <a href='#' class=' toSelect2'><img class='deg320 circleArray' name='deg320'></a>
                 </div>
             </section>
                 <div style="margin:525px 0 0 100px; position:absolute; left:40%"> <form> <p > You can type the object label here: </p>  </form> 
@@ -278,7 +286,7 @@
         </section> </center>
 
         <div id="bottomOfSlide" style="margin-top:600px; position:absolute; left:40%">
-            <center><div><button type="button" id="sendMessage" onClick="this.blur()"> </button></div></center> 
+            <!-- <center><div><button type="button" id="sendMessage" onClick="this.blur()"> </button></div></center>  -->
             <div id="thatIsEnglish"  style="margin-left:-200px; width: 400px; text-align:center"> </div>
             <p id="waitingForPartner" style="margin-left:-60px">  Your partner is thinking.... </p> 
             <div id="spinningWaiting" style="margin-left:-10px">  </div> 

@@ -35,6 +35,14 @@ th {
 	color: #ce1212;
 }
 
+.crosshatch{
+	position:absolute;
+	height:20px;
+    margin:195px 0 0 -28px;
+    border-left: 2px dotted black;
+}
+
+
 .emptySquare {
     width: 0;
     height: 0;
@@ -59,6 +67,10 @@ th {
 
 .blink_me {
   animation: blinker 1.5s linear infinite;
+}
+
+.blink_me_slow {
+  animation: blinker 3s linear infinite;
 }
 
 @keyframes blinker {  
