@@ -69,17 +69,21 @@ function getRandomImages(imgAr, path, gameOrAttention, count) {
     	//if were not building the array for the attention check, proceed here for a 3x3 display
     	if (gameOrAttention!="Attention") {
     		if (i==0 || i==3 || i==6) {
-    			imgSet[i] = '<img  style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    			imgSet[i] = '<img  style="max-width:200px" class=" ' + classes + offset+ '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		} else {
     			imgSet[i] = '<img style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
     		}
     	// if we are building the 5x5 array for the attention check slide, the images with offsets are different
     	} else {
     		if (i==0 || i==5 || i==10 || i==15 || i==20) {
-    			imgSet[i] = '</div> <div class="row"> <img style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
-    		} else {
-    			imgSet[i] = '<img  style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
-    		}
+    		// 	imgSet[i] = '</div> <div class="row"> <img style="max-width:200px" class=" ' + classes + offset + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    		// } else {
+    		// 	imgSet[i] = '<img  style="max-width:200px" class="' + classes + '" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+    		// }
+          imgSet[i] = '</div></center> <center> <div class="row"> <img style="width:100px" class="toSelect" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+        } else {
+         imgSet[i] = '<img  style="width:100px" class="toSelect" id = ' + idTag + ' src="' + path + imgAr[i] + '" alt = "'+imgAr[i]+'">';
+        }
     	}
     }
     output= new Array;
@@ -341,14 +345,14 @@ var levDist = function(s, t) {
 //-----------------------------------------------
 
 try { 
-	console.log("want a turk flag here")
+	// console.log("want a turk flag here")
 	    // if (turk.workerId.length > 0) { 
     var xmlHttp = null;
     var filename = "sender_condition_counts";
     // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
     var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1";
 
-    // var condCounts = "1,0;2,0"
+    // var condCounts = "1,0;20,1"
     // var condCounts= "100_30,30;80_50,30"
     xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
@@ -362,13 +366,18 @@ try {
                 //if waiting or broken
                 if (subjectIdentifier.length>3) {
                   showSlide("limbo")
-                  document.getElementById("disabledStart").disabled=true;
+                  slide_number="limbo"
+                  document.getElementById("disabledStart").innerHTML='(unable to continue at this time)';
                   return;
                 } else {
-
                   do_all_the_setup()
+
                   // for debugging, use line below to jump around the exp
-                    experiment.game(0,0,30);
+                    // setTimeout(function() {
+                    //   $(window).off("keyup")
+                    //   experiment.partnering(0,0,30);
+                    // }, 100)
+
                 }
 
         }
@@ -410,30 +419,29 @@ var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length
 
 function do_all_the_setup() {
 
-                if(subjectIdentifier <= 20) {
+                if(subjectIdentifier <= 120) {
                   // cond = "100_30"
-                  partnersExposure = "0"
-                  // if (subjectIdentifier <= 20) {
-                  //   partnersExposure ="1/2"
+                  partnersExposure = "perfect"
+                  speedAsLag = 10
+                  if (subjectIdentifier <= 100) {
+                    speedAsLag= 20 
+                  } if (subjectIdentifier <= 80) {
+                    speedAsLag=30
+                  }
+                  if (subjectIdentifier <= 60) {
+                    partnersExposure ="0"
+                    speedAsLag=10
+                  }
+                  if (subjectIdentifier <= 40) {
+                    speedAsLag= 20
+                  } 
+                  if (subjectIdentifier <= 20) {
+                    speedAsLag=30
+                  }
                   // } if (subjectIdentifier<= 10) {
                   //   partnersExposure = "1"
                   // }
-                } else {
-                  speedAsLag = 30
-                      // cond="80_50";
-                      //   trueLabelPoints = 80;
-                      //   trueClickPoints = 50;
-                      //   doingBothPoints = 30;
-                      //   pointsLabelWrong = -20;
-                      //   pointsClickWrong = -50;
-                      //   pointsBothWrong = -70;
-                  partnersExposure = "0"
-                  // if (subjectIdentifier <= 50) {
-                  //   partnersExposure ="1/2"
-                  // } if (subjectIdentifier <= 40) {
-                  //   partnersExposure = "1"
-                  // }
-                }
+                } 
 
 
                 if (partnersExposure == "1/2") {
@@ -442,6 +450,8 @@ function do_all_the_setup() {
                   arrNumKnownByExp = [3,1,1]
                 } if (partnersExposure =="0") {
                   arrNumKnownByExp = [0,0,0]
+                } if (partnersExposure =="perfect") {
+                  arrNumKnownByExp = [3,3,3]
                 }
 
                 console.log("speed (as lag time) set to " + speedAsLag + "    partnersExposure set to " +partnersExposure)
@@ -456,9 +466,22 @@ function do_all_the_setup() {
 
 
   showSlide("welcome");
-  	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
-  	else {document.getElementById("welcomeStart").onclick = function() {experiment.instructions(2)}
-  };
+  	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {
+        document.getElementById("welcomeStart").innerHTML= 'Accept the HIT to Begin'
+    } else {
+      $("#welcomeStart").hide()
+      document.getElementById("welcomeStart").innerHTML = "(press 'Enter' to begin) <br> (if nothing happens, click inside this window and try again)"
+      setTimeout(function() {
+        $("#welcomeStart").show()
+        $(window).on('keyup', function(event){
+          if(event.keyCode == 13) {
+            $(window).off("keyup")
+            experiment.instructions(2)
+          }
+        })        
+      }, 001)
+    }
+
   slide_number = 1; 
   for(var i = 0; i<progressBars.length; i++) {
   	progressBars[i].style.width = String(1*100/totalSlides) + "%" ;
@@ -486,16 +509,19 @@ var experiment = {
 	instructions: function(slideNumber) {
     slide_number=slideNumber;
 		showSlide("instructions");
+    $("#beforeStudy").hide();
 		for(var i = 0; i<progressBars.length; i++) {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
-
-        $(window).keyup(function(event){
+    setTimeout(function() {
+        $("#beforeStudy").show();
+        $(window).on('keyup', function(event){
           if(event.keyCode == 13) {
-            $(window).unbind('keyup')
+            $(window).off("keyup")
             experiment.exposure(slideNumber+1)
           }
         })
+    }, 4000)
 	},
 
 	//transition from instruction slide to the exposure phase
@@ -519,17 +545,18 @@ var experiment = {
 		// document.getElementById("clickme").innerHTML = "Next";
 		setTimeout(function() {
       $("#clickme").fadeIn(500)
-      $(window).keyup(function(event){
+      $(window).on('keyup', function(event){
         if(event.keyCode == 13) {
-          $(window).unbind('keyup')
+          $(window).off("keyup")
     			time2 = new Date().getTime()
     			//pass trial data for eventual output
     			expDuration= {
                     phase : "exposure",
             subID : subjectIdentifier,
-            condition: cond,
+            speed: speedAsLag,
     				trialnum : slideNumber,
     				object: exposureArray[index],
+            label: pairObjectLabels(exposureArray[index]),
     				exposureRate : getOccurences(exposureArray[index], exposureArray),
     				timestamp: getCurrentTime(), //the time that the trial was completed at 
     				duration : time2 - time1,
@@ -571,16 +598,17 @@ var experiment = {
 
 			setTimeout(function() {
         $("#clickme").fadeIn(500)
-        $(window).keyup(function(event){
+        $(window).on('keyup', function(event){
           if(event.keyCode == 13) {
-              $(window).unbind('keyup')
+            $(window).off("keyup")
       				time2 = new Date().getTime();
       				expDuration= {
       					phase : "exposure",
                   subID : subjectIdentifier,
-                  condition: cond,
+                  speed: speedAsLag,
       					trialnum : slideNumber,
       					object: newPic,
+                label: pairObjectLabels(newPic),
       					exposureRate : getOccurences(newPic, exposureArray),
       					timestamp: getCurrentTime(), //the time that the trial was completed at 
       					duration : time2 - time1,
@@ -604,9 +632,9 @@ var experiment = {
 		shuffle(imgArray);
 		setTimeout(function() {
       $("#beginTest").fadeIn()
-      $(window).keyup(function(event){
+      $(window).on('keyup', function(event){
         if(event.keyCode == 13) {
-          $(window).unbind('keyup')
+          $(window).off("keyup")
           experiment.test(0, slideNumber+1)
         }
       })
@@ -621,6 +649,7 @@ var experiment = {
 		document.getElementById('progressBar').style.width= String(31 + testNumber * .5) + "%" ;
 		document.getElementById('testInput').value = '';
 		document.getElementById('testInput').disabled=false;
+    $("#testInput").focus()
 		document.getElementById('notSure').disabled=false;
 		document.getElementById('notSure').checked=false;
 		// document.getElementById('nextObject').disabled=true;
@@ -628,8 +657,8 @@ var experiment = {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
     // console.log("change this back too")
-    // lastExposure= 1;
-		lastExposure= imgArray.length;
+    // lastTest= 2;
+		lastTest= imgArray.length;
 		ar = imgArray;
 		notKnown=0;
 		var blah = document.getElementById('testInput').value.toLowerCase().trim();
@@ -653,7 +682,7 @@ var experiment = {
 		    $(this).val( $(this).val().replace(regexp,'') );
 		  }
 		});
-		if (testNumber < lastExposure) {
+		if (testNumber < lastTest) {
 			document.getElementById("testInput").onkeyup = function() {
 				if (document.getElementById("testInput").value =="") {
 					document.getElementById('notSure').disabled = false;
@@ -678,12 +707,12 @@ var experiment = {
 			// if (blah != '') {
 			// 	document.getElementById("nextObject").disabled = true;
 			// }
-      $(window).keyup(function(event){
+      $(window).on('keyup', function(event){
         var blah = document.getElementById('testInput').value.toLowerCase().trim();
         if(event.keyCode == 13) {
           if(blah == '' && (document.getElementById('notSure').checked==false)) {return false
           } else {
-            $(window).unbind('keyup')
+            $(window).off('keyup')
     				candidate='';
     				time2 = new Date().getTime();
     				if (blah != '') {
@@ -714,12 +743,12 @@ var experiment = {
     						var testCorrect=0;
     					}
     				}
-    				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect=0}
+    				if(document.getElementById('notSure').checked) {blah = "UNKNOWN"; testCorrect='UNKNOWN'}
     				//pass trial data for eventual output
     				testTrials= {
     					phase : "test",
                   subID : subjectIdentifier,
-                  condition: cond,
+                  speed: speedAsLag,
     					trialnum : slideNumber,
     					targetObjectName : document.getElementById('orderedImage').alt,
     					exposureRate : getOccurences(document.getElementById('orderedImage').alt, exposureArray),
@@ -739,7 +768,7 @@ var experiment = {
           }
   			};
       })
-		} if (testNumber >= lastExposure) {
+		} if (testNumber >= lastTest) {
 			experiment.prestudy(slideNumber);
 		};
 	},
@@ -771,10 +800,10 @@ var experiment = {
     // (hideous) series of timing events to walk through examples that illustrate the game rules
     // creates a little 'video.' would be so much easier to adjust if we could pass a variable TIMER as the ms for the timeout,
     //      but i haven't been able to write it that way because of the way setTimeout operates. 
-    $(window).keyup(function(event){
+    $(window).on('keyup', function(event){
       var blah = document.getElementById('testInput').value.toLowerCase().trim();
       if(event.keyCode == 13) {
-        $(window).unbind('keyup')
+        $(window).off('keyup')
         $("#pressEnterEx").hide()
   			$("#exampleText").hide()
   			$("#howToPlay").hide()
@@ -797,9 +826,9 @@ var experiment = {
         setTimeout(function() {
           // $("#gameReady").fadeIn(500)
           $("#pressEnterEx").show()
-          $(window).keyup(function(event){
+          $(window).on('keyup', function(event){
             if(event.keyCode == 13) {
-              $(window).unbind('keyup')
+              $(window).off("keyup")
               experiment.prestudyTypeRight(slideNumber)
             }
           })
@@ -847,7 +876,7 @@ var experiment = {
   			// setTimeout(function() {document.getElementById("ifTyping").value="shoe"}, 1100)
         // try it yourself demonstration
         // setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
-      $(window).keyup(function(event){
+      $(window).on('keyup', function(event){
         if(event.keyCode == 13) {
           // if they don't type shoe, display a little reminder
           if (document.getElementById("ifTyping").value!= 'shoe') {
@@ -858,7 +887,7 @@ var experiment = {
               }, 2500)
             return false
           } else {
-            $(window).unbind('keyup')
+            $(window).off('keyup')
             document.getElementById("ifTypePoints").innerHTML=""
             $("#sendMessageDemo").hide()
             // partner's selection
@@ -871,9 +900,9 @@ var experiment = {
             setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
                     // $("#gameReady").fadeIn(500)
                   $("#pressEnterEx").show()
-              $(window).keyup(function(event){
+              $(window).on('keyup', function(event){
                 if(event.keyCode == 13) {
-                  $(window).unbind('keyup')
+                  $(window).off("keyup")
                   experiment.prestudyTypeWrong(slideNumber)
                 }
               })
@@ -902,7 +931,7 @@ var experiment = {
       $("#pressEnterEx").hide()
       $("#pointerEx").hide()
 
-          $(window).unbind("keyup")
+          $(window).off("keyup")
 
 
         //typing exmaple, wrong messsage
@@ -930,7 +959,7 @@ var experiment = {
 
           // diy example
           // setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
-          $(window).keyup(function(event){
+          $(window).on('keyup', function(event){
             if(event.keyCode == 13) {
               // if they don't type chair, display a little reminder
               if (document.getElementById("ifTyping").value!= 'chair') {
@@ -939,7 +968,7 @@ var experiment = {
                 setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
                 return false
               } else {
-                $(window).unbind("keyup")
+                $(window).off("keyup")
                 $("#ifTypePoints").hide()
                 $("#sendMessageDemo").hide()
                 document.getElementById("ifClick").innerHTML="You will earn <strong> 0 points</strong>."
@@ -947,9 +976,9 @@ var experiment = {
                 setTimeout(function() {document.getElementById("chairDistractor").style.border= "3px red dashed"}, 500)
                 setTimeout(function() {
                   $("#pressEnterEx").show()
-                  $(window).keyup(function(event){
+                  $(window).on('keyup', function(event){
                     if(event.keyCode == 13) {
-                      $(window).unbind("keyup")
+                      $(window).off("keyup")
                       experiment.prestudyClick(slideNumber)
                     }
                   })
@@ -983,7 +1012,7 @@ var experiment = {
           $("#pressEnterEx").hide()
           $("#ifClick").hide()
 
-      $(window).unbind("keyup")
+      $(window).off("keyup")
 
           //clicking example
           // diy
@@ -995,7 +1024,6 @@ var experiment = {
                     w = 600 - pointerEx.width(),
                     d = {},
                     x = 1;
-                console.log("is this thing on?  " + paneEx)
                 function newv(v,a,b) {
                     var n = parseInt(v, 10) - (d[a] ? x : 0) + (d[b] ? x : 0);
                     return n < 0 ? 0 : n > w ? w : n;
@@ -1021,18 +1049,15 @@ var experiment = {
                       })
                     }, 20)
                 // detect enter events and handle
-                  $(window).keyup(function(event){
-                    if(event.keyCode == 13) {
+                $(window).on('keyup', function(event){
+                  if(event.keyCode == 13) {
                       // scan each of the possible objects to figure out which one we are talking about
                       $('.famObjects').each(function() {
-                        console.log("here")
                         if(this.style.border== "5px solid black") {
-                          console.log("did we catch one?")
                           demoSelection=this.id;
 
                             if (demoSelection != 'shoe') {
                               document.getElementById("ifTyping").focus(); 
-                              console.log("flag3")
                               $("#ifTypePoints").addClass('redText');
                               $("#tryThatAgain").fadeIn(500)
                               setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
@@ -1047,7 +1072,7 @@ var experiment = {
                                   //prevent more enter events
                                       // this isn't the best method cause it will also break the pointer movement code, so we will have to redfine that later.
                                       // is there a better method (i.e. that can more specifically target the enter keyup events)?
-                                $(window).unbind("keyup")
+                                $(window).off("keyup")
 
 
                               $("#ifTypePoints").hide()
@@ -1061,12 +1086,11 @@ var experiment = {
                                 $("#ifClick").fadeIn(500)
                               }, 1000)
                               setTimeout(function() {
-                                console.log('enter message shows')
                                 $("#pressEnterEx").show()
-                                $(window).keyup(function(event){
+                                $(window).on('keyup', function(event){
                                   if(event.keyCode == 13) {
-                                    $(window).unbind("keyup")
-                                      experiment.prestudyDoingBoth(slideNumber)
+                                    $(window).off("keyup")
+                                    experiment.prestudyDoingBoth(slideNumber)
                                   }
                                 })
                                 // document.getElementById("gameReady").innerHTML = "Anything Else?";
@@ -1136,7 +1160,7 @@ var experiment = {
               });  
             }, 500)
 
-            $(window).unbind("keyup")
+            $(window).off("keyup")
 
 
             $("#exampleTarget").fadeIn(500)
@@ -1196,18 +1220,16 @@ var experiment = {
 
                 // detect enter events and handle
                 $(document).ready(function() {
-                  $(window).keyup(function(event){
+                  $(window).on('keyup', function(event){
                     if(event.keyCode == 13) {
                       hasClicked=false
                       // scan each of the possible objects to figure out which one we are talking about
                       $('.famObjects').each(function() {
                         if(this.style.border== "5px solid black") {
-                          console.log("did we catch one?")
                           hasClicked=true
                           demoSelection=this.id;
                             // if they don't type shoe and/or don't click the shoe, display a little reminder
                             if (demoSelection!= 'shoe' || document.getElementById("ifTyping").value != 'shoe') {
-                              console.log("flag3")
                               $("#ifTypePoints").addClass('redText');
                               $("#tryThatAgain").fadeIn(500)
                               setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
@@ -1222,7 +1244,7 @@ var experiment = {
                                   //prevent more enter events
                                       // this isn't the best method cause it will also break the pointer movement code, so we will have to redfine that later.
                                       // is there a better method (i.e. that can more specifically target the enter keyup events)?
-                                $(window).unbind("keyup")
+                                $(window).off("keyup")
 
 
                               $("#ifTypePoints").hide()
@@ -1238,10 +1260,10 @@ var experiment = {
                                 setTimeout(function() {
                                   // $("#gameReady").fadeIn(500)
                                   $("#pressEnterEx").show()
-                                  $(window).keyup(function(event){
+                                  $(window).on('keyup', function(event){
                                     if(event.keyCode == 13) {
-                                      $(window).unbind("keyup")
-                                        experiment.partnering(slideNumber)
+                                      $(window).off("keyup")
+                                        experiment.partnering(slideNumber+1)
                                     }
                                   })
                                   // issue where if you get referred to back to watching the instructions again, the on click function call doubled up and negated itself
@@ -1255,7 +1277,6 @@ var experiment = {
                           }) 
                             if (hasClicked == false) {
                                 if (document.getElementById("ifTyping").value != '') {
-                                  console.log("flag3")
                                   $("#ifTypePoints").addClass('redText');
                                   $("#tryThatAgain").fadeIn(500)
                                   setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
@@ -1292,7 +1313,7 @@ var experiment = {
 				$("#beginGame").fadeIn();
 				// this functions checks all the inputs, and when they have content, enables the button
 				(function() {
-				    $('.gameQuestion').bind("keyup click change", function() {
+				    $('.gameQuestion').on("keyup click change", function() {
 				        var empty = false;
 				        
 				        $('.gameQuestion').each(function() {
@@ -1322,7 +1343,7 @@ var experiment = {
 					//store P's response data before moving on
 					ruleQuestions = {
               subID : subjectIdentifier,
-              condition: cond,
+              speed: speedAsLag,
 						phase: "pregameCheck",
 						// lots of redundent info here, but saves time during analysis.
 						pointsClick : document.getElementById("pointsForClick").value,
@@ -1358,7 +1379,7 @@ var experiment = {
 		// $("#clickme").on("click", function() {experiment.exposures(i)});
 	},
 
-	partnering: function(score, roundNumber, slideNumber) {
+	partnering: function(slideNumber) {
     slide_number=slideNumber;
 		showSlide("getYourPartner");
     $("#squareExamples").hide()
@@ -1367,7 +1388,7 @@ var experiment = {
     $('#gameStartFinal').hide()
 		document.getElementById("gameStartFinal").innerHTML = "Press 'Enter' to Find a Partner";
 		// this event handler checks the input, and when they have content, enables the button
-		$('#userName').bind("keyup click change", function() {
+		$('#userName').on("keyup click change", function() {
 				        var empty = false;
 				            if ($(this).val() == '') {
 				                empty = true;
@@ -1378,14 +1399,15 @@ var experiment = {
                     $('#gameStartFinal').show();
 				        }
 		});
-    $(window).keyup(function(event){
+    $(window).on('keyup', function(event){
       if(event.keyCode == 13) {
         if($('#userName').val() != '') {
-          $(window).unbind("keyup")      
+          $(window).off("keyup")      
           $('#gameStartFinal').hide()
           $("#partneringHeadingStuff").addClass("blink_me")
           document.getElementById("partneringHeading").innerHTML= "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now! "
-    			$("#userName").hide();
+    			document.getElementById("partneringHeading").style.margin = "-50px 0 0 0"
+          $("#userName").hide();
     			// document.getElementById("partneringText").innerHTML = "Okay, <strong>" + $("#userName").val()+ "</strong>, we are searching now!"
           document.getElementById("partneringText").innerHTML = "<br> Note that you saw the objects and their labels <strong> 21 times </strong> "
           $("#exposureText").fadeIn(500);
@@ -1426,6 +1448,19 @@ var experiment = {
                   expVisualized= expVisualized + thisObject
               }
               document.getElementById('squaresFewer').innerHTML = expVisualized
+              expVisualized = ''
+              for(var i=0; i<(exposureArray.length*2); i++) {
+                prefix = ''
+                  if(i==0) {
+                    prefix = '<div class="row">'
+                  } if(i==exposureArray.length) {
+                    prefix = '</div> <div class="row">'
+                  } 
+                thisObject = prefix + '<img class="square" style="margin:1px">'
+                expVisualized= expVisualized + thisObject
+              }
+              document.getElementById('squaresDouble').innerHTML = expVisualized
+
           // bring in the examples after a few seconds
           setTimeout(function() {$("#squareExamples").fadeIn(500)}, 3000)
 
@@ -1433,46 +1468,48 @@ var experiment = {
     			setTimeout(function() {$("#partneringHeadingStuff").fadeOut(501)}, searchTime - 500)
     			setTimeout(function() {
             document.getElementById("exposureText").innerHTML= "<br> We found you a partner called <strong>"+partnersName+"</strong>!"
-
+            document.getElementById("exposureText").style.margin = "-50px 0 0 0"
     				// document.getElementById("partneringText").innerHTML= "<br><br>"
+              $("#fewer").fadeOut(500)
+              $("#none").fadeOut(500)
+              $("#same").fadeOut(500)
+              $("#double").fadeOut(500)
     				if (partnersExposure=="0") { 
               // $("#fewer").css("visibility", "hidden")
-              $("#none").fadeOut(500)
               setTimeout(function() {$("#none").fadeIn(500)
                 document.getElementById("noneText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 0 times</strong>."
                 $("#noneText").addClass("redText")
                 }, 1500)
-              $("#fewer").fadeOut(500)
-              $("#same").fadeOut(500)
             }
             if (partnersExposure=="1/2") {
-              $("#fewer").fadeOut(500)
-              $("#none").fadeOut(500)
-              $("#same").fadeOut(500)
               setTimeout(function() {
                 document.getElementById("fewerText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> 1/2 as many times</strong> as you did."
                 $("#fewer").fadeIn(500)
                 $("#fewerText").addClass("redText")}, 1500)
             }
             if (partnersExposure=="1") {
-              $("#none").fadeOut(500)
-              $("#fewer").fadeOut(500)
-              $("#same").fadeOut(500)
               setTimeout(function() {
                 document.getElementById("sameText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> just as many times</strong> as you did."
                 $("#same").fadeIn(500)
                 $("#sameText").addClass("redText")}, 1500)
             }
+            if (partnersExposure=="perfect") {
+              setTimeout(function() {
+                document.getElementById("doubleText").innerHTML = "<br> <strong>"+partnersName+"</strong> saw the objects and their labels <strong> twice as many times</strong> as you did."
+                $("#double").fadeIn(500)
+                $("#doubleText").addClass("redText")}, 1500)
+            }
+
             $("#partneringText").fadeTo(500, .5)
             $("#myVisual").fadeTo(500, .5)
             $("#partneringText").fadeIn(500);
             $("#exposureText").fadeIn(500);
     				document.getElementById("gameStartFinal").innerHTML= "Press 'Enter' to Begin the Game!"
     				setTimeout(function() {$("#gameStartFinal").fadeIn(1000)
-              $(window).keyup(function(event){
+              $(window).on('keyup', function(event){
                 if(event.keyCode == 13) {
-                  $(window).unbind("keyup")
-                     experiment.game(0, 0, slideNumber+1, $("#userName").val())
+                  $(window).off("keyup")
+                  experiment.game(0, 0, slideNumber+1, $("#userName").val())
                 }
               })
             }, 4000);
@@ -1486,9 +1523,8 @@ var experiment = {
                             // selection = null;
                         // selectedObject = null;
                         // message = null;
-    console.log(imgArray.slice(0))
+    document.getElementById('myScore').innerHTML = "your points: " + score;
     imgArrayShuffled = shuffle(imgArray.slice(0))
-    console.log(imgArrayShuffled)
     count=0
     $('.circleArray').each(function() {
       this.src='tabletobjects/'+imgArrayShuffled[count]
@@ -1552,7 +1588,7 @@ var experiment = {
 
 
 		var target = pairObjectLabels(document.getElementById("gameTargetImage").alt);
-    console.log(target + '   ' + document.getElementById("gameTargetImage").alt)
+    // console.log(target + '   ' + document.getElementById("gameTargetImage").alt)
 		var message = 0; // no message
 
     setInterval(function() {
@@ -1636,6 +1672,10 @@ var experiment = {
 
 		document.getElementById("labelInput").disabled = false;
         document.getElementById("labelInput").focus();
+    // retains permanant focus on the text box, even if you click elsewhere
+    $('#labelInput').on('blur',function(){
+      if (this.value.length < 7) this.focus();
+    });
 
 		// document.getElementById("labelInput").onkeyup = function() {
 		// 	// var node = $(this);
@@ -1731,7 +1771,7 @@ var experiment = {
 		// document.getElementById("sendMessage").onclick = function() {
 
     $(document).ready(function() {
-      $(window).keyup(function(event){
+      $(window).on('keyup', function(event){
         if(event.keyCode == 13) {
           clicked = false
           // event.preventDefault();
@@ -1747,7 +1787,6 @@ var experiment = {
                 // console.log(this.alt)
                 // console.log(this.id)
                       clicked = true;
-                      console.log("flag1")
                       // if (message==1) {
                       //   // if you have selected an object, and are trying to click another object, do nothing.
                       //   if (this.style.border!="5px solid black") {return}
@@ -1767,7 +1806,6 @@ var experiment = {
                       // }
                       //if neither pointing nor typing has occured, select the target element and note that.
                       // if (message==0) {
-                        console.log("is this the only one that happens now?")
                         // console.log(pairObjectLabels(this.alt));
                         this.style.border="5px solid black";
                         var thisOneIsMoving = this.getBoundingClientRect()
@@ -1778,7 +1816,6 @@ var experiment = {
                         // else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
                         //               pointChange = doingBothPoints;
                         // }
-                        console.log(this.id)
                         selection = pairObjectLabels(this.id);
                         selectedObject = this.id;
                         // console.log(this)
@@ -1794,7 +1831,6 @@ var experiment = {
             return false
           } else {
 
-            console.log("evaluating")
 
             pseudoPartnersSelection = 'UNCAUGHT'
               // testing setting, should be overwritten, if any are submitted, we know we missed something
@@ -1923,7 +1959,7 @@ var experiment = {
       			if (blah == '') {
       				blah = null;
       				method = "click";
-      				if(selection != target) {console.log("click wrong evaluation   " + target + selection); message = 3; isCorrect = 0;
+      				if(selection != target) { message = 3; isCorrect = 0;
                 // pointChange = pointsClickWrong; 
                 pseudoPartnersSelection = selectedObject};
       			}
@@ -2010,7 +2046,6 @@ var experiment = {
         pointChange = 0;
       }
   
-      console.log('hellllo')
       $('.circleArray').each(function() {
         // console.log('this')
         if(this.id == document.getElementById("gameTargetImage").alt) {
@@ -2018,6 +2053,7 @@ var experiment = {
         }
       })
 
+      document.getElementById("labelInput").blur()
       //issue with saving the array of partner knowledge... 
       partnerKnowsSave = partnerKnows.slice(0)
       //store trial data before moving on
@@ -2081,9 +2117,8 @@ var experiment = {
      clearInterval(detectMovementInterval)
      // need to unbind event that catches enter presses to prevent multiple sending event and
         // and prevent stacking function definition
-          $(window).unbind("keyup")
+        $(window).off("keyup")
 
-    console.log('sent to gameWaiting state')
     slide_number=slideNumber;
 		$("#waitingForPartner").show();
 		$("#spinningWaiting").show();
@@ -2101,7 +2136,6 @@ var experiment = {
 			// var newPoints = document.createTextNode(score);
 			// document.getElementById('myScore').appendChild(newPoints);
       document.getElementById('myScore').innerHTML = "your points: " + score;
-      console.log(pseudoPartnersSelection)
       $('.circleArray').each(function() {
         if(this.id == pseudoPartnersSelection) {
           // console.log(this.alt + "   " + pseudoPartnersSelection); 
@@ -2109,6 +2143,7 @@ var experiment = {
         }
       })
 		}, waitTime);
+    // console.log('change this back')
 		numOfGames = gameArray.length;  
     // numOfGames = 4;  
     setTimeout(function() {
@@ -2117,18 +2152,20 @@ var experiment = {
       if (count < numOfGames) {
   			// document.getElementById("nextRound").onclick = function() {experiment.game(score,count, slideNumber, username)};
         //press enter to get to new slide
-        $(window).keyup(function(event){
+      $(document).ready(function() {
+        $(window).on('keyup', function(event){
           if(event.keyCode == 13) {
-              $(window).unbind("keyup")
+            $(window).off("keyup")
             experiment.game(score,count, slideNumber, username)
           }
         })
+      })
         // if this is the last trial, pressing enter sends Ps to the final attention check
   		} else {
   			// document.getElementById("nextRound").onclick = function() {experiment.attentionCheck(slideNumber)}};
-        $(window).keyup(function(event){
+        $(window).on('keyup', function(event){
           if(event.keyCode == 13) {
-              $(window).unbind("keyup")
+            $(window).off("keyup")
             experiment.attentionCheck(slideNumber)
           }
         })
