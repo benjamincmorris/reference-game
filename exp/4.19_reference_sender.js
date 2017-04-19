@@ -38,6 +38,7 @@ var basePath = "tabletobjects/";
 // var pointsBothWrong = -70;
 
 var speedAsLag = 30
+var timePerTrial = 11
 
 
 // while we outlawed producing english words, 
@@ -341,12 +342,63 @@ var levDist = function(s, t) {
 }
 
 
+// https://github.com/johnschult/jquery.countdown360
+var initializeTimer = function(timerName, size, labelsOn) {
+    if (labelsOn =true) {
+      timerLabelsColor = 'black'
+      timerLabels = ['point', 'points']
+    } else{timerLabelsColor = 'fff'; timerLabels = ['', '']}
+    // code for the game timer, this version is a per trial timer
+    $("#"+timerName+"").countdown360({
+      radius      : size,
+      seconds     : timePerTrial,
+      fillStyle   : '#fff',
+      strokeStyle : 'black',
+      strokeWidth : 5,
+      // fontSize    : 50,
+      fontColor   : timerLabelsColor,
+      label: timerLabels,
+      autostart: false,
+      smooth: true,
+      onComplete  : function () { 
+        console.log('time is up!')
+      }
+    }).start()
+    $("#"+timerName+"").countdown360({}).stop()
+}
+
+var startTimer = function(timerName) {
+      $("#"+timerName+"").countdown360({}).start()
+      console.log($("#"+timerName+"").countdown360({}).getTimeRemaining())
+      time1 = new Date().getTime();
+      timerInterval = setInterval(function() {
+        // console.log('hm')
+        timeNow = new Date().getTime()
+        timeRemaining = $("#"+timerName+"").countdown360({}).getTimeRemaining()
+        console.log(timeRemaining)
+        if (timeRemaining <= 1) {
+          setTimeout(function() {$("#"+timerName+"").countdown360({}).stop()}, 50)
+        }
+      }, 1000)
+}
+
+var stopTimer = function(timerName) {
+      $("#"+timerName+"").countdown360({}).stop()
+      clearInterval(timerInterval)
+      if (timeRemaining <= 1) {
+        timeRemaining=1
+      }
+}
+
+
+
+
 
 //-----------------------------------------------
 
 try { 
 	// console.log("want a turk flag here")
-	    // if (turk.workerId.length > 0) { 
+    // if (turk.workerId.length > 0) { 
     var xmlHttp = null;
     var filename = "sender_condition_counts";
     // var condCounts = "1,1;2,1;3,1;4,1;5,1;6,1;7,1;8,1;9,1;10,1;11,1;12,1;13,1;14,1;15,1;16,1;17,1;18,1;19,1;20,1;21,1;22,1;23,1;24,1;25,1;26,1;27,1;28,1;29,1;30,1;31,1;32,1;33,1;34,1;35,1;36,1;37,1;38,1;39,1;40,1;41,1;42,1;43,1;44,1;45,1;46,1;47,1;48,1;49,1;50,1;51,1;52,1;53,1;54,1;55,1;56,1;57,1;58,1;59,1;60,1";
@@ -356,41 +408,40 @@ try {
     // var condCounts= "100_30,30;80_50,30"
     xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            // Action to be performed when the document is read;
-             subjectIdentifier = this.responseText; // For actual experimental runs
-            console.log("subID returning as " + this.responseText);
-                //if a buggy and uniformative subjectIdentifier code slips through, force them into 'waiting' state
-                console.log('subID is how long?    ' + subjectIdentifier.length + ' character(s).' );
+      if (this.readyState == 4 && this.status == 200) {
+        // Action to be performed when the document is read;
+        subjectIdentifier = this.responseText; // For actual experimental runs
+        console.log("subID returning as " + this.responseText);
+        //if a buggy and uniformative subjectIdentifier code slips through, force them into 'waiting' state
+        console.log('subID is how long?    ' + subjectIdentifier.length + ' character(s).' );
 
-                //if waiting or broken
-                if (subjectIdentifier.length>3) {
-                  showSlide("limbo")
-                  slide_number="limbo"
-                  document.getElementById("disabledStart").innerHTML='(unable to continue at this time)';
-                  return;
-                } else {
-                  do_all_the_setup()
+        //if waiting or broken
+        if (subjectIdentifier.length>3) {
+          showSlide("limbo")
+          slide_number="limbo"
+          document.getElementById("disabledStart").innerHTML='(unable to continue at this time)';
+          return;
+        } else {
+          do_all_the_setup()
 
-                  // for debugging, use line below to jump around the exp
-                    // setTimeout(function() {
-                    //   $(window).off("keyup")
-                    //   experiment.partnering(0,0,30);
-                    // }, 100)
-
-                }
+          // for debugging, use line below to jump around the exp
+          // setTimeout(function() {
+          //   $(window).off("keyup")
+          //   experiment.test(0);
+          // }, 1)
 
         }
+      }
     };
     if (turk.workerId.length > 0) { 
-        //if we are on turk, send turker parameter to the php
-        console.log("time stamping...")
-        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + cond, true);
-          xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts + "&turkID=true", true);
+      //if we are on turk, send turker parameter to the php
+      console.log("time stamping...")
+      // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + cond, true);
+      xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts + "&turkID=true", true);
     } else {
-        //if we are not on turk (or hit not accepted yet), omit this flag
-        // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/condition_assignment_turk.php?filename=" + filename + "&conds=" + condCounts + "&to_decrement=true", true);
-        xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts, true);
+      //if we are not on turk (or hit not accepted yet), omit this flag
+      // xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/condition_assignment_turk.php?filename=" + filename + "&conds=" + condCounts + "&to_decrement=true", true);
+      xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/yoking_init.php?filename=" + filename + "&conds=" + condCounts, true);
     }
     xmlHttp.send(null)
 
@@ -422,21 +473,21 @@ function do_all_the_setup() {
                 if(subjectIdentifier <= 120) {
                   // cond = "100_30"
                   partnersExposure = "perfect"
-                  speedAsLag = 10
+                  speedAsLag = 20
                   if (subjectIdentifier <= 100) {
-                    speedAsLag= 20 
+                    speedAsLag= 30 
                   } if (subjectIdentifier <= 80) {
-                    speedAsLag=30
+                    speedAsLag=40
                   }
                   if (subjectIdentifier <= 60) {
                     partnersExposure ="0"
-                    speedAsLag=10
+                    speedAsLag=20
                   }
                   if (subjectIdentifier <= 40) {
-                    speedAsLag= 20
+                    speedAsLag= 30
                   } 
                   if (subjectIdentifier <= 20) {
-                    speedAsLag=30
+                    speedAsLag=40
                   }
                   // } if (subjectIdentifier<= 10) {
                   //   partnersExposure = "1"
@@ -463,8 +514,8 @@ function do_all_the_setup() {
 
 
 
-
-
+  console.log("trying to focus on window from turk")
+  $(window).focus()
   showSlide("welcome");
   	if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {
         document.getElementById("welcomeStart").innerHTML= 'Accept the HIT to Begin'
@@ -505,6 +556,7 @@ var experiment = {
 	ruleQuestions: [],
 	gameTrials: [],
 	attnCheck: [],
+  comments: [],
 
 	instructions: function(slideNumber) {
     slide_number=slideNumber;
@@ -809,6 +861,7 @@ var experiment = {
   			$("#howToPlay").hide()
   			$("#ifClick").hide()
   			$("#ifRight").hide()
+        $("#timerText").hide()
   			//certain things need to be 'reset' that won't affect first viewing, but would affect Ps who get sent back to watch again.
   			document.getElementById("ifTyping").value=""
         $("#paneEx").fadeIn(500)
@@ -821,8 +874,9 @@ var experiment = {
   			
         //general rules
   			setTimeout(function() {$("#clickText").fadeIn(500)}, 4000)			
-  			document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn <strong> 10 points</strong>. <br> But if your partner gets it wrong, you won't get any points."
-  			setTimeout(function() {$("#ifRight").fadeIn(500)}, 7000)
+  			// document.getElementById('ifRight').innerHTML ="If your partner selects the target based on your message, you will earn <strong> points</strong>. <br> But if your partner gets it wrong, you won't get any points."
+        document.getElementById('timerText').innerHTML ="You can send a message by: <br> typing, <br> pointing, <br> typing and pointing"
+  			setTimeout(function() {$("#timerText").fadeIn(500)}, 7000)
         setTimeout(function() {
           // $("#gameReady").fadeIn(500)
           $("#pressEnterEx").show()
@@ -842,7 +896,10 @@ var experiment = {
     })
   },
 
-  prestudyTypeRight: function(slideNumber) {
+  prestudyTimer: function(slideNumber, ifStart) {
+    document.getElementById("ifTyping").value = "";
+    document.getElementById("shoe").style.border= "";
+    document.getElementById("shoe").style.outline= "";
     slide_number=slideNumber;  
     showSlide("prestudy");
     $("#tryThatAgain").hide()
@@ -851,13 +908,135 @@ var experiment = {
     $("#howToPlay").hide();
     $("#typingExample").hide();
     $("#clickText").hide()
-      $("#exampleTarget").fadeIn(500)
-      $("#clickArray").fadeIn(500)
-      $("#generalInst").fadeIn(500)
-        $("#pressEnterEx").hide()
+    $("#exampleTarget").fadeIn(500)
+    $("#clickArray").hide()
+    $("#generalInst").fadeIn(500)
+    $("#pressEnterEx").hide()
+    $("#pointerEx").hide()
+    $("#ifClick").hide()
+
+
+    console.log('timerText')
+    $("#timerText").fadeOut(500)
+        $("#gameReady").hide()
+        $("#clickText").fadeOut(500)
+        $("#ifRight").fadeOut(500)
+
+    setTimeout(function() {
+      document.getElementById("timerText").innerHTML = "<br> Whatever message you send, you will earn points based on how long it takes you to send your message."
+      $("#timerText").fadeIn(500)
+    }, 500)
+    setTimeout(function() {
+      initializeTimer("countdownExample", 30, true)
+      $("#ifRight").fadeIn(500)
+      document.getElementById("ifRight").innerHTML = "A timer at the top of your screen will show how many points you could still win (always >= 1 point)."
+    }, 3500)
+
+    setTimeout(function() {
+      // $("#pressEnterEx").show()
+      // $(window).on('keyup', function(event){
+      //   if(event.keyCode == 13) {
+      //     $(window).off('keyup')
+      //     if(ifStart) {
+      //       stopTimer("countdownExample")
+      //     }
+      //     experiment.prestudyType(slideNumber, true)
+      //   }
+      // })
+      $("#ifRight").fadeOut(500) 
+
+    }, 7500)
+    setTimeout(function() {
+      $("#ifRight").fadeIn(500)
+      document.getElementById('ifRight').innerHTML = "Try those examples again with the timer <br> in 3..."
+    }, 8000)
+    setTimeout(function() {
+      document.getElementById('ifRight').innerHTML = "Try those examples again with the timer <br> in 3, 2..."
+    }, 9000)
+    setTimeout(function() {
+      document.getElementById('ifRight').innerHTML = "Try those examples again with the timer <br> in 3, 2, 1..."
+      $("#ifRight").fadeOut(500) 
+    }, 10000)
+
+
+
+    setTimeout(function() {
+      if(ifStart) {startTimer("countdownExample")}
+      $("#typingExample").fadeIn(500)
+          $("#ifTypePoints").fadeIn(500)
+      document.getElementById("ifType").innerHTML = "You can type here:"
+      $("#ifTyping").focus()
+      document.getElementById("ifTypePoints").innerHTML = "(try sending 'shoe' again)"
+
+
+
+                $(window).on('keyup', function(event){
+                  if(event.keyCode == 13) {
+                    console.log(document.getElementById("ifTyping").value)
+                    if (document.getElementById("ifTyping").value != "shoe") {
+                      $("#tryThatAgain").fadeIn(500)
+                      setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 1500)
+                    } else {
+                      $(window).off("keyup")
+                      stopTimer("countdownExample")
+                      $("#tryThatAgain").fadeOut(500)
+                      if(ifStart) {
+                        document.getElementById('ifClick').innerHTML ="Since you had " + (timeRemaining) + " second(s) on the clock, <br> you would end up with <strong>" + (timeRemaining) + " point(s)</strong>."
+                        $("#ifClick").fadeIn(500)
+                      }
+                      document.getElementById("shoe").style.outline="2px dashed red"
+
+                      setTimeout(function() {
+                        $("#pressEnterEx").show()
+                        $(window).on('keyup', function(event){
+                          if(event.keyCode == 13) {
+                            $(window).off("keyup")
+                            experiment.prestudyClick(slideNumber, true)
+                          }
+                        })
+                      }, 2000)
+
+                    }
+                  }
+                })
+              
+
+
+    }, 11000)
+
+
+
+  },
+
+  prestudyTypeRight: function(slideNumber, clockOnIfTrue) {
+    slide_number=slideNumber;  
+    showSlide("prestudy");
+    $("#tryThatAgain").hide()
+    $("#sendMessageDemo").hide();
+    $("#exampleText").hide();
+    $("#howToPlay").hide();
+    $("#typingExample").hide();
+    $("#clickText").hide()
+    $("#exampleTarget").fadeIn(500)
+    $("#clickArray").fadeIn(500)
+    $("#generalInst").fadeIn(500)
+    $("#pressEnterEx").hide()
+      // $("#timerText").hide()
+
+        document.getElementById('timerText').innerHTML ="You can send a message by: <br> <strong> typing, </strong><br> pointing, <br> typing and pointing"
+
+    if (clockOnIfTrue==true) {
+      setTimeout(function() {
+        startTimer("countdownExample")
+      }, 2000)
+    }
+
+
 
       //typing example, right message
-        document.getElementById("ifType").innerHTML="You can send a message by typing the object's label here...";
+        // document.getElementById("ifType").innerHTML="You can send a message by typing the object's label here...";
+        document.getElementById("ifType").innerHTML="try typing 'shoe' here";
+
         document.getElementById('ifTypePoints').innerHTML =""
         $("#gameReady").hide()
         $("#clickText").fadeOut(500)
@@ -867,9 +1046,11 @@ var experiment = {
                     $("#typingExample").fadeIn(500)
                     document.getElementById("ifTyping").focus(); 
                     }, 500)
-        setTimeout(function() {document.getElementById('ifTypePoints').innerHTML ="(try typing 'shoe' in the box above!) <br> press 'Enter' to send your message"
-              $("#ifTypePoints").fadeIn(500);
-          }, 2000)
+        setTimeout(function() {
+          document.getElementById('ifTypePoints').innerHTML ="(type 'shoe' in the box above!) <br> press 'Enter' to send your message"
+          document.getElementById('ifTypePoints').innerHTML ="press 'Enter' to send your message"
+          $("#ifTypePoints").fadeIn(500);
+        }, 2000)
   			// setTimeout(function() {document.getElementById("ifTyping").value="s"}, 500)
   			// setTimeout(function() {document.getElementById("ifTyping").value="sh"}, 700)
   			// setTimeout(function() {document.getElementById("ifTyping").value="sho"}, 900)
@@ -887,6 +1068,7 @@ var experiment = {
               }, 2500)
             return false
           } else {
+            if(clockOnIfTrue==true){ stopTimer("countdownExample") }
             $(window).off('keyup')
             document.getElementById("ifTypePoints").innerHTML=""
             $("#sendMessageDemo").hide()
@@ -894,8 +1076,10 @@ var experiment = {
             setTimeout(function() {document.getElementById('clickText').innerHTML ="<br> <br> You will then be shown what your partner selected."
                 $("#clickText").fadeIn(500)
               }, 500)
-            setTimeout(function() {document.getElementById("shoe").style.border= "3px red dashed";}, 1500)
-            setTimeout(function() {document.getElementById('ifClick').innerHTML ="Since your partner chose the target, <br> you would end up with <strong> 10 points</strong> in this example."
+            setTimeout(function() {document.getElementById("shoe").style.outline = "3px red dashed";}, 1500)
+            setTimeout(function() {
+              if(clockOnIfTrue) {document.getElementById('ifClick').innerHTML ="Since your partner chose the target and you had " + (timeRemaining) + "  second(s) on the clock, <br> you would end up with <strong>" + (timeRemaining) + " point(s)</strong>."
+              } else {document.getElementById('ifClick').innerHTML ="Nice! Your partner figured out which object you were talking about!"}
                 $("#ifClick").fadeIn(500)}, 2500)
             setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
                     // $("#gameReady").fadeIn(500)
@@ -903,7 +1087,7 @@ var experiment = {
               $(window).on('keyup', function(event){
                 if(event.keyCode == 13) {
                   $(window).off("keyup")
-                  experiment.prestudyTypeWrong(slideNumber)
+                  experiment.prestudyClick(slideNumber)
                 }
               })
             }, 5000)
@@ -916,7 +1100,9 @@ var experiment = {
       })
   },
 
-  prestudyTypeWrong: function(slideNumber) {
+  prestudyTypeWrong: function(slideNumber, clockOnIfTrue) {
+    document.getElementById("shoe").style.border= ""
+    document.getElementById("shoe").style.outline= ""
     slide_number=slideNumber;  
     showSlide("prestudy");
     $("#tryThatAgain").hide()
@@ -929,9 +1115,18 @@ var experiment = {
       $("#clickArray").fadeIn(500)
       $("#generalInst").fadeIn(500)
       $("#pressEnterEx").hide()
-      $("#pointerEx").hide()
+      $("#timerText").hide()
+      $("#ifRight").hide()
+      $("#typingExample").hide();
 
-          $(window).off("keyup")
+
+
+
+
+      if (clockOnIfTrue==true) {
+        initializeTimer("countdownExample", 30, true)
+        startTimer("countdownExample")
+      }
 
 
         //typing exmaple, wrong messsage
@@ -944,21 +1139,15 @@ var experiment = {
     			setTimeout(function() {
               document.getElementById("shoe").style.border= ""
               $("#typingExample").fadeIn(500);
+              $("#pointerEx").hide();
     					document.getElementById("ifTyping").value=""; 
     					document.getElementById("ifType").innerHTML="But if your partner gets it wrong based on your message...";
-              document.getElementById("ifTypePoints").innerHTML="(try typing 'chair' above) <br> remember to press 'Enter' to send"
+              document.getElementById("ifTypePoints").innerHTML='(try typing "chair" above)'
               $("#ifTypePoints").fadeIn(500);
               document.getElementById("ifTyping").focus(); 
             }, 500)
-    			// setTimeout(function() {document.getElementById("ifTyping").value="c"}, 700)
-    			// setTimeout(function() {document.getElementById("ifTyping").value="ch"}, 900)
-    			// setTimeout(function() {document.getElementById("ifTyping").value="cha"}, 1100)
-    			// setTimeout(function() {document.getElementById("ifTyping").value="chai"}, 1300)
-    			// setTimeout(function() {document.getElementById("ifTyping").value="chair";
-    			// 						}, 1500)
 
           // diy example
-          // setTimeout(function() {$("#sendMessageDemo").fadeIn(500)}, 3000)
           $(window).on('keyup', function(event){
             if(event.keyCode == 13) {
               // if they don't type chair, display a little reminder
@@ -968,10 +1157,11 @@ var experiment = {
                 setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
                 return false
               } else {
+                if (clockOnIfTrue==true) {stopTimer("countdownExample")}
                 $(window).off("keyup")
                 $("#ifTypePoints").hide()
                 $("#sendMessageDemo").hide()
-                document.getElementById("ifClick").innerHTML="You will earn <strong> 0 points</strong>."
+                document.getElementById("ifClick").innerHTML="You will earn <strong> 0 points</strong> regardless of how many seconds are left."
                 setTimeout(function() {$("#ifClick").fadeIn(500)}, 1500)
                 setTimeout(function() {document.getElementById("chairDistractor").style.border= "3px red dashed"}, 500)
                 setTimeout(function() {
@@ -979,7 +1169,7 @@ var experiment = {
                   $(window).on('keyup', function(event){
                     if(event.keyCode == 13) {
                       $(window).off("keyup")
-                      experiment.prestudyClick(slideNumber)
+                      experiment.partnering(slideNumber+1)
                     }
                   })
                   // document.getElementById("gameReady").innerHTML = "Got It";
@@ -993,8 +1183,9 @@ var experiment = {
           })
   },
 
-  prestudyClick: function(slideNumber) {
+  prestudyClick: function(slideNumber, clockOnIfTrue) {
     document.getElementById("chairDistractor").style.border= ""
+    document.getElementById("shoe").style.outline= ""
     slide_number=slideNumber;  
     // adding these hide/show lines allows us to jump around to this specific example during testing
         // it seems repetative, but it needs to be so that the proper things are always showing?
@@ -1011,7 +1202,11 @@ var experiment = {
           $("#pointerEx").fadeIn(500)
           $("#pressEnterEx").hide()
           $("#ifClick").hide()
+          // $("#pointerEx").hide()
 
+
+      document.getElementById('timerText').innerHTML ="You can send a message by: <br> <strike> typing,</strike><br> <strong> pointing,</strong><br> typing and pointing"
+      if (clockOnIfTrue) {$("#timerText").hide()}
       $(window).off("keyup")
 
           //clicking example
@@ -1024,6 +1219,11 @@ var experiment = {
                     w = 600 - pointerEx.width(),
                     d = {},
                     x = 1;
+                pointerEx.css({
+                  left: "170px",
+                  top: "200px"
+                });  
+
                 function newv(v,a,b) {
                     var n = parseInt(v, 10) - (d[a] ? x : 0) + (d[b] ? x : 0);
                     return n < 0 ? 0 : n > w ? w : n;
@@ -1063,7 +1263,9 @@ var experiment = {
                               setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
                               return false
                             } else {
+                              if (clockOnIfTrue==true) {stopTimer("countdownExample")}
                               enterPressed = true;
+                              $("#ifClick").fadeOut(500)
                               // this prevents pointer movement because that is now broken
                               clearInterval(detectMovementInterval)
                               clearInterval(detectHoverInterval)
@@ -1082,7 +1284,11 @@ var experiment = {
                                 document.getElementById("shoe").style.zIndex= "1"
                               }, 500)
                               setTimeout(function() {
-                                document.getElementById("ifClick").innerHTML="you will end up with <strong> 10 points </strong> <br> when your partner gets it right."
+                                if (clockOnIfTrue==true) {
+                                  document.getElementById("ifClick").innerHTML="you would end up with <strong>"+(timeRemaining)+" point(s) </strong> <br> when your partner gets it right."
+                                } else {
+                                  document.getElementById("ifClick").innerHTML="Cool! Your partner understood your message."
+                                }
                                 $("#ifClick").fadeIn(500)
                               }, 1000)
                               setTimeout(function() {
@@ -1090,7 +1296,11 @@ var experiment = {
                                 $(window).on('keyup', function(event){
                                   if(event.keyCode == 13) {
                                     $(window).off("keyup")
-                                    experiment.prestudyDoingBoth(slideNumber)
+                                    if (clockOnIfTrue) {
+                                      experiment.prestudyTypeWrong(slideNumber, true)
+                                    } else {
+                                      experiment.prestudyDoingBoth(slideNumber)
+                                    }
                                   }
                                 })
                                 // document.getElementById("gameReady").innerHTML = "Anything Else?";
@@ -1107,28 +1317,38 @@ var experiment = {
 
                   })
 
+            // restart timer
+            if (clockOnIfTrue==true) {initializeTimer("countdownExample", 30, true)}
 
             // this is the general set up stuff for the example
               // $('.famArray').addClass('toSelect')
             $("#ifClick").hide()
             $("#gameReady").hide()
             document.getElementById("clickText").innerHTML="<br> You can also send a message by using the pointer to select the object..."
+            if (clockOnIfTrue) {document.getElementById("clickText").innerHTML="<br> <br> Try selecting the shoe again..."}
             // fade out the old
             $("#typingExample").fadeOut(500)
             setTimeout(function() {document.getElementById("chairDistractor").style.border= ""}, 500)
             //bring in the new
-            setTimeout(function() {$("#clickText").fadeIn(500)}, 500)
+            setTimeout(function() {
+              $("#clickText").fadeIn(500)
+              if (clockOnIfTrue==true) {startTimer("countdownExample")}
+            }, 500)
             setTimeout(function() {
               // if someone is fast enough to do the example before this message comes in, we don't want it to show up
               if (enterPressed==false) {
                 document.getElementById("ifClick").innerHTML="Move the pointer with the arrow keys, <br> then press 'Enter' to send your message"
                 $("#ifClick").fadeIn(500)
+
+
               }
             }, 3000)
             setTimeout(function() {
               if (enterPressed==false) {
-                // document.getElementById("clickText").innerHTML="You can also send a message by selecting the object here... <br> <strong> Try selecting the shoe </strong>"
-                document.getElementById("ifClick").innerHTML="Move the pointer with the arrow keys, <br> then press 'Enter' to send your message <br> <strong> (if the pointer doesn't move, try clicking on the window first)"
+                if (! clockOnIfTrue) {
+                  // document.getElementById("clickText").innerHTML="You can also send a message by selecting the object here... <br> <strong> Try selecting the shoe </strong>"
+                  document.getElementById("ifClick").innerHTML="Move the pointer with the arrow keys, <br> then press 'Enter' to send your message <br> <strong> (if the pointer doesn't move, try clicking on the window first)"
+                }
               }
             }, 7000)
 
@@ -1139,7 +1359,7 @@ var experiment = {
 
 
 
-  prestudyDoingBoth: function(slideNumber) {
+  prestudyDoingBoth: function(slideNumber, clockOnIfTrue) {
         slide_number=slideNumber;  
           // adding these hide/show lines allows us to jump around to this specific example during testing
               // it seems repetative, but it needs to be so that the proper things are always showing?
@@ -1151,18 +1371,22 @@ var experiment = {
           $("#typingExample").hide();
           $("#clickText").hide()
           $("#pressEnterEx").hide()
+          $("#ifRight").hide()
           // reset pointer location for next example
             setTimeout(function() {
               $("#pointerEx").fadeIn(500);  
               pointerEx.css({
-                left: "175px",
+                left: "170px",
                 top: "200px"
               });  
             }, 500)
+      document.getElementById('timerText').innerHTML ="You can send a message by: <br> <strike> typing,</strike><br> <strike> pointing,</strike><br> <strong>typing and pointing</strong>"
+
 
             $(window).off("keyup")
 
-
+            // restart timer
+            if (clockOnIfTrue == true ){initializeTimer("countdownExample", 30, true)}
             $("#exampleTarget").fadeIn(500)
             $("#clickArray").fadeIn(500)
             $("#generalInst").fadeIn(500)
@@ -1216,7 +1440,9 @@ var experiment = {
               document.getElementById("ifTypePoints").innerHTML="(try typing 'shoe' and selecting that object)"; 
               document.getElementById("ifType").innerHTML="You can also choose to do both..."
               // diy demo
-  
+              setTimeout(function() {
+                if (clockOnIfTrue==true) {startTimer("countdownExample")}
+              }, 2000)
 
                 // detect enter events and handle
                 $(document).ready(function() {
@@ -1233,8 +1459,10 @@ var experiment = {
                               $("#ifTypePoints").addClass('redText');
                               $("#tryThatAgain").fadeIn(500)
                               setTimeout(function() {$("#tryThatAgain").fadeOut(500)}, 2500)
-                              return false
+                              // return false
                             } else {
+                                $(window).off("keyup")
+                                if (clockOnIfTrue==true) {stopTimer("countdownExample")}
                                 // this prevents pointer movement because that is now broken
                                 clearInterval(detectMovementInterval)
                                 //also clears hovering, important because we want the 'selected' border to remain and the hovering code requires the pointer to do this
@@ -1244,8 +1472,6 @@ var experiment = {
                                   //prevent more enter events
                                       // this isn't the best method cause it will also break the pointer movement code, so we will have to redfine that later.
                                       // is there a better method (i.e. that can more specifically target the enter keyup events)?
-                                $(window).off("keyup")
-
 
                               $("#ifTypePoints").hide()
                               $("#sendMessageDemo").hide()
@@ -1254,8 +1480,9 @@ var experiment = {
                                         document.getElementById("shoe").style.outline= "3px red dashed"
                                       }, 500)
                                 setTimeout(function() {
-                                        document.getElementById("ifClick").innerHTML="You would end up with <br> <strong> 10 points</strong> in this example."
-                                        $("#ifClick").fadeIn(500)
+                                        if (clockOnIfTrue) {document.getElementById("ifClick").innerHTML="You would end up with <strong>" + (timeRemaining) + " point(s)</strong> in this example."
+                                        } else {document.getElementById("ifClick").innerHTML="Your partner figured it out here too!"}
+                                      $("#ifClick").fadeIn(500)
                                       }, 1500)
                                 setTimeout(function() {
                                   // $("#gameReady").fadeIn(500)
@@ -1263,7 +1490,8 @@ var experiment = {
                                   $(window).on('keyup', function(event){
                                     if(event.keyCode == 13) {
                                       $(window).off("keyup")
-                                        experiment.partnering(slideNumber+1)
+                                        // experiment.partnering(slideNumber+1)
+                                        experiment.prestudyTimer(slideNumber, true)
                                     }
                                   })
                                   // issue where if you get referred to back to watching the instructions again, the on click function call doubled up and negated itself
@@ -1533,8 +1761,8 @@ var experiment = {
     })
       // make sure the pointer resets to center each time 
         $('#box').css({
-            left: "222px",
-            top: "295px"
+            left: "220px",
+            top: "275px"
         });
 
     slide_number=slideNumber;
@@ -1546,11 +1774,43 @@ var experiment = {
         // console.log(partnerKnows)
     }
 		showSlide("referenceGame");
+
 		$("#waitingForPartner").hide();
 		$("#spinningWaiting").hide();
 		$("#messageFromPartner").hide();
 		$("#nextRound").hide();
     $("#pressEnterToMove").hide();
+
+  
+
+    // code for the game timer, this version is a per trial timer
+      $("#countdown").countdown360({
+        radius      : 25,
+        seconds     : timePerTrial,
+        fillStyle   : '#fff',
+        strokeStyle : 'black',
+        strokeWidth : 5,
+        // fontSize    : 50,
+        fontColor   : 'fff',
+        // label: ['point', 'points'],
+        autostart: false,
+        smooth: true,
+        onComplete  : function () { 
+          console.log('time is up!')
+        }
+      }).start()
+    
+      setInterval(function() {
+        timeNow = new Date().getTime()
+        // console.log(timePerTrial - Math.ceil((timeNow-time1)/1000))
+        if ((timePerTrial - ((timeNow-time1)/1000)) < .9) {
+          $("#countdown").countdown360({}).stop()  
+        }
+      }, 200)
+
+
+
+
     // clear any border formatting on objects (would be left over from previuos trials)
           $('.circleArray').each(function() {
             this.style.border=''
@@ -1588,7 +1848,7 @@ var experiment = {
 
 
 		var target = pairObjectLabels(document.getElementById("gameTargetImage").alt);
-    // console.log(target + '   ' + document.getElementById("gameTargetImage").alt)
+    console.log(target + '   ' + document.getElementById("gameTargetImage").alt)
 		var message = 0; // no message
 
     setInterval(function() {
@@ -1787,6 +2047,7 @@ var experiment = {
                 // console.log(this.alt)
                 // console.log(this.id)
                       clicked = true;
+                      $("#countdown").countdown360({}).stop()
                       // if (message==1) {
                       //   // if you have selected an object, and are trying to click another object, do nothing.
                       //   if (this.style.border!="5px solid black") {return}
@@ -1830,7 +2091,7 @@ var experiment = {
           if (clicked == false && blah == '') {
             return false
           } else {
-
+            $("#countdown").countdown360({}).stop()
 
             pseudoPartnersSelection = 'UNCAUGHT'
               // testing setting, should be overwritten, if any are submitted, we know we missed something
@@ -2035,12 +2296,13 @@ var experiment = {
           }
         }
 
-
       //send message, return 'partner response'
       if (isCorrect == 1) {
-        pointChange = 10;
+        // pointChange = 10;
+        pointChange = (timePerTrial + 1 - Math.ceil(((time2-time1))/1000))
+        if (pointChange <= 0) {pointChange = 1}
         pseudoPartnersSelection = document.getElementById("gameTargetImage").alt
-        document.getElementById("messageFromPartner").innerHTML = "Nice work- "+partnersName+" figured it out!";
+        document.getElementById("messageFromPartner").innerHTML = "Nice work- "+partnersName+" figured it out and you got "+pointChange+ " point(s)!";
       } else {
         document.getElementById("messageFromPartner").innerHTML = "Uh oh- looks like "+partnersName+" chose the wrong object!";
         pointChange = 0;
@@ -2125,11 +2387,11 @@ var experiment = {
 		$('.toSelect').click(function() {return;});
 		$('.labelInput').disabled = true;
 		waitTime = randomIntFromInterval(1000,4000);
-		setTimeout(function() {
+		waitingTimer = setTimeout(function() {
       $("#waitingForPartner").hide(); 
       $("#spinningWaiting").hide()
     }, waitTime-250);
-		setTimeout(function() {
+		feedbackTimer= setTimeout(function() {
       // $("#nextRound").show();
 			$("#messageFromPartner").show();
 			// document.getElementById('myScore').removeChild(document.getElementById('myScore').lastChild);
@@ -2143,10 +2405,10 @@ var experiment = {
         }
       })
 		}, waitTime);
-    // console.log('change this back')
-		numOfGames = gameArray.length;  
-    // numOfGames = 4;  
-    setTimeout(function() {
+    console.log('change this back')
+		// numOfGames = gameArray.length;  
+    numOfGames = 4;  
+    nextTimer= setTimeout(function() {
       $("#pressEnterToMove").show()
       // $("#pressEnterToMove").innerHTML="(press 'Enter' to move to the next round!)"
       if (count < numOfGames) {
@@ -2222,32 +2484,52 @@ var experiment = {
 				}
 				experiment.attnCheck.push(attnCheck);
 			}
-                var xmlHttp = null;
-                xmlHttp = new XMLHttpRequest();
-                xmlHttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                    // Action to be performed when the document is read;
-                        console.log('truly decrementing partipcant file')
-                            // there is a potential issue where after finishing the experiment, the page is 'unloaded'
-                                // so our onbeforeunload script tries to run, which involves incrementing the subject count
-                                // changing the subId here should prevent that because the unload script has a max length conditional
-                            subjectIdentifier = 'garbage noise so that the on-close script is not run';
-                            console.log('overwriting subID before submission (testing for who wins the race)')
-                                // need to makes sure that this subID overwrite happens AFTER the decrementer call!!
-                                // otherwise paritipcants won't get zeroed out. 
-                            experiment.end()
-                    }
-                };
-                xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + subjectIdentifier, true);
-                xmlHttp.send(null)
+      experiment.end()
     }
 	},
 
 	//the end of the experiment, where the background becomes completely black
     end: function () {
-    	showSlide("finish");
-    	document.body.style.background = "black";
-    	turk.submit(experiment);
+      showSlide("finished");
+      // document.body.style.background = "black";
+
+      document.getElementById("submitData").onclick = function() {
+        $("[name='likert']").each(function(){
+          if(this.checked==true){
+            muchEnjoyment = this.value
+          }
+        })
+        comments= {
+          subID: subjectIdentifier,
+          time: getCurrentTime(),
+          enjoyedGame : muchEnjoyment, 
+          comments : document.getElementById("anyComments").value,
+        }
+        experiment.comments.push(comments);
+        var xmlHttp = null;
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+            // Action to be performed when the document is read;
+                $("#submitData").hide()
+                console.log('truly decrementing partipcant file')
+                    // there is a potential issue where after finishing the experiment, the page is 'unloaded'
+                        // so our onbeforeunload script tries to run, which involves incrementing the subject count
+                        // changing the subId here should prevent that because the unload script has a max length conditional
+                    subjectIdentifier = 'garbage noise so that the on-close script is not run';
+                    console.log('overwriting subID before submission (testing for who wins the race)')
+                        // need to makes sure that this subID overwrite happens AFTER the decrementer call!!
+                        // otherwise paritipcants won't get zeroed out. 
+
+                        turk.submit(experiment);
+                        $("#finished").hide()
+                        document.body.style.background = "black";
+            }
+        };
+        xmlHttp.open("GET", "https://callab.uchicago.edu/experiments/reference/php/_crementer.php?filename=" + filename + "&to_decrement=" + subjectIdentifier, true);
+        xmlHttp.send(null)
+      }
+
     },
 }
 

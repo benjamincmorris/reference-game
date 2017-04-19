@@ -15,6 +15,7 @@
     <script src="dictionary/wordList.min.js"></script>
     <script src="dictionary/wordBank.min.js"></script>
     <script type="text/javascript" src="js/check_browser_close.js"></script>
+    <script src="js/jquery.countdown360.min.js"></script>
 
 
 
@@ -253,11 +254,20 @@
 
 
     <div class="slide" id="referenceGame">
-    	<div class="progress">
-		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" > </div>
+    	<div class="progress" >
+		  <div class="progress-bar" id="gameProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" > </div>
 		</div>
-    	<div > <p class="points" id="myScore"> your points: 0 </p> </div>
-        <center> <section style="margin-top:50px">
+    	<div id="keepUnfaded"> <p class="points" id="myScore"> your points: 0 </p> </div>
+
+
+        <svg width="50" height="50" viewbox="0 0 250 250">
+          <path id="border" transform="translate(125, 125)"/>
+          <path id="loader" transform="translate(125, 125) scale(.84)"/>
+        </svg>
+        <div id="countdown"></div>
+
+
+        <center> <section id="gameSlide" style="margin-top:50px">
             <section id="leftSide" class="leftSide">
                 <div style="margin-top:75px"> <strong> <p> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </strong> 
                 <div class='hmm' id="gameTarget" > </div> <br> 
@@ -314,7 +324,9 @@
 
     <div class="slide" id="finished">
     </div>
+    <!-- <script src="reference_sender.js"></script> -->
     <script src="reference_sender.js"></script>
+
 
     <!-- this code should keep people from taking any of our related hits more than once -->
     <!-- however it is definitely possible to circumvent, so always check for repeated turkers post-hoc -->
