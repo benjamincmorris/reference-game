@@ -146,7 +146,7 @@ th {
     /*margin-top: -175px;*/
     /*width:500px; */
     height:400px;
-    margin:100px 0 0 25px;
+    margin:50px 0 0 25px;
     /*border-left: 2px dashed black;*/
 }
 #pointerEx {
@@ -175,7 +175,7 @@ th {
 	/*float: left;*/
 	position: absolute;
 	left:40%;
-	margin: 0px 0 0 -300px;
+	margin: 75px 0 0 -300px;
 	/*margin: 100px 0 0 10%;*/
 	/*width: 40%;*/
 }
@@ -185,9 +185,9 @@ th {
 	/*float: center;*/
     position: absolute;
     left:40%;
-    top: 30px;
+    /*top: 100px;*/
     /*left: 100px;*/
-    width:475px; height:475px;
+    width:525px; height:550px;
     border-left: 2px dashed black;
 }
     
@@ -265,10 +265,7 @@ button[disabled] {
 /*some new stuff for my testing*/
 
 
-#testObject{
-  margin-top:-30px;
-  z-index:-1;
-}
+
 
 .labels {
 	font-size: 30px;
@@ -281,7 +278,7 @@ button[disabled] {
 	font-size: 18px;
 	font-weight: bold;
 	left: 40%;
-	margin: 30px 0 0 -245px;
+	margin-left:-60px;
 }
 
 
@@ -294,11 +291,7 @@ button[disabled] {
 } */
 
 #spinningWaiting {
-    position: absolute; 
-    /*width: 100%; */
-    /*height: 100%; */
-    /*background: url('images/spinner.gif') no-repeat; */
-    z-index:1;
+    position: absolute; width: 100%; height: 100%; background: url('images/spinner.gif') no-repeat;
 }
 
 #spinner {
@@ -387,7 +380,7 @@ This stuff will vary by experiment.
 
 /*adjust so pictures fit comfortably in the middle of the screen (as opposed to too high or too low)*/
 #objects {
-	margin-top: 0px;
+	margin-top: 20px;
 }
 
 /*left pic and right pic are large but fit comfortably in the ipad window*/
@@ -428,29 +421,22 @@ This stuff will vary by experiment.
 
 
 
-table, th, td {
-    border: none;
-}
+
+
 
 
 #countdownExample {
 	position:absolute;
 	left:40%;
-	margin-left:-175px;
-	top: 225px;
-  z-index:1;
+	margin-left:-10px;
+	top: 105px;
 }
 
 #countdown {
 	position:absolute;
 	left:40%;
-	margin:25px 0 0 -215px;
+	margin-left:-30px;
 	top: 70px;
-}
-
-#squareExamples:hover {
-	border: "10px black dashed";
-
 }
 
 

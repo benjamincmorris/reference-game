@@ -424,11 +424,11 @@ try {
         } else {
           do_all_the_setup()
 
-          // for debugging, use line below to jump around the exp
-          // setTimeout(function() {
-          //   $(window).off("keyup")
-          //   experiment.test(0);
-          // }, 1)
+          // // for debugging, use line below to jump around the exp
+          setTimeout(function() {
+            $(window).off("keyup")
+            experiment.game(0, 0, 30);
+          }, 1)
 
         }
       }
@@ -2405,9 +2405,9 @@ var experiment = {
         }
       })
 		}, waitTime);
-    console.log('change this back')
-		// numOfGames = gameArray.length;  
-    numOfGames = 4;  
+    // console.log('change this back')
+		numOfGames = gameArray.length;  
+    // numOfGames = 4;  
     nextTimer= setTimeout(function() {
       $("#pressEnterToMove").show()
       // $("#pressEnterToMove").innerHTML="(press 'Enter' to move to the next round!)"
