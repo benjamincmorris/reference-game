@@ -59,15 +59,20 @@
 	      <div class="row" >
 	        <p class="block-text col-xs-offset-3 col-xs-6 ">Each of these objects has a label that identifies it. Your job is to learn those labels and then send messages to another player to get that player to select a particular object. 
 	        <br><br>
-	        You will be given a chance to learn these labels to aide you in the game. Each object will be presented one at a time with its corresponding label a few times.</p>
+	        You will be given a chance to learn these labels to aide you in the game.</p>
 	      </div>
-            <center> <p id="beforeStudy" class="blink_me_slow" onClick="this.blur()"> (press 'Enter' to move on) </p> </center>
+            <center> <p id="beforeStudy" class="blink_me_slow" onClick="this.blur()"> (press 'Enter' to begin learning) </p> </center>
     </div>
  
     <div class="slide" id="exposure">
 	    <div class="progress">
 		  <div class="progress-bar" id="progressBar" role="progressbar"  aria-valuemin="0" aria-valuemax="100"> </div>
 		</div>
+
+                <div class="box" id="animatedPointer" style="left:50%; margin-left:-11px; top:250px"> <img src="images/pointer.png" height="30px" width="auto"  > </div>
+                    <a href='#' class=' crosshatch' style="; transform: rotate(45deg); left:50%"></a>
+                    <a href='#' class=' crosshatch' style=" transform: rotate(135deg); left:50%"></a> 
+
     	<div class="container">
 	        <!-- <center> <div class="contents" id="content"> </div> </center> -->
             <section id="paneExposures">
@@ -377,7 +382,30 @@
                 <label>5 <br> A lot</label>
               </li>
             </ul>
-            <label class="statement">We are still tweaking this HIT - do you have any feedback for us?</label>
+
+            <label class="statement">It was possible to teach your partner during the game by both labeling and pointing at once. <br> &nbsp &nbsp Did you ever teach your partner a word?</label>
+            <ul >
+            <div style="position:relative; left:5%">
+              <li>
+                <label style="font-size:13px"> <input type="radio" class="teachingQuestion" name="teaching" value="unaware">
+                 &nbsp No, I didn't realize I could teach.</label>
+              </li>
+              <li>
+                <label style="font-size:13px"><input type="radio" class="teachingQuestion" name="teaching" value="choseNot">
+                &nbsp No, I realized I could teach, but I chose not to.</label>
+              </li>
+              <li>
+                <label style="font-size:13px"><input type="radio" class="teachingQuestion" name="teaching" value="didTeach">
+                 &nbsp Yes, I did teach!</label>
+              </li>
+              <li>
+                <label style="font-size:13px"><input type="radio" class="teachingQuestion" name="teaching" value="other"> 
+                 &nbsp Other:  </label>
+              </li> <textarea  id="otherText" name="name" style="margin:-25px 0 0 80px; width: 200px; height: 25px"> </textarea>
+
+            </div>
+            </ul>
+            <label class="statement">Any other thoughts about strategies you used during the communication game?</label>
             <!-- /*<input type = "text" name = "name" style="margin-left:4%; width: 60%; height: 100px"> */ -->
             <textarea  id="anyComments" name="name" style="margin-left:6%; width: 60%; height: 100px"> </textarea>
 
@@ -388,7 +416,7 @@
 
     </div>
     <!-- <script src="reference_sender.js"></script> -->
-    <script src="4.27_reference_sender.js"></script>
+    <script src="5.1_reference_sender.js"></script>
 
 
     <!-- this code should keep people from taking any of our related hits more than once -->

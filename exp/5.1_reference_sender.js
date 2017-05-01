@@ -429,7 +429,7 @@ try {
           // // for debugging, use line below to jump around the exp
           // setTimeout(function() {
           //   $(window).off("keyup")
-          //   experiment.prestudyDoingBoth(0, 0, 30);
+          //   experiment.exposure(0, 0, 30);
           //   // experiment.prestudyTimer(0,true)
           // }, 1)
 
@@ -582,19 +582,48 @@ var experiment = {
 
 	//transition from instruction slide to the exposure phase
 	exposure: function(slideNumber) {
-    $("#paneExposures").hide()
-    $("#paneExposures").fadeIn(500)
+    $(function () {
+      var left = $("#my-div").css("left");
+    });
+    $("#paneExposures").fadeIn(250)
+    $("#label").hide()
+    $('#animatedPointer').hide()
     imgArrayShuffled = shuffle(imgArray.slice(0))
     count=0
     var index=0;
     $('.exposuresArray').each(function() {
       this.src='tabletobjects/'+imgArrayShuffled[count]
       this.id=imgArrayShuffled[count]
-      if (this.id==exposureArray[index]) {
-        this.style.border="3px solid black"
-      }
       count=count+1
     })
+    setTimeout(function() {
+      $("#label").fadeIn(250)
+      $('.exposuresArray').each(function() {
+        if (this.id==exposureArray[index]) {
+          this.style.border="3px solid black"
+          hm = this.name
+        }
+      })
+      box.addClass(hm)
+      $('#animatedPointer').fadeIn(250)
+    }, 500)
+
+    // setTimeout(function(){console.log($("#"+exposureArray[index]).offset())},1000)
+    box = $('#animatedPointer'),
+    // boxMarginX = parseInt(box.css('margin-left'))
+    // console.log(boxMarginX )
+    count = 0
+
+    // pointerAnimating = setInterval(function() {
+    //     // console.log(boxMarginX - count)
+    //     // console.log((count))
+    //     count++
+    //     box.css({"margin-left":  (boxMarginX - count) })
+    //     // box.css({
+    //     //     left: (boxMarginX - (3*count)),
+    //     //     // top: function(i,v) { return newv(v, 38, 40); }
+    //     // });
+    // }, 20)
 
     slide_number=slideNumber;
 		time1 = new Date().getTime()
@@ -632,16 +661,25 @@ var experiment = {
     				};
     			experiment.expDuration.push(expDuration);
           $("#label").fadeOut(250)
-          $("#paneExposures").fadeOut(250)
-    			setTimeout(function() {experiment.exposures(0, slideNumber+1)}, 250)
+          // $("#paneExposures").fadeOut(250)
+          $("#animatedPointer").fadeOut(250)
+    			setTimeout(function() {box.removeClass(hm); experiment.exposures(0, slideNumber+1)}, 250)
         };
       })
-    }, 1250);
+    }, 1500);
 	},
 
 	exposures: function(index, slideNumber) {
-    $("#paneExposures").fadeIn(250)
-    $("#label").fadeIn(250)
+    // $("#paneExposures").fadeIn(250)
+    setTimeout(function() {
+      $("#animatedPointer").fadeIn(250)
+      $("#label").fadeIn(250)
+      $('.exposuresArray').each(function() {
+        if (this.id==exposureArray[i]){
+          this.style.border="3px solid black"          
+        }
+      })
+    }, 500)
     slide_number=slideNumber;
 		time1 = new Date().getTime()
 		$("#clickme").hide();
@@ -650,17 +688,26 @@ var experiment = {
 		}
 		var $img = $("img"), speed = 200;
 		i= index + 1;
-    imgArrayShuffled = shuffle(imgArray.slice(0))
-    count=0
-    $('.exposuresArray').each(function() {
-      this.src='tabletobjects/'+imgArrayShuffled[count]
-      this.id=imgArrayShuffled[count]
-      this.style.border=''
-      if (this.id==exposureArray[i]) {
-        this.style.border="3px solid black"
-      }
-      count++
-    })
+    // imgArrayShuffled = shuffle(imgArray.slice(0))
+
+    // setTimeout(function(){
+      count=0
+      $('.exposuresArray').each(function() {
+        // this.src='tabletobjects/'+imgArrayShuffled[count]
+        // this.id=imgArrayShuffled[count]
+        this.style.border=''
+        if (this.id==exposureArray[i]) {
+          // this.style.border="3px solid black"
+          hm = this.name
+          console.log(hm)
+        }
+        count++
+      })
+
+
+    // }, 1000)
+    box = $('#animatedPointer'),
+    box.addClass(hm)
 		ar = exposureArray;
     // console.log("change this back")
     // lastExposure = 3;
@@ -678,7 +725,9 @@ var experiment = {
 			// document.getElementById('content').appendChild(newImage);
 			document.getElementById('label').appendChild(newLabel);
 			$("#content").fadeIn(speed);
-			$("#label").fadeIn(speed);
+			// $("#label").fadeIn(speed);
+
+      // box.removeClass(hm)
 
 			setTimeout(function() {
         $("#clickme").fadeIn(500)
@@ -699,14 +748,17 @@ var experiment = {
       					};
       				experiment.expDuration.push(expDuration);
               $("#label").fadeOut(250)
-              $("#paneExposures").fadeOut(250)
+              $("#animatedPointer").fadeOut(250)
+              // $("#paneExposures").fadeOut(250)
               setTimeout(function() {
+                box.removeClass(hm)
       				  experiment.exposures(i, slideNumber+1)
               }, 250)
           }
         })
-      }, 1250);
+      }, 1500);
 		} else if (i >= lastExposure) {
+      box.removeClass(hm)
 			experiment.pretest(slideNumber);
 	}},
 
@@ -2751,18 +2803,48 @@ var experiment = {
 	//the end of the experiment, where the background becomes completely black
     end: function () {
       showSlide("finished");
-      // document.body.style.background = "black";
+      teachingQuestion=null
+      muchEnjoyment=null
+      document.getElementById("submitData").disabled=true
 
-      document.getElementById("submitData").onclick = function() {
+      $('.teachingQuestion').on("change", function() {
+        console.log('is this thing on')
+        gotOne =false
+        $(".teachingQuestion").each(function() { 
+          if (this.checked == true) {
+            gotOne = true
+            if (muchEnjoyment != null) {
+              document.getElementById("submitData").disabled=false
+            }
+            teachingQuestion = this.value
+          }
+        })
+      })
+
+      $('.likert').on("change", function() {
+        console.log("whata bout you")
         $("[name='likert']").each(function(){
           if(this.checked==true){
             muchEnjoyment = this.value
+            if (teachingQuestion != null) {
+              document.getElementById("submitData").disabled=false
+            }
           }
-        })
+        })   
+      })
+
+      document.getElementById("submitData").onclick = function() {
+        // $("[name='likert']").each(function(){
+        //   if(this.checked==true){
+        //     muchEnjoyment = this.value
+        //   }
+        // })
         comments= {
           subID: subjectIdentifier,
           time: getCurrentTime(),
           enjoyedGame : muchEnjoyment, 
+          teachingQuestion : teachingQuestion,
+          ifOther : document.getElementById("otherText").value,
           comments : document.getElementById("anyComments").value,
         }
         experiment.comments.push(comments);
