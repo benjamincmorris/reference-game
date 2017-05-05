@@ -1,0 +1,219 @@
+---
+title: "5.5 Timer Starts at Key Press"
+author: "Ben Morris and Dan Yurovsky"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: tango
+    theme: flatly
+    toc: true
+    toc_float:
+      collapsed: true
+    code_folding: hide
+---
+
+
+These data were on MTurk collected on May 5th, 2017. 9 participants were run. All participants were in the condition using the slowest pointer and were told their 'partner' had no exposure.
+
+This version of the game used a pointer that moves at different speeds to manipulate the relative cost between pointing and labeling. A per-trial-timer was used to determine how many points were won, in an attempt to make the time-cost more salient and consequential, scaled to 100. Participants that the 'doing both' strategy would allow them to teach their partner. In this 5.4 version, the timer was changed to begin running when a key was pressed to make labeling even less costly relative to pointing (and thus incentivize teaching). This version had the standard game structure all 9 objects shown 3 times. 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align='center', messages=FALSE, warning = FALSE,
+                      fig.height = 3, fig.width=5)
+```
+
+```{r load_libraries, include = FALSE, results = "hide"}
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+library(langcog)
+library(knitr)
+
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", 
+                          "toma", "dax", "gazzer", "kiv","manu"))
+
+theme_set(theme_bw(base_size = 14) + theme(panel.grid = element_blank(),
+                  strip.background = element_blank()))
+
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
+
+# Load Data
+
+```{r read_data, warning = FALSE}
+filenames <- list.files("production-results/", 
+                         pattern="*.json", full.names = TRUE)
+
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+sender_timing <- NULL
+sender_exposures <- NULL
+sender_ruleCheck <- NULL
+sender_manipulation <- NULL
+sender_game <- NULL
+sender_test<- NULL
+sender_attn <- NULL
+sender_turkIds<-NULL
+sender_comments<- NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+  anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  # else {condition <- "80_50"}
+  ldf_num <- i
+  sender_timing <- rbind(sender_timing, as.data.frame(
+      cbind(ldf_num, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  sender_exposures <- rbind(sender_exposures, janeDoe$answers$data$expDuration)
+  sender_ruleCheck <- rbind(sender_ruleCheck, janeDoe$answers$data$ruleQuestions)
+  sender_manipulation <- rbind(sender_manipulation, janeDoe$answers$data$manipCheck)
+  sender_test <- rbind(sender_test,cbind(ldf_num, janeDoe$answers$data$testTrials))
+  sender_game <- rbind(sender_game,cbind(ldf_num,janeDoe$answers$data$gameTrials))
+  if (length(janeDoe$answers$data$attnCheck)!=0) 
+    {sender_attn <- rbind(sender_attn, janeDoe$answers$data$attnCheck)}
+  sender_turkIds <- rbind(sender_turkIds, cbind(ldf_num, janeDoe$WorkerId))
+  sender_comments <- rbind(sender_comments,janeDoe$answers$data$comments)
+}
+```
+
+## Process and Clean the Sender Data
+
+We keep track of any participants who close or refresh the page, because any participants who did so before eventually submitting data may have had an a greater number of exposures than others and also have likely been exposed to multiple sets of object-word pairings. 
+
+
+
+```{r clean_data, warning = FALSE, message=FALSE}
+#check who closed or reloaded page against who submitted data!!
+# DO THIS MANUALLY, each time checking for any red flags
+sender_turkIds_clean <- (sender_turkIds)
+
+tmp <- read.table(textConnection(gsub(";","\n", readLines("experiment_files/participants_who_closed.txt"))))
+tmp <- read.table(textConnection(gsub(","," ", tmp$V1)))
+
+quit_participants <- sender_turkIds_clean[which(sender_turkIds_clean %in% tmp$V1)]
+# tmp %>% filter(V1 %in% quit_participants)
+#5.5: no worries
+
+all_data <- sender_game
+#join in knowledge at Test
+sender_test_slim <- sender_test %>% mutate(subID =as.numeric(subID)) %>%
+  select(targetObjectName, realLabel, subID, exposureRate, responseCorrect, ldf_num) %>%
+  rename(testCorrect= responseCorrect)
+#sender_game
+all_data_fixed <- all_data  %>%
+  left_join(sender_test_slim %>% mutate(ldf_num = as.integer(ldf_num), subID = as.character(subID)))
+
+all_data <- all_data_fixed %>%
+  mutate(trialnum = trialnum - 36) %>%
+  mutate(partnersExposure = factor(partnersExposure, levels = c("0", "1/2", "1", "perfect"),
+                                   labels = c("None", "Half", "Same", 'Perfect')))
+```
+
+# Analysis
+
+
+
+
+
+### Message Strategy Across Condtions As a Function of Appearance
+
+NOTE: there were two participants who failed the manipulation check and their data is wonky. It is noted when they are excluded. They is excluded in this figure.
+
+```{r by_appearance, warning=FALSE, message=FALSE, fig.width=7, fig.height=4}
+
+manipPeople <- (sender_manipulation %>% filter(manipCorrect==1) %>% select(subID))
+
+prop_methods <- all_data %>%
+  filter(subID %in% manipPeople$subID) %>%
+  group_by(subID, exposureRate, targetObjectName) %>%
+  mutate(appearance = if_else(trialnum == min(trialnum), "First",
+                              if_else(trialnum == max(trialnum), "Third", "Second"))) %>%
+  group_by(partnersExposure, appearance, method, subID) %>%
+  summarise(n = n()) %>% 
+  summarise(n = mean(n)) %>%
+  mutate(n = n/sum(n))
+  
+all_methods <- expand.grid(partnersExposure = unique(prop_methods$partnersExposure), 
+                             appearance = unique(prop_methods$appearance), 
+                            method = unique(prop_methods$method))
+
+anti_join(all_methods, select(prop_methods, partnersExposure, appearance, method)) %>%
+  mutate(n = 0) %>%
+  bind_rows(prop_methods) %>%
+  mutate(appearance = factor(appearance, levels = c("First", "Second", "Third")),
+         method = factor(method, levels = c("click", "label", "label_click"))) %>%
+  arrange(partnersExposure, appearance, method) %>%
+  ggplot(aes(x=appearance, y=n,  fill=method)) +
+       geom_bar(stat = "identity", position="stack", width = .70) +
+  facet_grid(partnersExposure ~ .) +
+  labs(y="Proportion of Trials", x="Appearance #") +
+  scale_fill_brewer(name = "Message Type", 
+                    labels=c("Click", "Label", "Teach"),
+                    palette = "Set1")
+```
+
+
+### Participants who teach
+```{r, echo=FALSE}
+teach_subs <- all_data %>%
+  group_by(subID, partnersExposure, speed) %>%
+  summarise(teach_freq = sum(method == "label_click")) %>%
+  filter(teach_freq > 0)
+
+kable(teach_subs)
+```
+
+
+### Participants who teach AND pass manipulation check
+```{r, echo=FALSE}
+manipPeople <- (sender_manipulation %>% filter(manipCorrect==1) %>% select(subID))
+teach_subs <- all_data  %>%
+  filter(subID %in% manipPeople$subID) %>%
+  group_by(subID, partnersExposure, speed) %>%
+  summarise(teach_freq = sum(method == "label_click")) %>%
+  filter(teach_freq > 0)
+
+kable(teach_subs)
+```
+
+
+
+
+
+### Duration by Method (ish)
+
+Note this is an imperfect reflection of the scores. 
+```{r, message=FALSE}
+all_data %>% group_by(method) %>%
+  # filter(duration<15000) %>%
+  summarize(medDur = median(duration), sdDur = sd(duration), n =n(), avgCorr = mean(responseCorrect)) %>%
+  kable()
+
+```
+
+### Participant Info, Comments, Etc
+```{r, message=FALSE}
+
+test_performance <- sender_test %>%
+  mutate(responseCorrect = ifelse(realLabel==adjLabel, 1, responseCorrect)) %>%
+  group_by(exposureRate) %>%
+  mutate(responseCorrect = ifelse(responseCorrect== "UNKNOWN", 0, as.numeric(responseCorrect))) %>%
+  summarize(meanDur = mean(duration), avgCorr = mean(responseCorrect), sdCorr = sd(responseCorrect))
+
+
+tmp <- sender_test %>%
+  mutate(testCorrect=ifelse(typedLabel=='UNKNOWN', "Unknown", 
+                            as.character(responseCorrect))) %>%
+  group_by( subID) %>%
+  mutate(testCorrect = ifelse(typedLabel==adjLabel, "1", testCorrect)) %>%
+  summarise(performance = mean(testCorrect=="1"))  %>%
+  left_join(sender_comments) %>%
+  arrange(performance) %>%
+  left_join(teach_subs) %>%
+  left_join(sender_manipulation, by='subID') %>%
+  select(subID, performance, enjoyedGame, teachingQuestion, teach_freq, comments, manipResponse, manipCorrect)
+
+kable(tmp)
+```
