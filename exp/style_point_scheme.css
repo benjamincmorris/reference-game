@@ -1,0 +1,534 @@
+/**
+## General styles
+This stuff can be ported from experiment to experiment.*/
+
+/** We want the page to sit flush inside the browser window - that means no margins or padding. Also, use a nice-looking serif font. */
+body {
+	padding: 0;
+	margin: 0;
+	font-family: Palatino Linotype, Bookman Antiqua, Palatino, serif;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+h4 {
+	text-align: center;
+}
+
+p {
+	font-size: 16px;
+}
+
+
+td {
+	border: 1px solid black;
+	text-align:center;
+	padding-top: 15px;
+}
+
+th {
+	text-align:center;
+	padding-top: 15px;
+}
+
+.redText {
+	color: #ce1212;
+}
+
+.crosshatch{
+	position:absolute;
+	height:20px;
+	/*issue in Explorer where it doesn't like negative margins? using 'left' to determine position is more compatible*/
+	left: 232px;
+    margin:200px 0 0 0px;
+    border-left: 2px dotted black;
+}
+
+
+.emptySquare {
+    width: 0;
+    height: 0;
+    border-left: 9px solid #fff;
+    border-right: 9px solid #fff;
+    border-bottom: 9px solid #fff;
+    border-top: 9px solid #fff;
+    outline: 1px solid black;
+    font-size: 0;
+    line-height: 0;
+}
+.square {
+    width: 0;
+    height: 0;
+    border-left: 10px solid #ce1212;
+    border-right: 10px solid #ce1212;
+    border-bottom: 10px solid #ce1212;
+    border-top: 10px solid #ce1212;
+    font-size: 0;
+    line-height: 0;
+}
+
+.blink_me {
+  animation: blinker 1.5s linear infinite;
+}
+
+.blink_me_slow {
+  animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+
+#objects2 {
+  position:absolute;
+  left:10%;
+  top:100px;
+}
+
+/*these classes (circle + deg...) let us arrange the objects in a circular fashion*/
+.circle-container {
+    position: relative;
+    width: 24em;
+    height: 24em;
+    padding: 2.8em;
+    /*2.8em = 2em*1.4 (2em = half the width of a link with img, 1.4 = sqrt(2))*/
+    /*border: dashed 1px;*/
+    /*border-radius: 50%;*/
+    margin: 1.75em auto 0;
+}
+.circle-container a {
+    display: block;
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 6em; height: 6em;
+    margin: -2em;
+}
+.circle-container img { display: block; width: 100%; }
+.deg0 { transform: translate(12em); } /* 12em = half the width of the wrapper */
+.deg40 { transform: rotate(40deg) translate(12em) rotate(-40deg); }
+.deg80 { transform: rotate(80deg) translate(12em) rotate(-80deg); }
+.deg120 { transform: rotate(120deg) translate(12em) rotate(-120deg); }
+.deg160 { transform: rotate(160deg) translate(12em) rotate(-160deg); }
+.deg200 { transform: rotate(200deg) translate(12em) rotate(-200deg); }
+.deg240 { transform: rotate(240deg) translate(12em) rotate(-240deg); }
+.deg280 { transform: rotate(280deg) translate(12em) rotate(-280deg); }
+.deg320 { transform: rotate(320deg) translate(12em) rotate(-320deg); }
+
+
+
+#clickText  {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    margin-top: -275px;
+    /*margin-left: -300px;*/
+}
+#ifClick  {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    margin-top: 275px;
+}
+#gameReady {
+	    position: absolute;
+    top: 90%;
+    left: 45%;
+    /*margin-top: 0px;*/
+}
+
+#tryThatAgain {
+	position: absolute;
+    top: 90%;
+    left: 35%;
+    /*margin-top: 0px;*/
+}
+#paneEx {
+	/*float: center;*/
+    /*position: absolute;*/
+        /*position: absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*margin-top: -175px;*/
+    /*width:500px; */
+    height:400px;
+    margin:100px 0 0 25px;
+    /*border-left: 2px dashed black;*/
+}
+#pointerEx {
+    position:absolute; 
+    /*top:-30px; */
+        left: 170px; top:200px;
+
+    /*left:255px;*/
+    /*width: 50px; height: 50px;          */
+	/*background: url('images/pointer.png') no-repeat top;*/
+    z-index: 2 !important;
+}
+
+
+
+#wholeThing {
+	/*float: center;*/
+	/*width: 50%;*/
+}
+
+/*#wholeThing section {
+	width: 50%; float: left;
+}*/
+
+.leftSide {
+	/*float: left;*/
+	position: absolute;
+	left:40%;
+	margin: 0px 0 0 -300px;
+	/*margin: 100px 0 0 10%;*/
+	/*width: 40%;*/
+}
+
+
+.pane {
+	/*float: center;*/
+    position: absolute;
+    left:40%;
+    top: 40px;
+    margin-left: 50px;
+    /*left: 100px;*/
+    width:400px; height:400px;
+    /*border-left: 2px dashed black;*/
+}
+    
+/*this defines the pointer to be used in the game
+	note that the position is specified in the javascript so that it is easy to reset the pointer on each new trial*/
+.box {
+    position:absolute; 
+    /*top:305px; left:180px;*/
+    /*width: 50px; height: 50px;          */
+	/*background: url('images/pointer.png') no-repeat top;*/
+    z-index: 2 !important;
+}
+
+#gameCircleArray {
+	margin-left:50px;
+}
+
+/** We manage display using "slides". A slide is a <code>div</code> that takes up the entire page. Only one slide should be visible at a time. Navigation between slides is most sensibly accomplished using buttons, rather than keyboard events. */
+/*.slide {
+	width: 95%;
+	height: 95%;
+	display: none;
+	position: absolute;
+	margin: 0;
+	margin-left: 0.5%;
+	
+	padding: 1% 2% 1% 2%;
+}*/
+
+input, select, button {font-family: Georgia, serif; font-size: 16px;}
+
+button {
+	background: url(images/button-gradient.png);
+	border: 1px solid #999;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	margin: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 29px;
+	min-width: 70px;
+	z-index: 3;
+}
+
+button2 {
+	background: url(images/button-gradient.png);
+	border: 1px solid #999;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	margin: 40px;
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 29px;
+	min-width: 70px;
+	z-index: 3;
+}
+button:active {
+	border-left: 1px solid #c9c9c9;
+	border-top: 1px solid #c9c9c9;
+	background: none;
+	background-color: #c9c9c9;
+	z-index: 3;
+}
+
+button[disabled] {
+	opacity: 0.4;
+	border: 1px solid #999;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	cursor: not-allowed;
+}
+
+
+
+/*some new stuff for my testing*/
+
+
+#testObject{
+  margin-top:-30px;
+  z-index:-1;
+}
+
+.labels {
+	font-size: 30px;
+	font-weight: bold;
+	margin-top:0%;
+}
+
+#myScore{
+	/*position:absolute;*/
+	font-size: 18px;
+	font-weight: bold;
+	left: 40%;
+	/*margin: 30px 0 0 -0px;*/
+}
+
+
+.toSelect{
+	/*height: 50px; width: 50px;*/
+}
+
+/*.toSelect:hover{
+	border: 2px solid #cc1e1e;
+} */
+
+#spinningWaiting {
+    position: absolute; 
+    left:49%;
+    width: 100%; 
+    height: 100%; 
+    background: url('images/spinner.gif') no-repeat; 
+    z-index:1;
+}
+
+#spinner {
+    position: absolute; width: 100%; height: 100%; background: url('images/spinner.gif') no-repeat top; left:4px;
+}
+
+.incorrect {
+	box-shadow: 0 0 7px #CC0000;
+}
+
+#exposureText {
+	color: #ce1212;
+	font-size: 20px;
+	margin: 0px 40px 0px 40px;
+}
+
+#imgObject:hover{
+	border: 2px solid #cc1e1e;
+} 
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for vh unit */
+  min-height: 100vh; /* You might also want to use
+                        'height' property instead.
+
+  /* Make it a flex container */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex; 
+  
+  /* Align the bootstrap's container vertically */
+    -webkit-box-align : center;
+  -webkit-align-items : center;
+       -moz-box-align : center;
+       -ms-flex-align : center;
+          align-items : center;
+  
+  /* In legacy web browsers such as Firefox 9
+     we need to specify the width of the flex container */
+  width: 100%;
+  
+  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+     hence the bootstrap's container won't be aligned to the center anymore.
+  
+     Therefore, we should use the following declarations to get it centered again */
+         -webkit-box-pack : center;
+            -moz-box-pack : center;
+            -ms-flex-pack : center;
+  -webkit-justify-content : center;
+          justify-content : center;
+}
+
+
+/**
+## Experiment-specific styles
+This stuff will vary by experiment.
+*/
+
+#logo-text {
+  font-weight: bold;
+}
+
+#instructions {
+  text-align: center;
+}
+
+
+.block-text {
+  width: 500px;
+  text-align: justify;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+#legal {
+  margin: 0 auto;
+  margin-top: 1.5em;
+  font-size: 0.8em;
+}
+
+#labelInst {
+	text-align: center;
+}
+
+/*adjust so pictures fit comfortably in the middle of the screen (as opposed to too high or too low)*/
+#objects {
+	margin-top: 0px;
+}
+
+/*left pic and right pic are large but fit comfortably in the ipad window*/
+#leftPic {
+	width: 400px;
+	height: auto;
+}
+
+#rightSide{
+  position:absolute;
+  left: 40%;
+}
+
+#rightPic {
+	width: 400px;
+	height: auto;
+}
+
+#fillerPic {
+	width: 900px;
+	height: auto;
+}
+
+#myProgress {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    background-color: grey;
+    transition: width  ease;
+}
+
+.animate({ width: progressBarWidth }, timeleft == timetotal ? 0 : 1000, "linear")
+
+
+
+#myBar {
+    position: absolute;
+    width: 1%;
+    height: 100%;
+    background-color: green;
+}
+
+
+
+
+table, th, td {
+    border: none;
+}
+
+
+#countdownExample {
+	position:absolute;
+	left:40%;
+	margin-left:-175px;
+	top: 225px;
+  z-index:1;
+}
+
+#countdown {
+	position:absolute;
+	left:40%;
+	margin:25px 0 0 -215px;
+	top: 70px;
+}
+
+#squareExamples:hover {
+	border: "10px black dashed";
+
+}
+
+
+
+
+/*likert scale stuff*/
+.wrap {
+  font:12px Arial, san-serif;
+}
+h1.likert-header {
+  padding-left:4.25%;
+  margin:20px 0 0;
+}
+form .statement {
+  display:block;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 30px 0 0 4.25%;
+  margin-bottom:10px;
+}
+form .likert {
+  list-style:none;
+  width:80%;
+  margin:0;
+  padding:0 0 35px;
+  display:block;
+  border-bottom:2px solid #efefef;
+}
+form .likert:last-of-type {border-bottom:0;}
+form .likert:before {
+  content: '';
+  position:relative;
+  top:11px;
+  left:9.5%;
+  display:block;
+  background-color:#efefef;
+  height:4px;
+  width:78%;
+}
+form .likert li {
+  display:inline-block;
+  width:19%;
+  text-align:center;
+  vertical-align: top;
+}
+form .likert li input[type=radio] {
+  display:block;
+  position:relative;
+  top:0;
+  left:50%;
+  margin-left:-6px;
+  
+}
+form .likert li label {width:100%;}
+form .buttons {
+  margin:30px 0;
+  padding:0 4.25%;
+  text-align:right
+} 
+form .buttons button {
+  padding: 5px 10px;
+  background-color: #67ab49;
+  border: 0;
+  border-radius: 3px;
+}
+form .buttons .clear {background-color: #e9e9e9;}
+form .buttons .submit {background-color: #67ab49;} 
+form .buttons .clear:hover {background-color: #ccc;}
+form .buttons .submit:hover {background-color: #14892c;} 
