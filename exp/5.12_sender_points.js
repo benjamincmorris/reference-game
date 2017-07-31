@@ -372,10 +372,10 @@ try {
                   document.getElementById("disabledStart").disabled=true;
                   return;
                 } else {
-
+                
                   do_all_the_setup()
                   // for debugging, use line below to jump around the exp
-                        // experiment.partnering(0,0,30);
+                     // experiment.partnering(0,0,30);
                 }
 
         }
