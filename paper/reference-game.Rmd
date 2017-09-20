@@ -1,0 +1,153 @@
+---
+title             : "A communicative framework for early word learning"
+shorttitle        : "Communicative Word Learning"
+
+author: 
+  - name          : "Benjamin C. Morris"
+    affiliation   : "1"
+    corresponding : no    # Define only one corresponding author
+  - name          : "Daniel Yurovsky"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Department of Psychology, University of Chicago, 5848 S University Ave, Chicago, IL 60637"
+    email         : "yurovsky@uchicago.edu"
+
+affiliation:
+  - id            : "1"
+    institution   : "University of Chicago"
+
+author_note: >
+
+abstract: >
+  Enter abstract here. Each new line herein must be indented, like this line.
+  
+keywords          : "keywords"
+wordcount         : "X"
+
+bibliography      : ["reference-game.bib"]
+
+figsintext        : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r load_packages, include = FALSE}
+library(papaja)
+library(tidyverse)
+```
+
+```{r analysis_preferences}
+# Seed for random number generation
+set.seed(42)
+```
+
+
+# Introduction
+
+Word learning as a statistical inference problem. 
+
+  From Quine on. [@quine1960]
+
+three kinds of uncertainty -- over statistical time and in the moment
+
+constraints, pragmatics, etc deal with uncertainty in the moment
+
+uncertainty over consistent meanings -- priors of some kind to deal with this tenenbaum & xu
+[@tenenbaum1999,@xu2007]
+
+statistical co-occurrence structure deals with uncerainty reduction over time
+[@siskind1996,@yu2008,@blythe2010,@blythe2016]
+
+these two scales are linked [@frank2009]
+
+linking priors and in the moment scales [@frank2012,@frank2014]
+
+All of the arguments in these domains are about the relative difficulty of these different kinds of problems [@trueswell2013,@smith2014,@yurovsky2014,@yurovsky2015]
+
+but all of this stuff is still about speakers talking to no one! [@tomasello2000, @tomasello2001]
+
+Indeed, it looks like it matters whether speech is to children
+  - structural reasons [@aslin1996,]
+  - evidence from weisleder, hoff, etc. [@weisleder2013]
+  - argument from ruthee about structure of contra evidence from Akhtar [@akhtar2001,@akhtar2005,foushee2016]
+
+In contrast, pedagogical inference -- shafto, bonawitz, etc. [@bonawitz2011,@shafto2012]
+  - evidence for some of this kind of stuff from follow-in labeling. tomasello, baldwin, yu
+  - but this is probably not what parents are doing most of the time (although c.f. tamis-lemonda) [@tamis-lemonda2017]
+  - old arguments from newport, etc. [@newport1977]
+
+An intermediate position: Speakers goal is to communicate
+  - @grice1969
+
+reference games and transmission of language
+  - @kirby2015
+  - @gibson2017
+  - @baddeley2009
+  
+Critically, reference games and information theory (in general) assume that speaker and receiver share the same code
+
+But what if only one person knows the code? In this case, in order to communicate successfully, speakers need to take into account the listener's knowledge of the language
+  - evidence for some speaker design
+  - brown-schmidt and tanenhaus [@brown-schmidt2008]
+
+In this case, ambiguity will be controlled in part by the speaker's communicative goals, and scale with the listener. 
+
+We show that without any explicit pedagogical goal, can get speaker design in reference games that leads to better learning
+
+A spectrum of models from pedagogical to adversarial. Figure?
+
+# A model of learning and production  
+
+# Brief explanation of the general reference game framework
+
+# Experiments 1 and 2
+  speakers adapt to beliefs about points and also speaker knowledge
+
+# Methods
+
+### Participants
+
+### Material
+
+### Procedure
+
+### Data analysis
+
+## Results
+
+## Discussion
+
+
+# Experiments 3 and 4
+  this leads to better learning, but not as good as ostension (obviously)
+
+# A model of teaching
+
+# Experiment 5
+  teaching!
+
+# Experiment 6? 
+  partner game--maybe this waits until next paper?
+  
+
+# General Discussion
+
+# Conclusion
+
+# Acknowledgement
+
+The authors are grateful to XX and YY for their thoughtful feedback on this manuscript. This research was supported by a James S MacDonnel Foundation Scholars Award to DY.
+
+\newpage
+
+# References
+
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
