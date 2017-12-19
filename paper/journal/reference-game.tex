@@ -1,0 +1,429 @@
+\documentclass[english,floatsintext,man]{apa6}
+
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+
+% Table formatting
+\usepackage{longtable, booktabs}
+\usepackage{lscape}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
+
+\newenvironment{lltable}
+  {\begin{landscape}\begin{center}\begin{ThreePartTable}}
+  {\end{ThreePartTable}\end{center}\end{landscape}}
+
+
+
+
+% The following enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand\getlongtablewidth{%
+ \begingroup
+  \ifcsname LT@\roman{LT@tables}\endcsname
+  \global\longtablewidth=0pt
+  \renewcommand\LT@entry[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}%
+  \@nameuse{LT@\roman{LT@tables}}%
+  \fi
+\endgroup}
+
+
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            pdfauthor={},
+            pdftitle={A communicative framework for early word learning},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=black,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0pt plus 0pt minus 0pt}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+\ifxetex
+  \usepackage{polyglossia}
+  \setmainlanguage{}
+\else
+  \usepackage[english]{babel}
+\fi
+
+% Manuscript styling
+\captionsetup{font=singlespacing,justification=justified}
+\usepackage{csquotes}
+\usepackage{upgreek}
+
+ % Line numbering
+  \usepackage{lineno}
+  \linenumbers
+
+
+\usepackage{tikz} % Variable definition to generate author note
+
+% fix for \tightlist problem in pandoc 1.14
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Essential manuscript parts
+  \title{A communicative framework for early word learning}
+
+  \shorttitle{Communicative Word Learning}
+
+
+  \author{Benjamin C. Morris\textsuperscript{1}~\& Daniel Yurovsky\textsuperscript{1}}
+
+  % \def\affdep{{"", ""}}%
+  % \def\affcity{{"", ""}}%
+
+  \affiliation{
+    \vspace{0.5cm}
+          \textsuperscript{1} University of Chicago  }
+
+  \authornote{
+    Correspondence concerning this article should be addressed to Daniel
+    Yurovsky, Department of Psychology, University of Chicago, 5848 S
+    University Ave, Chicago, IL 60637. E-mail:
+    \href{mailto:yurovsky@uchicago.edu}{\nolinkurl{yurovsky@uchicago.edu}}
+  }
+
+
+  \abstract{Enter abstract here. Each new line herein must be indented, like this
+line.}
+  \keywords{keywords \\
+
+    \indent Word count: X
+  }
+
+
+
+
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{solution}{Solution}
+\begin{document}
+
+\maketitle
+
+\setcounter{secnumdepth}{0}
+
+
+
+\section{Introduction}\label{introduction}
+
+Word learning as a statistical inference problem.
+
+From Quine on. (Quine, 1960)
+
+three kinds of uncertainty -- over statistical time and in the moment
+
+constraints, pragmatics, etc deal with uncertainty in the moment
+
+uncertainty over consistent meanings -- priors of some kind to deal with
+this tenenbaum \& xu (J. B. Tenenbaum, 1999,Xu and Tenenbaum (2007))
+
+statistical co-occurrence structure deals with uncerainty reduction over
+time (Siskind, 1996,C. Yu (2008),Richard A. Blythe, Smith, and Smith
+(2010),Richard A Blythe, Smith, and Smith (2016))
+
+these two scales are linked (Frank, Goodman, \& Tenenbaum, 2009)
+
+linking priors and in the moment scales (Frank \& Goodman, 2012,Frank
+and Goodman (2014))
+
+All of the arguments in these domains are about the relative difficulty
+of these different kinds of problems (Trueswell, Medina, Hafri, \&
+Gleitman, 2013,L. B. Smith, Suanda, and Yu (2014),D. Yurovsky, Fricker,
+Yu, and Smith (2014),Daniel Yurovsky and Frank (2015))
+
+but all of this stuff is still about speakers talking to no one!
+(Tomasello, 2000, Tomasello (2001))
+
+Indeed, it looks like it matters whether speech is to children -
+structural reasons (Aslin, Woodward, LaMendola, \& Bever, 1996,) -
+evidence from weisleder, hoff, etc. (Weisleder \& Fernald, 2013) -
+argument from ruthee about structure of contra evidence from Akhtar
+(Akhtar, Jipson, \& Callanan, 2001,Akhtar (2005),foushee2016)
+
+In contrast, pedagogical inference -- shafto, bonawitz, etc. (Bonawitz
+et al., 2011,Shafto, Goodman, and Frank (2012)) - evidence for some of
+this kind of stuff from follow-in labeling. tomasello, baldwin, yu - but
+this is probably not what parents are doing most of the time (although
+c.f. tamis-lemonda) (Tamis-LeMonda, Kuchirko, Luo, Escobar, \&
+Bornstein, 2017) - old arguments from newport, etc. (Newport, Gleitman,
+\& Gleitman, 1977)
+
+An intermediate position: Speakers goal is to communicate - Grice (1969)
+
+reference games and transmission of language - Kirby, Tamariz, Cornish,
+and Smith (2015) - E. Gibson et al. (2017) - Baddeley and Attewell
+(2009)
+
+Critically, reference games and information theory (in general) assume
+that speaker and receiver share the same code
+
+But what if only one person knows the code? In this case, in order to
+communicate successfully, speakers need to take into account the
+listener's knowledge of the language - evidence for some speaker design
+- brown-schmidt and tanenhaus (Brown-Schmidt, Gunlogson, \& Tanenhaus,
+2008)
+
+In this case, ambiguity will be controlled in part by the speaker's
+communicative goals, and scale with the listener.
+
+We show that without any explicit pedagogical goal, can get speaker
+design in reference games that leads to better learning
+
+A spectrum of models from pedagogical to adversarial. Figure?
+
+\section{A model of learning and
+production}\label{a-model-of-learning-and-production}
+
+\section{Brief explanation of the general reference game
+framework}\label{brief-explanation-of-the-general-reference-game-framework}
+
+\section{Experiments 1 and 2}\label{experiments-1-and-2}
+
+speakers adapt to beliefs about points and also speaker knowledge
+
+\section{Methods}\label{methods}
+
+\subsubsection{Participants}\label{participants}
+
+\subsubsection{Material}\label{material}
+
+\subsubsection{Procedure}\label{procedure}
+
+\subsubsection{Data analysis}\label{data-analysis}
+
+\subsection{Results}\label{results}
+
+\subsection{Discussion}\label{discussion}
+
+\section{Experiments 3 and 4}\label{experiments-3-and-4}
+
+this leads to better learning, but not as good as ostension (obviously)
+
+\section{A model of teaching}\label{a-model-of-teaching}
+
+\section{Experiment 5}\label{experiment-5}
+
+teaching!
+
+\section{Experiment 6?}\label{experiment-6}
+
+partner game--maybe this waits until next paper?
+
+\section{General Discussion}\label{general-discussion}
+
+\section{Conclusion}\label{conclusion}
+
+\section{Acknowledgement}\label{acknowledgement}
+
+The authors are grateful to XX and YY for their thoughtful feedback on
+this manuscript. This research was supported by a James S MacDonnel
+Foundation Scholars Award to DY.
+
+\newpage
+
+\section{References}\label{references}
+
+\setlength{\parindent}{-0.5in} \setlength{\leftskip}{0.5in}
+
+\hypertarget{refs}{}
+\hypertarget{ref-akhtar2005}{}
+Akhtar, N. (2005). The robustness of learning through overhearing.
+\emph{Developmental Science}, \emph{8}(2), 199--209.
+
+\hypertarget{ref-akhtar2001}{}
+Akhtar, N., Jipson, J., \& Callanan, M. A. (2001). Learning words
+through overhearing. \emph{Child Development}, \emph{72}(2), 416--430.
+
+\hypertarget{ref-aslin1996}{}
+Aslin, R. N., Woodward, J. Z., LaMendola, N. P., \& Bever, T. G. (1996).
+Models of word segmentation in fluent maternal speech to infants.
+\emph{Signal to Syntax: Bootstrapping from Speech to Grammar in Early
+Acquisition}, 117--134.
+
+\hypertarget{ref-baddeley2009}{}
+Baddeley, R., \& Attewell, D. (2009). The relationship between language
+and the environment: Information theory shows why we have only three
+lightness terms. \emph{Psychological Science}.
+
+\hypertarget{ref-blythe2016}{}
+Blythe, R. A., Smith, A. D., \& Smith, K. (2016). Word learning under
+infinite uncertainty. \emph{Cognition}, \emph{151}, 18--27.
+
+\hypertarget{ref-blythe2010}{}
+Blythe, R. A., Smith, K., \& Smith, A. D. M. (2010). Learning times for
+large lexicons through cross-situational learning. \emph{Cognitive
+Science}, \emph{34}, 620--642.
+
+\hypertarget{ref-bonawitz2011}{}
+Bonawitz, E., Shafto, P., Gweon, H., Goodman, N. D., Spelke, E., \&
+Schulz, L. (2011). The double-edged sword of pedagogy: Instruction
+limits spontaneous exploration and discovery. \emph{Cognition},
+\emph{120}(3), 322--330.
+
+\hypertarget{ref-brown-schmidt2008}{}
+Brown-Schmidt, S., Gunlogson, C., \& Tanenhaus, M. K. (2008). Addressees
+distinguish shared from private information when interpreting questions
+during interactive conversation. \emph{Cognition}, \emph{107}(3),
+1122--1134.
+
+\hypertarget{ref-frank2012}{}
+Frank, M. C., \& Goodman, N. D. (2012). Predicting pragmatic reasoning
+in language games. \emph{Science}, \emph{336}, 998--998.
+
+\hypertarget{ref-frank2014}{}
+Frank, M. C., \& Goodman, N. D. (2014). Inferring word meanings by
+assuming that speakers are informative. \emph{Cognitive Psychology},
+\emph{75}, 80--96.
+
+\hypertarget{ref-frank2009}{}
+Frank, M. C., Goodman, N., \& Tenenbaum, J. (2009). Using speakers'
+referential intentions to model early cross-situational word learning.
+\emph{Psychological Science}, \emph{20}, 578--585.
+
+\hypertarget{ref-gibson2017}{}
+Gibson, E., Futrell, R., Jara-Ettinger, J., Mahowald, K., Bergen, L.,
+Ratnasingam, S., \ldots{} Conway, B. R. (2017). Color naming across
+languages reflects color use. \emph{Proceedings of the National Academy
+of Sciences}, \emph{3}, 201619666--6.
+
+\hypertarget{ref-grice1969}{}
+Grice, H. P. (1969). Utterer's meaning and intention. \emph{The
+Philosophical Review}, \emph{78}, 147--177.
+
+\hypertarget{ref-kirby2015}{}
+Kirby, S., Tamariz, M., Cornish, H., \& Smith, K. (2015). Compression
+and communication in the cultural evolution of linguistic structure.
+\emph{Cognition}, \emph{141}, 87--102.
+
+\hypertarget{ref-newport1977}{}
+Newport, E. L., Gleitman, H., \& Gleitman, L. R. (1977). Mother, I'd
+rather do it myself: Some effects and non-effects of maternal speech
+style. In C. A. Ferguson (Ed.), \emph{Talking to children language input
+and interaction} (pp. 109--149). Cambridge University Press.
+
+\hypertarget{ref-quine1960}{}
+Quine, W. V. O. (1960). \emph{Word and object}. \emph{Cambridge, Mass}.
+Cambridge, Mass.: MIT Press.
+
+\hypertarget{ref-shafto2012}{}
+Shafto, P., Goodman, N. D., \& Frank, M. C. (2012). Learning from others
+the consequences of psychological reasoning for human learning.
+\emph{Perspectives on Psychological Science}, \emph{7}(4), 341--351.
+
+\hypertarget{ref-siskind1996}{}
+Siskind, J. M. (1996). A computational study of cross-situational
+techniques for learning word-to-meaning mappings. \emph{Cognition},
+\emph{61}, 39--91.
+
+\hypertarget{ref-smith2014}{}
+Smith, L. B., Suanda, S. H., \& Yu, C. (2014). The unrealized promise of
+infant statistical wordreferent learning. \emph{Trends in Cognitive
+Sciences}, \emph{18}(5), 251--258.
+
+\hypertarget{ref-tamis-lemonda2017}{}
+Tamis-LeMonda, C. S., Kuchirko, Y., Luo, R., Escobar, K., \& Bornstein,
+M. H. (2017). Power in methods: Language to infants in structured and
+naturalistic contexts. \emph{Developmental Science}.
+
+\hypertarget{ref-tenenbaum1999}{}
+Tenenbaum, J. B. (1999). \emph{A bayesian framework for concept
+learning} (PhD thesis). Massachusetts Institute of Technology.
+
+\hypertarget{ref-tomasello2000}{}
+Tomasello, M. (2000). The social-pragmatic theory of word learning.
+\emph{Pragmatics}, \emph{10}, 401--413.
+
+\hypertarget{ref-tomasello2001}{}
+Tomasello, M. (2001). Could we please lose the mapping metaphor, please?
+\emph{Behavioral and Brain Sciences}, \emph{24}(6), 1119--1120.
+
+\hypertarget{ref-trueswell2013}{}
+Trueswell, J. C., Medina, T. N., Hafri, A., \& Gleitman, L. R. (2013).
+Propose but verify: Fast mapping meets cross-situational word learning.
+\emph{Cognitive Psychology}, \emph{66}(1), 126--156.
+
+\hypertarget{ref-weisleder2013}{}
+Weisleder, A., \& Fernald, A. (2013). Talking to children matters early
+language experience strengthens processing and builds vocabulary.
+\emph{Psychological Science}, \emph{24}(11), 2143--2152.
+
+\hypertarget{ref-xu2007}{}
+Xu, F., \& Tenenbaum, J. B. (2007). Word learning as Bayesian inference.
+\emph{Psychological Review}, \emph{114}(2), 245--272.
+
+\hypertarget{ref-yu2008}{}
+Yu, C. (2008). A statistical associative account of vocabulary growth in
+early word learning. \emph{Language Learning and Development},
+\emph{4}(1), 32--62.
+
+\hypertarget{ref-yurovsky2015}{}
+Yurovsky, D., \& Frank, M. C. (2015). An integrative account of
+constraints on cross-situational learning. \emph{Cognition}, \emph{145},
+53--62.
+
+\hypertarget{ref-yurovsky2014}{}
+Yurovsky, D., Fricker, D. C., Yu, C., \& Smith, L. B. (2014). The role
+of partial knowledge in statistical word learning. \emph{Psychonomic
+Bulletin \& Review}, \emph{21}, 1--22.
+
+
+
+
+
+
+\end{document}
