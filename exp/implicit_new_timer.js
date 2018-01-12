@@ -40,6 +40,7 @@ var basePath = "tabletobjects/";
 // var timePerTrial = 11
 // 11/1.7 =~ 6.5
 var timePerTrial= 6.5
+var oneShot= false
 
 // while we outlawed producing english words, 
 //   some participants produced responses like "topleft" so we want to build an array to search for these words
@@ -403,6 +404,53 @@ var buildCondCounts = function(numofConditions) {
 	return res
 }
 
+var arrowKeySelection = function() {
+      $(document).on('keyup', function (e) {
+        // up arrow detect
+        if(e.keyCode == 38) {
+          currentOne="null"
+          $(".member").each(function() {
+            if (this.style.border == "1px solid black") {
+              currentOne = this.alt
+              if(this.alt != 1) {
+                this.style.border = "";
+              } 
+            }
+            $(".member").each(function() {
+              if (this.alt == (currentOne -1)) {
+                  this.style.border = "1px solid black"
+              }
+            })
+          })
+        }
+        if(e.keyCode == 40) {
+          currentOne="null"
+          $(".member").each(function() {
+            if (this.style.border == "1px solid black") {
+              currentOne = this.alt
+              if(this.alt != 4) {
+                this.style.border = "";
+              } 
+            }
+            if (this.alt == (currentOne +1)) {
+                this.style.border = "1px solid black"
+            }
+          })
+        }
+      })
+
+      // allowing click behavior
+      manipulationChecked= null 
+      count = 1
+      $(".member").each(function() {
+        if (count==1) {
+          this.style.border = "1px solid black"
+        } 
+        this.alt = count
+        count++;
+      })
+}
+
 
 
 
@@ -445,8 +493,8 @@ try {
           // for debugging, use line below to jump around the exp
           setTimeout(function() {
             $(window).off("keyup")
-            experiment.game(0, 0 , 30);
-            // experiment.partnering(0)
+            // experiment.partneringCheck(0, 0 , 30);
+            experiment.partnering(0)
           }, 1)
 
         }
@@ -1800,6 +1848,7 @@ var experiment = {
 	partnering: function(slideNumber) {
     slide_number=slideNumber;
 		showSlide("getYourPartner");
+    $(".howManyTimes").hide()
     $("#squareExamples").hide()
 		$("#spinner").hide();
     $('#userName').focus()
@@ -1972,6 +2021,7 @@ var experiment = {
     showSlide("getYourPartner");
     $("#squareExamples").hide()
     $("#spinner").hide();
+    $(".howManyTimes").hide()
     $('#gameStartFinal').hide()
     document.getElementById("gameStartFinal").innerHTML = "Press 'Enter' to Find a Partner";
     // this event handler checks the input, and when they have content, enables the button
@@ -1988,63 +2038,9 @@ var experiment = {
     document.getElementById("sameText").innerHTML= "as many times as you"
     document.getElementById("doubleText").innerHTML= "twice as many times as you"
 
-      $(document).on('keyup', function (e) {
-        // up arrow detect
-        if(e.keyCode == 38) {
-          currentOne="null"
-          $(".member").each(function() {
-            if (this.style.border == "1px solid black") {
-              currentOne = this.alt
-              if(this.alt != 1) {
-                this.style.border = "";
-              } 
-            }
-            $(".member").each(function() {
-              if (this.alt == (currentOne -1)) {
-                  this.style.border = "1px solid black"
-              }
-            })
-          })
-        }
-        if(e.keyCode == 40) {
-          currentOne="null"
-          $(".member").each(function() {
-            if (this.style.border == "1px solid black") {
-              currentOne = this.alt
-              if(this.alt != 4) {
-                this.style.border = "";
-              } 
-            }
-            if (this.alt == (currentOne +1)) {
-                this.style.border = "1px solid black"
-            }
-          })
-        }
-      })
-
-      // allowing click behavior
-      manipulationChecked= null 
-      count = 1
-      $(".member").each(function() {
-        if (count==1) {
-          this.style.border = "1px solid black"
-        } 
-        this.alt = count
-        count++;
-      })
+    arrowKeySelection()
 
 
-        // this.onmouseenter = function() {
-        //   if (manipulationChecked == null) {
-        //     this.style.border="1px solid black"
-        //   }
-        // } 
-        // this.onmouseleave = function() {
-        //   if (manipulationChecked == null) {
-        //     this.style.border=""
-        //   }
-        // }
-        // this.onclick = function() {
 
         document.getElementById("gameStartFinal").innerHTML= "Press 'Enter' to Check Your Answer!"
         $("#gameStartFinal").fadeIn(1000)
@@ -2085,7 +2081,7 @@ var experiment = {
                 }
                 setTimeout(function() {
                   $("#gameStartFinal").show()
-                  document.getElementById("gameStartFinal").innerHTML= "Press 'Enter' to Move On!"
+                  $("#gameStartFinal").html("Press 'Enter' to Move On!")
                   $(window).on('keyup', function(event){
                     if(event.keyCode == 13) {
                       if(manipulationChecked == checkCorrect){
@@ -2108,16 +2104,24 @@ var experiment = {
                       setTimeout(function() {
                         $("#exposureText").fadeIn(500)
                       }, 499)
-                      document.getElementById("exposureText").innerHTML = "<br> You will be asked to send messages to your partner about each object <strong>3 times.</strong> <br><br>"
+                      $("#exposureText").html("<br> You will be asked to send messages to your partner about each object <strong>3 times.</strong> <br><br>")
                       setTimeout(function() {
-                        document.getElementById("exposureText").innerHTML = "<br>You will be asked to send messages to your partner about each object <strong>3 times.</strong> <br><br><br> Press Enter to Begin Playing!"
+                        document.getElementById("exposureText").innerHTML +=  "<br><br><br> Press Enter!"
                         $(window).on('keyup', function(event){
                           if(event.keyCode == 13) {
                             $(window).off("keyup")
-                            experiment.game(0, 0, slideNumber+1, username)
+                            $("#exposureText").fadeOut(500)
+                            setTimeout(function() {
+                              $("#exposureText").fadeIn(500)
+                              $("#exposureText").html("Wait, how many times will you send messages about each object?")
+                              $(".howManyTimes").fadeIn(500)
+                              arrowKeySelection()
+                            }, 500)
+                            // experiment.game(0, 0, slideNumber+1, username)
                           }
                         })
                       }, 3000)
+
                     }
                   })
                 }, 2500)
@@ -2812,7 +2816,8 @@ var experiment = {
       })
 		}, waitTime);
     // console.log('change this back')
-	numOfGames = gameArray.length; 
+	  // numOfGames = gameArray.length; 
+    oneShot==true ? numOfGames=imgArray.length : numOfGames=gameArray.length
     // numOfGames = 4;  
     console.log(numOfGames) 
     nextTimer= setTimeout(function() {
