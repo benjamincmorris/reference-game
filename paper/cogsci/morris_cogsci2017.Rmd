@@ -5,7 +5,7 @@ csl: apa6.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Benjamin C. Morris} \\ \texttt{benmorris1@uchicago.edu} \\ Department of Psychology \\ University of Chicago
+    \author{{\large \bf Benjamin C. Morris} \\ \texttt{benmorris@uchicago.edu} \\ Department of Psychology \\ University of Chicago
     \And {\large \bf Daniel Yurovsky} \\ \texttt{yurovsky@uchicago.edu} \\ Department of Psychology \\ University of Chicago}
 
 abstract: 
@@ -41,7 +41,7 @@ library(xtable)
 
 One of the most striking aspects of children's language learning is just how quickly they master the complex system of their natural langauge [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
 
-One possiblility is that children's caregivers deserve most of the credit; that the language parents produce to their children is optimized for teaching. Although there is some evidence that aspects of child-directed support learning, other aspects--even in the same subproblem, e.g. phoneme discrimination--appear to make learning more difficulty [@eaves-jr2016;@mcmurray2013]. In general, parents rarely explicltly correct their children, and children are resistant to the rare explicit language correction they do get [@newport1977]. Thus while parents may occasionally offer a supervisory signal, the bulk of the evidence suggests that parental supervision is unlikely to explain rapid early language acqusition.
+One possiblility is that children's caregivers deserve most of the credit; that the language parents produce to their children is optimized for teaching. Although there is some evidence that aspects of child-directed speech support learning, other aspects--even in the same subproblem, e.g. phoneme discrimination--appear to make learning more difficul [@eaves-jr2016;@mcmurray2013]. In general, parents rarely explicltly correct their children, and children are resistant to the rare explicit language correction they do get [@newport1977]. Thus while parents may occasionally offer a supervisory signal, the bulk of the evidence suggests that parental supervision is unlikely to explain rapid early language acqusition.
 
 Alternatively, even the youngest infants may already come to language acquisition with a precocious ability to learn the latent structure of language from the statistical properties of the language in their ambient environment [@saffran2003;@smith2008]. While a number of experiments clearly demonstrate the early availability of such mechanisms, there is reason to be suspicious about just how precocious they are early in development. For example, infants' ability to track the co-occurrence information connecting words to their referents appears to be highly constrained by both their developing memory and attention systems [@vlach2013; @smith2013]. Further, computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics [@blythe2010;@vogt2012]. Thus precocious unsupervised statistical learning also appears to fall short of an explanation for rapid early language learning.
 
