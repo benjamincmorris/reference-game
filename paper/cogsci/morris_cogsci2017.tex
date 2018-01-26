@@ -59,22 +59,30 @@
 \maketitle
 
 \begin{abstract}
-The abstract should be one paragraph, indented 1/8 inch on both sides,
-in 9 point font with single spacing. The heading Abstract should be 10
-point, bold, centered, with one line space below it. This one-paragraph
-abstract section is required only for standard spoken papers and
-standard posters (i.e., those presentations that will be represented by
-six page papers in the Proceedings).
+Infants prefer to listen to and learn better from child-directed speech.
+This speech might support learning in part due to communicative
+pressure: parents must use language that their children understand. We
+designed a Mechanical Turk study to experimentally validate this idea,
+putting Turkers in the role of parents talking with children who knew a
+novel language less well. Participants could communicate in 3 ways:
+pointing---expensive but unambiguous, labelling---cheap but
+knowledge-dependent, or both. They won points only for communicating
+successfully; using pointing and labelling together was costly, but
+could teach, allowing cheaper communication on later trials.
+Participants were modulated their communicate behavior in response to
+their own and their partner's knowledge and teaaching emerged when the
+speaker had substanially more knowledge of the lexicon. While language
+is more than reference games, this work validates the hypothesis that
+communicative pressure alone can lead to supportive language input.
 
 \textbf{Keywords:}
-Add your choice of indexing terms or keywords; kindly use a semi-colon;
-between each term.
+Language; Child-Directed Speech; POMDP.
 \end{abstract}
 
 \section{Introduction}\label{introduction}
 
 One of the most striking aspects of children's language learning is just
-who quickly they master the complex system of their natural langauge
+how quickly they master the complex system of their natural langauge
 (Bloom, 2000). In just a few short years, children go from complete
 ignorance to conversational fluency that is the envy of second-language
 learners attempting the same feat later in life (Newport, 1990). What
@@ -102,10 +110,10 @@ of such mechanisms, there is reason to be suspicious about just how
 precocious they are early in development. For example, infants' ability
 to track the co-occurrence information connecting words to their
 referents appears to be highly constrained by both their developing
-memory and attention systems {[}Vlach \& Johnson (2013);smith2013{]}.
-Further, computational models of these processes show that the rate of
-acquisition is highly sensitive to variation in environmental statistics
-(Blythe, Smith, \& Smith, 2010; Vogt, 2012). Thus precocious
+memory and attention systems (L. B. Smith \& Yu, 2013; Vlach \& Johnson,
+2013). Further, computational models of these processes show that the
+rate of acquisition is highly sensitive to variation in environmental
+statistics (Blythe, Smith, \& Smith, 2010; Vogt, 2012). Thus precocious
 unsupervised statistical learning also appears to fall short of an
 explanation for rapid early language learning.
 
@@ -130,168 +138,347 @@ concept that both the features of child-directed speech that support
 learning as well as those that inhibit it may arise from a single
 unifying goal: The desire to communicative efficiently.
 
-For general information about authoring in markdown, see
-\textbf{\href{http://rmarkdown.rstudio.com/authoring_basics.html}{here}.}
+\section{Model: Communication as
+Planning}\label{model-communication-as-planning}
 
-For standard spoken papers and standard posters, the entire contribution
-(including figures, references, everything) can be no longer than six
-pages. For abstract posters, the entire contribution can be no longer
-than one page. For symposia, the entire contribution can be no longer
-than two pages.
+We implemented a two-agent model of speaker and listener behavior in
+this game based on partially observable Markov decision processes. The
+speaker is given a target referent each trial and must signal to the
+listener which object to select. Speakers send messages to the listener
+by speaking, a low cost cue that relies on the listener's knowledge, or
+by pointing, a higher cost cue that is unambiguous.
 
-The text of the paper should be formatted in two columns with an overall
-width of 7 inches (17.8 cm) and length of 9.25 inches (23.5 cm), with
-0.25 inches between the columns. Leave two line spaces between the last
-author listed and the text of the paper. The left margin should be 0.75
-inches and the top margin should be 1 inch.
-\textbf{The right and bottom margins will depend on whether you use
-U.S. letter or A4 paper, so you must be sure to measure the width of
-the printed text.} Use 10 point Times Roman with 12 point vertical
-spacing, unless otherwise specified.
+The speaker estimates the listener's knowledge. First, the speaker uses
+Markov chain Monte Carlo to infer their own learning rate based on how
+well they were able to learn a novel lexicon after N exposures. Then,
+given the listner's degree of exposure, the speaker can use their own
+learning rate to infer the probability that the listener would know any
+given object-label mapping. Across trials, the speaker gains further
+information about the listener through their selections, allowing them
+to update their beliefs about the listener's knoweldge state.
 
-The title should be in 14 point, bold, and centered. The title should be
-formatted with initial caps (the first letter of content words
-capitalized and the rest lower case). Each author's name should appear
-on a separate line, 11 point bold, and centered, with the author's email
-address in parentheses. Under each author's name list the author's
-affiliation and postal address in ordinary 10 point type.
+The model specifies the relative costs for each communicative modality.
+On each trial, the speaker estimates the expected utility of each
+modality by accounting for these costs, their own knowledge of the
+object's label, and the probability that the listner knows the object's
+label. The speaker then uses Luce's choice axiom to select a
+communicative modality based on the expected utilities.
 
-Indent the first line of each paragraph by 1/8\textasciitilde{}inch
-(except for the first paragraph of a new section). Do not add extra
-vertical space between paragraphs.
+When estimating expected utility, the model sums the expected utility of
+a given trial and any remaining trials for that particular object. This
+allows the speaker to engage in planning by accounting for the way a
+given message may affect knowledge changes and thus affect subsequent
+expected utilities. Utilites were scaled using an exponential discounter
+as a function of delay (Do we want to cite a precedent for this?) to
+give greater weight to immediate rewards than subsequent rewards.
 
-\section{First-Level Headings}\label{first-level-headings}
+Crucially, speakers can also combine both communication cues, paying the
+upfront cost of both, to produce a message that is both unambiguous and
+informative. In this way, speakers are able to teach their partners
+object-label mappings. A speaker that plans may thus infer that teaching
+the listener, especially if there is an asymmetry in their knowledge
+states, may have a high expected utility after accounting for remaining
+trials where the speaker could use a less costly cue (i.e.~speech).
+After producing both cues, the speaker also updates their own beliefs
+about the partner's knowledge state to reflect this exposure.
 
-First level headings should be in 12 point , initial caps, bold and
-centered. Leave one line space above the heading and
-1/4\textasciitilde{}line space below the heading.
+Over the course of three experiments, {[}TOTAL N{]} participants were
+recruited via Amazon Mechanical Turk, an online platform that allows
+workers to complete surveys and short tasks for payment. Turkers played
+partnered, iterated reference games. In these studies, all particpants
+were placed in the role of speaker and listener responses were
+programmed.
 
-\subsection{Second-Level Headings}\label{second-level-headings}
+\section{Experiment 1a}\label{experiment-1a}
 
-Second level headings should be 11 point , initial caps, bold, and flush
-left. Leave one line space above the heading and 1/4\textasciitilde{}
-line space below the heading.
+Our model's speaker chooses a communicative modality by optimizing the
+expected utilities of the possible modalities. By manipulating the
+utility of each strategy, we can evaluate our models predictions about
+the extent to which speakers sensibly adapt to these imposed utilites.
+In this experiment, we explicitly implemented strategy utility by
+assigning point values to each strategy.
 
-\subsubsection{Third-Level Headings}\label{third-level-headings}
+\subsection{Participants, Materials,
+Methods}\label{participants-materials-methods}
 
-Third-level headings should be 10 point , initial caps, bold, and flush
-left. Leave one line space above the heading, but no space after the
-heading.
+{[}n{]} particpants were recruited though Amazon Mechanical Turk and
+received a small payment for their participation.
 
-\section{Formalities, Footnotes, and
-Floats}\label{formalities-footnotes-and-floats}
+Participants were told they would be introduced to novel object-label
+pairs and then asked to play a communication game with a partner wherein
+they would have to refer to a particular target object. Particpants were
+exposed to nine novel objects, each with a randomly assigned pseudoword
+label. We manipulated the degree of exposure within subjects, such that,
+during training, particpants saw three of the nine object-label mappings
+four times, two times, or one time, resulting in a total of 27 training
+trials. Participants were then given a simple recall task to establish
+their baseline knowledge of the novel lexicon.
 
-Use standard APA citation format. Citations within the text should
-include the author's last name and year. If the authors' names are
-included in the sentence, place only the year in parentheses, as in
-({\textbf{???}}), but otherwise place the entire reference in
-parentheses with the authors and year separated by a comma
-({\textbf{???}}). List multiple references alphabetically and separate
-them by semicolons ({\textbf{???}}, {\textbf{???}}). Use the et. al.
-construction only after listing all the authors to a publication in an
-earlier reference and for citations with four or more authors.
+After being introduced to the rules of the game, participants were told
+they would be asked to communicate about each object three times. During
+gameplay, speakers saw the target object in addition to an array of all
+nine objects. Speakers had the option of either directly selecting the
+target object from the array (gesture)- a higher cost cue but without
+ambiguity- or typing a label for the object (speech)- a lower cost cue
+but contingent on the listener's knowledge. After sending the message,
+speakers are shown which object the listener selected.
 
-For more information on citations in R Markdown, see
-\textbf{\href{http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html\#citations}{here}.}
+If the speaker clicked on on object (gesture message), the listener was
+coded to simply make the same selection. If the speaker typed an object
+label, the listener evaluated the Levenshtein distance (LD) between the
+typed label and each of the nine possible labels and selected the
+candidate with the smalles edit distance. If none of the nine object
+labels had an LD less than or equal to two, the listener always selected
+an incorrect object.
 
-\subsection{Footnotes}\label{footnotes}
+Speakers could win up to 100 points per trial if the listener correctly
+selected the target referent based on their message. If the listener
+failed to identify the target object, the speaker received no points. We
+manipulated the relative utilities of each of the strategies
+between-subjects. In the `Talk is Cheap' condition, speakers recieved 30
+points for gesturing and 100 points for labeling, while in the `Talk is
+Less Cheap' condition speakers recieved 50 points for gesturing and 80
+points for labeling.
 
-Indicate footnotes with a number\footnote{Sample of the first
-footnote.} in the text. Place the footnotes in 9 point type at the
-bottom of the page on which they appear. Precede the footnote with a
-horizontal rule.\footnote{Sample of the second footnote.}
+\subsection{Results}\label{results}
 
-\subsection{Figures}\label{figures}
+As expected, particpants were sensitve to both the exposure rate and the
+relative utilities of the communication strategies. Speakers produced
+significantly more labels for object-label mappings that were shown more
+frequently during training than for the mappings that were less frequent
+(\ldots{}). The reverse was true for gesture (\ldots{}). The more
+exposures to a given object-label pair during training, the more likely
+participants were to recall that label at pretest (\ldots{}). The effect
+of exposure rate on modality choice held even after controlling for
+pretest knowledge, indicating the effect was more than the result of
+being constrained by knowledge of the label (\ldots{}). \ldots{}{[}I'm
+not sure which statistics to include here, since most of what i'd been
+looking at are these logitistic regression models with all our
+predictors.Should I subset to just one partners exposure, and then do
+the logistic regression with exposure rate, utility condition,
+appearance, and the random effect? Does that make sense?{]}\ldots{}
 
-All artwork must be very dark for purposes of reproduction and should
-not be hand drawn. Number figures sequentially, placing the figure
-number and caption, in 10 point, after the figure with one line space
-above the caption and one line space below it. If necessary, leave extra
-white space at the bottom of the page to avoid splitting the figure and
-figure caption. You may float figures to the top or bottom of a column,
-or set wide figures across both columns.
-
-\subsection{Two-column images}\label{two-column-images}
-
-You can read local images using png package for example and plot it like
-a regular plot using grid.raster from the grid package. With this method
-you have full control of the size of your image. \textbf{Note: Image
-must be in .png file format for the readPNG function to work.}
-
-You might want to display a wide figure across both columns. To do this,
-you change the \texttt{fig.env} chunk option to \texttt{figure*}. To
-align the image in the center of the page, set \texttt{fig.align} option
-to \texttt{center}. To format the width of your caption text, you set
-the \texttt{num.cols.cap} option to \texttt{2}.
+Participants also modulated their communicative behavior on the basis of
+the utility manipulation. Speakers in the Talk is Cheap condition
+produced significantly more labels than particpants in the Talk is Less
+Cheap condition (\ldots{}). Again, this effect was reversed for gesture
+(\ldots{}). Thus, participants are senstive to our manipulations-
+altering their choices about how to communicate with their partner on
+the basis of their own knowledge, the degree of training, and the
+imposed utilities.
 
 \begin{CodeChunk}
-\captionsetup{width=0.8\textwidth}\begin{figure*}[h]
+\begin{figure}[H]
 
-{\centering \includegraphics{figs/2-col-image-1} 
+{\centering \includegraphics{figs/image1-1} 
 
 }
 
-\caption[This image spans both columns]{This image spans both columns. And the caption text is limited to 0.8 of the width of the document.}\label{fig:2-col-image}
-\end{figure*}
+\caption[Plot of modality choice as a function of exposure, split by utility condition]{Plot of modality choice as a function of exposure, split by utility condition.}\label{fig:image1}
+\end{figure}
 \end{CodeChunk}
 
-\subsection{One-column images}\label{one-column-images}
+\section{Experiment 1b}\label{experiment-1b}
 
-Single column is the default option, but if you want set it explicitly,
-set \texttt{fig.env} to \texttt{figure}. Notice that the
-\texttt{num.cols} option for the caption width is set to \texttt{1}.
+As a replication and extension of Experiment 1a, we sought to embed the
+relative utilites of the communicative strageies in the game more
+implicitly. In experiment 1b, we used the same procedure described
+above; however, a timer controlled the number of points that were earned
+on each trial of gameplay. Rather than impose an explicit point system
+as in Experiment 1a, we set the relative utilities of communication
+strategies by manipulating the speed with which particpants could
+respond.
+
+\subsection{Participants, Materials,
+Methods}\label{participants-materials-methods-1}
+
+{[}n{]} particpants were recruited though Amazon Mechanical Turk and
+received a small payment for their participation.
+
+Experiment 1b utilitzed the same training and pretest procedures, but
+gameplay differed in a number of ways. During the game, the nine novel
+objects were arranged in a circle around a cartoon pointer (see Figure
+2). To manipulate the relative speeds of gesturing and labeling, we
+required speakers to move the small pointer with the arrow keys on their
+keyboards in order to select an object with gesture. With this method we
+could directly manipulate the speed of the pointer while holding the
+arrow keys to effectively set maximum possible utility of using gesture.
 
 \begin{CodeChunk}
-\captionsetup{width=0.8\columnwidth}\begin{figure}[H]
+\begin{figure}[H]
 
 {\centering \includegraphics{figs/image-1} 
 
 }
 
-\caption[One column image]{One column image.}\label{fig:image}
+\caption[Screenshot of speaker view during gameplay]{Screenshot of speaker view during gameplay.}\label{fig:image}
 \end{figure}
 \end{CodeChunk}
 
-\subsection{R Plots}\label{r-plots}
+If the listner correctly identified the target object, speakers recieved
+points determined by the amount of time remaining on the timer. For
+successful communications, speakers always recieved a minimum of 10
+points, regardless of the time elapsed. Based on pilot response times,
+the timer was set to 6.5 seconds and points were scaled to match
+Experiment 1a. Participants were randomly assigned into one of three
+conditions, where the pointer was set to either a fast, slow, or slowest
+setting.
 
-You can use R chunks directly to plot graphs. And you can use latex
-floats in the fig.pos chunk option to have more control over the
-location of your plot on the page. For more information on latex
-placement specifiers see
-\textbf{\href{https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions}{here}}
+This framework allowed us to implement the point system as an implicit
+extension of gameplay and resulted in each partipcant having unique
+gesture-speech utilities, based on their speed of responses across the
+two methods.
+
+\subsection{Results}\label{results-1}
+
+As expected, the same patterns emerge as experiment 1a. Speakers again
+labeled signifcantly more (TBD) and gestured significantly less (TBD) on
+high exposure targets, relative to low exposure targets. Particpants
+were signficantly more likely to recall the high exposure labels than
+the low exposure labels at pretest (TBD), and this effect did not
+account the effect of exposure rate on modality choice (TBD).
+
+Critically, there was a main effect of our utility manipulation, such
+that speakers in the fast pointer condition produced signficantly more
+gestures than particpants in the slowest pointer condition (TBD). The
+pattern is reveresed for labeling (TBD). In the absence of an explicit
+framework for assigning utilities based on method, speakers continue to
+adapt their communicative choices taking into account the expected
+utility of possible strategies.
+
+\section{Experiment 2a}\label{experiment-2a}
+
+{[}I don't know how to divvy up these ns{]}
+
+{[}n{]} particpants were recruited though Amazon Mechanical Turk and
+received a small payment for their participation.
+
+Thus far, we have focused on relatively straightforward scenarios to
+demonstrate that a pressure to communicate successfully in the moment
+can lead speakers to trade-off between gesture and speech sensibly.
+However, critical to these repeated interactions is the ability to learn
+about an interlocuter and potentially influence their learning. In
+Experiment 2a, particpants could send a third type of message by
+utilizing both gesture and speech within a single trial to effectively
+teach the listener an object-label mapping.
+
+\subsection{Participants, Materials,
+Methods}\label{participants-materials-methods-2}
+
+In order to produce teaching beahvior, speakers had to pay the cost of
+producing both cues, yeilding 30 points in either conditon of our
+explicit points framework. Our communicative game was designed to reward
+in-the-moment communication, and teaching required the speaker paying a
+cost upfront. However, rational communicators may understand that if one
+is accounting for future trials, paying the cost upfront to teach the
+listener allows a speaker to use a less costly message strategy on
+subsequent trials.
+
+Incorporating teaching means that our speaker must now reason about
+their interlocuter's knoweldge state more explicitly, in order to make
+rational decisions about what to teach and when. To address this added
+dimension, we also manipulated participants expectations about their
+partner's knowledge. Prior to beginning the game, participants were told
+that there partner had no experience with the lexicon, had half the
+experience of the speaker, or had twice the experience of the speaker.
+
+Listener starting knowledge state was also initialized accordingly.
+Listners with no exposure were given no knowledge of the lexicon to
+start. Listners with half the exposure of the speaker began with
+knowledge of three object-label pairs (2 high frequency, 1 mid
+frequency), based the typical retention rates found previously. Lastly,
+the listener with twice as much exposure as the speaker began with
+perfect knowledge of the lexicon. Through gesture-speech co-occurance,
+the speaker could effectively teach the listener a novel mapping.
+Listners could learn a novel mapping from one teaching event in this
+game and integrate it into their set of candidate words when evaluating
+the LD of subsequent labels.
+
+{[}I'm not sure how to describe the methods here{]}. {[}Experiment 2a
+directly mirrored Experiment 1a, except that partipcants were introduced
+to an additional strategy, i.e.~teaching, during the introduction to the
+game (feels a little wonky).{]}
+
+\subsection{Results}\label{results-2}
+
+As predicted, mixed effects logistic regression predicting whether or
+not teaching occured on a given trial revealed that teaching rates
+across conditions depend on all of the same factors that predict speech
+and gesture. There was a signficant effect of intial exposure to the
+mapping on the rates of teaching, such that more exposures to a word
+predicted higher rates of teaching behavior (B = 0.09, p = 0.045). There
+was also a signficant effect of the utility manipluation such that being
+in the Talk is Less Cheap condition predicted lower rates of teaching
+than being in the Talk is Cheap condtion (B = -0.98, p \textless{}
+0.01), a rational response considering the eventual benefit for teaching
+a novel word is less strong in this former condition.
+
+We also included whether this was an objects first, second, or third
+appearance as a predictor in our model. The expected utility of teaching
+on a given trial should decrease as there are fewer subsequent trials
+for that object, thus we predicted that teaching rates would drop
+dramatically. Indeed, this is consistent with the results from our
+model; compared with the first appearance of an object, speakers were
+significantly less likely to teach on the second appearance (B = -1.11,
+p \textless{} 0.001) or the third appearance (B = -2.01, p \textless{}
+0.001).
+
+Interestingly, as we expected, there was a signficant effect of our
+manipulation of listener knowledge. Compared with listner's with no
+experience with the lexicon, speakers were signifcantly less likely to
+teach when they were told the listner had half as much exposure (B =
+-1.19, p \textless{} 0.01) or twice as much exposure as they themselves
+did (B = -4.64, p \textless{} 0.001).
 
 \begin{CodeChunk}
 \begin{figure}[H]
 
-{\centering \includegraphics{figs/plot-1} 
+{\centering \includegraphics{figs/image3-1} 
 
 }
 
-\caption[R plot]{R plot}\label{fig:plot}
+\caption[Proportion of teaching behavior as a function of whether it was the first, second, or third appearance of a given target, split by partner's level of exposure]{Proportion of teaching behavior as a function of whether it was the first, second, or third appearance of a given target, split by partner's level of exposure.}\label{fig:image3}
 \end{figure}
 \end{CodeChunk}
 
-\subsection{Tables}\label{tables}
+\section{Experiment 2b}\label{experiment-2b}
 
-Number tables consecutively; place the table number and title (in 10
-point) above the table with one line space above the caption and one
-line space below it, as in Table 1. You may float tables to the top or
-bottom of a column, set wide tables across both columns.
+We investigated the emergence of teaching in both a paradigm with an
+explicit points system (Experiment 2a) and an implicit points system
+(Experiment 2b).
 
-You can use the xtable function in the xtable package.
+\subsection{Participants, Materials,
+Methods}\label{participants-materials-methods-3}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{rrrrr}
-  \hline
- & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
-  \hline
-(Intercept) & 0.08 & 0.09 & 0.9 & 0.38 \\ 
-  x & 2.15 & 0.10 & 20.9 & 0.00 \\ 
-   \hline
-\end{tabular}
-\caption{This table prints across one column.} 
-\end{table}
+\subsection{Results}\label{results-3}
+
+\section{Experiment 3}\label{experiment-3}
+
+Planning is critical to our model. A pressure to communicate
+successfully in-the-moment can lead to pedagogical-like input without
+pedagogical goals, merely by wishing to communicate more efficiently in
+the future. As a final check to ensure that accounting for the future is
+indeed crucial to the emergence of pedagoical behaviors in our
+framework, we ran a version of our partnered game where speakers are
+told they will only send emssages about each object 1 time. As expected,
+teaching behavior dropped off completely\ldots{} (TBD).
+
+\section{Model Comparison}\label{model-comparison}
+
+{[}Is this where the actual model fit stuff should live?{]}
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{figs/image4-1} 
+
+}
+
+\caption[Plot of the fit between model predictions and empirical data]{Plot of the fit between model predictions and empirical data.}\label{fig:image4}
+\end{figure}
+\end{CodeChunk}
+
+\section{Discussion}\label{discussion}
 
 \section{Acknowledgements}\label{acknowledgements}
 
@@ -347,6 +534,11 @@ Science}, \emph{12}(4), 110--114.
 Smith, L. B., \& Yu, C. (2008). Infants rapidly learn word-referent
 mappings via cross-situational statistics. \emph{Cognition}, \emph{106},
 1558--1568.
+
+\hypertarget{ref-smith2013}{}
+Smith, L. B., \& Yu, C. (2013). Visual attention is not enough:
+Individual differences in statistical word-referent learning in infants.
+\emph{Language Learning and \ldots{}}, \emph{9}, 25--49.
 
 \hypertarget{ref-vlach2013}{}
 Vlach, H. A., \& Johnson, S. P. (2013). Memory constraints on infants
