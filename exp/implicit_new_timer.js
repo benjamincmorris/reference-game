@@ -37,10 +37,19 @@ var basePath = "tabletobjects/";
 // var pointsClickWrong = -70;
 // var pointsBothWrong = -70;
 
+var debugging= false;
+
 // var timePerTrial = 11
 // 11/1.7 =~ 6.5
 var timePerTrial= 6.5
-var oneShot= false
+var convertTimeToPoints = (11/timePerTrial)
+var convertTimeToPoints = convertTimeToPoints.toPrecision(2)
+console.log(convertTimeToPoints)
+
+var realTrialsPerObj= 3
+
+var participantsPer=40
+
 
 // while we outlawed producing english words, 
 //   some participants produced responses like "topleft" so we want to build an array to search for these words
@@ -51,6 +60,15 @@ var commonWords = ["top", "bottom", "left", "right", "corner",
 var partnersName = "ben"
 
 // ---------------- HELPER ------------------
+function timeToPointsConverter(millisPassed, conversionRate) {
+  console.log('convertingggg')
+  timeLeft = timePerTrial - (millisPassed/1000)
+  calculatedPoints = Math.floor(timeLeft*conversionRate)*10
+  // calculatedPoints < 50 ? calculatedPoints+= -10 : calculatedPoints
+  calculatedPoints <= 10 ? calculatedPoints = 10 : calculatedPoints
+  return calculatedPoints
+}
+
 
 // function to display nine random object images in a grid (uses bootstrap)
 function getRandomImages(imgAr, path, gameOrAttention, count) {
@@ -151,10 +169,10 @@ function getOccurences(img, imgAr) {
 function gameStimuli(imgAr, fixing) {
   if (fixing!=true) {
     shuffle(imgAr);
-    numRoundsPerWord = 3;
+    // numRoundsPerWord = 3;
     gameImgs = []
     for (var i=0; i < imgArray.length; i++) {
-      arr1 = fillArray(imgAr[i], numRoundsPerWord)
+      arr1 = fillArray(imgAr[i], realTrialsPerObj)
       gameImgs = gameImgs.concat(arr1)
     }
     shuffle(gameImgs);
@@ -346,7 +364,7 @@ var levDist = function(s, t) {
 // https://github.com/johnschult/jquery.countdown360
 var initializeTimer = function(timerName, size, labelsOn) {
     if (labelsOn == true) {
-      timerLabelsColor = 'black'
+      timerLabelsColor = 'white'
       timerLabels = ['points', 'points']
     } else{timerLabelsColor = 'fff'; timerLabels = ['', '']}
     // code for the game timer, this version is a per trial timer
@@ -382,7 +400,7 @@ var startTimer = function(timerName) {
         if (timeRemaining <= 1) {
           setTimeout(function() {$("#"+timerName+"").countdown360({}).stop()}, 50)
         }
-      }, 1000)
+      }, 200)
 }
 
 var stopTimer = function(timerName) {
@@ -393,7 +411,6 @@ var stopTimer = function(timerName) {
       }
 }
 
-var participantsPer=40
 var buildCondCounts = function(numofConditions) {
 	res = ''
 	for (var i=1; i<=numofConditions*participantsPer; i++) {
@@ -404,19 +421,36 @@ var buildCondCounts = function(numofConditions) {
 	return res
 }
 
-var arrowKeySelection = function() {
+// (function($) {
+//   $.fn.randomize = function(tree, childElem) {
+//     return this.each(function() {
+//       var $this = $(this);
+//       if (tree) $this = $(this).find(tree);
+//       var unsortedElems = $this.children(childElem);
+//       var elems = unsortedElems.clone();
+      
+//       elems.sort(function() { return (Math.round(Math.random())-0.5); });  
+
+//       for(var i=0; i < elems.length; i++)
+//         unsortedElems.eq(i).replaceWith(elems[i]);
+//     });    
+//   };
+// })(jQuery);
+
+
+var arrowKeySelection = function(member) {
       $(document).on('keyup', function (e) {
         // up arrow detect
         if(e.keyCode == 38) {
           currentOne="null"
-          $(".member").each(function() {
+          $("."+member).each(function() {
             if (this.style.border == "1px solid black") {
               currentOne = this.alt
               if(this.alt != 1) {
                 this.style.border = "";
               } 
             }
-            $(".member").each(function() {
+            $("."+member).each(function() {
               if (this.alt == (currentOne -1)) {
                   this.style.border = "1px solid black"
               }
@@ -425,7 +459,7 @@ var arrowKeySelection = function() {
         }
         if(e.keyCode == 40) {
           currentOne="null"
-          $(".member").each(function() {
+          $("."+member).each(function() {
             if (this.style.border == "1px solid black") {
               currentOne = this.alt
               if(this.alt != 4) {
@@ -442,7 +476,7 @@ var arrowKeySelection = function() {
       // allowing click behavior
       manipulationChecked= null 
       count = 1
-      $(".member").each(function() {
+      $("."+member).each(function() {
         if (count==1) {
           this.style.border = "1px solid black"
         } 
@@ -452,13 +486,25 @@ var arrowKeySelection = function() {
 }
 
 
+// var checkArrowSelection = function(member, newVar) {
+//   console.log(newVar)
+//   $("." + member).each(function() {
+//     if (this.style.border == "1px solid black") {
+//       this.style.border="3px solid black"
+//       newVar. = this.id
+//       console.log(newVar)
+//       this.alt = "selected"
+//     }
+//   })
+//   console.log(newVar)
+// }
 
 
 
 //-----------------------------------------------
 
 try { 
-	condCounts = buildCondCounts(2)
+	condCounts = buildCondCounts(9)
 	// console.log("want a turk flag here")
     // if (turk.workerId.length > 0) { 
     var xmlHttp = null;
@@ -491,11 +537,12 @@ try {
 
 
           // for debugging, use line below to jump around the exp
-          setTimeout(function() {
-            $(window).off("keyup")
-            // experiment.partneringCheck(0, 0 , 30);
-            experiment.partnering(0)
-          }, 1)
+          // setTimeout(function() {
+          //   $(window).off("keyup")
+          //   // experiment.prestudy(0, 0 , 30);
+          //   experiment.prestudyTimer(0, true)
+          //   // experiment.partneringCheck(0, 0, 30)
+          // }, 1)
 
         }
       }
@@ -531,49 +578,51 @@ gameArray = gameStimuli(imgArray);
 
   //get full number of 'slides' to increment progress bar
 var totalSlides = 1 + 1 + exposureStimuli(imgArray).length + 1 + imgArray.length + 1 + 1 + gameArray.length + 1 + 1;
+console.log(totalSlides)
   // 1 slide values refer to the irb slide, instructions slide, pretest slide,  pregame slide, gameCheck slide, and attention check, respectively. 
   // plus a final 1 so that the final slide is not quite 100%
 
 
 function do_all_the_setup() {
 
-                // if(subjectIdentifier <= participantsPer*9) {
-                //   // cond = "100_30"
-                //   partnersExposure = "1/2"
-                //   speedAsLag = 20
-                //   if (subjectIdentifier <= participantsPer*8) {
-                //     speedAsLag= 30 
-                //   } if (subjectIdentifier <= participantsPer*7) {
-                //     speedAsLag=40
-                //   }
-                //   if(subjectIdentifier <= participantsPer*6) {
-                //   	// cond = "100_30"
-                //   	partnersExposure = "perfect"
-                //   	speedAsLag = 20
-              		// }
-                //   if (subjectIdentifier <= participantsPer*5) {
-                //     speedAsLag= 30 
-                //   } if (subjectIdentifier <= participantsPer*4) {
-                //     speedAsLag=40
-                //   }
-                //   if (subjectIdentifier <= participantsPer*3) {
-                //     partnersExposure ="0"
-                //     speedAsLag=20
-                //   }
+                  if(subjectIdentifier <= participantsPer*9) {
+                    // cond = "100_30"
+                    partnersExposure = "0"
+                    speedAsLag = 20
+                  }
+                  if (subjectIdentifier <= participantsPer*8) {
+                    partnersExposure = "1/2"
+                    speedAsLag= 30 
+                  } if (subjectIdentifier <= participantsPer*7) {
+                    partnersExposure = "perfect"                    
+                    speedAsLag=40
+                  }
 
+                  if(subjectIdentifier <= participantsPer*6) {
+                  	// cond = "100_30"
+                  	partnersExposure = "perfect"
+                  	speedAsLag = 20
+              		}
+                  if (subjectIdentifier <= participantsPer*5) {
+                      partnersExposure = "1/2"
+                    speedAsLag= 30 
+                  } if (subjectIdentifier <= participantsPer*4) {
+                    speedAsLag=40
+                  }
+
+                  if (subjectIdentifier <= participantsPer*3) {
+                    partnersExposure ="0"
+                    speedAsLag=20
+                  }
                 // assigning conditions for 5.10
                   if (subjectIdentifier <= participantsPer*2) {
                     partnersExposure = "1/2"
-                    speedAsLag = 20
+                    speedAsLag = 30
                   } 
                   if (subjectIdentifier <= participantsPer) {
-                    partnersExposure = "1/2"                    
+                    partnersExposure = "perfect"                    
                     speedAsLag = 40
                   }
-                  // } if (subjectIdentifier<= 10) {
-                  //   partnersExposure = "1"
-                  // }
-                // } 
 
 
                 if (partnersExposure == "1/2") {
@@ -792,8 +841,7 @@ var experiment = {
     box.addClass(hm)
 		ar = exposureArray;
     // console.log("change this back")
-    // lastExposure = 3;
-		lastExposure = ar.length;
+    debugging ? lastExposure = 3 : lastExposure = ar.length;
 		if (i < lastExposure) {
 		  	newPic= ar[i];
 			// document.getElementById('content').removeChild(
@@ -879,8 +927,7 @@ var experiment = {
 			progressBars[i].style.width = String((slideNumber)*100/totalSlides) + "%" ;
 		}
     // console.log("change this back too")
-    // lastTest= 2;
-		lastTest= imgArray.length;
+    debugging ? lastTest= 2 : lastTest= imgArray.length;
 		ar = imgArray;
 		notKnown=0;
 		var blah = document.getElementById('testInput').value.toLowerCase().trim();
@@ -1100,10 +1147,10 @@ var experiment = {
     setTimeout(function() {
       initializeTimer("countdownExample", 30, true)
       $("#ifRight").fadeIn(500)
-      document.getElementById("ifRight").innerHTML = "A timer at the top of your screen will show how many points you could still win (always >= 10 points)."
+      document.getElementById("ifRight").innerHTML = "A timer at the top of your screen shows roughly how many points you could still win (always >= 10 points)."
     }, 3500)
     setTimeout(function() {
-      document.getElementById("ifRight").innerHTML = "A timer at the top of your screen will show how many points you could still win (always >= 10 points).<br> <strong>The timer starts when you press a key.</strong>"
+      document.getElementById("ifRight").innerHTML = "A timer at the top of your screen shows roughly how many points you could still win (always >= 10 points).<br> <strong>The timer starts when you press a key.</strong>"
     }, 7500)
 
     setTimeout(function() {
@@ -1165,7 +1212,9 @@ var experiment = {
             stopTimer("countdownExample")
             $("#tryThatAgain").fadeOut(500)
             if(ifStart) {
-              document.getElementById('ifClick').innerHTML ="Since you had " + (timeRemaining*10) + " points on the clock, <br> you would end up with <strong>" + (timeRemaining*10) + " points</strong>."
+              // var pointsEx= Math.floor(timeRemaining*convertTimeToPoints)*10
+              var pointsEx = timeToPointsConverter(shoeDurationClock, convertTimeToPoints)
+              document.getElementById('ifClick').innerHTML ="Based on the time left on the clock, <br> you would end up with <strong>" + (pointsEx) + " points</strong>."
               $("#ifClick").fadeIn(500)
             }
             document.getElementById("shoe").style.outline="3px dashed red"
@@ -1248,6 +1297,7 @@ var experiment = {
           } else {
           	time2 = new Date().getTime();
           	console.log(time2 - time1)
+            responseTime = time2-time1
             if(clockOnIfTrue==true){ stopTimer("countdownExample") }
             $(window).off('keyup')
             document.getElementById("ifTypePoints").innerHTML=""
@@ -1258,7 +1308,9 @@ var experiment = {
               }, 500)
             setTimeout(function() {document.getElementById("shoe").style.outline = "3px red dashed";}, 1500)
             setTimeout(function() {
-              if(clockOnIfTrue) {document.getElementById('ifClick').innerHTML ="Since your partner chose the target and you had " + (timeRemaining) + "  second(s) on the clock, <br> you would end up with <strong>" + (timeRemaining*10) + " points</strong>."
+              if(clockOnIfTrue) {
+                var pointsEx = timeToPointsConverter(responseTime, convertTimeToPoints)
+                document.getElementById('ifClick').innerHTML ="Since your partner chose the target and you had " + (pointsEx) + "  points on the clock, <br> you would end up with <strong>" + (pointsEx) + " points</strong>."
               } else {document.getElementById('ifClick').innerHTML ="<br> <strong>Nice! Your partner knows what 'shoe' is and figured it out! </strong>"}
                 $("#ifClick").fadeIn(500)}, 2500)
             setTimeout(function() {document.getElementById("gameReady").innerHTML = "Still With You";
@@ -1477,7 +1529,8 @@ var experiment = {
                               return false
                             } else {
                                 time2 = new Date().getTime();
-              					console.log(time2-time1)
+              					         console.log(time2-time1)
+                                clickExTime= time2-time1
                               $("#pressEnterEx").hide()
                               if (clockOnIfTrue==true) {stopTimer("countdownExample")}
                               enterPressed = true;
@@ -1501,7 +1554,8 @@ var experiment = {
                               }, 500)
                               setTimeout(function() {
                                 if (clockOnIfTrue==true) {
-                                  document.getElementById("ifClick").innerHTML="you would end up with <strong>"+(timeRemaining*10)+" points </strong> <br> when your partner gets it right."
+                                  var pointsEx = timeToPointsConverter(clickExTime, convertTimeToPoints)
+                                  document.getElementById("ifClick").innerHTML="you would end up with <strong>"+(pointsEx)+" points </strong> <br> when your partner gets it right."
                                 } else {
                                   document.getElementById("ifClick").innerHTML="<br> <strong>Cool! Your partner understood your message.</strong"
                                 }
@@ -1712,7 +1766,9 @@ var experiment = {
                                         document.getElementById("shoe").style.outline= "3px red dashed"
                                       }, 500)
                                 setTimeout(function() {
-                                        if (clockOnIfTrue) {document.getElementById("ifClick").innerHTML="You end up with <strong>" + (timeRemaining*10) + " points</strong> and your partner learned this is a 'shoe.'"
+                                        if (clockOnIfTrue) {
+                                          var pointsEx = timeToPointsConverter(bothDurationClock, convertTimeToPoints)
+                                          document.getElementById("ifClick").innerHTML="You end up with <strong>" + (pointsEx) + " points</strong> and your partner learned this is a 'shoe.'"
                                         } else {document.getElementById("ifClick").innerHTML="<strong>Your partner figured it out here too <br> and you taught him this was called a 'shoe.'</strong>"}
                                       $("#ifClick").fadeIn(500)
                                       }, 1500)
@@ -1998,6 +2054,9 @@ var experiment = {
 	},
 
   partneringCheck: function(slideNumber, username) {
+    // alert('debugging, so i assigned a value for partners knwoeldge');
+    // var checkCorrect='double';
+    // var messageAboutPartner = "coolio";
 
     (function($) {
       $.fn.randomize = function(tree, childElem) {
@@ -2016,6 +2075,7 @@ var experiment = {
     })(jQuery);
 
     $("div.band").randomize("table tr td", "div.member");
+    $("div.band").randomize("table tr td", "div.times");
 
     slide_number=slideNumber;
     showSlide("getYourPartner");
@@ -2038,8 +2098,7 @@ var experiment = {
     document.getElementById("sameText").innerHTML= "as many times as you"
     document.getElementById("doubleText").innerHTML= "twice as many times as you"
 
-    arrowKeySelection()
-
+    arrowKeySelection("member")
 
 
         document.getElementById("gameStartFinal").innerHTML= "Press 'Enter' to Check Your Answer!"
@@ -2049,6 +2108,7 @@ var experiment = {
           $(window).off("keyup")
 
           if (manipulationChecked == null) {
+            // checkArrowSelection("member", manipulationChecked)
             $(".member").each(function() {
               if (this.style.border == "1px solid black") {
                 this.style.border="3px solid black"
@@ -2056,6 +2116,7 @@ var experiment = {
                 this.alt = "selected"
               }
             })
+            console.log(manipulationChecked)
                 $(window).off("keyup")
                 $("#gameStartFinal").hide()
                 // if they select correctly
@@ -2088,34 +2149,88 @@ var experiment = {
                         isManipCorrect=1
                       } else {isManipCorrect =0}
                       $(window).off("keyup")
-                                manipCheck = {
-                                    subID : subjectIdentifier,
-                                    speed: speedAsLag,
-                                    partnersExposure: partnersExposure,
-                                    manipResponse: manipulationChecked,
-                                    manipActual: checkCorrect,
-                                    manipCorrect: isManipCorrect,
-                                    timestamp: getCurrentTime(),
-                                  };
-                                  experiment.manipCheck.push(manipCheck);
                       $("#squareExamples").fadeOut(500)
                       $("#gameStartFinal").hide()
                       $("#squareExamples").fadeOut(500)
                       setTimeout(function() {
                         $("#exposureText").fadeIn(500)
                       }, 499)
-                      $("#exposureText").html("<br> You will be asked to send messages to your partner about each object <strong>3 times.</strong> <br><br>")
+                      var tense= null
+                      realTrialsPerObj==1 ? tense=" time" : tense=" times"
+                      $("#exposureText").html("<br> You will be asked to send messages to your partner about each object <strong>"+ realTrialsPerObj+ tense +".</strong> <br><br>")
                       setTimeout(function() {
-                        document.getElementById("exposureText").innerHTML +=  "<br><br><br> Press Enter!"
+                        $("#gameStartFinal").fadeIn(500)
+                        $("#gameStartFinal").html("Press Enter to Move On!")    
                         $(window).on('keyup', function(event){
                           if(event.keyCode == 13) {
+                            $("#gameStartFinal").hide()
                             $(window).off("keyup")
                             $("#exposureText").fadeOut(500)
                             setTimeout(function() {
                               $("#exposureText").fadeIn(500)
                               $("#exposureText").html("Wait, how many times will you send messages about each object?")
                               $(".howManyTimes").fadeIn(500)
-                              arrowKeySelection()
+                              arrowKeySelection("times")
+                              $(window).on('keyup', function(event){
+                                if(event.keyCode == 13) {
+                                  $(window).off("keyup")
+                                  var userTrialsPerObj= "null";
+                                  // checkArrowSelection("times", testing)
+                                  $(".times").each(function() {
+                                    if (this.style.border == "1px solid black") {
+                                      this.style.border="3px solid black"
+                                      userTrialsPerObj = this.id
+                                      this.alt = "selected"
+                                    }
+                                  })
+                                  if (userTrialsPerObj == realTrialsPerObj) {
+                                    var isNumTrialsCorrect = 1
+                                    $("#exposureText").fadeOut(500)
+                                    setTimeout(function() {
+                                      $("#exposureText").html("That's correct! Let's get started!")
+                                      $("#exposureText").fadeIn(500)
+                                    }, 500)
+                                  } else {
+                                    var isNumTrialsCorrect = 0
+                                    $("#exposureText").fadeOut(500)
+                                    setTimeout(function() {
+                                      $("#exposureText").html("Whoops! Actually you will send messages about each object <strong>" +realTrialsPerObj + " times!</strong>")
+                                      $("#exposureText").fadeIn(500)
+                                      $(".times").each(function() {
+                                        if (this.id == realTrialsPerObj) {
+                                          this.style.border="3px solid red"
+                                        } else {
+                                          this.style.border= ""
+                                        }
+                                      })      
+                                    }, 500)
+                                    manipCheck = {
+                                      subID : subjectIdentifier,
+                                      speed: speedAsLag,
+                                      partnersExposure: partnersExposure,
+                                      manipResponse: manipulationChecked,
+                                      manipActual: checkCorrect,
+                                      manipCorrect: isManipCorrect,
+                                      numTrialsActual: realTrialsPerObj,
+                                      numTrialsResponse: userTrialsPerObj,
+                                      numTrialsCorrect: isNumTrialsCorrect,
+                                      timestamp: getCurrentTime(),
+                                    };
+                                    experiment.manipCheck.push(manipCheck);
+                                  }
+                                  setTimeout(function() {
+                                    $("#gameStartFinal").fadeIn(500)
+                                    $("#gameStartFinal").html("Press Enter to Begin!")
+                                    $(window).on('keyup', function(event){
+                                      if(event.keyCode == 13) {
+                                        $(window).off("keyup")
+                                        experiment.game(0, 0, slideNumber+1, username)
+                                      }
+                                    })
+                                  }, 1000)
+                                }
+                              })
+
                             }, 500)
                             // experiment.game(0, 0, slideNumber+1, username)
                           }
@@ -2817,8 +2932,7 @@ var experiment = {
 		}, waitTime);
     // console.log('change this back')
 	  // numOfGames = gameArray.length; 
-    oneShot==true ? numOfGames=imgArray.length : numOfGames=gameArray.length
-    // numOfGames = 4;  
+    debugging ? numOfGames= 3 : numOfGames=gameArray.length
     console.log(numOfGames) 
     nextTimer= setTimeout(function() {
       $("#pressEnterToMove").show()

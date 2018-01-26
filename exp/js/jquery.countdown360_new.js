@@ -116,10 +116,12 @@
     _drawCountdownLabel: function (secondsElapsed) {
       this.ariaText.text(secondsLeft);
       this.pen.font         = this.settings.fontWeight + " " + this.settings.fontSize + "px " + this.settings.fontFamily;
-      var secondsLeft = this._secondsLeft(secondsElapsed),
+      var secondsLeft = this._secondsLeft(secondsElapsed*.5),
           label = secondsLeft === 1 ? this.settings.label[0] : this.settings.label[1],
           drawLabel = this.settings.label && this.settings.label.length === 2,
           x = this.settings.width/2;
+
+
       if (drawLabel) {
         y = this.settings.height/2 - (this.settings.fontSize/6.2);
       } else {
@@ -128,7 +130,10 @@
       this.pen.fillStyle = this.settings.fillStyle;
       this.pen.fillText(secondsLeft + 1, x, y);
       this.pen.fillStyle  = this.settings.fontColor;
-      this.pen.fillText(secondsLeft*20, x, y);
+      var labelPoints= Math.floor(secondsLeft*1.7)*10
+      // labelPoints < 50 ? labelPoints+= -10 : labelPoints
+      this.pen.fillText(labelPoints, x, y);
+      // this.pen.fillText(secondsLeft, x, y);
       if (drawLabel) {
         this.pen.font = "normal small-caps " + (this.settings.fontSize/3) + "px " + this.settings.fontFamily;
         this.pen.fillText(label, this.settings.width/2, this.settings.height/2 + (this.settings.fontSize/2.2));
@@ -146,13 +151,14 @@
     _draw: function () {
       var millisElapsed, secondsElapsed;
       millisElapsed = new Date().getTime() - this.startedAt.getTime();
+      halfSecondsElapsed = Math.floor((millisElapsed)/500);
       secondsElapsed = Math.floor((millisElapsed)/1000);
         endAngle = (Math.PI*3.5) - (((Math.PI*2)/(this.settings.seconds * 1000)) * millisElapsed);
       this._clearRect();
       this._drawCountdownShape(Math.PI*3.5, false);
       if (secondsElapsed < this.settings.seconds) {
         this._drawCountdownShape(endAngle, true);
-        this._drawCountdownLabel(secondsElapsed);
+        this._drawCountdownLabel(halfSecondsElapsed);
       } else {
         this._drawCountdownLabel(this.settings.seconds);
         this.stop();
