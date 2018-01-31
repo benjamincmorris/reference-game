@@ -1,5 +1,5 @@
 ---
-title: "Communicative pressure can lead to input that supports language learning"
+title: "Communicative pressure can leads input that supports language learning"
 bibliography: library.bib
 csl: apa6.csl
 document-params: "10pt, letterpaper"
@@ -41,24 +41,32 @@ library(xtable)
 
 One of the most striking aspects of children's language learning is just how quickly they master the complex system of their natural langauge [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
 
-One possiblility is that children's caregivers deserve most of the credit; that the language parents produce to their children is optimized for teaching. Although there is some evidence that aspects of child-directed speech support learning, other aspects--even in the same subproblem, e.g. phoneme discrimination--appear to make learning more difficul [@eaves-jr2016;@mcmurray2013]. In general, parents rarely explicltly correct their children, and children are resistant to the rare explicit language correction they do get [@newport1977]. Thus while parents may occasionally offer a supervisory signal, the bulk of the evidence suggests that parental supervision is unlikely to explain rapid early language acqusition.
+One possiblility is that children's caregivers deserve most of the credit; that the language parents produce to their children is optimized for teaching. Although there is some evidence that aspects of child-directed speech support learning, other aspects--even in the same subproblem, e.g. phoneme discrimination--appear to make learning more difficul [@eaves-jr2016;@mcmurray2013]. In general, parents rarely explicitly correct their children, and children are resistant to the rare explicit language correction they do get [@newport1977]. Thus while parents may occasionally offer a supervisory signal, the bulk of the evidence suggests that parental supervision is unlikely to explain rapid early language acqusition.
 
-Alternatively, even the youngest infants may already come to language acquisition with a precocious ability to learn the latent structure of language from the statistical properties of the language in their ambient environment [@saffran2003;@smith2008]. While a number of experiments clearly demonstrate the early availability of such mechanisms, there is reason to be suspicious about just how precocious they are early in development. For example, infants' ability to track the co-occurrence information connecting words to their referents appears to be highly constrained by both their developing memory and attention systems [@vlach2013; @smith2013]. Further, computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics [@blythe2010;@vogt2012]. Thus precocious unsupervised statistical learning also appears to fall short of an explanation for rapid early language learning.
+Alternatively, even the youngest infants may already come to language acquisition with a precocious ability to learn the latent structure of language from the statistical properties of speech in their ambient environment [@saffran2003;@smith2008]. While a number of experiments clearly demonstrate the early availability of such mechanisms, there is reason to be suspicious about just how precocious they are early in development. For example, infants' ability to track the co-occurrence information connecting words to their referents appears to be highly constrained by both their developing memory and attention systems [@vlach2013; @smith2013]. Further, computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics [@blythe2010;@vogt2012]. Thus precocious unsupervised statistical learning also appears to fall short of an explanation for rapid early language learning.
 
-In this paper we explore the consequences of a a third possibility: The language that children hear is neither designed for pedagogy, nor is it random: it is designed for communication [@brown1977]. We take as the caregiver's goal the desire to communicate with the child, not about language itself, but instead about the world in front of them. To succeed, the caregiver must produce the kinds of commincative signals that the child can understand, and thus might tune the complexity of their speech not for the sake of learning itself, but as a byproduct of in-the-moment pressure to communicate successfully [@yurovsky2017]. 
+We explore the consequences of a a third possibility: The language that children hear is neither designed for pedagogy, nor is it random; it is designed for communication [@brown1977]. We take as the caregiver's goal the desire to communicate with the child, not about language itself, but instead about the world in front of them. To succeed, the caregiver must produce the kinds of commincative signals that the child can understand, and thus might tune the complexity of their speech not for the sake of learning itself, but as a byproduct of in-the-moment pressure to communicate successfully [@yurovsky2017]. 
 
 We explore the emergence of tuning in a simple model system: an iterated reference game in which two players earn points for communicating successfully with each-other. On each round of the game, participants can point--a signal which is costly to produce but always communicatively effective, or can use language--a cheaper signal which is cheap to produce but successful only if both players share a common lexicon. Crucially, participants can point and speak together--paying the cost of both, but effectively establishing a shared label for this referent that they can exploit on later trials of the game. 
 
-In a series of experiments on Mechanical Turk, we show that people tune their communicative to choices to varying cost and reward structures, and also critically to their partner's linguistic knowledge--teaching when partners are unlikely to know language and many more rounds remain. We then show that human behavior can be explained by a rational planning model that seeks to optimize its expected utility over the course of the game. Together, this shows that pedagogically-supportive input can arise from purely selfish motives to maximize the cost of communicating successfully while minimizing the cost of communcation. We take these results as a proof of concept that both the features of child-directed speech that support learning as well as those that inhibit it may arise from a single unifying goal: The desire to communicative efficiently. 
+In a series of experiments on Mechanical Turk, we show that people tune their communicative to choices to varying cost and reward structures, and also critically to their partner's linguistic knowledge--teaching when partners are unlikely to know language and many more rounds remain. We then show that human behavior can be explained by a rational planning model that seeks to optimize its total expected utility over the course of the game. Together, these these data show that pedagogically-supportive input can arise from purely selfish motives to maximize the cost of communicating successfully while minimizing the cost of communication. We take these results as a proof of concept that both the features of child-directed speech that support learning as well as those that inhibit it may arise from a single unifying goal: The desire to communicative efficiently. 
 
+# Experiment 1
 
+To study the emergence of pedagogy from communicative pressure, we developed a simple reference game in which participants would be motivated to communicate successfuly. After giving people varying amounts of training on novel names for 9 novel objects, we asked them to play a communicative game in which they were given one of the objects as their referential goal, and they were rewarded if their partner successfully selected this referent from among the set of competitors (Figure \ref{fig:screenshot}). Participants could choose to refere either using the novel labels they had been exposed to, or they could use a deictic gesture to indicate the referent to their partner. Deixis was unambiguous, and thus would always succeed. However, in order for language to be effective, the participant and their partner would have to know the correct novel label for the referent. Across participants, we varied the relative cost of using these two communicative signals.
 
+If people are motivated to communicated successfully, their choice of referential modality should reflect the tradeoff between the cost of producing the commmunicative signal with the likelihood that the communication would succeed. We thus predicted that peoples' choice of referential modality would reflect this calculus: People should be more likely to use language if they have had more exposures to the novel object's correct label, and they should be more likely to use language as gesture becomes relatively more costly. In two experiments, we manipulated these utilities first explicitly (1a), and then implicitly (1b).
 
-# Experiment 1a   
+```{r screenshot, fig.env = "figure", fig.pos = "H", fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
+img <- png::readPNG("figs/implicit_screenshot.png")
+grid::grid.raster(img)
+```
 
-Our model's speaker chooses a communicative modality by optimizing the expected utilities of the possible modalities.  By manipulating the utility of each strategy, we can evaluate our models predictions about the extent to which speakers sensibly adapt to these imposed utilites.  In this experiment, we explicitly implemented strategy utility by assigning point values to each strategy.
+## Experiment 1a   
 
-## Participants, Materials, Methods
+In this experiment, we explicitly implemented strategy utility by assigning point values to each strategy.
+
+### Participants, Materials, Methods
 
 [n] particpants were recruited though Amazon Mechanical Turk and received a small payment for their participation. 
 
@@ -70,55 +78,57 @@ If the speaker clicked on on object (gesture message), the listener was coded to
 
 Speakers could win up to 100 points per trial if the listener correctly selected the target referent based on their message.  If the listener failed to identify the target object, the speaker received no points.  We manipulated the relative utilities of each of the strategies between-subjects. In the 'Talk is Cheap' condition, speakers recieved 30 points for gesturing and 100 points for labeling, while in the 'Talk is Less Cheap' condition speakers recieved 50 points for gesturing and 80 points for labeling.  
 
-
-## Results
+### Results
 
 As expected, particpants were sensitve to both the exposure rate and the relative utilities of the communication strategies.  Speakers produced significantly more labels for object-label mappings that were shown more frequently during training than for the mappings that were less frequent (...).  The reverse was true for gesture (...).   The more exposures to a given object-label pair during training, the more likely participants were to recall that label at pretest (...). The effect of exposure rate on modality choice held even after controlling for pretest knowledge, indicating the effect was more than the result of being constrained by knowledge of the label (...). ...[I'm not sure which statistics to include here, since most of what i'd been looking at are these logitistic regression models with all our predictors.Should I subset to just one partners exposure, and then do the logistic regression with exposure rate, utility condition, appearance, and the random effect? Does that make sense?]...
 
 Participants also modulated their communicative behavior on the basis of the utility manipulation.  Speakers in the Talk is Cheap condition produced significantly more labels than particpants in the Talk is Less Cheap condition (...).  Again, this effect was reversed for gesture (...). Thus, participants are senstive to our manipulations- altering their choices about how to communicate with their partner on the basis of their own knowledge, the degree of training, and the imposed utilities. 
-  
 
 ```{r image1, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=3.5, fig.height=3.5, set.cap.width=T, num.cols.cap=1, fig.cap = "Plot of modality choice as a function of exposure, split by utility condition."}
 img <- png::readPNG("figs/explicit_utilityManip.png")
 grid::grid.raster(img)
 ```
 
-# Experiment 1b
+## Experiment 1b
 
 As a replication and extension of Experiment 1a, we sought to embed the relative utilites of the communicative strageies in the game more implicitly.  In experiment 1b, we used the same procedure described above; however, a timer controlled the number of points that were earned on each trial of gameplay.  Rather than impose an explicit point system as in Experiment 1a, we set the relative utilities of communication strategies by manipulating the speed with which particpants could respond.
 
-## Participants, Materials, Methods
+### Participants, Materials, Methods
 
 [n] particpants were recruited though Amazon Mechanical Turk and received a small payment for their participation. 
 
 Experiment 1b utilitzed the same training and pretest procedures, but gameplay differed in a number of ways. During the game, the nine novel objects were arranged in a circle around a cartoon pointer (see Figure 2).  To manipulate the relative speeds of gesturing and labeling, we required speakers to move the small pointer with the arrow keys on their keyboards in order to select an object with gesture.  With this method we could directly manipulate the speed of the pointer while holding the arrow keys to effectively set maximum possible utility of using gesture.  
-
-```{r image, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=4, fig.height=4, set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
-img <- png::readPNG("figs/game_screenshot.png")
-grid::grid.raster(img)
-```
 
 If the listner correctly identified the target object, speakers recieved points determined by the amount of time remaining on the timer.  For successful communications, speakers always recieved a minimum of 10 points, regardless of the time elapsed.  Based on pilot response times, the timer was set to 6.5 seconds and points were scaled to match Experiment 1a. Participants were randomly assigned into one of three conditions, where the pointer was set to either a fast, slow, or slowest setting.
 
 This framework allowed us to implement the point system as an implicit extension of gameplay and resulted in each partipcant having unique gesture-speech utilities, based on their speed of responses across the two methods.
 
 
-## Results
+### Results
 
 As expected, the same patterns emerge as experiment 1a.  Speakers again labeled signifcantly more (TBD) and gestured significantly less (TBD) on high exposure targets, relative to low exposure targets. Particpants were signficantly more likely to recall the high exposure labels than the low exposure labels at pretest (TBD), and this effect did not account the effect of exposure rate on modality choice (TBD).
 
 Critically, there was a main effect of our utility manipulation, such that speakers in the fast pointer condition produced signficantly more gestures than particpants in the slowest pointer condition (TBD).  The pattern is reveresed for labeling (TBD).  In the absence of an explicit framework for assigning utilities based on method, speakers continue to adapt their communicative choices taking into account the expected utility of possible strategies. 
 
+## Discussion
 
-# Experiment 2a
+We did it!
+
+# Experiment 2
+
+XX planning figure HERE
+
+In experiment 2, we manipulated what people thought about the other person's language knowledge, and told them about teaching.
+
 [I don't know how to divvy up these ns]
 
 [n] particpants were recruited though Amazon Mechanical Turk and received a small payment for their participation. 
 
 Thus far, we have focused on relatively straightforward scenarios to demonstrate that a pressure to communicate successfully in the moment can lead speakers to trade-off between gesture and speech sensibly. However, critical to these repeated interactions is the ability to learn about an interlocuter and potentially influence their learning. In Experiment 2a, particpants could send a third type of message by utilizing both gesture and speech within a single trial to effectively teach the listener an object-label mapping.
 
-    
-## Participants, Materials, Methods
+## Experiment 2a
+
+### Participants, Materials, Methods
 
 In order to produce teaching beahvior, speakers had to pay the cost of producing both cues, yeilding 30 points in either conditon of our explicit points framework.  Our communicative game was designed to reward in-the-moment communication, and teaching required the speaker paying a cost upfront. However, rational communicators may understand that if one is accounting for future trials, paying the cost upfront to teach the listener allows a speaker to use a less costly message strategy on subsequent trials.
 
@@ -141,13 +151,13 @@ img <- png::readPNG("figs/teaching_by_pExposure.png")
 grid::grid.raster(img)
 ```
 
-# Experiment 2b
+## Experiment 2b
 
 We investigated the emergence of teaching in both a paradigm with an explicit points system (Experiment 2a) and an implicit points system (Experiment 2b). 
 
 
-## Participants, Materials, Methods
-## Results
+### Participants, Materials, Methods
+### Results
 
 # Experiment 3
 
@@ -155,8 +165,25 @@ Planning is critical to our model.  A pressure to communicate successfully in-th
 
 As expected, teaching behavior dropped off completely... (TBD).
 
+# Model: Iterated Communication as Rational Planning
 
-# Model: Communication as Planning
+The results from these experiments are qualitatively consistent with a model in which participants make their communicative choices to maximize their expected utility from the reference game. We next formalize this model to determine if these results are predicted quantitatively as well. 
+
+\newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]}
+
+In a one-shot reference game, like Experiment 3, maximizing expected utility is simply choosing the action ($a$) that has the highest expected utility $(\E{U})$. The expected utility depends both on the action itself, and on the state of the two partners ($s$): For pointing, this expected utility is independent of referent, defined entirely by our experimental manipulation. In contrast, for speech, the utility varies with the probability of partners sharing a common label for the referent. Following other models in the Rational Speech Act framework, we use the Luce Choice Axiom, in which each choice is taken in probability proportional to its exponentiated utility [@frank2012]. This choice rule has a single paramter $\alpha$ that controls the noise in this choice--as $\alpha$ approaches 0, choice is random and as $\alpha$ approaches infinity choice is optimal:
+
+$$ 
+C\left(a;s\right) \propto e^{\alpha \E{U \left(s,a\right))}}
+$$
+
+To use this rule, agents have to estimate how likely they are to share a common label ($s$). In our simulation, we assume for simplicty that people have an accurate representation of their own knowledge. We thus set each simulated participant's knowledge to the explicit recall judgement made by a real participant in our experiments. To estimate their partner's knowledge, participants can reason about their own learning. Again for simplicity we model learning as a simple Bernoulli process: Each exposure to novel label is like a flipping a coin with weight $p$, if it comes up heads, the label is learned. Having observed their own learning outcomes, agents can infer their own learning rate by determining the weight $p'$ under which their observed learning is most likely. Assuming that their partner would have learned at the same rate, participants can then generate a probabiliy with which their partner would have learned each label by estimating the probability that at least one of its $n$ came up heads given learning rate $p'$: $P\left(s^{+}\right)=1-p'\left( 1-p' \right)^{n}$.
+
+In an iterated game, however, because actions taken on the current trial can influence the state ($s$) on future trials, the optimal action to take is not the one that optimizes the single trial's rewards, but rather the one that optimizes the expected rewards that will accumulate over all future trials [@kaelbling1998].
+
+
+ For the results reported here, we set $\alpha = 2$ based on hand-tuning, but other values produces similar results.
+
 
 We implemented a two-agent model of speaker and listener behavior in this game based on partially observable Markov decision processes.  The speaker is given a target referent each trial and must signal to the listener which object to select. Speakers send messages to the listener by speaking, a low cost cue that relies on the listener's knowledge, or by pointing, a higher cost cue that is unambiguous. 
 
@@ -180,17 +207,9 @@ grid::grid.raster(img)
 # Discussion
 
 
-
-
-
-
-
-
-
 # Acknowledgements
 
-Place acknowledgments (including funding information) in a section at
-the end of the paper.
+We are grateful to Elliot Lipnowski for thoughtful feedback on the model. This research was funded by a James S. McDonnell Foundation Scholar Award to DY.
 
 # References 
 
