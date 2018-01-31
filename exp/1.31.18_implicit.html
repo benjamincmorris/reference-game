@@ -1,0 +1,486 @@
+<html>
+  <head>
+    <title>What does this mean?</title>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="style.css" />
+        <script src="js/impetus/impetus.min.js"></script>
+
+    <meta name="viewport" content="initial-scale=1.0" /> 
+    <script src="mmturkey.js"></script>
+     <!--<meta name="viewport" content="width=device-width">  -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="dictionary/wordList.min.js"></script>
+    <script src="dictionary/wordBank.min.js"></script>
+    <script type="text/javascript" src="js/check_browser_close.js"></script>
+    <script src="js/jquery.countdown360_new.js"></script>
+
+
+
+  </head>
+  <body onbeforeunload="return goodbye ()">
+
+    <!-- in case something is broken, send participants here -->
+    <div class="slide" id="limbo">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+        </div>
+         <div id="waitingForAssignment" class="row"> <center> <h4 style="margin:5% 0% 0 0%">  <strong> PLEASE DON'T ACCEPT THIS HIT RIGHT NOW! </strong> </h4>  </center> </div>
+            <div class="row"> <img id="chicagoLogo" style="margin-top:7%" class="col-xs-offset-4 col-xs-4"  src="images/logo.rgb.maroon.jpg" > </div>
+            <div id="gameTitle" style="text-align:center; margin-top: 0%" class="row"> <center> <h3>  Communication Game </h3> </center> </div>
+            <div id="waitingForAssignment" class="row"> <center> <h4 style="margin:1% 15% 0 15%">  Sorry about this, but it looks like we don't actually have a task for you right now! <br> <br> Because of the way our studies work, they sometimes get caught in this limbo state. <br> <br> <br> <br>  <strong> Check back in a few minutes if you'd still like to paricipate!! </strong> </h4>  </center> </div>
+            <br> <br>
+            <center> <p id="disabledStart" onClick="this.blur()">Continue</p> </center>
+    </div>
+
+    <div class="slide" id="welcome">
+		<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+			<div class="row"> <img style="margin-top:15px" class="col-xs-offset-4 col-xs-4"  src="images/logo.rgb.maroon.jpg" > </div>
+			<div style="text-align:center; margin-top: 0%" class="row"> <h3>  Communication Game </h3> </div>
+            <div class="row"> <p class="block-text col-xs-offset-1 col-xs-10 col-md-offset-3 col-md-6">  In this short game, you will be introduced to some strange objects and their labels and then asked to communicate about those objects with another player. <strong>  Note: </strong>There are multiple versions of this game, please only complete once! </p> </div>
+
+            <div class="row"> <h4 style="margin:1% 15% 0 15%">   Please complete this HIT in one sitting, without refreshing the page, you will have 25 minutes to do so. You will likely not need all of that time, so don't feel the need to rush.  </h4> </div>
+	        <br>
+	        <div class="row"> <p class="block-text col-xs-offset-1 col-xs-10"> By answering the following questions, you are participating in a study being performed by cognitive scientists in the University of Chicago Department of Psychology. If you have questions about this research, please contact us at <a href="mailto:callab.uchicago@gmail.com">callab.uchicago@gmail.com</a>. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. Note however that we have recently been made aware that your public Amazon.com profile can be accessed via your worker ID if you do not choose to opt out. If you would like to opt out of this feature, you may follow instructions available <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=16465241">here</a>.</p> </div>
+	      <div class="row">
+	        <center> <p id="welcomeStart" class="blink_me_slow" onClick="this.blur()">(press 'Enter' to move on)</p> </center>
+	      </div>
+    </div>
+
+    <div class="slide" id="instructions">
+		<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+	      <center> <div class="row col-xs-6 col-xs-offset-3" id="objects"> </div> </center>
+	      <div class="row" >
+	        <p class="block-text col-xs-offset-3 col-xs-6 ">Each of these objects has a label that identifies it. Your job is to learn those labels and then send messages to another player to get that player to select a particular object. 
+	        <br><br>
+	        You will be given a chance to learn these labels to aide you in the game.</p>
+	      </div>
+            <center> <p id="beforeStudy" class="blink_me_slow" onClick="this.blur()"> (press 'Enter' to begin learning) </p> </center>
+    </div>
+ 
+    <div class="slide" id="exposure">
+	    <div class="progress">
+		  <div class="progress-bar" id="progressBar" role="progressbar"  aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+
+                <div class="box" id="animatedPointer" style="left:50%; margin-left:-11px; top:250px"> <img src="images/pointer.png" height="30px" width="auto"  > </div>
+                    <a href='#' class=' crosshatch' style="; transform: rotate(45deg); left:50%"></a>
+                    <a href='#' class=' crosshatch' style=" transform: rotate(135deg); left:50%"></a> 
+
+    	<div class="container">
+	        <!-- <center> <div class="contents" id="content"> </div> </center> -->
+            <section id="paneExposures">
+                <div class='circle-container' id="exposuresArray" style="left:-25px">
+                    <a href='#' class=' toSelect3' ><img class='deg0 circleArray exposuresArray' name='deg0'></a>
+                    <a href='#' class=' toSelect3'><img class='deg40 circleArray exposuresArray' name='deg40'></a>
+                    <a href='#' class=' toSelect3' ><img class='deg80 circleArray exposuresArray' name='deg80'></a>
+                    <a href='#' class=' toSelect3' ><img class='deg120 circleArray exposuresArray' name='deg120'></a>
+                    <a href='#' class=' toSelect3'><img class=' deg160 circleArray exposuresArray' name='deg160'></a>
+                    <a href='#' class=' toSelect3'><img class='deg200 circleArray exposuresArray' name='deg200'></a>
+                    <a href='#' class=' toSelect3' ><img class='deg240 circleArray exposuresArray'  name='deg240'></a>
+                    <a href='#' class=' toSelect3' ><img class='deg280 circleArray exposuresArray' name='deg280'></a>
+                    <a href='#' class=' toSelect3'><img class='deg320 circleArray exposuresArray' name='deg320'></a>
+                </div>
+            </section>
+            <center> <div class="labels" style="margin-top:100px; z-index:2" id="label"> </div> </center>
+
+            <center> <p id="clickme" onClick="this.blur()" style="margin-top:5px; z-index:1"> (press 'Enter' to move on) </p> </center>
+	        <!-- <center> <div> <button type="button" id="clickme" onClick="this.blur()"> </button> </div> </center> -->
+    	</div>
+    </div>
+
+    <div class="slide" id="pretest">
+    	<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+        <div class="container">
+            <div class="row">
+            <p style="margin-top: 50px" class="block-text col-xs-offset-2 col-xs-8">Okay, you are all done learning! 
+                <br><br>
+                Before we get started with the game, we want to give you a chance to show off what you have learned. Next, you will see each of nine objects one-at-a-time. If you remember the object's label, you may type it in the box. If you don't remember the label, just click the 'Don't Know' button instead. You won't be given any feedback about your accuracy just yet! Good luck! </p>
+            </div>
+            <center> <p id="beginTest" class="blink_me" onClick="this.blur()"> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+<!--             <center> <div> <button type="button" id="beginTest" onClick="this.blur()"> </button> </div> </center>
+ -->        </div>
+    </div>
+
+    <div class="slide" id="test">
+	    <div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+        <div class="container">
+            <center> <p> Do you remember the name of this object? </p> </center>
+            <div class="row"><div class="row col-xs-7 col-xs-offset-3 col-lg-5 col-lg-offset-4" id="testObject"> </div> </div> 
+            <div class="row">
+	            <center> <form> <p> <strong> Type the object label here: <br> </strong> </p>
+	            <input type="text" name="testLabel" id="testInput" autocomplete="off" maxlength="9"><br> </center> </form>
+	            <center><label> <input type="checkbox" id="notSure" onClick="this.blur()"> Don't Know </input></label></center>
+	        </div>
+            <center> <p id="nextObject" class="blink_me" onClick="this.blur()"> <br> (press 'Enter' to move on) </p> </center>
+            <!-- <center> <div> <button type="button" id="nextObject" onClick="this.blur()">Next Object </button> </div> </center> -->
+        </div>
+    </div>
+
+
+    <div class="slide" id="prestudy">
+    	<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+    	<div class="container">
+	       	<div class="row" id="prestudy">
+		        <p style="margin-top: 50px" id="exampleText" class="block-text col-xs-offset-2 col-xs-8 "> You are almost ready to play our game! <br> <br> Remember, in the game you will be communicating in our made up language about the objects you have just been learning about. But, before we start, let's walk through an example where we will communicate in English about familiar objects.
+                <br> <br>
+                <!-- <strong> BE SURE YOU PAY ATTENTION OR YOU MIGHT HAVE TO WATCH THE INSTRUCTIONS AGAIN </strong> -->
+                </p>
+            </div>
+            <center> <p id="howToPlay" class="blink_me" onClick="this.blur()"> <br> <br> <br> (press 'Enter' to move on) </p> </center>
+            <!-- <center> <div style="padding:20px"> <button id="howToPlay"> Tell Me How To Play </button> </div> <center>             -->
+            <div class="row" id="example" style="margin-top: 15px">
+                <p id="generalInst" style="position:absolute; margin:-20px 0 0 -260px; left:40%; width: 600px; text-align:center"> Each round, this is what you will see. <br> Your job is to send a message to another player to help them find the object on the left side of your screen. </p>
+                        <div id="countdownExample"></div>
+
+                <div class="row" style="padding-top:0px" id="textRow">
+                    <div class="col-xs-5"> <p> <br> <br> <br> </p> </div>
+                    <div  id="clickArrayText">
+                        <p class="redText" id="clickText" style="position:absolute; top: 75px; margin:0px 0px 0px 50px; left:40%; width: 370px; text-align:center; z-index:1"> <br>  </p> 
+                    </div>
+                </div>
+                <div class="row" id="imageRow">
+                	<div >
+                        <p id='timerText' style="position:absolute; margin:0px 0 0 -300px; top:125px; left:40%;width: 300px; text-align:center; z-index:1;">  </p>
+
+                		<div id="exampleTarget" style="position:absolute; margin:100px 0 0 -300px; left:40%; width:300px">
+    	            		<!-- <center> <p style="margin:20px"> This is the target object: </p> </center> -->
+    	            		<div class="row" > 
+    	            			<img style="position:absolute; height: 200px; width: 200px; margin:25px 0 0 75px" src="images/familiar/shoe.jpg"> 
+    	            		</div>
+    	            		<center> <p id="ifRight" style="position:absolute; top:200px"> </p> </center>
+    	            		<center><div id="typingExample" style="position:absolute; top:300px; margin-left:375px; width:350px">
+    		            		 <p id="ifType" >  </p> 
+    		            		<input type="text" id="ifTyping">  </input> 
+    		            		<p id="ifTypePoints" > </p> 
+    	            		</div></center>
+    	            	</div>
+                	</div>
+                    <div id="paneEx" class="pane">
+                        <!-- <div id="pointerEx"> <img src="images/pointer.png" height="30px" width="auto"> </div> -->
+                    	<center> <div class="circle-container" style="margin-left:35px">
+                            <a href='#' class='center' id="pointerEx" class="box"><img src='images/pointer.png' style="height:30px; width:auto"></a>
+                        	<a href='#' class='deg0 famObjects' ><img src="images/familiar/pen.jpg" alt="pen"></a>
+                            <a href='#' class='deg40 famObjects' ><img src="images/familiar/phone.jpg" ></a>
+                            <a href='#' class='deg80 famObjects'><img src="images/familiar/computer.jpg"></a>
+                            <a href='#' class='deg120 famObjects' id="shoe"><img id="shoeTarget" src="images/familiar/shoe.jpg"></a>
+                            <a href='#' class='deg160 famObjects'><img src="images/familiar/newspaper.jpg"></a>
+                            <a href='#' class='deg200 famObjects'><img src="images/familiar/plant.jpg" ></a>
+                            <a href='#' class='deg240 famObjects' id="chair" ><img id="chairDistractor" src="images/familiar/chair.jpg"   ></a>
+                            <a href='#' class='deg280 famObjects' ><img src="images/familiar/key.jpg"></a>
+                            <a href='#' class='deg320 famObjects'><img src="images/familiar/apple.jpg" ></a>
+                        </div> </center>
+                    </div>
+                    <p  id="ifClick" style="position:absolute; top: 450px; margin:0px 0px 0px -300px; left:40%; width: 300px; text-align:center">  </p>
+                </div>
+            </div>            			
+
+
+    	</div>
+        <div >
+            <div> <button type="button" id="gameReady" onClick="this.blur()" style="position:absolute; margin:-25px 0 0 -25px; left:40%"> I'm Ready</button> </div> 
+            <center> <div> <button type="button" id="sendMessageDemo" onClick="this.blur()" > Send Demo Message</button> </div> </center>
+            <center> <p id="pressEnterEx" class="blink_me" onClick="this.blur()" style="position:absolute; margin:400px 0 0 -250px; left:40%"> (press 'Enter' to move on) </p> </center>
+            <center> <div id="tryThatAgain" style="position:absolute; margin:0px 0 0 -305px; left:40% width: 200px; text-align:center"> Whoops, that's not the message you we're supposed to send <br> try that one again </div> </center>
+        </div>
+    </div>
+
+
+    <div class="slide" id="gameCheck">
+    	<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+    	<div class="container">
+	       	<div class="row col-xs-11" id="gameCheck" >
+		        <div class="row"> <p style="margin-top: 50px" class="block-text col-xs-offset-2 col-xs-8"> Before you start, we want to make sure you know the rules for our game! </p> </div>
+		        <br> <br>
+		        <form form-name="gameCheckForm" id="GameCheckForm">
+                    <fieldset>
+			        <p class="col-xs-6 col-xs-offset-1">If you click on the object, and your partner gets it right, how many points will you get? </p> 
+			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForClick"> </div> </center>
+                        <p id="clickCorrection" class="col-xs-offset-2" style="font-weight:bold"></p>
+			       		<br>
+			       	<p class="col-xs-6 col-xs-offset-1">If you type the object label, and your partner gets it right, how many points will you get? </p>
+                        <div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForLabel"> </div> </center>
+                        <p id="labelCorrection" class="col-xs-offset-2" style="font-weight:bold"> </p>
+                        <br> 
+			        <p class="col-xs-6 col-xs-offset-1"> If you use <em> both </em> strategies, and your partner chooses the right object, how many points will you get? </p>
+			        	<div class="row"> <center> <input class="gameQuestion" type="number" id="pointsForWrong"> </div> </center>
+                        <center> <p id="wrongCorrection" style="padding: 20px 0 0 10px; font-weight:bold"> </p> </center>
+			        	<br>
+		    </div>
+    	</div> <br>
+    	           <div class="row" > <center> <button type="button" id="beginGame" disabled="disabled"> Begin Game</button> </center> </div> 
+               </fieldset>  </form>     
+    </div> 
+
+
+    <div class="slide" id="getYourPartner">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+        </div>
+        <br> <br> <br> <br>
+        <div class="row"> <center> 
+            <div id="partneringHeadingStuff">
+                    <p id="partneringHeading"> Great, the last thing we need to do is find you a partner! </p>
+                    <center><div id="spinner" >  </div> </center>
+                    <br>
+            </div>
+            <p id="exposureText">  </p>
+            <p id="partneringText" style="margin-top:10px"> Type a name you want to use: </p>
+            <input type="text" id="userName"> 
+            <div id='exposureVisualization' class="row" style="top:40px"> 
+                <!-- <div class="col-xs-10" id="myExposureVisual">                          -->
+                    <div class="col-xs-10 col-xs-offset-1" id="myVisual"> </div>
+                    <div class="col-xs-10 col-xs-offset-1" id="myVisualOther"> </div>
+                <!-- </div> -->
+            </div>
+            <div id ="squareExamples" class='row band' style="margin-top:25px; ">
+                <table border="0">
+                <tr><td>
+                    <div id='double' class='row member'>
+                        <p id='doubleText'> <br> Your partner may have seen the objects twice as much as you did </p>
+                        <div class="row col-xs-10 col-xs-offset-1 row" id="squaresDouble" style="padding-bottom:10px"> <br> <br></div> 
+                    </div> 
+                </tr></td>
+                <tr><td>
+                    <div id='same' class="row member">
+                        <p id='sameText'> <br> seen them the same amount </p>
+                        <div class="col-xs-10 col-xs-offset-1 row" id="squaresSame" style="padding-bottom:10px"> </div> 
+                    </div>
+                </tr></td>
+                <tr><td>
+                    <div id='fewer' class='row member'>
+                        <p id='fewerText' class="col-xs-8 col-xs-offset-2"> <br> half as many times </p>
+                        <div class="col-xs-10 col-xs-offset-1" id="squaresFewer" style="padding-bottom:10px"> </div>
+                    </div>
+                </tr></td>
+                <tr><td>
+                    <div id='none' class='row member'>
+                        <p id='noneText' class="col-xs-8 col-xs-offset-2"> <br> or not at all </p>
+                        <div class="col-xs-10 col-xs-offset-1" id="squaresNone" style="padding:0px 0 10px 0"> </div>
+                    </div>
+                </tr></td>
+                </table>
+            </div> 
+ 
+            <div class="col-xs-10 col-xs-offset-1" id="partnersVisual"> </div>
+            
+            <div class="howManyTimes row band" style="margin-top:25px; ">
+                <table border="0" width="200">
+                    <tr><td>
+                        <div class="times row col-xs-8 col-xs-offset-2" id="1" style="padding-bottom:10px">1 time </div>
+                    </tr></td>
+                    <tr><td>
+                        <div class="times row col-xs-8 col-xs-offset-2" id="2" style="padding-bottom:10px">2 times</div>
+                    </tr></td>
+                    <tr><td>
+                        <div class="times row col-xs-8 col-xs-offset-2" id="3" style="padding-bottom:10px">3 times</div>
+                    </tr></td>
+                    <tr><td>
+                        <div class="times row col-xs-8 col-xs-offset-2" id="4" style="padding-bottom:10px">4 times</div>
+                    </tr></td>
+                </table>
+            </div>
+           
+
+        </div> </center> <br>
+        <center> <p id="gameStartFinal" class="blink_me" onClick="this.blur()" style="margin-top:20px"> (press 'Enter' to move on) </p> </center>
+        <!-- <div class="row" > <center> <button type="button" id="gameStartFinal" disabled="disabled"> </button> </center> </div>  -->
+    </div>
+
+
+    <div class="slide" id="referenceGame">
+    	<div class="progress" >
+		  <div class="progress-bar" id="gameProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" > </div>
+		</div>
+    	<div id="keepUnfaded"> <p class="points" id="myScore"> your points: 0 </p> </div>
+
+
+        <svg width="50" height="50" viewbox="0 0 250 250">
+          <path id="border" transform="translate(125, 125)"/>
+          <path id="loader" transform="translate(125, 125) scale(.84)"/>
+        </svg>
+        <div id="countdown"></div>
+
+
+        <center> <section id="gameSlide" style="margin-top:50px">
+            <section id="leftSide" class="leftSide">
+                <div style="margin-top:75px; z-index:1"> <strong> <p> Your goal is to get your partner <br> to find <em> this object: </em></p> </div> </strong> 
+                <div class='hmm' id="gameTarget" style="position:absolute;top:100px;margin-left:15px; z-index:-1"> </div> <br> 
+                <!-- <div><form> <p > You can type the object <br> label here: <br> </p>  </form> </div> -->
+                <!-- <div> <input type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div> -->
+            </section>
+            <section id="pane" class="pane">
+                <div id="box" class="box"> <img src="images/pointer.png" height="30px" width="auto"> </div>
+            	<p  style="margin: 0px 0 0 0px"> You can select the object here: <br> (use the arrow keys to move the pointer and <br> press enter to make a selection) </p> 
+    	       <!-- <div id="objects2" class="objectArray" style="margin-top:0%"> </div>  -->
+                    <a href='#' class=' crosshatch' style="; transform: rotate(45deg)"></a>
+                    <a href='#' class=' crosshatch' style=" transform: rotate(135deg)"></a>
+                <div class='circle-container' id="gameCircleArray">
+                    <!-- <a href='#' class='center toSelect'><img src='tabletObjects/2002-600.jpg' alt="2002-600.jpg"></a> -->
+                    <!-- <a href='#' class='center'><img id='box' src='images/pointer.png'></a> -->
+                    <!-- <img class='deg0 toSelect' src='tabletObjects/2003-600.jpg' alt='2003-600.jpg' style="height: 75px; width: auto;"> -->
+
+                    <a href='#' class=' toSelect2' ><img class='deg0 circleArray gameArray' name='deg0'></a>
+                    <a href='#' class=' toSelect2'><img class='deg40 circleArray gameArray' name='deg40'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg80 circleArray gameArray' name='deg80'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg120 circleArray gameArray' name='deg120'></a>
+                    <a href='#' class=' toSelect2'><img class=' deg160 circleArray gameArray' name='deg160'></a>
+                    <a href='#' class=' toSelect2'><img class='deg200 circleArray gameArray' name='deg200'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg240 circleArray gameArray'  name='deg240'></a>
+                    <a href='#' class=' toSelect2' ><img class='deg280 circleArray gameArray' name='deg280'></a>
+                    <a href='#' class=' toSelect2'><img class='deg320 circleArray gameArray' name='deg320'></a>
+                </div>
+            </section>
+                <div style="position:absolute; margin:375px 0 0 115px;  left:40%"> <form> <p > You can type the object label here: </p>  </form> 
+                <input type="text" name="label" id="labelInput" maxlength="9" autocomplete="off"> </form></div>
+        </section> </center>
+
+        <div id="bottomOfSlide" style="margin-top:345px; position:absolute; left:40%; ">
+            <!-- <center><div><button type="button" id="sendMessage" onClick="this.blur()"> </button></div></center>  -->
+            <div id="thatIsEnglish"  style="margin-left:-325px; width: 300px; text-align:center"> </div>
+            <p id="waitingForPartner" style="margin-left:-240px">  Your partner is thinking.... </p> 
+            <img id="spinningWaiting" style="margin-left:-190px;" src="images/spinner.gif"> 
+            <strong>  <p id="messageFromPartner" style ="margin-left:-305px; width: 250px; text-align:center"> </p>  </strong>
+            <p id="pressEnterToMove" class="blink_me" style="position:absolute;margin:0px 0 0 -325px; width: 300px; text-align:center"> (press 'Enter' to move to the next round!) </p>
+            <center><div id="nextRound"> <button> Next Round </button> </div> </center>
+        </div>
+    </div>
+
+
+    <div class="slide" id="attentionSlide">
+    	<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"> </div>
+		</div>
+    	<center> <p >Great job! As a final check, please click on the objects you have seen from the array below. <br> Then click the 'All Set' button! </p> </center>
+        <div class="row"> <div id="objects3" class="objectArray col-xs-10 col-md-8 col-xs-offset-1 col-md-offset-2"> </div> </div>
+        <center><div style="margin-top:5px" id="endStudy" > <button>  All Set </button> </div> </center>
+    </div>
+
+
+    <div class="slide" id="finished">
+        <div class="wrap">
+          <h1 class="likert-header"></h1>
+          <form action="">
+            <label class="statement">How much did you enjoy playing this game?</label>
+            <ul class='likert'>
+              <li>
+                <input type="radio" name="likert" value="1">
+                <label>1 <br> Not very much</label>
+              </li>
+              <li>
+                <input type="radio" name="likert" value="2">
+                <label>2</label>
+              </li>
+              <li>
+                <input type="radio" name="likert" value="3">
+                <label>3</label>
+              </li>
+              <li>
+                <input type="radio" name="likert" value="4">
+                <label>4</label>
+              </li>
+              <li>
+                <input type="radio" name="likert" value="5">
+                <label>5 <br> A lot</label>
+              </li>
+            </ul>
+
+            <label class="statement">It was possible to teach your partner during the game by both labeling and pointing at once. <br> &nbsp &nbsp Did you ever teach your partner a word?</label>
+            <ul >
+            <div style="position:relative; left:5%">
+              <li>
+                <label style="font-size:13px"> <input type="radio" class="teachingQuestion" name="teaching" value="unaware">
+                 &nbsp No, I didn't realize I could teach.</label>
+              </li>
+              <li>
+                <label style="font-size:13px"><input type="radio" class="teachingQuestion" name="teaching" value="choseNot">
+                &nbsp No, I realized I could teach, but I chose not to.</label>
+              </li>
+              <li>
+                <label style="font-size:13px"><input type="radio" class="teachingQuestion" name="teaching" value="didTeach">
+                 &nbsp Yes, I did teach!</label>
+              </li>
+              <li>
+                <label style="font-size:13px"><input type="radio" class="teachingQuestion" name="teaching" value="other"> 
+                 &nbsp Other:  </label>
+              </li> <textarea  id="otherText" name="name" style="margin:-25px 0 0 80px; width: 200px; height: 25px"> </textarea>
+
+            </div>
+            </ul>
+            <label class="statement">Any other thoughts about strategies you used during the communication game?</label>
+            <!-- /*<input type = "text" name = "name" style="margin-left:4%; width: 60%; height: 100px"> */ -->
+            <textarea  id="anyComments" name="name" style="margin-left:6%; width: 60%; height: 100px"> </textarea>
+
+        </form>
+        </div>
+        <center> <button id="submitData" style="margin-top:50px">End & Submit</button> </center>
+
+
+    </div>
+    <!-- <script src="reference_sender.js"></script> -->
+    <script src="1.31.18_implicit.js"></script>
+
+
+    <!-- this code should keep people from taking any of our related hits more than once -->
+    <!-- however it is definitely possible to circumvent, so always check for repeated turkers post-hoc -->
+    <script src="https://uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    (function(){
+        var ut_id = "17753d4494372d5119178031993ffca9";
+        if (UTWorkerLimitReached(ut_id)) {
+            // console.log("chcecking for repeat turkers, exculding our debugging process")
+            // console.log(turk.workerId)
+            // if(turk.workerId != "A2MG0KC0KL6UWS") {
+        // if (1>0) {
+                // the below line is from the original code taken from the uniqueturker website
+                    // however, it breaks the function becasue we are using an external hit. 
+                // document.getElementById('mturk_form').style.display = 'none';
+                document.getElementsByTagName('body')[0].innerHTML = "Unfortunately, you have already completed a similar HIT for this requester in the past and repeated attempts are not allowed. Please click 'Return HIT' to avoid any impact on your approval rating.";
+                $('body').addClass("col-xs-8 col-xs-offset-2 redText")
+                $('body').css('margin-top', "100px")
+                $('body').css('font-weight', "bold")
+                $('body').css('font-size', "20px")
+                slide_number="repeated"
+            // }
+        }
+    })();
+    </script>
+
+    <script type="text/javascript">
+        function init() {
+          var btn = document.getElementById("sendMessage");
+          btn.addEventListener("mousedown", mouseDown, false);
+          btn.addEventListener("mouseup", mouseUp, false);
+        }
+        
+        function mouseDown(e) {
+          e.target.setCapture();
+          e.target.addEventListener("mousemove", mouseMoved, false);
+        }
+        
+        function mouseUp(e) {
+          e.target.removeEventListener("mousemove", mouseMoved, false);
+        }
+        
+        function mouseMoved(e) {
+          var output = document.getElementById("output");
+          output.innerHTML = "Position: " + e.clientX + ", " + e.clientY;
+        }
+    </script>
+
+  </body>
+</html>
