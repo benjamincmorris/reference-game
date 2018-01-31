@@ -37,7 +37,7 @@ var basePath = "tabletobjects/";
 // var pointsClickWrong = -70;
 // var pointsBothWrong = -70;
 
-var debugging= true;
+var debugging= false;
 
 // var timePerTrial = 11
 // 11/1.7 =~ 6.5
