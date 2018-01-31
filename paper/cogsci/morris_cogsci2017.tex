@@ -52,7 +52,7 @@
 \title{Communicative pressure can lead to input that supports language learning}
 
 
-\author{{\large \bf Benjamin C. Morris} \\ \texttt{benmorris1@uchicago.edu} \\ Department of Psychology \\ University of Chicago \And {\large \bf Daniel Yurovsky} \\ \texttt{yurovsky@uchicago.edu} \\ Department of Psychology \\ University of Chicago}
+\author{{\large \bf Benjamin C. Morris} \\ \texttt{benmorris@uchicago.edu} \\ Department of Psychology \\ University of Chicago \And {\large \bf Daniel Yurovsky} \\ \texttt{yurovsky@uchicago.edu} \\ Department of Psychology \\ University of Chicago}
 
 \begin{document}
 
@@ -91,9 +91,9 @@ accounts for this remarkable transition?
 One possiblility is that children's caregivers deserve most of the
 credit; that the language parents produce to their children is optimized
 for teaching. Although there is some evidence that aspects of
-child-directed support learning, other aspects--even in the same
+child-directed speech support learning, other aspects--even in the same
 subproblem, e.g.~phoneme discrimination--appear to make learning more
-difficulty (Eaves Jr, Feldman, Griffiths, \& Shafto, 2016; McMurray,
+difficul (Eaves Jr, Feldman, Griffiths, \& Shafto, 2016; McMurray,
 Kovack-Lesh, Goodwin, \& McEchron, 2013). In general, parents rarely
 explicltly correct their children, and children are resistant to the
 rare explicit language correction they do get (Newport, Gleitman, \&
@@ -127,16 +127,28 @@ that the child can understand, and thus might tune the complexity of
 their speech not for the sake of learning itself, but as a byproduct of
 in-the-moment pressure to communicate successfully (Yurovsky, 2017).
 
-We take as our model system a simple iterated reference game in which
-two players earn points for communicating successfully with each-other
-about the objects in front of them. First in a computational model, and
-then in a set of experiments with adults on Mechanical Turk, we show
-that pedagogically-supportive input can arise from purely selfish
-motives to maximize the cost of communicating successfully while
-minimizing the cost of communcation. We take these results as a proof of
-concept that both the features of child-directed speech that support
-learning as well as those that inhibit it may arise from a single
-unifying goal: The desire to communicative efficiently.
+We explore the emergence of tuning in a simple model system: an iterated
+reference game in which two players earn points for communicating
+successfully with each-other. On each round of the game, participants
+can point--a signal which is costly to produce but always
+communicatively effective, or can use language--a cheaper signal which
+is cheap to produce but successful only if both players share a common
+lexicon. Crucially, participants can point and speak together--paying
+the cost of both, but effectively establishing a shared label for this
+referent that they can exploit on later trials of the game.
+
+In a series of experiments on Mechanical Turk, we show that people tune
+their communicative to choices to varying cost and reward structures,
+and also critically to their partner's linguistic knowledge--teaching
+when partners are unlikely to know language and many more rounds remain.
+We then show that human behavior can be explained by a rational planning
+model that seeks to optimize its expected utility over the course of the
+game. Together, this shows that pedagogically-supportive input can arise
+from purely selfish motives to maximize the cost of communicating
+successfully while minimizing the cost of communcation. We take these
+results as a proof of concept that both the features of child-directed
+speech that support learning as well as those that inhibit it may arise
+from a single unifying goal: The desire to communicative efficiently.
 
 \section{Model: Communication as
 Planning}\label{model-communication-as-planning}
@@ -167,7 +179,7 @@ communicative modality based on the expected utilities.
 When estimating expected utility, the model sums the expected utility of
 a given trial and any remaining trials for that particular object. This
 allows the speaker to engage in planning by accounting for the way a
-given message may affect knowledge changes and thus affect subsequent
+given message may induce knowledge changes and thus affect subsequent
 expected utilities. Utilites were scaled using an exponential discounter
 as a function of delay (Do we want to cite a precedent for this?) to
 give greater weight to immediate rewards than subsequent rewards.
@@ -268,7 +280,7 @@ the basis of their own knowledge, the degree of training, and the
 imposed utilities.
 
 \begin{CodeChunk}
-\begin{figure}[H]
+\captionsetup{width=0.8\columnwidth}\begin{figure}[H]
 
 {\centering \includegraphics{figs/image1-1} 
 
@@ -305,7 +317,7 @@ could directly manipulate the speed of the pointer while holding the
 arrow keys to effectively set maximum possible utility of using gesture.
 
 \begin{CodeChunk}
-\begin{figure}[H]
+\captionsetup{width=0.8\columnwidth}\begin{figure}[H]
 
 {\centering \includegraphics{figs/image-1} 
 
@@ -431,7 +443,7 @@ teach when they were told the listner had half as much exposure (B =
 did (B = -4.64, p \textless{} 0.001).
 
 \begin{CodeChunk}
-\begin{figure}[H]
+\captionsetup{width=0.8\columnwidth}\begin{figure}[H]
 
 {\centering \includegraphics{figs/image3-1} 
 
@@ -460,15 +472,16 @@ pedagogical goals, merely by wishing to communicate more efficiently in
 the future. As a final check to ensure that accounting for the future is
 indeed crucial to the emergence of pedagoical behaviors in our
 framework, we ran a version of our partnered game where speakers are
-told they will only send emssages about each object 1 time. As expected,
-teaching behavior dropped off completely\ldots{} (TBD).
+told they will only send emssages about each object 1 time.
+
+As expected, teaching behavior dropped off completely\ldots{} (TBD).
 
 \section{Model Comparison}\label{model-comparison}
 
 {[}Is this where the actual model fit stuff should live?{]}
 
 \begin{CodeChunk}
-\begin{figure}[H]
+\captionsetup{width=0.8\columnwidth}\begin{figure}[H]
 
 {\centering \includegraphics{figs/image4-1} 
 

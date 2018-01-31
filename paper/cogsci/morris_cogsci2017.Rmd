@@ -47,23 +47,12 @@ Alternatively, even the youngest infants may already come to language acquisitio
 
 In this paper we explore the consequences of a a third possibility: The language that children hear is neither designed for pedagogy, nor is it random: it is designed for communication [@brown1977]. We take as the caregiver's goal the desire to communicate with the child, not about language itself, but instead about the world in front of them. To succeed, the caregiver must produce the kinds of commincative signals that the child can understand, and thus might tune the complexity of their speech not for the sake of learning itself, but as a byproduct of in-the-moment pressure to communicate successfully [@yurovsky2017]. 
 
-We take as our model system a simple iterated reference game in which two players earn points for communicating successfully with each-other about the objects in front of them. First in a computational model, and then in a set of experiments with adults on Mechanical Turk, we show that pedagogically-supportive input can arise from purely selfish motives to maximize the cost of communicating successfully while minimizing the cost of communcation. We take these results as a proof of concept that both the features of child-directed speech that support learning as well as those that inhibit it may arise from a single unifying goal: The desire to communicative efficiently. 
+We explore the emergence of tuning in a simple model system: an iterated reference game in which two players earn points for communicating successfully with each-other. On each round of the game, participants can point--a signal which is costly to produce but always communicatively effective, or can use language--a cheaper signal which is cheap to produce but successful only if both players share a common lexicon. Crucially, participants can point and speak together--paying the cost of both, but effectively establishing a shared label for this referent that they can exploit on later trials of the game. 
+
+In a series of experiments on Mechanical Turk, we show that people tune their communicative to choices to varying cost and reward structures, and also critically to their partner's linguistic knowledge--teaching when partners are unlikely to know language and many more rounds remain. We then show that human behavior can be explained by a rational planning model that seeks to optimize its expected utility over the course of the game. Together, this shows that pedagogically-supportive input can arise from purely selfish motives to maximize the cost of communicating successfully while minimizing the cost of communcation. We take these results as a proof of concept that both the features of child-directed speech that support learning as well as those that inhibit it may arise from a single unifying goal: The desire to communicative efficiently. 
 
 
 
-# Model: Communication as Planning
-
-We implemented a two-agent model of speaker and listener behavior in this game based on partially observable Markov decision processes.  The speaker is given a target referent each trial and must signal to the listener which object to select. Speakers send messages to the listener by speaking, a low cost cue that relies on the listener's knowledge, or by pointing, a higher cost cue that is unambiguous. 
-
-The speaker estimates the listener's knowledge. First, the speaker uses Markov chain Monte Carlo to infer their own learning rate based on how well they were able to learn a novel lexicon after N exposures. Then, given the listner's degree of exposure, the speaker can use their own learning rate to infer the probability that the listener would know any given object-label mapping.  Across trials, the speaker gains further information about the listener through their selections, allowing them to update their beliefs about the listener's knoweldge state.  
-
-The model specifies the relative costs for each communicative modality. On each trial, the speaker estimates the expected utility of each modality by accounting for these costs, their own knowledge of the object's label, and the probability that the listner knows the object's label. The speaker then uses Luce's choice axiom to select a communicative modality based on the expected utilities. 
-
-When estimating expected utility, the model sums the expected utility of a given trial and any remaining trials for that particular object. This allows the speaker to engage in planning by accounting for the way a given message may induce knowledge changes and thus affect subsequent expected utilities. Utilites were scaled using an exponential discounter as a function of delay (Do we want to cite a precedent for this?) to give greater weight to immediate rewards than subsequent rewards.
-
-Crucially, speakers can also combine both communication cues, paying the upfront cost of both, to produce a message that is both unambiguous and informative.  In this way, speakers are able to teach their partners object-label mappings.  A speaker that plans may thus infer that teaching the listener, especially if there is an asymmetry in their knowledge states, may have a high expected utility after accounting for remaining trials where the speaker could use a less costly cue (i.e. speech). After producing both cues, the speaker also updates their own beliefs about the partner's knowledge state to reflect this exposure. 
-
-Over the course of three experiments, [TOTAL N] participants were recruited via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment.  Turkers played partnered, iterated reference games.  In these studies, all particpants were placed in the role of speaker and listener responses were programmed. 
 
 # Experiment 1a   
 
@@ -167,8 +156,19 @@ Planning is critical to our model.  A pressure to communicate successfully in-th
 As expected, teaching behavior dropped off completely... (TBD).
 
 
+# Model: Communication as Planning
 
-# Model Comparison
+We implemented a two-agent model of speaker and listener behavior in this game based on partially observable Markov decision processes.  The speaker is given a target referent each trial and must signal to the listener which object to select. Speakers send messages to the listener by speaking, a low cost cue that relies on the listener's knowledge, or by pointing, a higher cost cue that is unambiguous. 
+
+The speaker estimates the listener's knowledge. First, the speaker uses Markov chain Monte Carlo to infer their own learning rate based on how well they were able to learn a novel lexicon after N exposures. Then, given the listner's degree of exposure, the speaker can use their own learning rate to infer the probability that the listener would know any given object-label mapping.  Across trials, the speaker gains further information about the listener through their selections, allowing them to update their beliefs about the listener's knoweldge state.  
+
+The model specifies the relative costs for each communicative modality. On each trial, the speaker estimates the expected utility of each modality by accounting for these costs, their own knowledge of the object's label, and the probability that the listner knows the object's label. The speaker then uses Luce's choice axiom to select a communicative modality based on the expected utilities. 
+
+When estimating expected utility, the model sums the expected utility of a given trial and any remaining trials for that particular object. This allows the speaker to engage in planning by accounting for the way a given message may induce knowledge changes and thus affect subsequent expected utilities. Utilites were scaled using an exponential discounter as a function of delay (Do we want to cite a precedent for this?) to give greater weight to immediate rewards than subsequent rewards.
+
+Crucially, speakers can also combine both communication cues, paying the upfront cost of both, to produce a message that is both unambiguous and informative.  In this way, speakers are able to teach their partners object-label mappings.  A speaker that plans may thus infer that teaching the listener, especially if there is an asymmetry in their knowledge states, may have a high expected utility after accounting for remaining trials where the speaker could use a less costly cue (i.e. speech). After producing both cues, the speaker also updates their own beliefs about the partner's knowledge state to reflect this exposure. 
+
+Over the course of three experiments, [TOTAL N] participants were recruited via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment.  Turkers played partnered, iterated reference games.  In these studies, all particpants were placed in the role of speaker and listener responses were programmed. 
 
 [Is this where the actual model fit stuff should live?]
 ```{r image4, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=4, fig.height=4, set.cap.width=T, num.cols.cap=1, fig.cap = "Plot of the fit between model predictions and empirical data."}
