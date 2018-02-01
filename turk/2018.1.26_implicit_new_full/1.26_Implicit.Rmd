@@ -1,0 +1,461 @@
+---
+title: "1.28 New Timer Implicit"
+author: "Ben Morris"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: tango
+    theme: flatly
+    toc: true
+    toc_float:
+      collapsed: true
+    code_folding: hide
+---
+
+
+
+These data were on MTurk collected on January 26th, 2018. 360 participants were run, with 40 in each of 9 conditions.  Timer at 6.5 seconds.  3 trials per object.
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align='center', messages=FALSE, warning = FALSE,
+                      fig.height = 3, fig.width=5)
+```
+
+```{r load_libraries, include = FALSE, results = "hide"}
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+library(langcog)
+library(knitr)
+library(lme4)
+library(directlabels)
+
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", 
+                          "toma", "dax", "gazzer", "kiv","manu"))
+
+theme_set(theme_bw(base_size = 14) + theme(panel.grid = element_blank(),
+                  strip.background = element_blank()))
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", speech = "#e8250b", gesture = "#1f11e0", both ="#54a832")
+
+modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", speech = "#e8250b")
+```
+
+# Load Data
+
+```{r read_data, warning = FALSE}
+filenames <- list.files("production-results/", 
+                         pattern="*.json", full.names = TRUE)
+filenames <- append(filenames, list.files("../2018.1.26_implicit_new_pilot/production-results/", 
+                         pattern="*.json", full.names = TRUE))
+filenames <- append(filenames, list.files("../2018.1.31_implicit_fix/production-results/", 
+                         pattern="*.json", full.names = TRUE))
+ldf <- lapply(filenames, fromJSON)
+res <- lapply(ldf, summary)
+
+sender_timing <- NULL
+sender_exposures <- NULL
+sender_ruleCheck <- NULL
+sender_manipulation <- NULL
+sender_game <- NULL
+sender_test<- NULL
+sender_attn <- NULL
+sender_turkIds<-NULL
+sender_comments<- NULL
+for (i in 1:length(ldf)) {
+  janeDoe <- ldf[[i]]
+  anyAttn <- ifelse(length(janeDoe$answers$data$attnCheck)!=0, 1,0)
+  ldf_num <- i
+  sender_timing <- rbind(sender_timing, as.data.frame(
+      cbind(ldf_num, start= janeDoe$AcceptTime,stop = janeDoe$SubmitTime)))
+  sender_exposures <- rbind(sender_exposures,cbind(ldf_num, janeDoe$answers$data$expDuration))
+  sender_ruleCheck <- rbind(sender_ruleCheck, janeDoe$answers$data$ruleQuestions)
+  sender_manipulation <- rbind(sender_manipulation, cbind(ldf_num,janeDoe$answers$data$manipCheck))
+  sender_test <- rbind(sender_test,cbind(ldf_num, janeDoe$answers$data$testTrials))
+  sender_game <- rbind(sender_game,cbind(ldf_num,janeDoe$answers$data$gameTrials))
+  if (length(janeDoe$answers$data$attnCheck)!=0) 
+    {sender_attn <- rbind(sender_attn, janeDoe$answers$data$attnCheck)}
+  sender_turkIds <- rbind(sender_turkIds, cbind(ldf_num, janeDoe$WorkerId))
+  sender_comments <- rbind(sender_comments,janeDoe$answers$data$comments)
+}
+```
+
+## Process and Clean the Sender Data
+
+```{r clean_data, warning = FALSE, message=FALSE}
+#join in knowledge at Test
+sender_test_slim <- sender_test %>% 
+  mutate(subID =as.numeric(subID)) %>%
+  mutate(responseCorrect = ifelse(realLabel==adjLabel, 1, responseCorrect)) %>%
+  select(targetObjectName, realLabel, subID, exposureRate, responseCorrect, ldf_num) %>%
+  rename(testCorrect= responseCorrect)
+#sender_game
+all_data_fixed <- sender_game  %>%
+  left_join(sender_test_slim %>% mutate(ldf_num = as.integer(ldf_num), subID = as.character(subID)))
+
+all_data <- all_data_fixed %>%
+  mutate(trialnum = trialnum - 35) %>%
+  mutate(partnersExposure = factor(partnersExposure, levels = c("0", "1/2", "1", "perfect"),
+                                   labels = c("None", "Half", "Same", 'Perfect'))) %>%
+  mutate(toBeDropped=0) %>%
+  rename(condition=speed)
+```
+
+We keep track of any participants who close or refresh the page, because any participants who did so before eventually submitting data may have had an a greater number of exposures than others and also have likely been exposed to multiple sets of object-word pairings. 
+
+```{r clean_data, warning = FALSE, message=FALSE}
+#check who closed or reloaded page against who submitted data!!
+sender_turkIds_clean <- data.frame(sender_turkIds)
+
+stopped_exp <- read.table(textConnection(gsub(";","\n", readLines("experiment_files/participants_who_closed.txt"))))
+stopped_exp <- append(stopped_exp, read.table(textConnection(
+  gsub(";","\n", readLines("../2018.1.31_implicit_fix/experiment_files/participants_who_closed.txt")))))
+stopped_exp <- read.table(textConnection(gsub(","," ", stopped_exp$V1)))
+
+quit_participants <- stopped_exp %>% 
+  filter(V1 %in% sender_turkIds_clean$V2) %>%
+  left_join(sender_turkIds_clean, by=c("V1" = "V2"))
+quit_participants$V2 <- as.numeric((quit_participants$V2))
+quitters <- quit_participants[which(quit_participants$V2 > 1),]
+
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% quitters$ldf_num, 1, toBeDropped)) 
+```
+
+
+Also drop people who fail manipulation check.  
+```{r clean_data, warning = FALSE, message=FALSE}
+#people who pass manipulation check
+manipFail <- (sender_manipulation %>% filter(manipCorrect==0 | numTrialsCorrect==0) %>% select(ldf_num))
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% manipFail$ldf_num, 1, toBeDropped))
+```
+
+
+Also drop people who submit nonsense messages. 
+```{r clean_data, warning = FALSE, message=FALSE}
+#also check for wonky repsonse
+how_many_adj <- sender_game %>% 
+  ungroup() %>%
+  mutate(adjusted = if_else(is.na(typedLabel), as.numeric(NA), 
+                            if_else(typedLabel %in% novelWords, 0, 1))) %>%
+  # mutate(adjusted = ifelse(typedLabel != adjLabel, 1, 0)) %>%
+  group_by(ldf_num) %>%
+  summarize(n_Adjusts = sum(adjusted, na.rm=TRUE), num_Corr = sum(responseCorrect, na.rm=TRUE))
+
+hist(how_many_adj$n_Adjusts, breaks= 27)
+nrow(how_many_adj  %>% filter(n_Adjusts>18))
+threshold <- quantile(how_many_adj$n_Adjusts, prob=.95)
+threshold
+way_off_subjs <- how_many_adj %>%
+  filter(n_Adjusts > threshold)
+
+way_off_trials <- sender_game %>% filter(ldf_num %in% way_off_subjs$ldf_num) %>% 
+  select(ldf_num, typedLabel, adjLabel, realLabel)  %>%
+  filter(typedLabel != adjLabel)
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% way_off_subjs$ldf_num, 1, toBeDropped))
+```
+
+
+####Check for runs of strings that are repated as messages.
+
+  In these data there are 5 participants who sent messages 3 or more times in a row.  
+```{r clean_data, warning = FALSE, message=FALSE}
+# same string three times in a row?
+findRuns <- function(word, count) {
+  runs <- ifelse(word == lag(word), findRuns(lag(word), count+1), count)
+  ifelse(is.na(runs), 0, runs)
+}
+
+send_freqs <- filter(sender_game) %>%
+  arrange(partnersExposure,ldf_num,trialnum) %>%
+  group_by(ldf_num) %>%
+  mutate(n_back = findRuns(typedLabel, 0)) %>%
+  group_by(partnersExposure, ldf_num, typedLabel) %>%
+  summarise(n_back = max(n_back)) %>%
+  filter(!is.na(typedLabel))
+
+n_back_subjs <- send_freqs %>%
+  #note that n_back == 2 is a 3-string run
+  filter(n_back >= 2) %>%
+  select(ldf_num, n_back)
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% n_back_subjs$ldf_num, 1, toBeDropped))
+
+```
+
+####Check for participants who sent the same message many times over all trials
+
+  Drop participants who send the same label too many times across all the game trials. 
+```{r clean_data, warning = FALSE, message=FALSE}
+  # same message just >=6 times total?
+
+repeated_words <-  sender_game %>%
+  filter(method != "click") %>%
+  group_by(ldf_num, typedLabel, realLabel) %>%
+  summarise(n = n()) %>%
+  group_by(ldf_num, typedLabel) %>%
+  summarize(n=sum(n), num_targets= n()) %>% 
+  group_by(ldf_num) %>%
+  summarise(n = max(n))
+
+
+threshold <- quantile(repeated_words$n, prob=.95)
+repeated_words_subjs <- repeated_words %>%
+  filter(n > threshold) 
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% repeated_words_subjs$ldf_num, 1, toBeDropped))
+
+```
+
+
+
+####Check for single character messages
+```{r clean_data, warning = FALSE, message=FALSE}
+charLength <- sender_game %>% 
+  mutate(typedChar = nchar(typedLabel)) %>%
+  select(ldf_num, typedLabel, typedChar) 
+
+one_letter_subjs <- charLength %>%
+  filter(typedChar==1) %>%
+  group_by(ldf_num) %>%
+  summarize(n=n()) %>%
+  filter(n > 1)
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% one_letter_subjs$ldf_num, 1, toBeDropped))
+```
+
+####Check for English
+
+  After doing the above exclusions, an experimenter manually checked all remaining messages where the label was not part of the starting lexicon. While the game program checks participants messages to prevent english labels from being used during the game, some particpants produced pseudo-english labels which skirted this rule. In the manual check, any participant who produced a pseudo-english label (e.g., 'blu') was removed from analyses. 
+  
+  Additionally, any participant who produced a nonsense label (e.g., 'xdhi') that was not caught by the above rules was also removed. 
+```{r clean_data, warning = FALSE, message=FALSE}
+# do all the filtering, then check any typedLabels that got through for english words.
+all_data_dropped <- all_data %>%
+  filter(toBeDropped == 0)
+
+non_vocab_labels <- all_data_dropped %>%
+  filter(!is.na(typedLabel)) %>%
+  filter(!typedLabel %in% novelWords)
+non_vocab_labels %>% select(ldf_num,typedLabel, realLabel) %>% filter(ldf_num > 355) %>% View()
+
+english_subjs <- c(70, 94, 125, 247, 290, 320, 63, 404)
+one_english_subjs <- c(21, 36, 55, 79, 112, 253, 263, 305)
+nonsense_subjs <- c(69, 292)
+
+all_data <- all_data %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% english_subjs, 1, toBeDropped)) %>%
+  mutate(toBeDropped = ifelse(ldf_num %in% nonsense_subjs, 1, toBeDropped)) %>%
+    mutate(toBeDropped = ifelse(ldf_num %in% one_english_subjs, 1, toBeDropped))
+
+```
+
+
+####Also check for condition assignment inquealities. 
+
+  
+```{r clean_data, warning = FALSE, message=FALSE}
+### check for doubling...
+  ### check the condition assignment bug...
+sender_game %>% 
+  distinct(ldf_num, username, speed, partnersExposure) %>% 
+  group_by(speed, partnersExposure) %>%
+  summarize(n=n()) 
+# error where one condition received double the pariticpants, need to drop folks
+
+## after dropping
+all_data %>% 
+  filter(toBeDropped==0) %>% 
+  distinct(ldf_num, username, condition, partnersExposure) %>% 
+  group_by(condition, partnersExposure) %>%
+  summarize(n=n()) 
+```
+
+
+```{r}
+all_data$partnerVocab <- vapply(all_data$partnerVocab, paste, collapse = ", ", character(1L))
+write.csv(all_data, file= "1.26_data.csv")
+```
+
+
+```{r by_appearance, include=FALSE}
+
+all_data_dropped <- all_data %>%
+  filter(toBeDropped != 1) %>%
+  group_by(ldf_num, exposureRate, targetObjectName) %>%
+  mutate(appearance = if_else(trialnum == min(trialnum), "First",
+                              if_else(trialnum == max(trialnum), "Third", "Second"))) %>%
+  mutate(method=factor(method, levels=c("label", "click", "label_click"), labels=c('Speech', 'Gesture', 'Teach')))
+
+```
+
+
+Experiment 3, Plot 1. 
+```{r}
+###wrangling data for plots by exposure
+prop_methods_exposures <- all_data_dropped %>%
+  filter(toBeDropped != 1) %>%
+  # filter(partnersExposure == 0) %>%
+  ungroup() %>%
+  select(condition,ldf_num, partnersExposure, exposureRate,method) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
+  mutate(n = n/sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), exposureRate, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, method, exposureRate) %>%
+  summarise(mean = mean(n), se = seprop(n)) %>%
+  ungroup()
+  # mutate(partnersExposure=factor(partnersExposure, labels=c('None', 'Half', 'Twice'))) %>%
+
+
+#Exp. 3, Plot 1. 
+prop_methods_exposures %>% 
+  filter(method!="Teach", partnersExposure== "Perfect") %>%
+  ggplot(aes(x=exposureRate, y=mean, color = method)) +
+  geom_point(size=1.5,position=position_dodge(.25)) +
+  ## plotting model predictions
+  # geom_ribbon(data=(prop_methods_exposures %>% filter(isEmpirical=="pred_perf_teaching")),
+  #   aes(x=as.numeric(exposureRate),ymax = mean + se, ymin = mean - se,
+  #       fill=method, alpha=.4), position=position_dodge(.25)) +
+  geom_line(aes(x=(exposureRate), y=mean),  size=.9,
+          position=position_dodge(.25)) +
+  geom_linerange(aes(ymax = mean + se,
+    ymin = mean - se),position=position_dodge(.25)) +
+  # facet_grid(partnersExposure ~ condition) +
+  #labs(y="Proportion of Trials", x="Exposure Rate during Training") +
+  coord_cartesian(ylim=c(0,1)) +
+  facet_grid(.~condition) +
+  # scale_alpha(range = c(0.4, 0.8)) +
+  theme_bw()
+  # scale_color_manual(values=modality.colors)
+```
+
+
+Plot 2: Teaching
+```{r}
+
+prop_methods_teaching <- all_data_dropped %>%
+  filter(toBeDropped != 1) %>%
+  # filter(partnersExposure == 0) %>%
+  ungroup() %>%
+  select(condition,ldf_num, partnersExposure, appearance,method) %>%
+  group_by(condition, ldf_num,partnersExposure, appearance, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, appearance) %>%
+  mutate(n = n/sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), appearance, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, method, appearance) %>%
+  summarise(mean = mean(n), se = seprop(n)) %>%
+  filter(method=='Teach') %>%
+  ungroup() %>%
+  # mutate(partnersExposure=factor(partnersExposure, labels=c('None', 'Half', 'Twice'))) %>%
+  mutate(appearance=factor(appearance, labels=c('First','Second', 'Third')))
+
+prop_methods_teaching %>%
+  # filter( isEmpirical=='method') %>%
+  ggplot(aes(x=appearance, y=mean, label=partnersExposure)) +
+  geom_point(aes(x=appearance, y=mean, color=partnersExposure), size=2.25, position=position_dodge(.25)) +
+  # geom_ribbon(data=(prop_methods_teaching %>% filter(isEmpirical=="pred_perf_teaching")),
+  #   aes(x=as.numeric(appearance),ymax = mean + se, ymin = mean - se, 
+  #       fill=partnersExposure, alpha=.4), position=position_dodge(.25)) +
+  geom_line(aes(x=appearance, y=mean, group=partnersExposure, color=partnersExposure), 
+            size=1, position=position_dodge(.25)) +
+  geom_linerange(aes(ymax = mean + se,
+    ymin = mean - se, color=partnersExposure), position=position_dodge(.25)) +
+  facet_grid(. ~ condition) +
+  labs(y="Proportion of Teaching Trials", x="Object Instance during Game") +
+  coord_cartesian(ylim=c(0,.4)) +
+  geom_dl(aes(label = partnersExposure, color=partnersExposure), method=list("first.qp", hjust=c(.95, 1.45, 1.55), cex = .9)) +
+  # scale_color_manual(values=c("#87d868", "#54a832", "#2c6d12"), name=NULL, labels=NULL) 
+  scale_color_manual(values=c("#87d868", "#54a832", "#2c6d12"), name = "Partner's Exposure", 
+                    labels=c("None", "Half as Much", "Twice as Much")) +
+  scale_fill_manual(values=c("#87d868", "#54a832", "#2c6d12"), name = "Partner's Exposure", 
+                    labels=c("None", "Half as Much", "Twice as Much")) 
+  # geom_point(aes(x='First',y=0.1638889))+
+  # geom_linerange(aes(x="First", ymax=(0.1638889+ 0.05852976), ymin=(0.1638889- 0.05852976)), linetype="dotted")
+```
+
+
+
+```{r}
+tmp <- all_data_dropped %>%
+  mutate(appearance= as.numeric(as.factor(appearance))) %>%
+  mutate(partnersExposure = as.numeric(partnersExposure) - 2,
+         partnersExposure = if_else(partnersExposure == 2, 1, partnersExposure))
+# (0, 0, 1)
+
+gm_label <- glmer((method=='Speech') ~ appearance *
+                partnersExposure +
+                condition +
+                exposureRate +
+               (exposureRate|ldf_num),
+               control = glmerControl(optimizer = "bobyqa"),
+            data=tmp,
+      family=binomial)
+
+gm_teach <- glmer((method=='Teach') ~ appearance +
+                partnersExposure +
+                condition +
+                exposureRate +
+               (exposureRate|ldf_num),
+             
+            data=tmp,
+      family=binomial)
+
+gm_gesture <- glmer((method=='Gesture') ~ appearance +
+                partnersExposure +
+                condition +
+                exposureRate +
+               (exposureRate|ldf_num),
+                       control = glmerControl(optimizer = "bobyqa"),
+            data=tmp,
+      family=binomial)
+
+```
+
+
+
+
+Speed Check
+```{r}
+tmp <- all_data_dropped %>% group_by(condition, method) %>%
+  filter(duration<15000) %>%
+  filter(responseCorrect==1) %>%
+  summarize(medDur = median(duration), sdDur = sd(duration),
+            meanScore=mean(score), n =n(), avgCorr = mean(responseCorrect)) 
+
+
+tmp %>%
+  gather(type, Score, meanScore) %>%
+  mutate(Score = if_else(Score < 0, 0, Score))  %>%
+  # mutate(method=factor(method, levels=c("label","click", "label_click"))) %>%
+  ggplot(aes(x=method))+
+  geom_bar(stat="identity", aes(x=method, y=Score, fill=method)) +
+  # geom_bar(aes(x=method, y=medDur))+
+  facet_grid(type~condition) +
+  theme_bw()
+```
+

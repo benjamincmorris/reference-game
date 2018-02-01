@@ -445,3 +445,8 @@ wrong_first_data <- sender_all_data_split %>%
 
 ```
 
+
+```{r}
+no_teaching_data <- read.csv("turk/12.8_no_teaching.csv")
+```
+
