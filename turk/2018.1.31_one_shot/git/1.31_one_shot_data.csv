@@ -1,0 +1,406 @@
+"","ldf_num","username","exposureRate","responseCorrect","typedLabel","realLabel","trialnum","partnersExposure","adjLabel","subID","duration","score","targetPosition","timestamp","targetObjectName","phase","partnerSelection","partnerVocab","condition","method","clickedObject","testCorrect","toBeDropped"
+"1",1,"butch",4,1,NA,"toma",1,"None","",1,23152,10,"deg0","12:50:47","2009-600.jpg","game","2009-600.jpg","",40,"click","toma","1",0
+"2",1,"butch",4,1,NA,"kiv",2,"None","",1,5256,20,"deg320","12:51:02","2023-600.jpg","game","2023-600.jpg","",40,"click","kiv","UNKNOWN",0
+"3",1,"butch",2,1,NA,"fep",3,"None","",1,4911,20,"deg320","12:51:17","2056-600.jpg","game","2056-600.jpg","",40,"click","fep","UNKNOWN",0
+"4",1,"butch",4,1,NA,"kreeb",4,"None","",1,6521,10,"deg160","12:51:31","2005-600.jpg","game","2005-600.jpg","",40,"click","kreeb","1",0
+"5",1,"butch",2,1,NA,"dax",5,"None","",1,5648,10,"deg160","12:51:45","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","1",0
+"6",1,"butch",1,1,NA,"wug",6,"None","",1,8680,10,"deg280","12:52:01","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","UNKNOWN",0
+"7",1,"butch",1,1,NA,"manu",7,"None","",1,6248,10,"deg200","12:52:13","2002-600.jpg","game","2002-600.jpg","",40,"click","manu","UNKNOWN",0
+"8",1,"butch",1,1,NA,"blicket",8,"None","",1,5313,20,"deg200","12:52:23","2025-600.jpg","game","2025-600.jpg","",40,"click","blicket","UNKNOWN",0
+"9",1,"butch",2,1,NA,"gazzer",9,"None","",1,5390,10,"deg200","12:52:34","2006-600.jpg","game","2006-600.jpg","",40,"click","gazzer","UNKNOWN",0
+"10",2,"HB",4,1,"kreeb","kreeb",1,"None","kreeb",1,7658,10,"deg80","14:23:20","2007-600.jpg","game","2007-600.jpg","kreeb, 2007-600.jpg",40,"label_click","kreeb","1",0
+"11",2,"HB",1,1,NA,"fep",2,"None","",1,7015,10,"deg160","14:23:35","2002-600.jpg","game","2002-600.jpg","kreeb, 2007-600.jpg",40,"click","fep","UNKNOWN",0
+"12",2,"HB",2,1,"kiv","kiv",3,"None","kiv",1,7307,10,"deg280","14:23:48","2025-600.jpg","game","2025-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg",40,"label_click","kiv","1",0
+"13",2,"HB",4,1,"manu","manu",4,"None","manu",1,8298,10,"deg280","14:24:02","2056-600.jpg","game","2056-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg, manu, 2056-600.jpg",40,"label_click","manu","1",0
+"14",2,"HB",1,1,NA,"dax",5,"None","",1,8784,10,"deg320","14:24:16","2005-600.jpg","game","2005-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg, manu, 2056-600.jpg",40,"click","dax","UNKNOWN",0
+"15",2,"HB",1,1,NA,"wug",6,"None","",1,7003,10,"deg120","14:24:30","2023-600.jpg","game","2023-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg, manu, 2056-600.jpg",40,"click","wug","UNKNOWN",0
+"16",2,"HB",2,0,"gazzer","gazzer",7,"None","gazzer",1,1451,0,"deg240","14:24:38","2009-600.jpg","game","2006-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg, manu, 2056-600.jpg",40,"label",NA,"1",0
+"17",2,"HB",2,1,NA,"toma",8,"None","",1,7035,10,"deg0","14:24:53","2001-600.jpg","game","2001-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg, manu, 2056-600.jpg",40,"click","toma","UNKNOWN",0
+"18",2,"HB",4,1,NA,"blicket",9,"None","",1,11027,10,"deg240","14:25:11","2006-600.jpg","game","2006-600.jpg","kreeb, 2007-600.jpg, kiv, 2025-600.jpg, manu, 2056-600.jpg",40,"click","blicket","1",0
+"19",3,"Wes",2,1,"kiv","kiv",1,"None","kiv",1,31978,10,"deg40","12:47:52","2002-600.jpg","game","2002-600.jpg","kiv, 2002-600.jpg",40,"label_click","kiv","UNKNOWN",0
+"20",3,"Wes",1,1,NA,"gazzer",2,"None","",1,8270,10,"deg0","12:48:09","2056-600.jpg","game","2056-600.jpg","kiv, 2002-600.jpg",40,"click","gazzer","UNKNOWN",0
+"21",3,"Wes",4,1,NA,"blicket",3,"None","",1,6804,10,"deg280","12:48:26","2005-600.jpg","game","2005-600.jpg","kiv, 2002-600.jpg",40,"click","blicket","1",0
+"22",3,"Wes",1,1,NA,"dax",4,"None","",1,6008,10,"deg80","12:48:40","2009-600.jpg","game","2009-600.jpg","kiv, 2002-600.jpg",40,"click","dax","0",0
+"23",3,"Wes",2,1,NA,"wug",5,"None","",1,5583,10,"deg240","12:48:53","2023-600.jpg","game","2023-600.jpg","kiv, 2002-600.jpg",40,"click","wug","UNKNOWN",0
+"24",3,"Wes",4,1,NA,"toma",6,"None","",1,5937,10,"deg200","12:49:08","2007-600.jpg","game","2007-600.jpg","kiv, 2002-600.jpg",40,"click","toma","0",0
+"25",3,"Wes",1,1,NA,"kreeb",7,"None","",1,7970,10,"deg320","12:49:23","2025-600.jpg","game","2025-600.jpg","kiv, 2002-600.jpg",40,"click","kreeb","UNKNOWN",0
+"26",3,"Wes",2,1,NA,"manu",8,"None","",1,6600,10,"deg280","12:49:37","2006-600.jpg","game","2006-600.jpg","kiv, 2002-600.jpg",40,"click","manu","UNKNOWN",0
+"27",3,"Wes",4,1,NA,"fep",9,"None","",1,5807,10,"deg80","12:49:48","2001-600.jpg","game","2001-600.jpg","kiv, 2002-600.jpg",40,"click","fep","UNKNOWN",0
+"28",4,"blergh",1,1,NA,"dax",1,"None","",1,4997,20,"deg320","13:14:29","2001-600.jpg","game","2001-600.jpg","",40,"click","dax","UNKNOWN",0
+"29",4,"blergh",4,1,"gazzer","gazzer",2,"None","gazzer",1,7755,10,"deg240","13:14:44","2009-600.jpg","game","2009-600.jpg","gazzer, 2009-600.jpg",40,"label_click","gazzer","1",0
+"30",4,"blergh",1,1,NA,"wug",3,"None","",1,5719,10,"deg200","13:14:58","2007-600.jpg","game","2007-600.jpg","gazzer, 2009-600.jpg",40,"click","wug","0",0
+"31",4,"blergh",4,1,"manu","manu",4,"None","manu",1,6567,10,"deg120","13:15:11","2025-600.jpg","game","2025-600.jpg","gazzer, 2009-600.jpg, manu, 2025-600.jpg",40,"label_click","manu","1",0
+"32",4,"blergh",1,1,NA,"fep",5,"None","",1,5336,10,"deg240","13:15:24","2023-600.jpg","game","2023-600.jpg","gazzer, 2009-600.jpg, manu, 2025-600.jpg",40,"click","fep","UNKNOWN",0
+"33",4,"blergh",2,1,NA,"toma",6,"None","",1,5848,10,"deg80","13:15:35","2002-600.jpg","game","2002-600.jpg","gazzer, 2009-600.jpg, manu, 2025-600.jpg",40,"click","toma","UNKNOWN",0
+"34",4,"blergh",2,1,NA,"kreeb",7,"None","",1,5297,20,"deg120","13:15:45","2056-600.jpg","game","2056-600.jpg","gazzer, 2009-600.jpg, manu, 2025-600.jpg",40,"click","kreeb","1",0
+"35",4,"blergh",4,1,NA,"kiv",8,"None","",1,5897,10,"deg120","13:15:58","2006-600.jpg","game","2006-600.jpg","gazzer, 2009-600.jpg, manu, 2025-600.jpg",40,"click","kiv","1",0
+"36",4,"blergh",2,1,"blicket","blicket",9,"None","blicket",1,9921,10,"deg120","13:16:28","2005-600.jpg","game","2005-600.jpg","gazzer, 2009-600.jpg, manu, 2025-600.jpg, blicket, 2005-600.jpg",40,"label_click","blicket","1",0
+"37",5,"Lisa",2,1,NA,"dax",1,"None","",1,8385,10,"deg240","15:03:55","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","1",0
+"38",5,"Lisa",4,1,NA,"blicket",2,"None","",1,7152,10,"deg200","15:04:10","2009-600.jpg","game","2009-600.jpg","",40,"click","blicket","1",0
+"39",5,"Lisa",1,1,NA,"kiv",3,"None","",1,5801,10,"deg280","15:04:21","2056-600.jpg","game","2056-600.jpg","",40,"click","kiv","1",0
+"40",5,"Lisa",4,1,NA,"manu",4,"None","",1,7185,10,"deg120","15:04:33","2001-600.jpg","game","2001-600.jpg","",40,"click","manu","1",0
+"41",5,"Lisa",2,1,NA,"wug",5,"None","",1,8505,10,"deg160","15:04:49","2023-600.jpg","game","2023-600.jpg","",40,"click","wug","UNKNOWN",0
+"42",5,"Lisa",2,1,NA,"fep",6,"None","",1,9534,10,"deg200","15:05:04","2002-600.jpg","game","2002-600.jpg","",40,"click","fep","1",0
+"43",5,"Lisa",1,1,NA,"toma",7,"None","",1,7657,10,"deg200","15:05:17","2005-600.jpg","game","2005-600.jpg","",40,"click","toma","UNKNOWN",0
+"44",5,"Lisa",4,1,NA,"gazzer",8,"None","",1,6982,10,"deg120","15:05:31","2025-600.jpg","game","2025-600.jpg","",40,"click","gazzer","1",0
+"45",5,"Lisa",1,1,NA,"kreeb",9,"None","",1,8472,10,"deg320","15:05:45","2006-600.jpg","game","2006-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"46",6,"unicorn",4,1,NA,"wug",1,"None","",1,5743,10,"deg280","12:51:11","2056-600.jpg","game","2056-600.jpg","",40,"click","wug","1",0
+"47",6,"unicorn",1,1,NA,"manu",2,"None","",1,5379,10,"deg280","12:51:23","2002-600.jpg","game","2002-600.jpg","",40,"click","manu","1",0
+"48",6,"unicorn",2,1,NA,"blicket",3,"None","",1,4950,20,"deg160","12:51:33","2009-600.jpg","game","2009-600.jpg","",40,"click","blicket","1",0
+"49",6,"unicorn",4,1,NA,"toma",4,"None","",1,4821,20,"deg160","12:51:42","2001-600.jpg","game","2001-600.jpg","",40,"click","toma","1",0
+"50",6,"unicorn",1,1,NA,"fep",5,"None","",1,4819,20,"deg160","12:51:53","2007-600.jpg","game","2007-600.jpg","",40,"click","fep","UNKNOWN",0
+"51",6,"unicorn",2,1,NA,"gazzer",6,"None","",1,5354,10,"deg280","12:52:04","2006-600.jpg","game","2006-600.jpg","",40,"click","gazzer","1",0
+"52",6,"unicorn",4,1,NA,"kreeb",7,"None","",1,4462,30,"deg120","12:52:11","2025-600.jpg","game","2025-600.jpg","",40,"click","kreeb","1",0
+"53",6,"unicorn",1,1,NA,"dax",8,"None","",1,5356,10,"deg280","12:52:21","2005-600.jpg","game","2005-600.jpg","",40,"click","dax","UNKNOWN",0
+"54",6,"unicorn",2,1,NA,"kiv",9,"None","",1,5782,10,"deg240","12:52:32","2023-600.jpg","game","2023-600.jpg","",40,"click","kiv","1",0
+"55",7,"danny",1,1,NA,"kreeb",1,"None","",1,7336,10,"deg240","17:16:00","2025-600.jpg","game","2025-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"56",7,"danny",2,1,"wug","wug",2,"None","wug",1,8407,10,"deg120","17:16:16","2006-600.jpg","game","2006-600.jpg","wug, 2006-600.jpg",40,"label_click","wug","1",0
+"57",7,"danny",4,1,"manu","manu",3,"None","manu",1,7552,10,"deg120","17:16:30","2009-600.jpg","game","2009-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg",40,"label_click","manu","1",0
+"58",7,"danny",4,1,"dax","dax",4,"None","dax",1,6937,10,"deg40","17:16:44","2005-600.jpg","game","2005-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg, dax, 2005-600.jpg",40,"label_click","dax","1",0
+"59",7,"danny",1,1,NA,"kiv",5,"None","",1,5576,10,"deg80","17:16:56","2002-600.jpg","game","2002-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg, dax, 2005-600.jpg",40,"click","kiv","1",0
+"60",7,"danny",1,1,NA,"blicket",6,"None","",1,5304,20,"deg200","17:17:07","2001-600.jpg","game","2001-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg, dax, 2005-600.jpg",40,"click","blicket","0",0
+"61",7,"danny",4,1,"gazzle","gazzer",7,"None","gazzer",1,7250,10,"deg80","17:17:22","2023-600.jpg","game","2023-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg, dax, 2005-600.jpg, gazzle, 2023-600.jpg",40,"label_click","gazzer","1",0
+"62",7,"danny",2,1,"toma","toma",8,"None","toma",1,7608,10,"deg40","17:17:37","2007-600.jpg","game","2007-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg, dax, 2005-600.jpg, gazzle, 2023-600.jpg, toma, 2007-600.jpg",40,"label_click","toma","1",0
+"63",7,"danny",2,1,"fep","fep",9,"None","fep",1,7009,10,"deg240","17:17:48","2056-600.jpg","game","2056-600.jpg","wug, 2006-600.jpg, manu, 2009-600.jpg, dax, 2005-600.jpg, gazzle, 2023-600.jpg, toma, 2007-600.jpg, fep, 2056-600.jpg",40,"label_click","fep","1",0
+"64",8,"GiGi",2,1,NA,"kiv",1,"None","",1,7074,10,"deg200","15:10:19","2002-600.jpg","game","2002-600.jpg","",40,"click","kiv","UNKNOWN",0
+"65",8,"GiGi",2,1,NA,"fep",2,"None","",1,8513,10,"deg80","15:10:34","2006-600.jpg","game","2006-600.jpg","",40,"click","fep","1",0
+"66",8,"GiGi",1,1,NA,"gazzer",3,"None","",1,4909,20,"deg120","15:10:48","2025-600.jpg","game","2025-600.jpg","",40,"click","gazzer","0",0
+"67",8,"GiGi",2,1,NA,"toma",4,"None","",1,6125,10,"deg0","15:11:01","2056-600.jpg","game","2056-600.jpg","",40,"click","toma","0",0
+"68",8,"GiGi",1,1,NA,"dax",5,"None","",1,4754,20,"deg320","15:11:16","2001-600.jpg","game","2001-600.jpg","",40,"click","dax","UNKNOWN",0
+"69",8,"GiGi",4,1,NA,"wug",6,"None","",1,5537,10,"deg80","15:11:25","2009-600.jpg","game","2009-600.jpg","",40,"click","wug","1",0
+"70",8,"GiGi",1,1,NA,"blicket",7,"None","",1,5262,20,"deg80","15:11:37","2023-600.jpg","game","2023-600.jpg","",40,"click","blicket","1",0
+"71",8,"GiGi",4,1,NA,"manu",8,"None","",1,5319,20,"deg320","15:11:47","2005-600.jpg","game","2005-600.jpg","",40,"click","manu","1",0
+"72",8,"GiGi",4,1,NA,"kreeb",9,"None","",1,5322,20,"deg200","15:11:58","2007-600.jpg","game","2007-600.jpg","",40,"click","kreeb","1",0
+"73",9,"Embers",1,0,"kreeb","kreeb",1,"None","kreeb",1,1319,0,"deg280","15:48:31","2023-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",0
+"74",9,"Embers",1,1,"dax","dax",2,"None","dax",1,6008,10,"deg240","15:48:49","2009-600.jpg","game","2009-600.jpg","dax, 2009-600.jpg",40,"label_click","dax","1",0
+"75",9,"Embers",2,1,"manu","manu",3,"None","manu",1,8623,10,"deg200","15:49:06","2025-600.jpg","game","2025-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg",40,"label_click","manu","1",0
+"76",9,"Embers",1,1,"gazzer","gazzer",4,"None","gazzer",1,8721,10,"deg320","15:49:22","2056-600.jpg","game","2056-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg, gazzer, 2056-600.jpg",40,"label_click","gazzer","1",0
+"77",9,"Embers",2,1,"wug","wug",5,"None","wug",1,5408,10,"deg40","15:49:36","2002-600.jpg","game","2002-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg, gazzer, 2056-600.jpg, wug, 2002-600.jpg",40,"label_click","wug","1",0
+"78",9,"Embers",4,1,"toma","toma",6,"None","toma",1,5888,10,"deg120","15:49:48","2005-600.jpg","game","2005-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg, gazzer, 2056-600.jpg, wug, 2002-600.jpg, toma, 2005-600.jpg",40,"label_click","toma","1",0
+"79",9,"Embers",2,1,"blicket","blicket",7,"None","blicket",1,6360,10,"deg240","15:50:02","2006-600.jpg","game","2006-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg, gazzer, 2056-600.jpg, wug, 2002-600.jpg, toma, 2005-600.jpg, blicket, 2006-600.jpg",40,"label_click","blicket","1",0
+"80",9,"Embers",4,1,"kiv","kiv",8,"None","kiv",1,5376,10,"deg120","15:50:15","2007-600.jpg","game","2007-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg, gazzer, 2056-600.jpg, wug, 2002-600.jpg, toma, 2005-600.jpg, blicket, 2006-600.jpg, kiv, 2007-600.jpg",40,"label_click","kiv","1",0
+"81",9,"Embers",4,1,"fep","fep",9,"None","fep",1,7649,10,"deg0","15:50:31","2001-600.jpg","game","2001-600.jpg","dax, 2009-600.jpg, manu, 2025-600.jpg, gazzer, 2056-600.jpg, wug, 2002-600.jpg, toma, 2005-600.jpg, blicket, 2006-600.jpg, kiv, 2007-600.jpg, fep, 2001-600.jpg",40,"label_click","fep","1",0
+"82",10,"gleph",4,1,NA,"toma",1,"None","",1,6819,10,"deg200","15:58:26","2025-600.jpg","game","2025-600.jpg","",40,"click","toma","1",0
+"83",10,"gleph",1,1,NA,"wug",2,"None","",1,5926,10,"deg280","15:58:40","2023-600.jpg","game","2023-600.jpg","",40,"click","wug","1",0
+"84",10,"gleph",1,1,NA,"gazzer",3,"None","",1,7546,10,"deg240","15:58:56","2009-600.jpg","game","2009-600.jpg","",40,"click","gazzer","UNKNOWN",0
+"85",10,"gleph",2,1,NA,"dax",4,"None","",1,5655,10,"deg0","15:59:09","2002-600.jpg","game","2002-600.jpg","",40,"click","dax","0",0
+"86",10,"gleph",2,1,NA,"manu",5,"None","",1,5711,10,"deg80","15:59:21","2005-600.jpg","game","2005-600.jpg","",40,"click","manu","1",0
+"87",10,"gleph",1,1,NA,"kiv",6,"None","",1,5572,10,"deg0","15:59:39","2006-600.jpg","game","2006-600.jpg","",40,"click","kiv","UNKNOWN",0
+"88",10,"gleph",4,1,NA,"fep",7,"None","",1,8127,10,"deg240","15:59:59","2056-600.jpg","game","2056-600.jpg","",40,"click","fep","UNKNOWN",0
+"89",10,"gleph",2,1,NA,"kreeb",8,"None","",1,5380,10,"deg80","16:00:18","2001-600.jpg","game","2001-600.jpg","",40,"click","kreeb","0",0
+"90",10,"gleph",4,1,NA,"blicket",9,"None","",1,5424,10,"deg280","16:00:30","2007-600.jpg","game","2007-600.jpg","",40,"click","blicket","0",0
+"91",11,"fuckinkillmeallready",2,1,NA,"wug",1,"None","",1,5328,10,"deg320","13:59:23","2009-600.jpg","game","2009-600.jpg","",40,"click","wug","UNKNOWN",1
+"92",11,"fuckinkillmeallready",1,1,NA,"manu",2,"None","",1,5664,10,"deg240","13:59:34","2025-600.jpg","game","2025-600.jpg","",40,"click","manu","0",1
+"93",11,"fuckinkillmeallready",2,1,NA,"blicket",3,"None","",1,5104,20,"deg120","13:59:48","2001-600.jpg","game","2001-600.jpg","",40,"click","blicket","UNKNOWN",1
+"94",11,"fuckinkillmeallready",4,1,NA,"kiv",4,"None","",1,5336,10,"deg80","13:59:59","2002-600.jpg","game","2002-600.jpg","",40,"click","kiv","UNKNOWN",1
+"95",11,"fuckinkillmeallready",1,1,NA,"gazzer",5,"None","",1,4656,30,"deg320","14:00:08","2023-600.jpg","game","2023-600.jpg","",40,"click","gazzer","UNKNOWN",1
+"96",11,"fuckinkillmeallready",1,1,NA,"toma",6,"None","",1,4511,30,"deg40","14:00:18","2006-600.jpg","game","2006-600.jpg","",40,"click","toma","UNKNOWN",1
+"97",11,"fuckinkillmeallready",4,1,NA,"dax",7,"None","",1,5720,10,"deg0","14:00:27","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","UNKNOWN",1
+"98",11,"fuckinkillmeallready",2,1,NA,"fep",8,"None","",1,6312,10,"deg200","14:00:36","2056-600.jpg","game","2056-600.jpg","",40,"click","fep","0",1
+"99",11,"fuckinkillmeallready",4,1,NA,"kreeb",9,"None","",1,6072,10,"deg0","14:00:46","2005-600.jpg","game","2005-600.jpg","",40,"click","kreeb","0",1
+"100",12,"sol",1,1,NA,"wug",1,"None","",1,15422,10,"deg160","13:52:35","2056-600.jpg","game","2056-600.jpg","",40,"click","wug","1",0
+"101",12,"sol",4,1,NA,"kiv",2,"None","",1,6510,10,"deg280","13:52:49","2002-600.jpg","game","2002-600.jpg","",40,"click","kiv","1",0
+"102",12,"sol",4,1,"fep","fep",3,"None","fep",1,10837,10,"deg120","13:53:07","2025-600.jpg","game","2025-600.jpg","fep, 2025-600.jpg",40,"label_click","fep","1",0
+"103",12,"sol",2,1,NA,"dax",4,"None","",1,5361,10,"deg200","13:53:21","2001-600.jpg","game","2001-600.jpg","fep, 2025-600.jpg",40,"click","dax","UNKNOWN",0
+"104",12,"sol",1,1,NA,"toma",5,"None","",1,4120,40,"deg40","13:53:32","2006-600.jpg","game","2006-600.jpg","fep, 2025-600.jpg",40,"click","toma","0",0
+"105",12,"sol",1,1,"gazz","gazzer",6,"None","gazzer",1,10946,10,"deg0","13:53:51","2009-600.jpg","game","2009-600.jpg","fep, 2025-600.jpg, gazz, 2009-600.jpg",40,"label_click","gazzer","1",0
+"106",12,"sol",2,1,NA,"kreeb",7,"None","",1,5580,10,"deg0","13:54:04","2007-600.jpg","game","2007-600.jpg","fep, 2025-600.jpg, gazz, 2009-600.jpg",40,"click","kreeb","UNKNOWN",0
+"107",12,"sol",2,1,NA,"blicket",8,"None","",1,5838,10,"deg40","13:54:16","2005-600.jpg","game","2005-600.jpg","fep, 2025-600.jpg, gazz, 2009-600.jpg",40,"click","blicket","1",0
+"108",12,"sol",4,1,"manu","manu",9,"None","manu",1,7791,10,"deg160","13:54:29","2023-600.jpg","game","2023-600.jpg","fep, 2025-600.jpg, gazz, 2009-600.jpg, manu, 2023-600.jpg",40,"label_click","manu","1",0
+"109",13,"Sarah",4,1,NA,"blicket",1,"None","",1,5847,10,"deg280","16:01:00","2056-600.jpg","game","2056-600.jpg","",40,"click","blicket","1",0
+"110",13,"Sarah",2,1,NA,"fep",2,"None","",1,5408,10,"deg80","16:01:11","2009-600.jpg","game","2009-600.jpg","",40,"click","fep","0",0
+"111",13,"Sarah",4,1,NA,"manu",3,"None","",1,7264,10,"deg320","16:01:26","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","1",0
+"112",13,"Sarah",2,1,NA,"gazzer",4,"None","",1,5990,10,"deg200","16:01:36","2025-600.jpg","game","2025-600.jpg","",40,"click","gazzer","0",0
+"113",13,"Sarah",2,1,NA,"dax",5,"None","",1,6400,10,"deg0","16:01:47","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","1",0
+"114",13,"Sarah",1,1,NA,"kreeb",6,"None","",1,5502,10,"deg0","16:01:58","2005-600.jpg","game","2005-600.jpg","",40,"click","kreeb","0",0
+"115",13,"Sarah",1,1,NA,"kiv",7,"None","",1,6255,10,"deg200","16:02:08","2006-600.jpg","game","2006-600.jpg","",40,"click","kiv","0",0
+"116",13,"Sarah",1,1,NA,"toma",8,"None","",1,5239,20,"deg80","16:02:21","2001-600.jpg","game","2001-600.jpg","",40,"click","toma","UNKNOWN",0
+"117",13,"Sarah",4,1,NA,"wug",9,"None","",1,14551,10,"deg320","16:02:41","2002-600.jpg","game","2002-600.jpg","",40,"click","wug","UNKNOWN",0
+"118",14,"Marc",1,1,NA,"kiv",1,"None","",1,5348,10,"deg80","16:15:57","2056-600.jpg","game","2056-600.jpg","",40,"click","kiv","1",0
+"119",14,"Marc",1,1,NA,"toma",2,"None","",1,5774,10,"deg0","16:16:14","2002-600.jpg","game","2002-600.jpg","",40,"click","toma","1",0
+"120",14,"Marc",2,1,NA,"blicket",3,"None","",1,6161,10,"deg240","16:16:28","2005-600.jpg","game","2005-600.jpg","",40,"click","blicket","1",0
+"121",14,"Marc",2,1,NA,"dax",4,"None","",1,5359,10,"deg80","16:16:42","2006-600.jpg","game","2006-600.jpg","",40,"click","dax","1",0
+"122",14,"Marc",4,1,NA,"wug",5,"None","",1,5404,10,"deg320","16:16:55","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","1",0
+"123",14,"Marc",4,1,NA,"kreeb",6,"None","",1,5023,20,"deg240","16:17:09","2025-600.jpg","game","2025-600.jpg","",40,"click","kreeb","1",0
+"124",14,"Marc",2,1,NA,"gazzer",7,"None","",1,8207,10,"deg160","16:17:30","2007-600.jpg","game","2007-600.jpg","",40,"click","gazzer","1",0
+"125",14,"Marc",4,1,NA,"manu",8,"None","",1,6399,10,"deg280","16:17:48","2009-600.jpg","game","2009-600.jpg","",40,"click","manu","1",0
+"126",14,"Marc",1,1,NA,"fep",9,"None","",1,6278,10,"deg40","16:18:13","2023-600.jpg","game","2023-600.jpg","",40,"click","fep","1",0
+"127",15,"Jimin",1,1,NA,"fep",1,"None","",1,4983,20,"deg160","14:45:49","2023-600.jpg","game","2023-600.jpg","",40,"click","fep","UNKNOWN",0
+"128",15,"Jimin",4,1,NA,"kiv",2,"None","",1,4359,30,"deg40","14:45:59","2002-600.jpg","game","2002-600.jpg","",40,"click","kiv","1",0
+"129",15,"Jimin",2,1,NA,"dax",3,"None","",1,4608,30,"deg320","14:46:08","2006-600.jpg","game","2006-600.jpg","",40,"click","dax","1",0
+"130",15,"Jimin",1,1,NA,"manu",4,"None","",1,4399,30,"deg120","14:46:19","2025-600.jpg","game","2025-600.jpg","",40,"click","manu","1",0
+"131",15,"Jimin",2,1,NA,"kreeb",5,"None","",1,3932,40,"deg320","14:46:30","2056-600.jpg","game","2056-600.jpg","",40,"click","kreeb","1",0
+"132",15,"Jimin",4,1,NA,"gazzer",6,"None","",1,3924,40,"deg40","14:46:39","2009-600.jpg","game","2009-600.jpg","",40,"click","gazzer","1",0
+"133",15,"Jimin",4,1,NA,"blicket",7,"None","",1,5421,10,"deg280","14:46:48","2005-600.jpg","game","2005-600.jpg","",40,"click","blicket","1",0
+"134",15,"Jimin",2,1,NA,"wug",8,"None","",1,4908,20,"deg160","14:46:58","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","1",0
+"135",15,"Jimin",1,1,NA,"toma",9,"None","",1,3900,40,"deg320","14:47:07","2007-600.jpg","game","2007-600.jpg","",40,"click","toma","1",0
+"136",16,"jazzy",1,1,NA,"wug",1,"None","",1,9109,10,"deg120","16:14:35","2023-600.jpg","game","2023-600.jpg","",40,"click","wug","0",0
+"137",16,"jazzy",2,1,"kreeb","kreeb",2,"None","kreeb",1,12103,10,"deg200","16:14:59","2002-600.jpg","game","2002-600.jpg","kreeb, 2002-600.jpg",40,"label_click","kreeb","1",0
+"138",16,"jazzy",4,1,NA,"gazzer",3,"None","",1,9289,10,"deg40","16:15:19","2007-600.jpg","game","2007-600.jpg","kreeb, 2002-600.jpg",40,"click","gazzer","1",0
+"139",16,"jazzy",2,1,NA,"dax",4,"None","",1,8527,10,"deg320","16:15:35","2009-600.jpg","game","2009-600.jpg","kreeb, 2002-600.jpg",40,"click","dax","1",0
+"140",16,"jazzy",2,1,NA,"kiv",5,"None","",1,7361,10,"deg0","16:15:51","2025-600.jpg","game","2025-600.jpg","kreeb, 2002-600.jpg",40,"click","kiv","1",0
+"141",16,"jazzy",4,1,NA,"toma",6,"None","",1,8790,10,"deg40","16:16:07","2005-600.jpg","game","2005-600.jpg","kreeb, 2002-600.jpg",40,"click","toma","1",0
+"142",16,"jazzy",4,1,NA,"fep",7,"None","",1,8528,10,"deg280","16:16:25","2001-600.jpg","game","2001-600.jpg","kreeb, 2002-600.jpg",40,"click","fep","1",0
+"143",16,"jazzy",1,1,NA,"manu",8,"None","",1,8220,10,"deg120","16:16:39","2006-600.jpg","game","2006-600.jpg","kreeb, 2002-600.jpg",40,"click","manu","1",0
+"144",16,"jazzy",1,1,NA,"blicket",9,"None","",1,7132,10,"deg160","16:16:54","2056-600.jpg","game","2056-600.jpg","kreeb, 2002-600.jpg",40,"click","blicket","0",0
+"145",17,"S",2,1,"gazzer","blicket",1,"None","gazzer",1,7802,10,"deg40","15:44:58","2056-600.jpg","game","2056-600.jpg","gazzer, 2056-600.jpg",40,"label_click","blicket","1",0
+"146",17,"S",4,1,"toma","toma",2,"None","toma",1,4216,30,"deg40","15:45:08","2001-600.jpg","game","2001-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg",40,"label_click","toma","1",0
+"147",17,"S",2,1,"manu","manu",3,"None","manu",1,5720,10,"deg240","15:45:20","2023-600.jpg","game","2023-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg",40,"label_click","manu","1",0
+"148",17,"S",2,1,NA,"kiv",4,"None","",1,6152,10,"deg0","15:45:33","2025-600.jpg","game","2025-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg",40,"click","kiv","0",0
+"149",17,"S",4,1,NA,"dax",5,"None","",1,5157,20,"deg200","15:45:44","2005-600.jpg","game","2005-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg",40,"click","dax","1",0
+"150",17,"S",1,1,NA,"wug",6,"None","",1,5768,10,"deg80","15:45:56","2006-600.jpg","game","2006-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg",40,"click","wug","UNKNOWN",0
+"151",17,"S",1,1,NA,"kreeb",7,"None","",1,5559,10,"deg80","15:46:05","2002-600.jpg","game","2002-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg",40,"click","kreeb","UNKNOWN",0
+"152",17,"S",1,1,NA,"gazzer",8,"None","",1,5288,20,"deg160","15:46:17","2009-600.jpg","game","2009-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg",40,"click","gazzer","1",0
+"153",17,"S",4,1,"fep","fep",9,"None","fep",1,7903,10,"deg40","15:46:29","2007-600.jpg","game","2007-600.jpg","gazzer, 2056-600.jpg, toma, 2001-600.jpg, manu, 2023-600.jpg, fep, 2007-600.jpg",40,"label_click","fep","1",0
+"154",18,"Jen",4,1,NA,"fep",1,"None","",1,8491,10,"deg320","14:59:50","2007-600.jpg","game","2007-600.jpg","",40,"click","fep","1",0
+"155",18,"Jen",4,0,"fiv","kreeb",2,"None","kiv",1,1170,0,"deg40","14:59:58","2023-600.jpg","game","2007-600.jpg","",40,"label",NA,"0",0
+"156",18,"Jen",2,1,NA,"wug",3,"None","",1,8615,10,"deg40","15:00:12","2002-600.jpg","game","2002-600.jpg","",40,"click","wug","UNKNOWN",0
+"157",18,"Jen",2,1,NA,"toma",4,"None","",1,7692,10,"deg0","15:00:29","2056-600.jpg","game","2056-600.jpg","",40,"click","toma","1",0
+"158",18,"Jen",1,1,NA,"dax",5,"None","",1,6582,10,"deg200","15:00:42","2001-600.jpg","game","2001-600.jpg","",40,"click","dax","UNKNOWN",0
+"159",18,"Jen",2,1,NA,"blicket",6,"None","",1,7676,10,"deg240","15:00:55","2009-600.jpg","game","2009-600.jpg","",40,"click","blicket","1",0
+"160",18,"Jen",4,1,NA,"kiv",7,"None","",1,5274,20,"deg200","15:01:06","2006-600.jpg","game","2006-600.jpg","",40,"click","kiv","0",0
+"161",18,"Jen",1,1,NA,"manu",8,"None","",1,5658,10,"deg0","15:01:17","2005-600.jpg","game","2005-600.jpg","",40,"click","manu","UNKNOWN",0
+"162",18,"Jen",1,1,NA,"gazzer",9,"None","",1,4564,30,"deg120","15:01:29","2025-600.jpg","game","2025-600.jpg","",40,"click","gazzer","UNKNOWN",0
+"163",19,"Mickey",1,1,"blicket","blicket",1,"None","blicket",1,17097,10,"deg280","16:15:38","2005-600.jpg","game","2005-600.jpg","blicket, 2005-600.jpg",40,"label_click","blicket","1",0
+"164",19,"Mickey",4,1,"kreeb","kreeb",2,"None","kreeb",1,6234,10,"deg80","16:15:53","2023-600.jpg","game","2023-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg",40,"label_click","kreeb","1",0
+"165",19,"Mickey",2,1,NA,"dax",3,"None","",1,7086,10,"deg40","16:16:09","2056-600.jpg","game","2056-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg",40,"click","dax","UNKNOWN",0
+"166",19,"Mickey",1,1,NA,"kiv",4,"None","",1,5513,10,"deg40","16:16:23","2001-600.jpg","game","2001-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg",40,"click","kiv","0",0
+"167",19,"Mickey",1,1,NA,"gazzer",5,"None","",1,5361,10,"deg280","16:16:34","2002-600.jpg","game","2002-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg",40,"click","gazzer","UNKNOWN",0
+"168",19,"Mickey",4,1,"wug","wug",6,"None","wug",1,3912,40,"deg320","16:16:49","2025-600.jpg","game","2025-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg, wug, 2025-600.jpg",40,"label_click","wug","1",0
+"169",19,"Mickey",2,1,"feb","fep",7,"None","fep",1,5372,10,"deg280","16:17:06","2009-600.jpg","game","2009-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg, wug, 2025-600.jpg, feb, 2009-600.jpg",40,"label_click","fep","1",0
+"170",19,"Mickey",4,1,"toma","toma",8,"None","toma",1,5368,10,"deg160","16:17:20","2006-600.jpg","game","2006-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg, wug, 2025-600.jpg, feb, 2009-600.jpg, toma, 2006-600.jpg",40,"label_click","toma","1",0
+"171",19,"Mickey",2,1,NA,"manu",9,"None","",1,5269,20,"deg120","16:17:29","2007-600.jpg","game","2007-600.jpg","blicket, 2005-600.jpg, kreeb, 2023-600.jpg, wug, 2025-600.jpg, feb, 2009-600.jpg, toma, 2006-600.jpg",40,"click","manu","UNKNOWN",0
+"172",20,"Jay",4,1,"wug","wug",1,"None","wug",1,5803,10,"deg160","15:50:32","2002-600.jpg","game","2002-600.jpg","wug, 2002-600.jpg",40,"label_click","wug","1",0
+"173",20,"Jay",1,1,NA,"gazzer",2,"None","",1,5233,20,"deg160","15:50:43","2009-600.jpg","game","2009-600.jpg","wug, 2002-600.jpg",40,"click","gazzer","1",0
+"174",20,"Jay",4,1,NA,"kiv",3,"None","",1,5327,10,"deg80","15:50:56","2023-600.jpg","game","2023-600.jpg","wug, 2002-600.jpg",40,"click","kiv","1",0
+"175",20,"Jay",2,1,NA,"blicket",4,"None","",1,6679,10,"deg240","15:51:10","2005-600.jpg","game","2005-600.jpg","wug, 2002-600.jpg",40,"click","blicket","1",0
+"176",20,"Jay",4,1,NA,"fep",5,"None","",1,4725,30,"deg240","15:51:20","2056-600.jpg","game","2056-600.jpg","wug, 2002-600.jpg",40,"click","fep","1",0
+"177",20,"Jay",1,1,NA,"toma",6,"None","",1,4662,30,"deg240","15:51:31","2001-600.jpg","game","2001-600.jpg","wug, 2002-600.jpg",40,"click","toma","1",0
+"178",20,"Jay",2,1,NA,"dax",7,"None","",1,4946,20,"deg200","15:51:46","2025-600.jpg","game","2025-600.jpg","wug, 2002-600.jpg",40,"click","dax","1",0
+"179",20,"Jay",2,1,NA,"manu",8,"None","",1,4000,40,"deg320","15:51:57","2006-600.jpg","game","2006-600.jpg","wug, 2002-600.jpg",40,"click","manu","1",0
+"180",20,"Jay",1,1,NA,"kreeb",9,"None","",1,5018,20,"deg160","15:52:08","2007-600.jpg","game","2007-600.jpg","wug, 2002-600.jpg",40,"click","kreeb","1",0
+"181",21,"kh",2,1,NA,"dax",1,"None","",1,7148,10,"deg320","14:03:50","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","UNKNOWN",0
+"182",21,"kh",2,1,NA,"blicket",2,"None","",1,15427,10,"deg160","14:04:23","2002-600.jpg","game","2002-600.jpg","",40,"click","blicket","UNKNOWN",0
+"183",21,"kh",4,0,"kev","kiv",3,"None","kiv",1,958,0,"deg240","14:04:32","2006-600.jpg","game","2056-600.jpg","",40,"label",NA,"1",0
+"184",21,"kh",2,1,NA,"toma",4,"None","",1,9731,10,"deg200","14:04:56","2025-600.jpg","game","2025-600.jpg","",40,"click","toma","UNKNOWN",0
+"185",21,"kh",4,1,NA,"fep",5,"None","",1,6392,10,"deg240","14:05:11","2001-600.jpg","game","2001-600.jpg","",40,"click","fep","UNKNOWN",0
+"186",21,"kh",1,1,NA,"wug",6,"None","",1,5600,10,"deg0","14:05:21","2009-600.jpg","game","2009-600.jpg","",40,"click","wug","UNKNOWN",0
+"187",21,"kh",4,1,NA,"gazzer",7,"None","",1,5372,10,"deg80","14:05:32","2005-600.jpg","game","2005-600.jpg","",40,"click","gazzer","1",0
+"188",21,"kh",1,1,NA,"kreeb",8,"None","",1,6326,10,"deg80","14:05:48","2056-600.jpg","game","2056-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"189",21,"kh",1,1,NA,"manu",9,"None","",1,7035,10,"deg320","14:05:59","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","UNKNOWN",0
+"190",22,"Brandi",2,0,"toma","toma",1,"None","toma",1,10925,0,"deg320","14:53:26","2009-600.jpg","game","2056-600.jpg","",40,"label",NA,"1",0
+"191",22,"Brandi",2,1,"fep","fep",2,"None","fep",1,11121,10,"deg240","14:53:50","2023-600.jpg","game","2023-600.jpg","fep, 2023-600.jpg",40,"label_click","fep","1",0
+"192",22,"Brandi",4,1,"wup","wug",3,"None","wug",1,10009,10,"deg0","14:54:17","2007-600.jpg","game","2007-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg",40,"label_click","wug","1",0
+"193",22,"Brandi",1,1,NA,"dax",4,"None","",1,14164,10,"deg0","14:54:40","2056-600.jpg","game","2056-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg",40,"click","dax","0",0
+"194",22,"Brandi",4,1,"kiv","kiv",5,"None","kiv",1,7538,10,"deg160","14:54:56","2002-600.jpg","game","2002-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg, kiv, 2002-600.jpg",40,"label_click","kiv","1",0
+"195",22,"Brandi",2,1,"blicket","blicket",6,"None","blicket",1,9950,10,"deg160","14:55:14","2001-600.jpg","game","2001-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg, kiv, 2002-600.jpg, blicket, 2001-600.jpg",40,"label_click","blicket","1",0
+"196",22,"Brandi",1,1,NA,"kreeb",7,"None","",1,4739,20,"deg40","14:55:28","2025-600.jpg","game","2025-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg, kiv, 2002-600.jpg, blicket, 2001-600.jpg",40,"click","kreeb","UNKNOWN",0
+"197",22,"Brandi",4,1,"gazzer","gazzer",8,"None","gazzer",1,11959,10,"deg160","14:55:49","2006-600.jpg","game","2006-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg, kiv, 2002-600.jpg, blicket, 2001-600.jpg, gazzer, 2006-600.jpg",40,"label_click","gazzer","1",0
+"198",22,"Brandi",1,1,"manu","manu",9,"None","manu",1,9632,10,"deg280","14:56:05","2005-600.jpg","game","2005-600.jpg","fep, 2023-600.jpg, wup, 2007-600.jpg, kiv, 2002-600.jpg, blicket, 2001-600.jpg, gazzer, 2006-600.jpg, manu, 2005-600.jpg",40,"label_click","manu","1",0
+"199",23,"Kate",1,1,NA,"kreeb",1,"None","",1,7104,10,"deg0","15:49:00","2007-600.jpg","game","2007-600.jpg","",40,"click","kreeb","UNKNOWN",1
+"200",23,"Kate",2,1,NA,"fep",2,"None","",1,12378,10,"deg320","15:49:21","2006-600.jpg","game","2006-600.jpg","",40,"click","fep","UNKNOWN",1
+"201",23,"Kate",4,1,NA,"kiv",3,"None","",1,7218,10,"deg40","15:49:34","2023-600.jpg","game","2023-600.jpg","",40,"click","kiv","UNKNOWN",1
+"202",23,"Kate",4,1,NA,"gazzer",4,"None","",1,7101,10,"deg120","15:49:48","2009-600.jpg","game","2009-600.jpg","",40,"click","gazzer","1",1
+"203",23,"Kate",2,1,NA,"dax",5,"None","",1,5704,10,"deg80","15:50:04","2005-600.jpg","game","2005-600.jpg","",40,"click","dax","UNKNOWN",1
+"204",23,"Kate",2,1,NA,"toma",6,"None","",1,6860,10,"deg200","15:50:18","2056-600.jpg","game","2056-600.jpg","",40,"click","toma","1",1
+"205",23,"Kate",4,1,NA,"blicket",7,"None","",1,6048,10,"deg0","15:50:29","2002-600.jpg","game","2002-600.jpg","",40,"click","blicket","0",1
+"206",23,"Kate",1,1,NA,"wug",8,"None","",1,6657,10,"deg200","15:50:41","2025-600.jpg","game","2025-600.jpg","",40,"click","wug","UNKNOWN",1
+"207",23,"Kate",1,1,NA,"manu",9,"None","",1,7509,10,"deg40","15:50:53","2001-600.jpg","game","2001-600.jpg","",40,"click","manu","0",1
+"208",24,"john",2,1,NA,"manu",1,"None","",1,13899,10,"deg280","16:23:13","2002-600.jpg","game","2002-600.jpg","",40,"click","manu","UNKNOWN",1
+"209",24,"john",4,1,NA,"gazzer",2,"None","",1,8273,10,"deg280","16:23:28","2009-600.jpg","game","2009-600.jpg","",40,"click","gazzer","1",1
+"210",24,"john",4,1,NA,"fep",3,"None","",1,4868,20,"deg40","16:23:40","2023-600.jpg","game","2023-600.jpg","",40,"click","fep","UNKNOWN",1
+"211",24,"john",1,1,NA,"blicket",4,"None","",1,5759,10,"deg280","16:23:51","2007-600.jpg","game","2007-600.jpg","",40,"click","blicket","UNKNOWN",1
+"212",24,"john",2,1,NA,"kreeb",5,"None","",1,4223,30,"deg320","16:23:59","2006-600.jpg","game","2006-600.jpg","",40,"click","kreeb","UNKNOWN",1
+"213",24,"john",1,1,NA,"toma",6,"None","",1,5213,20,"deg40","16:24:07","2005-600.jpg","game","2005-600.jpg","",40,"click","toma","UNKNOWN",1
+"214",24,"john",4,1,NA,"wug",7,"None","",1,8390,10,"deg280","16:24:21","2056-600.jpg","game","2056-600.jpg","",40,"click","wug","0",1
+"215",24,"john",1,1,NA,"dax",8,"None","",1,5504,10,"deg240","16:24:31","2001-600.jpg","game","2001-600.jpg","",40,"click","dax","UNKNOWN",1
+"216",24,"john",2,1,NA,"kiv",9,"None","",1,5743,10,"deg0","16:24:40","2025-600.jpg","game","2025-600.jpg","",40,"click","kiv","UNKNOWN",1
+"217",25,"scooter",4,0,"manu","gazzer",1,"None","manu",1,12105,0,"deg240","15:15:15","2006-600.jpg","game","2056-600.jpg","",40,"label",NA,"0",1
+"218",25,"scooter",2,0,"feb","fep",2,"None","fep",1,1268,0,"deg240","15:15:26","2009-600.jpg","game","2005-600.jpg","",40,"label",NA,"1",1
+"219",25,"scooter",1,1,NA,"blicket",3,"None","",1,6077,10,"deg0","15:15:50","2025-600.jpg","game","2025-600.jpg","",40,"click","blicket","UNKNOWN",1
+"220",25,"scooter",2,1,NA,"toma",4,"None","",1,7096,10,"deg200","15:16:06","2005-600.jpg","game","2005-600.jpg","",40,"click","toma","UNKNOWN",1
+"221",25,"scooter",1,1,NA,"kiv",5,"None","",1,8397,10,"deg320","15:16:22","2002-600.jpg","game","2002-600.jpg","",40,"click","kiv","1",1
+"222",25,"scooter",2,1,NA,"wug",6,"None","",1,7992,10,"deg0","15:16:40","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","UNKNOWN",1
+"223",25,"scooter",4,1,NA,"manu",7,"None","",1,8885,10,"deg40","15:17:01","2007-600.jpg","game","2007-600.jpg","",40,"click","manu","0",1
+"224",25,"scooter",4,1,NA,"kreeb",8,"None","",1,7790,10,"deg40","15:17:16","2056-600.jpg","game","2056-600.jpg","",40,"click","kreeb","1",1
+"225",25,"scooter",1,1,NA,"dax",9,"None","",1,7110,10,"deg200","15:17:30","2023-600.jpg","game","2023-600.jpg","",40,"click","dax","UNKNOWN",1
+"226",26,"John",2,1,"toma","toma",1,"None","toma",1,6621,10,"deg80","15:53:50","2023-600.jpg","game","2023-600.jpg","toma, 2023-600.jpg",40,"label_click","toma","1",1
+"227",26,"John",2,1,NA,"fep",2,"None","",1,5905,10,"deg80","15:54:05","2005-600.jpg","game","2005-600.jpg","toma, 2023-600.jpg",40,"click","fep","UNKNOWN",1
+"228",26,"John",1,1,"kreeb","kreeb",3,"None","kreeb",1,6480,10,"deg240","15:54:19","2056-600.jpg","game","2056-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg",40,"label_click","kreeb","1",1
+"229",26,"John",1,1,"gazzer","gazzer",4,"None","gazzer",1,5057,20,"deg320","15:54:30","2025-600.jpg","game","2025-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg, gazzer, 2025-600.jpg",40,"label_click","gazzer","1",1
+"230",26,"John",4,1,"blicket","blicket",5,"None","blicket",1,6494,10,"deg120","15:54:42","2001-600.jpg","game","2001-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg, gazzer, 2025-600.jpg, blicket, 2001-600.jpg",40,"label_click","blicket","1",1
+"231",26,"John",4,1,"manu","manu",6,"None","manu",1,6559,10,"deg280","15:54:55","2006-600.jpg","game","2006-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg, gazzer, 2025-600.jpg, blicket, 2001-600.jpg, manu, 2006-600.jpg",40,"label_click","manu","1",1
+"232",26,"John",4,1,"wug","wug",7,"None","wug",1,4721,30,"deg40","15:55:04","2002-600.jpg","game","2002-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg, gazzer, 2025-600.jpg, blicket, 2001-600.jpg, manu, 2006-600.jpg, wug, 2002-600.jpg",40,"label_click","wug","1",1
+"233",26,"John",1,1,NA,"dax",8,"None","",1,5696,10,"deg0","15:55:15","2009-600.jpg","game","2009-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg, gazzer, 2025-600.jpg, blicket, 2001-600.jpg, manu, 2006-600.jpg, wug, 2002-600.jpg",40,"click","dax","UNKNOWN",1
+"234",26,"John",2,1,"kiv","kiv",9,"None","kiv",1,7042,10,"deg280","15:55:28","2007-600.jpg","game","2007-600.jpg","toma, 2023-600.jpg, kreeb, 2056-600.jpg, gazzer, 2025-600.jpg, blicket, 2001-600.jpg, manu, 2006-600.jpg, wug, 2002-600.jpg, kiv, 2007-600.jpg",40,"label_click","kiv","1",1
+"235",27,"Nia",2,1,"toma","toma",1,"None","toma",1,6057,10,"deg320","14:50:07","2056-600.jpg","game","2056-600.jpg","toma, 2056-600.jpg",40,"label_click","toma","1",0
+"236",27,"Nia",1,1,"drazz","gazzer",2,"None","",1,11533,10,"deg120","14:50:28","2005-600.jpg","game","2005-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg",40,"label_click","gazzer","0",0
+"237",27,"Nia",2,1,"dax","dax",3,"None","dax",1,6534,10,"deg120","14:50:42","2025-600.jpg","game","2025-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg",40,"label_click","dax","1",0
+"238",27,"Nia",1,1,"krizz","kreeb",4,"None","drazz",1,6668,10,"deg40","14:50:56","2002-600.jpg","game","2002-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg, krizz, 2002-600.jpg",40,"label_click","kreeb","0",0
+"239",27,"Nia",2,1,"fep","fep",5,"None","fep",1,7619,10,"deg160","14:51:08","2006-600.jpg","game","2006-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg, krizz, 2002-600.jpg, fep, 2006-600.jpg",40,"label_click","fep","1",0
+"240",27,"Nia",1,1,"plicket","blicket",6,"None","blicket",1,8210,10,"deg160","14:51:27","2007-600.jpg","game","2007-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg, krizz, 2002-600.jpg, fep, 2006-600.jpg, plicket, 2007-600.jpg",40,"label_click","blicket","1",0
+"241",27,"Nia",4,1,"wug","wug",7,"None","wug",1,7282,10,"deg200","14:51:38","2001-600.jpg","game","2001-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg, krizz, 2002-600.jpg, fep, 2006-600.jpg, plicket, 2007-600.jpg, wug, 2001-600.jpg",40,"label_click","wug","1",0
+"242",27,"Nia",4,1,"manu","manu",8,"None","manu",1,8861,10,"deg0","14:51:53","2009-600.jpg","game","2009-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg, krizz, 2002-600.jpg, fep, 2006-600.jpg, plicket, 2007-600.jpg, wug, 2001-600.jpg, manu, 2009-600.jpg",40,"label_click","manu","1",0
+"243",27,"Nia",4,1,"kiv","kiv",9,"None","kiv",1,6538,10,"deg40","14:52:05","2023-600.jpg","game","2023-600.jpg","toma, 2056-600.jpg, drazz, 2005-600.jpg, dax, 2025-600.jpg, krizz, 2002-600.jpg, fep, 2006-600.jpg, plicket, 2007-600.jpg, wug, 2001-600.jpg, manu, 2009-600.jpg, kiv, 2023-600.jpg",40,"label_click","kiv","1",0
+"244",28,"Andrew",2,1,NA,"dax",1,"None","",1,4678,30,"deg120","15:48:49","2009-600.jpg","game","2009-600.jpg","",40,"click","dax","1",0
+"245",28,"Andrew",1,1,NA,"kiv",2,"None","",1,5464,10,"deg280","15:49:02","2005-600.jpg","game","2005-600.jpg","",40,"click","kiv","0",0
+"246",28,"Andrew",4,1,NA,"wug",3,"None","",1,5631,10,"deg0","15:49:27","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","1",0
+"247",28,"Andrew",2,1,NA,"manu",4,"None","",1,6822,10,"deg0","15:49:38","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","1",0
+"248",28,"Andrew",4,1,NA,"kreeb",5,"None","",1,41382,10,"deg120","15:50:27","2056-600.jpg","game","2056-600.jpg","",40,"click","kreeb","0",0
+"249",28,"Andrew",4,1,NA,"gazzer",6,"None","",1,5424,10,"deg80","15:50:39","2006-600.jpg","game","2006-600.jpg","",40,"click","gazzer","UNKNOWN",0
+"250",28,"Andrew",1,1,NA,"toma",7,"None","",1,5439,10,"deg280","15:50:58","2025-600.jpg","game","2025-600.jpg","",40,"click","toma","UNKNOWN",0
+"251",28,"Andrew",1,1,NA,"blicket",8,"None","",1,5447,10,"deg80","15:51:17","2007-600.jpg","game","2007-600.jpg","",40,"click","blicket","0",0
+"252",28,"Andrew",2,1,NA,"fep",9,"None","",1,4848,20,"deg120","15:51:27","2002-600.jpg","game","2002-600.jpg","",40,"click","fep","1",0
+"253",29,"DumpTruck",1,1,NA,"kiv",1,"None","",1,11739,10,"deg280","13:12:14","2009-600.jpg","game","2009-600.jpg","",40,"click","kiv","0",1
+"254",29,"DumpTruck",1,1,NA,"toma",2,"None","",1,5439,10,"deg160","13:12:27","2005-600.jpg","game","2005-600.jpg","",40,"click","toma","UNKNOWN",1
+"255",29,"DumpTruck",4,0,"dax","dax",3,"None","dax",1,1423,0,"deg40","13:12:37","2006-600.jpg","game","2009-600.jpg","",40,"label",NA,"1",1
+"256",29,"DumpTruck",2,1,NA,"kreeb",4,"None","",1,8748,10,"deg320","13:13:03","2056-600.jpg","game","2056-600.jpg","",40,"click","kreeb","1",1
+"257",29,"DumpTruck",1,1,NA,"manu",5,"None","",1,5876,10,"deg280","13:13:18","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","1",1
+"258",29,"DumpTruck",4,1,NA,"wug",6,"None","",1,5302,20,"deg120","13:13:32","2025-600.jpg","game","2025-600.jpg","",40,"click","wug","1",1
+"259",29,"DumpTruck",2,1,NA,"fep",7,"None","",1,4544,30,"deg40","13:13:43","2007-600.jpg","game","2007-600.jpg","",40,"click","fep","1",1
+"260",29,"DumpTruck",4,1,NA,"blicket",8,"None","",1,5966,10,"deg0","13:13:58","2002-600.jpg","game","2002-600.jpg","",40,"click","blicket","1",1
+"261",29,"DumpTruck",2,1,NA,"gazzer",9,"None","",1,6032,10,"deg280","13:14:10","2001-600.jpg","game","2001-600.jpg","",40,"click","gazzer","1",1
+"262",30,"Lisa",1,0,"mula","dax",1,"None","",1,30345,0,"deg120","12:47:17","2025-600.jpg","game","2001-600.jpg","",40,"label",NA,"0",1
+"263",30,"Lisa",4,0,"kiv","kiv",2,"None","kiv",1,938,0,"deg320","12:47:26","2007-600.jpg","game","2056-600.jpg","",40,"label",NA,"1",1
+"264",30,"Lisa",2,0,"mul","kreeb",3,"None","wug",1,935,0,"deg160","12:47:35","2006-600.jpg","game","2025-600.jpg","",40,"label",NA,"0",1
+"265",30,"Lisa",2,0,"terf","fep",4,"None","",1,6667,0,"deg280","12:47:47","2005-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",1
+"266",30,"Lisa",1,0,"muta","manu",5,"None","",1,878,0,"deg40","12:47:54","2023-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",1
+"267",30,"Lisa",2,0,"flia","gazzer",6,"None","",1,1087,0,"deg200","12:48:01","2002-600.jpg","game","2007-600.jpg","",40,"label",NA,"UNKNOWN",1
+"268",30,"Lisa",4,0,"tuma","toma",7,"None","toma",1,846,0,"deg0","12:48:09","2001-600.jpg","game","2056-600.jpg","",40,"label",NA,"1",1
+"269",30,"Lisa",1,0,"mula","wug",8,"None","",1,900,0,"deg280","12:48:25","2056-600.jpg","game","2005-600.jpg","",40,"label",NA,"0",1
+"270",30,"Lisa",4,0,"phra","blicket",9,"None","",1,1507,0,"deg120","12:48:35","2009-600.jpg","game","2002-600.jpg","",40,"label",NA,"0",1
+"271",31,"happyhaier",2,1,NA,"kreeb",1,"None","",1,5169,20,"deg240","15:31:30","2002-600.jpg","game","2002-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"272",31,"happyhaier",4,1,NA,"blicket",2,"None","",1,13264,10,"deg160","15:31:51","2056-600.jpg","game","2056-600.jpg","",40,"click","blicket","1",0
+"273",31,"happyhaier",1,1,NA,"gazzer",3,"None","",1,4615,30,"deg120","15:32:00","2009-600.jpg","game","2009-600.jpg","",40,"click","gazzer","UNKNOWN",0
+"274",31,"happyhaier",4,1,NA,"wug",4,"None","",1,5215,20,"deg120","15:32:09","2023-600.jpg","game","2023-600.jpg","",40,"click","wug","1",0
+"275",31,"happyhaier",2,1,NA,"fep",5,"None","",1,5671,10,"deg160","15:32:18","2005-600.jpg","game","2005-600.jpg","",40,"click","fep","1",0
+"276",31,"happyhaier",1,1,NA,"toma",6,"None","",1,5207,20,"deg200","15:32:28","2001-600.jpg","game","2001-600.jpg","",40,"click","toma","1",0
+"277",31,"happyhaier",2,1,NA,"manu",7,"None","",1,5406,10,"deg200","15:32:37","2006-600.jpg","game","2006-600.jpg","",40,"click","manu","1",0
+"278",31,"happyhaier",1,1,NA,"kiv",8,"None","",1,5256,20,"deg200","15:32:49","2025-600.jpg","game","2025-600.jpg","",40,"click","kiv","UNKNOWN",0
+"279",31,"happyhaier",4,1,NA,"dax",9,"None","",1,4567,30,"deg120","15:32:57","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","1",0
+"280",32,"dorrie",1,0,"weg","gazzer",1,"None","wug",1,3231,0,"deg120","16:32:20","2023-600.jpg","game","2001-600.jpg","",40,"label",NA,"1",1
+"281",32,"dorrie",2,0,"dax","dax",2,"None","dax",1,1984,0,"deg240","16:32:33","2005-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",1
+"282",32,"dorrie",4,0,"blexa","blicket",3,"None","",1,8927,0,"deg80","16:32:47","2009-600.jpg","game","2006-600.jpg","",40,"label",NA,"0",1
+"283",32,"dorrie",1,0,"weg","manu",4,"None","wug",1,5382,0,"deg240","16:33:00","2007-600.jpg","game","2025-600.jpg","",40,"label",NA,"0",1
+"284",32,"dorrie",1,0,"diaz","kreeb",5,"None","dax",1,4680,0,"deg0","16:33:12","2056-600.jpg","game","2009-600.jpg","",40,"label",NA,"0",1
+"285",32,"dorrie",4,0,"dep","fep",6,"None","fep",1,1208,0,"deg160","16:33:23","2025-600.jpg","game","2002-600.jpg","",40,"label",NA,"1",1
+"286",32,"dorrie",4,0,"deg","kiv",7,"None","dax",1,1744,0,"deg240","16:33:33","2006-600.jpg","game","2005-600.jpg","",40,"label",NA,"1",1
+"287",32,"dorrie",2,0,"toma","toma",8,"None","toma",1,1328,0,"deg240","16:33:40","2002-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",1
+"288",32,"dorrie",2,0,"gazzer","wug",9,"None","gazzer",1,1825,0,"deg240","16:33:50","2001-600.jpg","game","2006-600.jpg","",40,"label",NA,"0",1
+"289",33,"fut",1,1,NA,"gazzer",1,"None","",1,5055,20,"deg120","15:47:47","2002-600.jpg","game","2002-600.jpg","",40,"click","gazzer","1",0
+"290",33,"fut",1,1,NA,"fep",2,"None","",1,5719,10,"deg280","15:47:58","2001-600.jpg","game","2001-600.jpg","",40,"click","fep","UNKNOWN",0
+"291",33,"fut",2,1,NA,"dax",3,"None","",1,5736,10,"deg200","15:48:09","2023-600.jpg","game","2023-600.jpg","",40,"click","dax","0",0
+"292",33,"fut",2,1,NA,"toma",4,"None","",1,14038,10,"deg200","15:48:28","2009-600.jpg","game","2009-600.jpg","",40,"click","toma","1",0
+"293",33,"fut",4,1,NA,"wug",5,"None","",1,4488,30,"deg320","15:48:38","2006-600.jpg","game","2006-600.jpg","",40,"click","wug","UNKNOWN",0
+"294",33,"fut",1,1,NA,"manu",6,"None","",1,5807,10,"deg0","15:48:48","2025-600.jpg","game","2025-600.jpg","",40,"click","manu","UNKNOWN",0
+"295",33,"fut",2,1,NA,"kreeb",7,"None","",1,5223,20,"deg200","15:48:58","2007-600.jpg","game","2007-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"296",33,"fut",4,1,NA,"kiv",8,"None","",1,5911,10,"deg280","15:49:09","2005-600.jpg","game","2005-600.jpg","",40,"click","kiv","1",0
+"297",33,"fut",4,1,NA,"blicket",9,"None","",1,5124,20,"deg120","15:49:19","2056-600.jpg","game","2056-600.jpg","",40,"click","blicket","0",0
+"298",34,"Shay",2,1,"kiv","dax",1,"None","kiv",1,24644,10,"deg320","15:50:07","2007-600.jpg","game","2007-600.jpg","kiv, 2007-600.jpg",40,"label_click","dax","1",0
+"299",34,"Shay",4,1,"kreeb","kreeb",2,"None","kreeb",1,12734,10,"deg240","15:50:39","2006-600.jpg","game","2006-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg",40,"label_click","kreeb","1",0
+"300",34,"Shay",1,0,"blicket","blicket",3,"None","blicket",1,892,0,"deg80","15:51:03","2056-600.jpg","game","2025-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg",40,"label",NA,"1",0
+"301",34,"Shay",2,0,"fep","fep",4,"None","fep",1,801,0,"deg120","15:51:24","2009-600.jpg","game","2001-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg",40,"label",NA,"1",0
+"302",34,"Shay",1,1,"toma","toma",5,"None","toma",1,7760,10,"deg80","15:52:06","2001-600.jpg","game","2001-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg, toma, 2001-600.jpg",40,"label_click","toma","0",0
+"303",34,"Shay",1,1,"gazzer","gazzer",6,"None","gazzer",1,24502,10,"deg240","15:52:48","2025-600.jpg","game","2025-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg, toma, 2001-600.jpg, gazzer, 2025-600.jpg",40,"label_click","gazzer","1",0
+"304",34,"Shay",4,1,"wug","wug",7,"None","wug",1,9574,10,"deg0","15:53:14","2005-600.jpg","game","2005-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg, toma, 2001-600.jpg, gazzer, 2025-600.jpg, wug, 2005-600.jpg",40,"label_click","wug","1",0
+"305",34,"Shay",2,1,"manu","manu",8,"None","manu",1,8449,10,"deg160","15:53:46","2023-600.jpg","game","2023-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg, toma, 2001-600.jpg, gazzer, 2025-600.jpg, wug, 2005-600.jpg, manu, 2023-600.jpg",40,"label_click","manu","1",0
+"306",34,"Shay",4,1,"kiv","kiv",9,"None","kiv",1,8752,10,"deg240","15:54:10","2002-600.jpg","game","2002-600.jpg","kiv, 2007-600.jpg, kreeb, 2006-600.jpg, toma, 2001-600.jpg, gazzer, 2025-600.jpg, wug, 2005-600.jpg, manu, 2023-600.jpg",40,"label_click","kiv","1",0
+"307",35,"Red",2,0,"manu","manu",1,"None","manu",1,1905,0,"deg280","14:06:03","2006-600.jpg","game","2056-600.jpg","",40,"label",NA,"1",0
+"308",35,"Red",4,1,NA,"blicket",2,"None","",1,6433,10,"deg0","14:06:19","2002-600.jpg","game","2002-600.jpg","",40,"click","blicket","1",0
+"309",35,"Red",1,0,"kleeb","kreeb",3,"None","kreeb",1,3418,0,"deg240","14:06:32","2025-600.jpg","game","2005-600.jpg","",40,"label",NA,"1",0
+"310",35,"Red",1,1,NA,"toma",4,"None","",1,4412,30,"deg40","14:06:45","2007-600.jpg","game","2007-600.jpg","",40,"click","toma","1",0
+"311",35,"Red",4,1,NA,"dax",5,"None","",1,5968,10,"deg280","14:07:00","2056-600.jpg","game","2056-600.jpg","",40,"click","dax","1",0
+"312",35,"Red",2,1,NA,"fep",6,"None","",1,4316,30,"deg40","14:07:14","2023-600.jpg","game","2023-600.jpg","",40,"click","fep","1",0
+"313",35,"Red",2,1,NA,"gazzer",7,"None","",1,4442,30,"deg320","14:07:27","2001-600.jpg","game","2001-600.jpg","",40,"click","gazzer","1",0
+"314",35,"Red",4,1,NA,"wug",8,"None","",1,4370,30,"deg320","14:07:39","2009-600.jpg","game","2009-600.jpg","",40,"click","wug","1",0
+"315",35,"Red",1,1,NA,"kiv",9,"None","",1,5374,10,"deg160","14:07:52","2005-600.jpg","game","2005-600.jpg","",40,"click","kiv","1",0
+"316",36,"Muppet",2,0,"wub","wug",1,"None","wug",1,6252,0,"deg40","15:52:08","2056-600.jpg","game","2001-600.jpg","",40,"label",NA,"1",0
+"317",36,"Muppet",4,1,NA,"kiv",2,"None","",1,5952,10,"deg80","15:52:25","2006-600.jpg","game","2006-600.jpg","",40,"click","kiv","0",0
+"318",36,"Muppet",4,1,"manu","manu",3,"None","manu",1,8208,10,"deg0","15:52:43","2023-600.jpg","game","2023-600.jpg","manu, 2023-600.jpg",40,"label_click","manu","1",0
+"319",36,"Muppet",4,1,NA,"toma",4,"None","",1,5228,20,"deg240","15:53:08","2025-600.jpg","game","2025-600.jpg","manu, 2023-600.jpg",40,"click","toma","1",0
+"320",36,"Muppet",2,1,"gazzer","gazzer",5,"None","gazzer",1,7152,10,"deg320","15:53:27","2007-600.jpg","game","2007-600.jpg","manu, 2023-600.jpg, gazzer, 2007-600.jpg",40,"label_click","gazzer","1",0
+"321",36,"Muppet",1,1,NA,"fep",6,"None","",1,4287,30,"deg320","15:53:42","2001-600.jpg","game","2001-600.jpg","manu, 2023-600.jpg, gazzer, 2007-600.jpg",40,"click","fep","0",0
+"322",36,"Muppet",1,1,NA,"dax",7,"None","",1,4496,30,"deg40","15:53:50","2009-600.jpg","game","2009-600.jpg","manu, 2023-600.jpg, gazzer, 2007-600.jpg",40,"click","dax","0",0
+"323",36,"Muppet",2,1,NA,"kreeb",8,"None","",1,5217,20,"deg160","15:54:03","2002-600.jpg","game","2002-600.jpg","manu, 2023-600.jpg, gazzer, 2007-600.jpg",40,"click","kreeb","0",0
+"324",36,"Muppet",1,1,"blicket","blicket",9,"None","blicket",1,6944,10,"deg160","15:54:16","2005-600.jpg","game","2005-600.jpg","manu, 2023-600.jpg, gazzer, 2007-600.jpg, blicket, 2005-600.jpg",40,"label_click","blicket","1",0
+"325",37,"kar",4,0,"manu","manu",1,"None","manu",1,2691,0,"deg40","12:53:02","2056-600.jpg","game","2023-600.jpg","",40,"label",NA,"1",0
+"326",37,"kar",1,0,"faz","dax",2,"None","fep",1,7216,0,"deg0","12:53:19","2005-600.jpg","game","2007-600.jpg","",40,"label",NA,"UNKNOWN",0
+"327",37,"kar",2,1,NA,"toma",3,"None","",1,6927,10,"deg160","12:53:35","2001-600.jpg","game","2001-600.jpg","",40,"click","toma","1",0
+"328",37,"kar",1,1,NA,"kiv",4,"None","",1,9831,10,"deg240","12:53:55","2025-600.jpg","game","2025-600.jpg","",40,"click","kiv","UNKNOWN",0
+"329",37,"kar",4,1,NA,"kreeb",5,"None","",1,7831,10,"deg320","12:54:12","2009-600.jpg","game","2009-600.jpg","",40,"click","kreeb","1",0
+"330",37,"kar",1,1,NA,"fep",6,"None","",1,9727,10,"deg200","12:54:27","2023-600.jpg","game","2023-600.jpg","",40,"click","fep","1",0
+"331",37,"kar",4,0,"blicket","blicket",7,"None","blicket",1,2136,0,"deg80","12:54:37","2006-600.jpg","game","2025-600.jpg","",40,"label",NA,"1",0
+"332",37,"kar",2,1,NA,"wug",8,"None","",1,9477,10,"deg240","12:54:55","2002-600.jpg","game","2002-600.jpg","",40,"click","wug","1",0
+"333",37,"kar",2,0,"gazzle","gazzer",9,"None","gazzer",1,3380,0,"deg280","12:55:03","2007-600.jpg","game","2002-600.jpg","",40,"label",NA,"1",0
+"334",38,"Ginger",4,1,NA,"toma",1,"None","",1,6201,10,"deg280","16:14:17","2007-600.jpg","game","2007-600.jpg","",40,"click","toma","1",1
+"335",38,"Ginger",1,1,NA,"gazzer",2,"None","",1,5807,10,"deg80","16:14:29","2006-600.jpg","game","2006-600.jpg","",40,"click","gazzer","UNKNOWN",1
+"336",38,"Ginger",2,1,NA,"kiv",3,"None","",1,5160,20,"deg160","16:14:40","2025-600.jpg","game","2025-600.jpg","",40,"click","kiv","1",1
+"337",38,"Ginger",2,1,NA,"manu",4,"None","",1,6208,10,"deg280","16:14:54","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","0",1
+"338",38,"Ginger",4,1,NA,"dax",5,"None","",1,6073,10,"deg80","16:15:05","2002-600.jpg","game","2002-600.jpg","",40,"click","dax","1",1
+"339",38,"Ginger",1,1,NA,"wug",6,"None","",1,5625,10,"deg280","16:15:40","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","UNKNOWN",1
+"340",38,"Ginger",2,1,NA,"kreeb",7,"None","",1,4562,30,"deg320","16:15:51","2005-600.jpg","game","2005-600.jpg","",40,"click","kreeb","0",1
+"341",38,"Ginger",4,1,NA,"blicket",8,"None","",1,6383,10,"deg240","16:16:05","2056-600.jpg","game","2056-600.jpg","",40,"click","blicket","1",1
+"342",38,"Ginger",1,1,NA,"fep",9,"None","",1,5034,20,"deg240","16:16:16","2009-600.jpg","game","2009-600.jpg","",40,"click","fep","UNKNOWN",1
+"343",39,"JC",2,1,NA,"kreeb",1,"None","",1,6040,10,"deg120","15:59:53","2002-600.jpg","game","2002-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"344",39,"JC",4,1,NA,"blicket",2,"None","",1,5119,20,"deg120","16:00:06","2009-600.jpg","game","2009-600.jpg","",40,"click","blicket","1",0
+"345",39,"JC",2,1,NA,"manu",3,"None","",1,5759,10,"deg80","16:00:19","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","1",0
+"346",39,"JC",1,1,NA,"gazzer",4,"None","",1,6096,10,"deg280","16:00:34","2005-600.jpg","game","2005-600.jpg","",40,"click","gazzer","0",0
+"347",39,"JC",1,1,NA,"kiv",5,"None","",1,5616,10,"deg200","16:00:49","2025-600.jpg","game","2025-600.jpg","",40,"click","kiv","UNKNOWN",0
+"348",39,"JC",4,1,NA,"fep",6,"None","",1,5360,10,"deg160","16:01:01","2056-600.jpg","game","2056-600.jpg","",40,"click","fep","1",0
+"349",39,"JC",4,1,NA,"dax",7,"None","",1,5520,10,"deg160","16:01:15","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","1",0
+"350",39,"JC",1,1,NA,"toma",8,"None","",1,6288,10,"deg0","16:01:29","2006-600.jpg","game","2006-600.jpg","",40,"click","toma","UNKNOWN",0
+"351",39,"JC",2,1,NA,"wug",9,"None","",1,5184,20,"deg120","16:01:43","2001-600.jpg","game","2001-600.jpg","",40,"click","wug","UNKNOWN",0
+"352",40,"Kelli",1,1,NA,"fep",1,"None","",1,5883,10,"deg200","14:00:14","2005-600.jpg","game","2005-600.jpg","",40,"click","fep","UNKNOWN",0
+"353",40,"Kelli",2,1,NA,"gazzer",2,"None","",1,6007,10,"deg80","14:00:26","2056-600.jpg","game","2056-600.jpg","",40,"click","gazzer","1",0
+"354",40,"Kelli",1,1,NA,"dax",3,"None","",1,5388,10,"deg240","14:00:35","2009-600.jpg","game","2009-600.jpg","",40,"click","dax","0",0
+"355",40,"Kelli",2,1,NA,"toma",4,"None","",1,5601,10,"deg200","14:00:48","2002-600.jpg","game","2002-600.jpg","",40,"click","toma","UNKNOWN",0
+"356",40,"Kelli",2,1,NA,"kreeb",5,"None","",1,5972,10,"deg0","14:01:01","2006-600.jpg","game","2006-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"357",40,"Kelli",4,1,NA,"manu",6,"None","",1,5387,10,"deg160","14:01:11","2023-600.jpg","game","2023-600.jpg","",40,"click","manu","0",0
+"358",40,"Kelli",4,1,NA,"kiv",7,"None","",1,5973,10,"deg0","14:01:21","2001-600.jpg","game","2001-600.jpg","",40,"click","kiv","UNKNOWN",0
+"359",40,"Kelli",4,1,NA,"blicket",8,"None","",1,5387,10,"deg160","14:01:32","2007-600.jpg","game","2007-600.jpg","",40,"click","blicket","UNKNOWN",0
+"360",40,"Kelli",1,1,NA,"wug",9,"None","",1,5692,10,"deg80","14:01:42","2025-600.jpg","game","2025-600.jpg","",40,"click","wug","0",0
+"361",41,"Osama",2,1,"joop","kiv",1,"None","",1,51747,10,"deg280","15:56:22","2001-600.jpg","game","2001-600.jpg","joop, 2001-600.jpg",40,"label_click","kiv","0",1
+"362",41,"Osama",4,1,"dilt","gazzer",2,"None","",1,6301,10,"deg120","15:56:38","2023-600.jpg","game","2023-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"label_click","gazzer","0",1
+"363",41,"Osama",1,1,NA,"blicket",3,"None","",1,4874,20,"deg40","15:56:49","2056-600.jpg","game","2056-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","blicket","0",1
+"364",41,"Osama",1,1,NA,"dax",4,"None","",1,5753,10,"deg200","15:57:00","2002-600.jpg","game","2002-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","dax","0",1
+"365",41,"Osama",2,1,NA,"kreeb",5,"None","",1,5822,10,"deg0","15:57:13","2005-600.jpg","game","2005-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","kreeb","0",1
+"366",41,"Osama",2,1,NA,"fep",6,"None","",1,5295,20,"deg40","15:57:24","2009-600.jpg","game","2009-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","fep","0",1
+"367",41,"Osama",4,1,NA,"toma",7,"None","",1,4631,30,"deg320","15:57:34","2025-600.jpg","game","2025-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","toma","0",1
+"368",41,"Osama",1,1,NA,"manu",8,"None","",1,7018,10,"deg240","15:57:43","2007-600.jpg","game","2007-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","manu","0",1
+"369",41,"Osama",4,1,NA,"wug",9,"None","",1,5771,10,"deg240","15:57:54","2006-600.jpg","game","2006-600.jpg","joop, 2001-600.jpg, dilt, 2023-600.jpg",40,"click","wug","0",1
+"370",42,"Ashley",4,0,"gazzer","gazzer",1,"None","gazzer",1,1839,0,"deg240","15:47:51","2056-600.jpg","game","2005-600.jpg","",40,"label",NA,"1",1
+"371",42,"Ashley",4,0,"keb","fep",2,"None","kreeb",1,718,0,"deg40","15:48:02","2025-600.jpg","game","2005-600.jpg","",40,"label",NA,"0",1
+"372",42,"Ashley",1,0,"kiv","dax",3,"None","kiv",1,4046,0,"deg40","15:48:13","2001-600.jpg","game","2025-600.jpg","",40,"label",NA,"1",1
+"373",42,"Ashley",2,0,"kiv","kiv",4,"None","kiv",1,1767,0,"deg280","15:48:24","2009-600.jpg","game","2001-600.jpg","",40,"label",NA,"1",1
+"374",42,"Ashley",4,0,"manu","manu",5,"None","manu",1,3005,0,"deg80","15:48:34","2023-600.jpg","game","2056-600.jpg","",40,"label",NA,"1",1
+"375",42,"Ashley",2,0,"keb","wug",6,"None","kiv",1,1590,0,"deg160","15:48:47","2002-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",1
+"376",42,"Ashley",2,0,"keber","kreeb",7,"None","",1,1335,0,"deg40","15:48:56","2005-600.jpg","game","2007-600.jpg","",40,"label",NA,"1",1
+"377",42,"Ashley",1,0,"bnker","toma",8,"None","",1,13086,0,"deg160","15:49:16","2007-600.jpg","game","2025-600.jpg","",40,"label",NA,"0",1
+"378",42,"Ashley",1,0,"kezza","blicket",9,"None","",1,3471,0,"deg0","15:49:28","2006-600.jpg","game","2005-600.jpg","",40,"label",NA,"0",1
+"379",43,"Jane",1,1,"krev","toma",1,"None","kreeb",1,20850,10,"deg120","15:45:32","2006-600.jpg","game","2006-600.jpg","krev, 2006-600.jpg",40,"label_click","toma","UNKNOWN",0
+"380",43,"Jane",2,1,NA,"manu",2,"None","",1,7479,10,"deg120","15:45:46","2007-600.jpg","game","2007-600.jpg","krev, 2006-600.jpg",40,"click","manu","UNKNOWN",0
+"381",43,"Jane",4,1,NA,"blicket",3,"None","",1,6454,10,"deg0","15:45:57","2056-600.jpg","game","2056-600.jpg","krev, 2006-600.jpg",40,"click","blicket","1",0
+"382",43,"Jane",1,1,NA,"fep",4,"None","",1,8168,10,"deg320","15:46:11","2025-600.jpg","game","2025-600.jpg","krev, 2006-600.jpg",40,"click","fep","UNKNOWN",0
+"383",43,"Jane",1,1,NA,"kiv",5,"None","",1,6662,10,"deg40","15:46:24","2002-600.jpg","game","2002-600.jpg","krev, 2006-600.jpg",40,"click","kiv","1",0
+"384",43,"Jane",4,1,NA,"kreeb",6,"None","",1,5985,10,"deg80","15:46:35","2001-600.jpg","game","2001-600.jpg","krev, 2006-600.jpg",40,"click","kreeb","1",0
+"385",43,"Jane",2,1,NA,"gazzer",7,"None","",1,5501,10,"deg80","15:46:44","2023-600.jpg","game","2023-600.jpg","krev, 2006-600.jpg",40,"click","gazzer","1",0
+"386",43,"Jane",2,1,NA,"dax",8,"None","",1,6795,10,"deg120","15:46:57","2005-600.jpg","game","2005-600.jpg","krev, 2006-600.jpg",40,"click","dax","1",0
+"387",43,"Jane",4,1,NA,"wug",9,"None","",1,8273,10,"deg120","15:47:08","2009-600.jpg","game","2009-600.jpg","krev, 2006-600.jpg",40,"click","wug","0",0
+"388",44,"cabutterfly",2,1,NA,"kreeb",1,"None","",1,4816,20,"deg120","13:07:49","2002-600.jpg","game","2002-600.jpg","",40,"click","kreeb","UNKNOWN",0
+"389",44,"cabutterfly",4,1,NA,"blicket",2,"None","",1,5576,10,"deg80","13:08:01","2009-600.jpg","game","2009-600.jpg","",40,"click","blicket","UNKNOWN",0
+"390",44,"cabutterfly",1,1,NA,"kiv",3,"None","",1,5823,10,"deg0","13:08:15","2001-600.jpg","game","2001-600.jpg","",40,"click","kiv","UNKNOWN",0
+"391",44,"cabutterfly",2,1,NA,"toma",4,"None","",1,5098,20,"deg200","13:08:28","2025-600.jpg","game","2025-600.jpg","",40,"click","toma","UNKNOWN",0
+"392",44,"cabutterfly",1,1,NA,"manu",5,"None","",1,6638,10,"deg280","13:08:38","2006-600.jpg","game","2006-600.jpg","",40,"click","manu","UNKNOWN",0
+"393",44,"cabutterfly",1,1,NA,"gazzer",6,"None","",1,4727,30,"deg120","13:08:47","2056-600.jpg","game","2056-600.jpg","",40,"click","gazzer","UNKNOWN",0
+"394",44,"cabutterfly",4,1,NA,"wug",7,"None","",1,4217,30,"deg40","13:08:56","2023-600.jpg","game","2023-600.jpg","",40,"click","wug","UNKNOWN",0
+"395",44,"cabutterfly",2,1,NA,"fep",8,"None","",1,7912,10,"deg280","13:09:10","2005-600.jpg","game","2005-600.jpg","",40,"click","fep","UNKNOWN",0
+"396",44,"cabutterfly",4,1,NA,"dax",9,"None","",1,5568,10,"deg280","13:09:20","2007-600.jpg","game","2007-600.jpg","",40,"click","dax","1",0
+"397",45,"mt",2,1,NA,"toma",1,"None","",1,10670,10,"deg40","15:47:58","2001-600.jpg","game","2001-600.jpg","",40,"click","toma","0",1
+"398",45,"mt",1,1,NA,"gazzer",2,"None","",1,9584,10,"deg40","15:48:17","2002-600.jpg","game","2002-600.jpg","",40,"click","gazzer","UNKNOWN",1
+"399",45,"mt",4,1,NA,"wug",3,"None","",1,9631,10,"deg200","15:48:44","2056-600.jpg","game","2056-600.jpg","",40,"click","wug","UNKNOWN",1
+"400",45,"mt",4,1,NA,"manu",4,"None","",1,8991,10,"deg240","15:49:00","2007-600.jpg","game","2007-600.jpg","",40,"click","manu","UNKNOWN",1
+"401",45,"mt",1,1,NA,"kreeb",5,"None","",1,8542,10,"deg200","15:49:16","2006-600.jpg","game","2006-600.jpg","",40,"click","kreeb","0",1
+"402",45,"mt",4,1,NA,"kiv",6,"None","",1,6128,10,"deg280","15:49:29","2005-600.jpg","game","2005-600.jpg","",40,"click","kiv","UNKNOWN",1
+"403",45,"mt",1,1,NA,"dax",7,"None","",1,9647,10,"deg40","15:49:48","2009-600.jpg","game","2009-600.jpg","",40,"click","dax","UNKNOWN",1
+"404",45,"mt",2,1,NA,"blicket",8,"None","",1,8112,10,"deg160","15:50:04","2025-600.jpg","game","2025-600.jpg","",40,"click","blicket","0",1
+"405",45,"mt",2,1,NA,"fep",9,"None","",1,9086,10,"deg120","15:50:22","2023-600.jpg","game","2023-600.jpg","",40,"click","fep","UNKNOWN",1
