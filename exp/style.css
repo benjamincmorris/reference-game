@@ -101,12 +101,15 @@ th {
 .circle-container img { display: block; width: 100%; }
 .deg0 { transform: translate(12em); } /* 12em = half the width of the wrapper */
 .deg40 { transform: rotate(40deg) translate(12em) rotate(-40deg); }
+.deg60 { transform: rotate(60deg) translate(12em) rotate(-60deg); }
 .deg80 { transform: rotate(80deg) translate(12em) rotate(-80deg); }
 .deg120 { transform: rotate(120deg) translate(12em) rotate(-120deg); }
 .deg160 { transform: rotate(160deg) translate(12em) rotate(-160deg); }
+.deg180 { transform: rotate(180deg) translate(12em) rotate(-180deg); }
 .deg200 { transform: rotate(200deg) translate(12em) rotate(-200deg); }
 .deg240 { transform: rotate(240deg) translate(12em) rotate(-240deg); }
 .deg280 { transform: rotate(280deg) translate(12em) rotate(-280deg); }
+.deg300 { transform: rotate(300deg) translate(12em) rotate(-300deg); }
 .deg320 { transform: rotate(320deg) translate(12em) rotate(-320deg); }
 
 
