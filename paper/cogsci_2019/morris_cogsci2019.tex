@@ -33,7 +33,10 @@
 \newenvironment{CodeChunk}{}{}
 
 % cite package, to clean up citations in the main text. Do not remove.
-\usepackage{cite}
+\usepackage{apacite}
+
+% KM added 1/4/18 to allow control of blind submission
+
 
 \usepackage{color}
 
@@ -49,7 +52,8 @@
 % \textwidth 16cm
 % \textheight 21cm
 
-\title{Communicative pressure can leads input that supports language learning}
+\title{Pressure to communicate across knowledge asymmetries leads to
+pedagogical-like language input}
 
 
 \author{{\large \bf Benjamin C. Morris} \\ \texttt{benmorris@uchicago.edu} \\ Department of Psychology \\ University of Chicago \And {\large \bf Daniel Yurovsky} \\ \texttt{yurovsky@uchicago.edu} \\ Department of Psychology \\ University of Chicago}
@@ -62,18 +66,22 @@
 Infants prefer to listen to and learn better from child-directed speech.
 This speech might support learning in part due to communicative
 pressure: parents must use language that their children understand. We
-designed a Mechanical Turk study to experimentally validate this idea,
-putting Turkers in the role of parents talking with children who knew a
-novel language less well. Participants could communicate in 3 ways:
-pointing---expensive but unambiguous, labelling---cheap but
-knowledge-dependent, or both. They won points only for communicating
-successfully; using pointing and labelling together was costly, but
-could teach, allowing cheaper communication on later trials.
-Participants were modulated their communicate behavior in response to
-their own and their partner's knowledge and teaching emerged when the
-speaker had substantially more knowledge of the lexicon. While language
-is more than reference games, this work validates the hypothesis that
-communicative pressure alone can lead to supportive language input.
+present longitudinal corpus data of parent-child interaction to
+demonstrate that parents provide information-rich referential
+communication (using both gesture and speech during the same reference)
+more for infrequent referents and when their children are younger. We
+then present a Mechanical Turk study to experimentally validate this
+idea, asking Turkers to communicate with a listener who a novel language
+less well. Participants could communicate in 3 ways: pointing (expensive
+but unambiguous), labelling (cheap but knowledge-dependent), or both.
+They won points only for communicating successfully; using pointing and
+labelling together was costly, but could teach, allowing cheaper
+communication on later trials. Participants modulated their
+communicative behavior in response to their own and their partner's
+knowledge and teaching emerged when the speaker had substantially more
+knowledge of the lexicon. While language is more than reference games,
+this work validates the hypothesis that communicative pressure alone can
+lead to supportive language input.
 
 \textbf{Keywords:}
 Language; Child-Directed Speech; POMDP.
@@ -110,7 +118,7 @@ mechanisms, there is reason to be suspicious about just how precocious
 they are early in development. For example, infants' ability to track
 the co-occurrence information connecting words to their referents
 appears to be highly constrained by both their developing memory and
-attention systems (L. B. Smith \& Yu, 2013; Vlach \& Johnson, 2013).
+attention systems (\textbf{Vlach2013}) (L. B. Smith \& Yu, 2013).
 Further, computational models of these processes show that the rate of
 acquisition is highly sensitive to variation in environmental statistics
 (Blythe, Smith, \& Smith, 2010; Vogt, 2012). Thus precocious
@@ -127,40 +135,126 @@ can understand, and thus might tune the complexity of their speech not
 for the sake of learning itself, but as a byproduct of in-the-moment
 pressure to communicate successfully (Yurovsky, 2017).
 
-We explore the emergence of tuning in a simple model system: an iterated
-reference game in which two players earn points for communicating
-successfully with each other. On each round of the game, participants
-can point--a signal which is costly to produce but always
+To examine this hypothesis, we first analyze parent communicative
+behavior in a longitudinal corpus of parent-child interaction in the
+home (\textbf{Goldin-Meadow et al., 2014}). We investigate the extent to
+which parents modify their communicative behavior across their child's
+development to align to their child's developing linguistic knowledge.
+\textbf{?maybe something about alignment at other levels, syntatic,
+lexical, etc.,--\textgreater{} but we're looking here for modality?}
+Specifically, we analyze communicative modality to look for instances
+gesture-speech co-occurence-- when speakers indicate the same referent
+in two modalities. These instances might be particularly powerful
+learning opportunities for young children because they provide a verbal
+label in the presence of a highly disambuiguting gestural cue (e.g.,
+pointing, holding), greatly reducing referential uncertainty
+(\textbf{gesture-speech citation, word-learning as uncertainty
+reduction}).
+
+\subsection{even for words they know}\label{even-for-words-they-know}
+
+We then turn to the emergence of alignment in a simple model system: an
+iterated reference game in which two players earn points for
+communicating successfully with each other. On each round of the game,
+participants can point--a signal which is costly to produce but always
 communicatively effective, or can use language--a cheaper signal which
 is cheap to produce but successful only if both players share a common
 lexicon. Crucially, participants can point and speak together--paying
 the cost of both, but effectively establishing a shared label for this
 referent that they can exploit on later trials of the game.
 
-In a series of experiments on Mechanical Turk, we show that people tune
-their communicative to choices to varying cost and reward structures,
-and also critically to their partner's linguistic knowledge--teaching
-when partners are unlikely to know language and many more rounds remain.
-We then show that human behavior can be explained by a rational planning
-model that seeks to optimize its total expected utility over the course
-of the game. Together, these data show that pedagogically-supportive
-input can arise from purely selfish motives to maximize the cost of
-communicating successfully while minimizing the cost of communication.
-We take these results as a proof of concept that both the features of
-child-directed speech that support learning as well as those that
-inhibit it may arise from a single unifying goal: The desire to
-communicative efficiently.
+In an experiment on Mechanical Turk using this model system, we show
+that people tune their communicative to choices to varying cost and
+reward structures, and also critically to their partner's linguistic
+knowledge--teaching when partners are unlikely to know language and many
+more rounds remain. We then show that human behavior can be explained by
+a rational planning model that seeks to optimize its total expected
+utility over the course of the game. Together, these data show that
+pedagogically-supportive input can arise from purely selfish motives to
+maximize the utility of communicating successfully while minimizing the
+cost of communication. We take these results as a proof of concept that
+both the features of child-directed speech that support learning as well
+as those that inhibit it may arise from a single unifying goal: The
+desire to communicative efficiently.
+
+\section{Corpus Data}\label{corpus-data}
+
+To begin with, we investigate aligned linguisitc input in naturalistic,
+parent-child corpus data. We focus on parent referential communication
+to examine how might be aligning to their children. The degree of
+parental alignment should be sensitive to the child's age, such that
+parents will be more likely to provide richer communicative information
+when their child is younger, when she has less linguistic knowedge, than
+as she gets older (Yurovsky, Doyle, and Frank, 2016). Parental alignment
+should also be stronger for infrequent objects, where again children are
+likely to have less knowledge of the relevant label. We analyze the
+production of gesture-speech cooccurence for the same referent, in the
+same instance, which could reflect alignment if parents are senstively
+using this information-rich cue for young children and infrequent
+objects.
+
+\subsubsection{Participants, Materials,
+Methods}\label{participants-materials-methods}
+
+These data come from the Language Development Project, a large-scale,
+longitudinal corpus of parent child-interaction in the home with
+families whose socio-economic, racial, and gender diversity is
+representative of the broader Chicago community (Goldin-Meadow et al.,
+2014)\ldots{} \textbf{add specific demographics info}
+
+These data are drawn from a sample of 10 families from the greater
+corpus. Recordings were taken in the home every 4-months from when the
+child was 14-months-old until they were 34-months-old, resulting in 6
+timepoints (missing one family at the 30-month timepoint). Recordings
+were 90 minute sessions, and participants were given no instructions.
+
+\paragraph{Corpus Coding}\label{corpus-coding}
+
+The Language Development Project corpus contains transcription of all
+speech and communicative gestures prroeduced by children and their
+caregivers over the course of the 90-minute home recordings. An
+indpendent coder analyzed each of these communicative instances and
+identified each time a concrete noun was referenced using speech (i.e.,
+a specific noun form) or gesture (only deictic gestures were coded for
+ease of coding and interpretation).
+
+\textbf{ask maddie about criteria for `both' coding, couldn't find in
+the manual}
+
+\begin{CodeChunk}
+\begin{figure*}[h]
+
+{\centering \includegraphics{figs/corpus_plot-1} 
+
+}
+
+\caption[Proportion of parent referential talk with speech-gesture cooccurence across development]{Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, where more infrequent items are closer to zero.}\label{fig:corpus_plot}
+\end{figure*}
+\end{CodeChunk}
+
+\subsubsection{Results}\label{results}
+
+These corpus data were analyzed using a mixed effects regression to
+predict parent use of gesture-speech cooccurence for a given referent.
+Random effects of subject and referent were included in the model. Our
+key predictors were child age and referent frequency * is this spoken
+frequency in the corpus overall? *.
+
+We find a signficant negative effect of age, such that parents are
+signficantly less likely to provide the gesture-speech cue as their
+child gets older (\emph{B} \textless{} -0.038, \emph{p \textless{}
+0.0001}).
 
 \section{Experimental Framework}\label{experimental-framework}
 
 To study the emergence of pedagogy from communicative pressure, we
 developed a simple reference game in which participants would be
 motivated to communicate successfully. After giving people varying
-amounts of training on novel names for 9 novel objects, we asked them to
+amounts of training on novel names for 6 novel objects, we asked them to
 play a communicative game in which they were given one of the objects as
 their referential goal, and they were rewarded if their partner
 successfully selected this referent from among the set of competitors
-(Figure \ref{fig:exp_screenshot}). Participants could choose to refer
+(Figure \ref{fig:imp_screenshot}). Participants could choose to refer
 either using the novel labels they had been exposed to, or they could
 use a deictic gesture to indicate the referent to their partner. Deixis
 was unambiguous, and thus would always succeed. However, in order for
@@ -177,24 +271,24 @@ likely to use language if they have had more exposures to the novel
 object's correct label, and they should be more likely to use language
 as gesture becomes relatively more costly.
 
-Over the course of three experiments, 705 participants were recruited to
-play our reference games via Amazon Mechanical Turk, an online platform
-that allows workers to complete surveys and short tasks for payment. In
-these studies, all participants were placed in the role of speaker and
-listener responses were programmed.
+Across 12 conditions, 480 participants were recruited to play our
+reference game via Amazon Mechanical Turk, an online platform that
+allows workers to complete surveys and short tasks for payment. In this
+study, all participants were placed in the role of speaker and listener
+responses were programmed.
 
 \begin{CodeChunk}
 \begin{figure}[H]
 
-{\centering \includegraphics{figs/exp_screenshot-1} 
+{\centering \includegraphics{figs/imp_screenshot-1} 
 
 }
 
-\caption[Screenshot of speaker view during gameplay]{Screenshot of speaker view during gameplay.}\label{fig:exp_screenshot}
+\caption[Screenshot of speaker view during gameplay]{Screenshot of speaker view during gameplay.}\label{fig:imp_screenshot}
 \end{figure}
 \end{CodeChunk}
 
-\section{Experiment 1}\label{experiment-1}
+\section{Amazon Turk Experiment}\label{amazon-turk-experiment}
 
 In this experiment, we explicitly implemented strategy utility by
 assigning point values to each communicative method. Experiment 1
@@ -203,10 +297,10 @@ our manipulation and that we could induce speech-gesture tradeoff with
 this paradigm.
 
 \subsubsection{Participants, Materials,
-Methods}\label{participants-materials-methods}
+Methods}\label{participants-materials-methods-1}
 
-60 participants were recruited though Amazon Mechanical Turk and
-received a small payment for their participation. Data from 9
+480 participants were recruited though Amazon Mechanical Turk and
+received a small payment for their participation. Data from \textbf{XYZ}
 participants was excluded from subsequent analysis for failing the
 manipulation check or for producing pseudo-English labels (e.g.,
 `pricklyyone').
@@ -216,46 +310,106 @@ pairs and then asked to play a communication game with a partner wherein
 they would have to refer to a particular target object. Participants
 were exposed to nine novel objects, each with a randomly assigned
 pseudo-word label. We manipulated the degree of exposure within
-subjects, such that, during training, participants saw three of the nine
-object-label mappings four times, two times, or one time, resulting in a
-total of 21 training trials. Participants were then given a simple
-recall task to establish their baseline knowledge of the novel lexicon.
+subjects, such that, during training, participants saw two of the six
+object-label mappings five times, three times, or two time, resulting in
+a total of 20 training trials. Participants were then given a simple
+recall task to establish their baseline knowledge of the novel lexicon
+(pretest).
 
 After being introduced to the rules of the game, participants are
-screened to ensure they understand the rules of the game (manipulation
-check). During gameplay, speakers saw the target object in addition to
-an array of all nine objects. Speakers had the option of either directly
-selecting the target object from the array (gesture)- a higher cost cue
-but without ambiguity- or typing a label for the object (speech)- a
-lower cost cue but contingent on the listener's knowledge. After sending
-the message, speakers are shown which object the listener selected.
+screened to ensure they understand key aspects of the manipulation,
+i.e.~their partner's knowledge and the number of times each object would
+be discussed during subsequent gameplay (manipulation check). During
+gameplay, speakers saw the target object in addition to an array of all
+six objects (see Figure \ref{fig:imp_screenshot} for the speaker's
+perspective). Speakers had the option of either directly selecting the
+target object from the array (gesture)- a higher cost cue but without
+ambiguity- or typing a label for the object (speech)- a lower cost cue
+but contingent on the listener's knowledge. After sending the message,
+speakers are shown which object the listener selected.
 
-If the speaker clicked on object (gesture message), the listener was
-coded to simply make the same selection. If the speaker typed an object
-label, the listener evaluated the Levenshtein distance (LD) between the
-typed label and each of the nine possible labels and selected the
-candidate with the smallest edit distance. If none of the nine object
-labels had an LD less than or equal to two, the listener always selected
-an incorrect object.
+Additionally, particpants were told about a third type of message using
+both gesture and speech within a single trial to effectively teach the
+listener an object-label mapping. In order to produce this teaching
+behavior, speakers had to pay the cost of producing both cues (i.e.~the
+time it takes to type the label and select the referent using the arrow
+keys). Our communicative game was designed to reward in-the-moment
+communication, and thus teaching required the speaker paying a higher
+cost upfront. However, rational communicators may understand that if one
+is accounting for future trials, paying the cost upfront to teach the
+listener allows a speaker to use a less costly message strategy on
+subsequent trials (namely, speech).
+
+Incorporating teaching means that our speaker must now reason about
+their interlocutor's knowledge state more explicitly, in order to make
+rational decisions about what to teach and when. To address this added
+dimension, we also manipulated participants' expectations about their
+partner's knowledge. Prior to beginning the game, participants were told
+that there partner had either no experience with the lexicon, had half
+the experience of the speaker, the same experience, or had twice the
+experience of the speaker.
+
+Listeners starting knowledge state were also initialized accordingly.
+Listeners with no exposure were given no knowledge of the lexicon to
+start. Listeners with half the exposure of the speaker began with
+knowledge of three object-label pairs (2 high frequency, 1 mid
+frequency), based the average retention rates found previously.
+Listeners with the same exposure of the speaker began with knowledge of
+three object-label pairs (2 high frequency, 2 mid frequency, 1 low
+frequency), again based the average retention rates found previously.
+Lastly, the listener with twice as much exposure as the speaker began
+with perfect knowledge of the lexicon. Through gesture-speech
+co-occurrence, the speaker could effectively teach the listener a novel
+mapping. \ldots{} Listeners could learn a novel mapping from one
+teaching event in this game and integrate it into their set of candidate
+words when evaluating the LD of subsequent labels\ldots{}
 
 Speakers could win up to 100 points per trial if the listener correctly
 selected the target referent based on their message. If the listener
 failed to identify the target object, the speaker received no points. We
 manipulated the relative utilities of each of the strategies
-between-subjects. In the `Talk is Cheap' condition, speakers received 30
-points for gesturing and 100 points for labeling, while in the `Talk is
-Less Cheap' condition speakers received 50 points for gesturing and 80
-points for labeling. 30 participants were run in each of the two
-conditions.
+between-subjects, emb the relative utilities of the communicative
+strategies in the gameplay more implicitly. Using a timer that
+controlled the number of points that were earned on each trial of
+gameplay (Figure \ref{fig:imp_screenshot}). Rather than impose an
+explicit point system, we set the relative utilities of communication
+strategies by manipulating the speed with which participants could
+respond.
 
-\subsubsection{Results}\label{results}
+During the game, the six novel objects were arranged in a circle around
+a cartoon pointer (see Figure \ref{fig:imp_screenshot}). To manipulate
+the relative speeds of gesturing and labeling, we required speakers to
+move a small pointer using the arrow keys on their keyboards in order to
+select an object with gesture. With this method we could directly
+manipulate the speed of the pointer while holding the arrow keys to
+effectively set the maximum possible utility of using gesture.
+
+If the listener correctly identified the target object, speakers
+received points determined by the amount of time remaining on the timer.
+For successful communications, speakers always received a minimum of 10
+points, regardless of the time elapsed. Based on pilot response times,
+the timer was set to 6.5 seconds. The timer did not begin until speakers
+began an action (i.e.~pressed a key), so that speed of recall would not
+be an additional cost. Participants were randomly assigned into one of
+three conditions, where the pointer was set to either a fast, slow, or
+slowest setting. \textbf{more on how speed works// quantitative?}
+
+This framework allowed us to implement the point system as an implicit
+extension of gameplay and resulted in each participant having unique
+gesture-speech utilities, based on the speed of their responses across
+the two methods. \textbf{Plot the average points for a given speed
+condition?, or put a table in?}
+
+\subsubsection{Results}\label{results-1}
 
 As expected, participants were sensitive to both the exposure rate and
 the relative utilities of the communication strategies. As an initial
 check of our knowledge manipulation, a logistic regression indicated
 that the more exposures to a given object-label pair during training,
 the more likely participants were to recall that label at pretest (B =
--.52, p \textless{} 0.001).
+XYZ, p \textless{} XYZ).
+
+\paragraph{Gesture-Speech Tradeoff}\label{gesture-speech-tradeoff}
 
 A separate logistic regression was used to predict whether speakers
 chose to produce a gesture or a label during a given trial as a function
@@ -271,184 +425,22 @@ sensitive to our manipulations- altering their choices about how to
 communicate with their partner on the basis of their own knowledge, the
 degree of training, and the imposed utilities.
 
-\begin{CodeChunk}
-\begin{figure}[H]
-
-{\centering \includegraphics{figs/image1-1} 
-
-}
-
-\caption[Plot of modality choice as a function of exposure, split by utility condition]{Plot of modality choice as a function of exposure, split by utility condition.}\label{fig:image1}
-\end{figure}
-\end{CodeChunk}
-
-\section{Experiment 2}\label{experiment-2}
-
-Thus far, we have focused on relatively straightforward scenarios to
-demonstrate that a pressure to communicate successfully in the moment
-can lead speakers to trade-off between gesture and speech sensibly.
-However, critical to these repeated interactions is the ability to learn
-about an interlocutor and potentially influence their learning. In
-Experiment 2, participants were told about a third type of message using
-both gesture and speech within a single trial to effectively teach the
-listener an object-label mapping. This strategy necessitates making
-inferences about the listener's knowledge state, so we also manipulated
-listener knowledge in Experiment 2.
-
-\subsection{Participants, Materials,
-Methods}\label{participants-materials-methods-1}
-
-240 participants were recruited though Amazon Mechanical Turk and
-received a small payment for their participation. 40 participants were
-run in each of 6 different conditions, crossing our utility manipulation
-(the same described in Experiment 1) and our partner knowledge
-manipulation (where we told speakers that the listener had seen the
-object-label pairs zero times, half as many times as the speaker, or
-twice as many times as the speaker). 39 participants were excluded from
-the final analysis for failing to respond correctly to the manipulation
-check, producing pseudo-English labels, or producing nonsense labels
-(e.g., ``xhlfjh'').
-
-In order to produce teaching behavior, speakers had to pay the cost of
-producing both cues, yielding 30 points in either condition of our
-explicit points framework. Our communicative game was designed to reward
-in-the-moment communication, and teaching required the speaker paying a
-cost upfront. However, rational communicators may understand that if one
-is accounting for future trials, paying the cost upfront to teach the
-listener allows a speaker to use a less costly message strategy on
-subsequent trials.
-
-Incorporating teaching means that our speaker must now reason about
-their interlocutor's knowledge state more explicitly, in order to make
-rational decisions about what to teach and when. To address this added
-dimension, we also manipulated participants' expectations about their
-partner's knowledge. Prior to beginning the game, participants were told
-that there partner had no experience with the lexicon, had half the
-experience of the speaker, or had twice the experience of the speaker.
-
-Listeners starting knowledge state were also initialized accordingly.
-Listeners with no exposure were given no knowledge of the lexicon to
-start. Listeners with half the exposure of the speaker began with
-knowledge of three object-label pairs (2 high frequency, 1 mid
-frequency), based the average retention rates found previously. Lastly,
-the listener with twice as much exposure as the speaker began with
-perfect knowledge of the lexicon, again based on the average retention
-rates. Through gesture-speech co-occurrence, the speaker could
-effectively teach the listener a novel mapping. Listeners could learn a
-novel mapping from one teaching event in this game and integrate it into
-their set of candidate words when evaluating the LD of subsequent
-labels.
-
-\subsection{Results}\label{results-1}
-
-In line with our hypotheses, Experiment 2 mirrored the effects found in
-Experiment 1 and demonstrated that teaching is also sensitive to these
-same factors. A mixed effects logistic regression predicting whether or
-not teaching occurred on a given trial revealed that teaching rates
-across conditions depend on all of the same factors that predict speech
-and gesture. There was a significant effect of initial exposure to the
-mapping on the rates of teaching, such that more exposures to a word
-predicted higher rates of teaching behavior (B = 0.09, p \textless{}
-0.05). There was also a significant effect of the utility manipulation
-such that being in the Talk is Cheap condition predicted higher rates of
-teaching than being in the Talk is Less Cheap condition (B = 1.07, p =
-0.01), a rational response considering teaching allows one to use a less
-costly strategy in the future and that strategy is especially superior
-in the Talk is Cheap condition.
-
-As a predictor in our model, we also included whether this was an
-objects first, second, or third appearance in the game. The expected
-utility of teaching on a given trial should decrease as there are fewer
-subsequent trials for that object, thus we predicted that teaching rates
-would drop dramatically. Indeed, this is consistent with the results
-from our model; compared with the first appearance of an object,
-speakers were significantly less likely to teach on the subsequent
-appearances (B = -1.02, p \textless{} 0.001).
-
-\begin{CodeChunk}
-\begin{figure}[H]
-
-{\centering \includegraphics{figs/image3-1} 
-
-}
-
-\caption[Proportion of teaching behavior as a function of whether it was the first, second, or third appearance of a given target, split by partner's level of exposure]{Proportion of teaching behavior as a function of whether it was the first, second, or third appearance of a given target, split by partner's level of exposure.}\label{fig:image3}
-\end{figure}
-\end{CodeChunk}
-
-Interestingly, as we expected, there was a significant effect of our
-manipulation of listener knowledge. Speakers were significantly less
-likely to teach the more exposure their partner had to the lexicon (B =
--1.45, p \textless{} 0.01). The data from Experiment 2 provide a proof
-of concept that teaching behaviors can emerge from a pressure to
-communicate successfully in the moment, especially when there is an
-asymmetry in knowledge such that the speaker is interacting with a less
-knowledgeable listener.
-
-\section{Experiment 3}\label{experiment-3}
-
-As a replication and extension of experiments 1 and 2, we sought to
-embed the relative utilities of the communicative strategies in the
-gameplay more implicitly. In experiment 3, we used the same procedure
-described above; however, a timer controlled the number of points that
-were earned on each trial of gameplay (Figure \ref{fig:imp_screenshot}).
-Rather than impose an explicit point system as in experiments 1 and 2,
-we set the relative utilities of communication strategies by
-manipulating the speed with which participants could respond.
-
-\begin{CodeChunk}
-\begin{figure}[H]
-
-{\centering \includegraphics{figs/imp_screenshot-1} 
-
-}
-
-\caption[Screenshot of speaker view during gameplay in the Experiment 3 version]{Screenshot of speaker view during gameplay in the Experiment 3 version.}\label{fig:imp_screenshot}
-\end{figure}
-\end{CodeChunk}
-
-\subsection{Participants, Materials,
-Methods}\label{participants-materials-methods-2}
-
-405 participants were recruited though Amazon Mechanical Turk and
-received a small payment for their participation. Roughly 45
-participants were run in each of 9 conditions, again crossing partner
-knowledge (none, half as much, twice as much) with our utility
-manipulation (pointing is normal, slow, or slowest). The responses from
-128 participants were excluded for failing to meet our manipulation
-check, using pseudo-English labels, or using non-sense labels.
-
-Experiment 3 utilized the same training and pretest procedures, but
-gameplay differed in a number of ways. During the game, the nine novel
-objects were arranged in a circle around a cartoon pointer (see Figure
-\ref{fig:imp_screenshot}). To manipulate the relative speeds of
-gesturing and labeling, we required speakers to move the small pointer
-with the arrow keys on their keyboards in order to select an object with
-gesture. With this method we could directly manipulate the speed of the
-pointer while holding the arrow keys to effectively set the maximum
-possible utility of using gesture.
-
-If the listener correctly identified the target object, speakers
-received points determined by the amount of time remaining on the timer.
-For successful communications, speakers always received a minimum of 10
-points, regardless of the time elapsed. Based on pilot response times,
-the timer was set to 6.5 seconds and points were scaled to match
-experiments 1 and 2. Participants were randomly assigned into one of
-three conditions, where the pointer was set to either a normal, slow, or
-slowest setting.
-
-This framework allowed us to implement the point system as an implicit
-extension of gameplay and resulted in each participant having unique
-gesture-speech utilities, based on the speed of their responses across
-the two methods.
-
-\subsection{Results}\label{results-2}
-
 In Experiment 3, we see gesture and speech trading off in the same
 patterns as Experiments 1 and 2. A mixed effects logistic regression
 showed that the more exposure to a given object during training, the
 more likely speakers were to label that object during the game (B =
-0.53, p \textless{} 0.01).
+0.53, p \textless{} 0.01)\ldots{}.
+
+\ldots{}.. Critically, there was a main effect of our utility
+manipulation, such that speakers the more difficult it was to gesture,
+the more likely participants were to rely on speech (B = 0.09, p
+\textless{} 0.01). Figure \ref{fig:imp_speech_gesture} illustrates this
+pattern in the condition where the listener has more exposure than the
+speaker, as there was minimal teaching in that condition and thus the
+speech-gesture trade-off is most interpretable. In the absence of an
+explicit framework for assigning utilities based on method, speakers
+continue to adapt their communicative choices taking into account the
+expected utility of possible strategies.
 
 \begin{CodeChunk}
 \begin{figure}[H]
@@ -461,35 +453,40 @@ more likely speakers were to label that object during the game (B =
 \end{figure}
 \end{CodeChunk}
 
-Critically, there was a main effect of our utility manipulation, such
-that speakers the more difficult it was to gesture, the more likely
-participants were to rely on speech (B = 0.09, p \textless{} 0.01).
-Figure \ref{fig:imp_speech_gesture} illustrates this pattern in the
-condition where the listener has more exposure than the speaker, as
-there was minimal teaching in that condition and thus the speech-gesture
-trade-off is most interpretable. In the absence of an explicit framework
-for assigning utilities based on method, speakers continue to adapt
-their communicative choices taking into account the expected utility of
-possible strategies.
+\paragraph{Emergence of Teaching}\label{emergence-of-teaching}
 
-Rates of teaching behavior also held a similar pattern shown in
-Experiment 2. We fit a mixed effects logistic regression to predict
-whether or not participants taught on a given trial, using the same
-predictors from Experiment 2. The number of remaining trials for a given
-object persisted as a significant predictor, again finding that later
-appearances of an object are less likely to evoke teaching (B = -0.94, p
-\textless{} 0.001). The role of listener knowledge also remained
-similar, such that the more exposure the listener had to the lexicon,
-the less likely speakers were to teach (B = -1.15, p \textless{} 0.001).
-Despite these similarities, the effects of our utility manipulation and
-the initial exposure rate were not significant on the rates of teaching
-(B = -0.03, p \textgreater{} 0.05 and B = 0.10, p \textgreater{} 0.05,
-respectively). This is possibly due to the unexpected noise in the data
-in the Gesture is Hardest, Partner has twice the exposure condition (see
-Figure \ref{fig:imp_speech_gesture}). Nevertheless, these results
-corroborate our early findings, demonstrating that teaching behavior
-emerges in both a paradigm with an explicit points system (Experiment 2)
-and an implicit points system (Experiment 3), despite the initial cost.
+Thus far, we have focused on relatively straightforward scenarios to
+demonstrate that a pressure to communicate successfully in the moment
+can lead speakers to trade-off between gesture and speech sensibly.
+
+\ldots{} In line with our hypotheses, Experiment 2 mirrored the effects
+found in Experiment 1 and demonstrated that teaching is also sensitive
+to these same factors. A mixed effects logistic regression predicting
+whether or not teaching occurred on a given trial revealed that teaching
+rates across conditions depend on all of the same factors that predict
+speech and gesture. There was a significant effect of initial exposure
+to the mapping on the rates of teaching, such that more exposures to a
+word predicted higher rates of teaching behavior (B = 0.09, p
+\textless{} 0.05). There was also a significant effect of the utility
+manipulation such that being in the Talk is Cheap condition predicted
+higher rates of teaching than being in the Talk is Less Cheap condition
+(B = 1.07, p = 0.01), a rational response considering teaching allows
+one to use a less costly strategy in the future and that strategy is
+especially superior in the Talk is Cheap condition.
+
+As a predictor in our model, we also included whether this was an
+objects first, second, or third appearance in the game. The expected
+utility of teaching on a given trial should decrease as there are fewer
+subsequent trials for that object, thus we predicted that teaching rates
+would drop dramatically. Indeed, this is consistent with the results
+from our model; compared with the first appearance of an object,
+speakers were significantly less likely to teach on the subsequent
+appearances (B = -1.02, p \textless{} 0.001).
+
+Nevertheless, these results corroborate our early findings,
+demonstrating that teaching behavior emerges in both a paradigm with an
+explicit points system (Experiment 2) and an implicit points system
+(Experiment 3), despite the initial cost.
 
 \begin{CodeChunk}
 \begin{figure}[H]
@@ -505,7 +502,7 @@ and an implicit points system (Experiment 3), despite the initial cost.
 \section{Model: Iterated Communication as Rational
 Planning}\label{model-iterated-communication-as-rational-planning}
 
-The results from these experiments are qualitatively consistent with a
+The results from this experiment are qualitatively consistent with a
 model in which participants make their communicative choices to maximize
 their expected utility from the reference game. We next formalize this
 model to determine if these results are predicted quantitatively as
@@ -555,15 +552,8 @@ rather the one that optimizes the expected rewards that will accumulate
 over all future trials (Kaelbling, Littman, \& Cassandra, 1998).
 
 For the results reported here, we set \(\alpha = 2\) based on
-hand-tuning, but other values produce similar results.
-
-\begin{itemize}
-\tightlist
-\item
-  Discounting parameter
-\item
-  Leploss parameter
-\end{itemize}
+hand-tuning, but other values produce similar results. \textbf{also the
+discounting parameter}
 
 We implemented a two-agent model of speaker and listener behavior in
 this game based on partially observable Markov decision processes. The
@@ -617,17 +607,25 @@ about the partner's knowledge state to reflect this exposure.
 \end{figure}
 \end{CodeChunk}
 
-\section{Discussion}\label{discussion}
+\section{General Discussion}\label{general-discussion}
+
+is it worth having preliminary discussions at the end of the corpus
+section, and the experiment section?
+
+limitations- obviously different pressures on the model feedback (fewer
+interactions, half situation don't know knowledge, no in-the-moment
+pressures like drift model\ldots{} gesture when speech is slow to
+come\ldots{}).
+
+this idea isn't specific to gesture-speech coocurrence.
 
 \section{Acknowledgements}\label{acknowledgements}
 
 We are grateful to Elliot Lipnowski for thoughtful feedback on the
-model. This research was funded by a James S. McDonnell Foundation
-Scholar Award to DY.
-
-\section{References}\label{references}
-
-\setlength{\parindent}{-0.1in} \setlength{\leftskip}{0.125in} \noindent
+model, to Susan Goldin-Meadow for sharing access to the Language
+Devleopment Project data, and to Madeline Meyers for help in coding and
+analyzing the corpus data. This research was funded by a James S.
+McDonnell Foundation Scholar Award to DY.
 
 \hypertarget{refs}{}
 \hypertarget{ref-bloom2000}{}
@@ -689,11 +687,6 @@ Smith, L. B., \& Yu, C. (2013). Visual attention is not enough:
 Individual differences in statistical word-referent learning in infants.
 \emph{Language Learning and \ldots{}}, \emph{9}, 25--49.
 
-\hypertarget{ref-vlach2013}{}
-Vlach, H. A., \& Johnson, S. P. (2013). Memory constraints on infants
-cross-situational statistical learning. \emph{Cognition}, \emph{127}(3),
-375--382.
-
 \hypertarget{ref-vogt2012}{}
 Vogt, P. (2012). Exploring the robustness of cross-situational learning
 under zipfian distributions. \emph{Cognitive Science}, \emph{36}(4),
@@ -702,5 +695,8 @@ under zipfian distributions. \emph{Cognitive Science}, \emph{36}(4),
 \hypertarget{ref-yurovsky2017}{}
 Yurovsky, D. (2017). A communicative approach to early word learning.
 \emph{New Ideas in Psychology}, 1--7.
+
+\bibliographystyle{apacite}
+
 
 \end{document}
