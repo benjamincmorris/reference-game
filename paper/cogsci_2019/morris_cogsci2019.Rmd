@@ -25,7 +25,6 @@ output: cogsci2016::cogsci_paper
 ---
 
 ```{r global_options, include=FALSE}
-rm(list=ls())
 knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, fig.pos = "tb",
                       fig.path='figs/', echo=F, warning=F, cache=F, message=F,
                       sanitize = T)
@@ -39,28 +38,31 @@ library(xtable)
 library(feather)
 library(tidyverse)
 library(lme4)
+library(here)
+
+theme_set(theme_classic(base_size = 10))
 ```
 
 # Introduction
 
-One of the most striking aspects of children's language learning is just how quickly they master the complex system of their natural language [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
+One of the most striking aspects of children's language learning is just how quickly they master the complex system of their natural language [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency in a way that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
 
 One possibility is that children's caregivers deserve most of the credit; that the language parents produce to their children is optimized for teaching. Although there is some evidence that aspects of child-directed speech support learning, other aspects--even in the same subproblem, e.g. phoneme discrimination--appear to make learning more difficult [@eaves-jr2016;@mcmurray2013]. In general, parents rarely explicitly correct their children, and children are resistant to the rare explicit language correction they do get [@newport1977]. Thus while parents may occasionally offer a supervisory signal, the bulk of the evidence suggests that parental supervision is unlikely to explain rapid early language acquisition
 
-Alternatively, even the youngest infants may already come to language acquisition with a precocious ability to learn the latent structure of language from the statistical properties of speech in their ambient environment [@saffran2003;@smith2008]. While a number of experiments clearly demonstrate the early availability of such mechanisms, there is reason to be suspicious about just how precocious they are early in development. For example, infants' ability to track the co-occurrence information connecting words to their referents appears to be highly constrained by both their developing memory and attention systems (**Vlach2013**) [ @smith2013]. Further, computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics [@blythe2010;@vogt2012]. Thus precocious unsupervised statistical learning also appears to fall short of an explanation for rapid early language learning.
+Alternatively, even the youngest infants may already come to language acquisition with a precocious ability to learn the latent structure of language from the statistical properties of speech in their ambient environment [@saffran2003;@smith2008]. While a number of experiments clearly demonstrate the early availability of such mechanisms, there is reason to be suspicious about just how precocious they are early in development. For example, infants' ability to track the co-occurrence information connecting words to their referents appears to be highly constrained by both their developing memory and attention systems [@vlach2013,@smith2013]. Further, computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics [@blythe2010;@vogt2012]. Thus precocious unsupervised statistical learning also appears to fall short of an explanation for rapid early language learning.
 
 We explore the consequences of a third possibility: The language that children hear is neither designed for pedagogy, nor is it random; it is designed for communication [@brown1977]. We take as the caregiver's goal the desire to communicate with the child, not about language itself, but instead about the world in front of them. To succeed, the caregiver must produce the kinds of communicative signals that the child can understand, and thus might tune the complexity of their speech not for the sake of learning itself, but as a byproduct of in-the-moment pressure to communicate successfully [@yurovsky2017]. 
 
-To examine this hypothesis, we first analyze parent communicative behavior in a longitudinal corpus of parent-child interaction in the home (**Goldin-Meadow et al., 2014**). We investigate the extent to which parents modify their communicative behavior across their child's development to align to their child's developing linguistic knowledge. **?maybe something about alignment at other levels, syntatic, lexical, etc.,--> but we're looking here for modality?** Specifically, we analyze communicative modality to look for instances multi-modal reference-- when speakers indicate the same referent, in the same instance, using both gesture and a verbal label. These instances might be particularly powerful learning opportunities for young children because they provide a verbal label in the presence of a highly disambuiguting gestural cue (e.g., pointing, holding), greatly reducing referential uncertainty (**gesture-speech citation, word-learning as uncertainty reduction**).
+To examine this hypothesis, we first analyze parent communicative behavior in a longitudinal corpus of parent-child interaction in the home [@goldin-meadow2014]. We investigate the extent to which parents modify their communicative behavior across their child's development to align to their child's developing linguistic knowledge. **?maybe something about alignment at other levels, syntatic, lexical, etc.,--> but we're looking here for modality?** Specifically, we analyze communicative modality to look for instances multi-modal reference-- when speakers indicate the same referent, in the same instance, using both gesture and a verbal label. These instances might be particularly powerful learning opportunities for young children because they provide a verbal label in the presence of a highly disambuiguting gestural cue (e.g., pointing, holding), greatly reducing referential uncertainty (**gesture-speech citation, word-learning as uncertainty reduction**).
 
 We then turn to the emergence of alignment in a simple model system: an iterated reference game in which two players earn points for communicating successfully with each other. On each round of the game, participants can point--a signal which is costly to produce but always communicatively effective, or can use language--a cheaper signal which is cheap to produce but successful only if both players share a common lexicon. Crucially, participants can point and speak together--paying the cost of both, but effectively establishing a shared label for this referent that they can exploit on later trials of the game. 
 
 In an experiment on Mechanical Turk using this model system, we show that people tune their communicative to choices to varying cost and reward structures, and also critically to their partner's linguistic knowledge--teaching when partners are unlikely to know language and many more rounds remain. We then show that human behavior can be explained by a rational planning model that seeks to optimize its total expected utility over the course of the game. Together, these data show that pedagogically-supportive input can arise from purely selfish motives to maximize the utility of communicating successfully while minimizing the cost of communication. We take these results as a proof of concept that both the features of child-directed speech that support learning as well as those that inhibit it may arise from a single unifying goal: The desire to communicative efficiently. 
 
-# Corpus Data
-```{r, include = FALSE}
+# Corpus Analysis
+```{r}
 # Plot of Referential Communication from LDP Corpus Data
-corpus_data <- read_feather('data/coded_responses.feather')
+corpus_data <- read_feather(here("data/coded_responses.feather"))
 
 modality_data <- corpus_data %>%
   group_by(person, age, subj, freq_cut, rank, freq, referent, modality, chat) %>%
@@ -81,9 +83,9 @@ teaching_ribbons <- scales::seq_gradient_pal("#cbffb7", "#124200", "Lab")(seq(0,
 teaching_ribbons[[6]] <- "#000000"
 ```
 
-To begin with, we investigate linguisitc input in naturalistic, parent-child corpus data. We focus on parent referential communication to examine how parents might be aligning to their children. The degree of parental alignment should be sensitive to the child's age, such that parents will be more likely to provide richer communicative information when their child is younger, when she has less linguistic knowedge, than as she gets older (**Yurovsky, Doyle, and Frank, 2016**). Parental alignment should also be stronger for infrequent objects, where again children are likely to have less knowledge of the relevant label. We analyze the production of multi-modal reference for the same referent, in the same instance, which could reflect alignment if parents are senstively using this information-rich cue for young children and infrequent objects. 
+To begin with, we investigate linguisitc input in naturalistic, parent-child corpus data. We focus on parent referential communication to examine how parents might be aligning to their children. The degree of parental alignment should be sensitive to the child's age, such that parents will be more likely to provide richer communicative information when their child is younger, when she has less linguistic knowedge, than as she gets older [@yurovsky2016]. Parental alignment should also be stronger for infrequent objects, where again children are likely to have less knowledge of the relevant label. We analyze the production of multi-modal reference for the same referent, in the same instance, which could reflect alignment if parents are senstively using this information-rich cue for young children and infrequent objects. 
 
-## Participants, Materials, Methods
+## Data
 These data come from the Language Development Project, a large-scale, longitudinal corpus of parent child-interaction in the home with families who are representative of the Chicago community in socio-economic, racial, and gender diversity (**Goldin-Meadow et al., 2014**)... **add specific demographics info**
 
 These data are drawn from a sample of 10 families from the greater corpus. Recordings were taken in the home every 4-months from when the child was 14-months-old until they were 34-months-old, resulting in 6 timepoints (missing one family at the 30-month timepoint). Recordings were 90 minute sessions, and participants were given no instructions.
@@ -94,7 +96,8 @@ The Language Development Project corpus contains transcription of all speech and
 **ask maddie about criteria for 'both' coding, couldn't find in the manual**
 
 ## Results
-```{r, cache=TRUE,  include=FALSE}
+
+```{r corpus_plot_lm, cache=TRUE}
 parent_both_lm <- glmer(cbind(both, speech + gesture) ~ age + log(freq) + 
                     (1|referent) + (1|subj), 
       data = filter(modality_data, person == "parent"),
@@ -108,7 +111,7 @@ These corpus data were analyzed using a mixed effects regression to predict pare
 
 We find a signficant negative effect of age on multi-modal reference, such that parents are signficantly less likely to provide the gesture-speech cue as their child gets older (*B <* `r age_beta`, *p < 0.0001*). Examing referents, we find a signficant negative effect of referent frequency on multi-modal reference as well, such that parents are signficantly less likely to provide the gesture-speech cue for frequent referents than infrequent ones (*B <* `r freq_beta`, *p < 0.0001*). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children.
 
-```{r corpus_plot, cache=TRUE, fig.env = "figure*", fig.pos = "h", fig.width=6, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, where more infrequent items are closer to zero."}
+```{r corpus_plot, cache=TRUE, fig.env = "figure", fig.width=3, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, where more infrequent items are closer to zero."}
 # theme_set(theme_bw(base_size = 14) + theme(panel.grid = element_blank(),
 #                   strip.background = element_blank()))
 
@@ -122,43 +125,41 @@ ggplot(plot_data, aes(x = log(freq), y = prop,
   coord_cartesian(ylim=c(0,.35)) +
   scale_fill_manual(values=teaching_ribbons, name='Age of Child', labels=c('14 months', '18 months','22 months','26 months', "30 months", "34 months")) +
   scale_color_manual(values=cc, name='Age of Child', labels=c('14 months', '18 months','22 months','26 months', "30 months", "34 months")) +
-  theme_bw()
+  theme(legend.position = c(.8,.8))
 ```
 
 ## Discussion
+
 These corpus findings are consistent with an account of parental alignment: parents are sensitive to their child's developing linguisitc knowledge and adjust their communicative behavior accordingly. We have shown that parents provided more multi-modal reference for less familiar objects and when their child is younger. However, with naturalistic data it is difficult to determine the role of the underlying pressures at work. While these data are consistent with our account of the role of communicative pressure and alignment, these data could result from (**any number of pressures, from pedagogical to... **). To take these ideas further, we next developed a paradigm to try to experimentally induce richly-structured, aligned input from a pressure to communicate in the moment, as a proof of concept. 
 
 
-# Experimental Framework
+# Experimental 
 
 To study the emergence of pedagogical-like input from communicative pressure, we developed a simple reference game in which participants would be motivated to communicate successfully on a trial-by-trial basis. After giving particpants varying amounts of training on novel names for 9 novel objects, we asked them to play a communicative game in which they were given one of the objects as their referential goal, and they were rewarded if their partner successfully selected this referent from among the set of competitors (see Figure \ref{fig:exp_screenshot}). Participants could choose to refer either using the novel labels they had been exposed to, or they could click an object to directly indicate the referent to their partner (analogous to a deictic gesture). Deixis was unambiguous, and thus would always succeed. However, in order for a labels to be effective for a target object, the participant and their partner would both have to know the correct novel label for the referent. Across participants, we varied the relative cost of using these two communicative signals.
 
 If people are motivated to communicate successfully, their choice of referential modality should reflect the tradeoff between the cost of producing the communicative signal with the likelihood that the communication would succeed. We thus predicted that peoples' choice of referential modality would reflect this calculus: People should be more likely to use language if they have had more exposures to the novel object's correct label, and they should be more likely to use language as gesture becomes relatively more costly. 
 
-Across 6 conditions, 480 participants were recruited to play our reference game via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment. In this study, all participants were placed in the role of speaker and listener responses were programmed. 
-
 ```{r exp_screenshot, fig.env = "figure", fig.pos = "H", fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
-img <- png::readPNG("figs/exp_screenshot.png")
+img <- png::readPNG(here("figs/exp_screenshot.png"))
 grid::grid.raster(img)
 ```
 
-
-# Amazon Turk Experiment   
-
-In this experiment, we explicitly implemented strategy utility by assigning point values to each communicative method.  
-
 <!-- Experiment 1 provides a proof of concept to show that participants were sensitive to our manipulation and that we could induce speech-gesture tradeoff with this paradigm.  -->
 
-## Participants, Materials, Methods
+## Method
 ```{r, include = FALSE}
-all_data <- read.csv("data/1.30_turk_exp.csv")
+all_data <- read_csv(here("data/1.30_turk_exp.csv"))
 
 n_Ps <- all_data %>% distinct(ldf_num) %>% nrow()
 n_manipFail <- all_data %>% filter(manipFail==1) %>% distinct(ldf_num) %>% nrow()
 n_engLabels <- all_data %>% filter(manipFail==0) %>% filter(usedEnglishLabels==1) %>% distinct(ldf_num) %>% nrow()
 ```
 
-`r n_Ps` participants were recruited though Amazon Mechanical Turk and received a small payment for their participation. Data from `r n_manipFail` participants were excluded from subsequent analysis for failing the critical manipulation check and a further `r n_engLabels` for producing pseudo-English labels (e.g., 'pricklyyone').
+### Participants
+`r n_Ps` participants were recruited though Amazon Mechanical Turk and received a **HOW MUCH** payment for their participation. Data from `r n_manipFail` participants were excluded from subsequent analysis for failing the critical manipulation check and a further `r n_engLabels` for producing pseudo-English labels (e.g., 'pricklyyone').
+
+
+### Design and Procedure
 
 Participants were told they would be introduced to novel object-label pairs and then asked to play a communication game with a partner wherein they would have to refer to a particular target object. Participants were exposed to nine novel objects, each with a randomly assigned pseudo-word label. We manipulated the degree of exposure within subjects, such that, during training participants saw three of the nine object-label mappings four times, two times, or one time. Thus, particpants had a total of 20 training trials. Participants were then given a simple recall task to establish their baseline knowledge of the novel lexicon (pretest). 
 
