@@ -84,11 +84,10 @@ this work validates the hypothesis that communicative pressure alone can
 lead to supportive language input.
 
 \textbf{Keywords:}
-Language; Child-Directed Speech; POMDP.
+Language; Learning; Child-Directed Speech; POMDP.
 \end{abstract}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
 One of the most striking aspects of children's language learning is just
 how quickly they master the complex system of their natural language
@@ -113,14 +112,14 @@ unlikely to explain rapid early language acquisition
 Alternatively, even the youngest infants may already come to language
 acquisition with a precocious ability to learn the latent structure of
 language from the statistical properties of speech in their ambient
-environment (Saffran \& 2003, 2003; Smith \& Yu, 2008). While a number
-of experiments clearly demonstrate the early availability of such
+environment (Saffran \& 2003, 2003; L. B. Smith \& Yu, 2008). While a
+number of experiments clearly demonstrate the early availability of such
 mechanisms, there is reason to be suspicious about just how precocious
 they are early in development. For example, infants' ability to track
 the co-occurrence information connecting words to their referents
 appears to be highly constrained by both their developing memory and
-attention systems (Vlach \& Johnson, 2013,@smith2013). Further,
-computational models of these processes show that the rate of
+attention systems (L. B. Smith \& Yu, 2013; Vlach \& Johnson, 2013).
+Further, computational models of these processes show that the rate of
 acquisition is highly sensitive to variation in environmental statistics
 (Blythe, Smith, \& Smith, 2010; Vogt, 2012). Thus precocious
 unsupervised statistical learning also appears to fall short of an
@@ -152,32 +151,18 @@ disambuiguting gestural cue (e.g., pointing, holding), greatly reducing
 referential uncertainty (\textbf{gesture-speech citation, word-learning
 as uncertainty reduction}).
 
-We then turn to the emergence of alignment in a simple model system: an
-iterated reference game in which two players earn points for
-communicating successfully with each other. On each round of the game,
-participants can point--a signal which is costly to produce but always
-communicatively effective, or can use language--a cheaper signal which
-is cheap to produce but successful only if both players share a common
-lexicon. Crucially, participants can point and speak together--paying
-the cost of both, but effectively establishing a shared label for this
-referent that they can exploit on later trials of the game.
+We then turn to the emergence of structured input in a simple model
+system: an iterated reference game in which two players earn points for
+communicating successfully with each other. Modeled after our corpus
+data, particpants are asked to make choices about which communicative
+strategy to use (akin to modality choice). In an experiment on
+Mechanical Turk using this model system, we experimentally induce
+structured language input from a pressure to communicate. We then show
+that human behavior can be explained by a rational planning model that
+seeks to optimize its total expected utility over the course of the
+game.
 
-In an experiment on Mechanical Turk using this model system, we show
-that people tune their communicative to choices to varying cost and
-reward structures, and also critically to their partner's linguistic
-knowledge--teaching when partners are unlikely to know language and many
-more rounds remain. We then show that human behavior can be explained by
-a rational planning model that seeks to optimize its total expected
-utility over the course of the game. Together, these data show that
-pedagogically-supportive input can arise from purely selfish motives to
-maximize the utility of communicating successfully while minimizing the
-cost of communication. We take these results as a proof of concept that
-both the features of child-directed speech that support learning as well
-as those that inhibit it may arise from a single unifying goal: The
-desire to communicative efficiently.
-
-\hypertarget{corpus-data}{%
-\section{Corpus Data}\label{corpus-data}}
+\section{Corpus Analysis}\label{corpus-analysis}
 
 To begin with, we investigate linguisitc input in naturalistic,
 parent-child corpus data. We focus on parent referential communication
@@ -192,9 +177,7 @@ production of multi-modal reference for the same referent, in the same
 instance, which could reflect alignment if parents are senstively using
 this information-rich cue for young children and infrequent objects.
 
-\hypertarget{participants-materials-methods}{%
-\subsection{Participants, Materials,
-Methods}\label{participants-materials-methods}}
+\subsection{Data}\label{data}
 
 These data come from the Language Development Project, a large-scale,
 longitudinal corpus of parent child-interaction in the home with
@@ -208,28 +191,24 @@ child was 14-months-old until they were 34-months-old, resulting in 6
 timepoints (missing one family at the 30-month timepoint). Recordings
 were 90 minute sessions, and participants were given no instructions.
 
-\hypertarget{corpus-coding}{%
-\paragraph{Corpus Coding}\label{corpus-coding}}
+\paragraph{Corpus Coding}\label{corpus-coding}
 
 The Language Development Project corpus contains transcription of all
 speech and communicative gestures produced by children and their
 caregivers over the course of the 90-minute home recordings. An
 independent coder analyzed each of these communicative instances and
 identified each time a concrete noun was referenced using speech (i.e.,
-a specific noun form) or gesture (only deictic gestures were coded for
-ease of coding and interpretation-- e.g., pointing).
+a specific noun form), gesture (only deictic gestures were coded for
+ease of coding and interpretation-- e.g., pointing) or both
+simultaneously.
 
-\textbf{ask maddie about criteria for `both' coding, couldn't find in
-the manual}
-
-\hypertarget{results}{%
-\subsection{Results}\label{results}}
+\subsection{Results}\label{results}
 
 These corpus data were analyzed using a mixed effects regression to
 predict parent use of multi-modal reference for a given referent. Random
 effects of subject and referent were included in the model. Our key
 predictors were child age and referent frequency as a spoken token in
-the corpus overall * is this spoken frequency in the corpus overall? *.
+the corpus overall.
 
 We find a signficant negative effect of age on multi-modal reference,
 such that parents are signficantly less likely to provide the
@@ -250,60 +229,66 @@ children.
 
 }
 
-\caption[Proportion of parent referential talk with speech-gesture cooccurence across development]{Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, where more infrequent items are closer to zero.}\label{fig:corpus_plot}
+\caption[Proportion of parent referential talk with speech-gesture cooccurence across development]{Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, with more infrequent items closer to zero.}\label{fig:corpus_plot}
 \end{figure}
 \end{CodeChunk}
 
-\hypertarget{discussion}{%
-\subsection{Discussion}\label{discussion}}
+\subsection{Discussion}\label{discussion}
 
-These corpus findings are consistent with an account of parental
-alignment: parents are sensitive to their child's developing linguisitc
-knowledge and adjust their communicative behavior accordingly. We have
-shown that parents provided more multi-modal reference for less familiar
-objects and when their child is younger. However, with naturalistic data
-it is difficult to determine the role of the underlying pressures at
-work. While these data are consistent with our account of the role of
-communicative pressure and alignment, these data could result from
+We have shown that parents provided more multi-modal reference for less
+familiar objects and when their child is younger. These corpus findings
+are consistent with an account of parental alignment: parents are
+sensitive to their child's developing linguisitc knowledge and adjust
+their communicative behavior accordingly. Alignment may be one example
+of the pressure to communicate sucessfully in the moment leading to
+richly-structured language input; however, with naturalistic data it is
+difficult to determine the role of the underlying pressures at work.
+While these data are consistent with our account of the role of
+communicative pressure and alignment, these data could also result from
 (\textbf{any number of pressures, from pedagogical to\ldots{} }). To
-take these ideas further, we next developed a paradigm to try to
+take our ideas further, we next developed a paradigm to try to
 experimentally induce richly-structured, aligned input from a pressure
 to communicate in the moment, as a proof of concept.
 
-\hypertarget{experimental-framework}{%
-\section{Experimental Framework}\label{experimental-framework}}
+\section{Experimental Framework}\label{experimental-framework}
 
 To study the emergence of pedagogical-like input from communicative
 pressure, we developed a simple reference game in which participants
 would be motivated to communicate successfully on a trial-by-trial
-basis. After giving particpants varying amounts of training on novel
-names for 9 novel objects, we asked them to play a communicative game in
-which they were given one of the objects as their referential goal, and
-they were rewarded if their partner successfully selected this referent
-from among the set of competitors (see Figure \ref{fig:exp_screenshot}).
-Participants could choose to refer either using the novel labels they
-had been exposed to, or they could click an object to directly indicate
-the referent to their partner (analogous to a deictic gesture). Deixis
-was unambiguous, and thus would always succeed. However, in order for a
-labels to be effective for a target object, the participant and their
-partner would both have to know the correct novel label for the
-referent. Across participants, we varied the relative cost of using
-these two communicative signals.
+basis. By manipulating the relative costs of the communicative methods
+and examining the role of differential knowledge states, we aim to
+determine the circumstances under which richly-structured input emerges,
+without an explicit pedagogical goal. If people are motivated to
+communicate successfully, their choice of referential modality should
+reflect the tradeoff between the cost of producing the communicative
+signal with the likelihood that the communication would succeed. In all
+conditions, pariticpants are placed in the role of speaker and asked to
+communicate with a computerized listner whose responses were programmed
+to be contingent on speaker behavior.
 
-If people are motivated to communicate successfully, their choice of
-referential modality should reflect the tradeoff between the cost of
-producing the communicative signal with the likelihood that the
-communication would succeed. We thus predicted that peoples' choice of
-referential modality would reflect this calculus: People should be more
-likely to use language if they have had more exposures to the novel
-object's correct label, and they should be more likely to use language
-as gesture becomes relatively more costly.
+\subsection{Method}\label{method}
 
-Across 6 conditions, 480 participants were recruited to play our
-reference game via Amazon Mechanical Turk, an online platform that
-allows workers to complete surveys and short tasks for payment. In this
-study, all participants were placed in the role of speaker and listener
-responses were programmed.
+\subsubsection{Participants}\label{participants}
+
+480 participants were recruited though Amazon Mechanical Turk and
+received a \$1 payment for their participation. Data from 51
+participants were excluded from subsequent analysis for failing the
+critical manipulation check and a further 28 for producing
+pseudo-English labels (e.g., `pricklyyone'). \textbf{add footnote that
+analyses were done with and without these participants and patterns
+hold?}
+
+\subsubsection{Design and Procedure}\label{design-and-procedure}
+
+Participants were told they would be introduced to novel object-label
+pairs and then asked to play a communication game with a partner.
+Participants were exposed to nine novel objects, each with a randomly
+assigned pseudo-word label. We manipulated the degree of exposure within
+subjects, such that, during training participants saw three of the nine
+object-label mappings four times, two times, or one time. Thus,
+particpants had a total of 20 training trials. Participants were then
+given a simple recall task to establish their baseline knowledge of the
+novel lexicon (pretest).
 
 \begin{CodeChunk}
 \begin{figure}[H]
@@ -316,45 +301,18 @@ responses were programmed.
 \end{figure}
 \end{CodeChunk}
 
-\hypertarget{amazon-turk-experiment}{%
-\section{Amazon Turk Experiment}\label{amazon-turk-experiment}}
-
-In this experiment, we explicitly implemented strategy utility by
-assigning point values to each communicative method.
-
-\hypertarget{participants-materials-methods-1}{%
-\subsection{Participants, Materials,
-Methods}\label{participants-materials-methods-1}}
-
-480 participants were recruited though Amazon Mechanical Turk and
-received a small payment for their participation. Data from 51
-participants were excluded from subsequent analysis for failing the
-critical manipulation check and a further 28 for producing
-pseudo-English labels (e.g., `pricklyyone').
-
-Participants were told they would be introduced to novel object-label
-pairs and then asked to play a communication game with a partner wherein
-they would have to refer to a particular target object. Participants
-were exposed to nine novel objects, each with a randomly assigned
-pseudo-word label. We manipulated the degree of exposure within
-subjects, such that, during training participants saw three of the nine
-object-label mappings four times, two times, or one time. Thus,
-particpants had a total of 20 training trials. Participants were then
-given a simple recall task to establish their baseline knowledge of the
-novel lexicon (pretest).
-
-Prior to beginning the game, participants are told about how much
-exposure their partner has had to the lexicon and also that they will be
-asked to discuss each object three times. Participants are then asked to
-report their partner's level of exposure, and corrected if they answer
-wrongly (manipulation check). Then during gameplay, speakers saw the
+Prior to beginning the game, participants are told how much exposure
+their partner has had to the lexicon and also that they will be asked to
+discuss each object three times. Participants are then asked to report
+their partner's level of exposure, and are corrected if they answer
+wrongly (manipulation check). Then during gameplay, speakers saw a
 target object in addition to an array of all nine objects (see Figure
 \ref{fig:exp_screenshot} for the speaker's perspective). Speakers had
 the option of either directly selecting the target object from the array
 (gesture)- a higher cost cue but without ambiguity- or typing a label
 for the object (speech)- a lower cost cue but contingent on the
-listener's knowledge. After sending the message, speakers are shown
-which object the listener selected.
+listener's shared linguistic knowledge. After sending the message,
+speakers are shown which object the listener selected.
 
 Speakers could win up to 100 points per trial if the listener correctly
 selected the target referent based on their message. We manipulated the
@@ -380,13 +338,13 @@ moment. In order to produce this teaching behavior, speakers had to pay
 the cost of producing both cues (i.e.~both gesture and speech). Note
 that, in both utility conditions, teaching nets participants 30 points.
 Our communicative game was designed to reward in-the-moment
-communication, and thus teaching required the speaker paying a high cost
+communication, and thus teaching required the speaker pay a high cost
 upfront. However, rational communicators may understand that if one is
 accounting for future trials, paying the cost upfront to teach the
 listener allows a speaker to use a less costly message strategy on
 subsequent trials (namely, speech).
 
-Incorporating teaching means that our speaker must now reason about
+Incorporating teaching means that our speaker must also reason about
 their interlocutor's knowledge state more explicitly, in order to make
 rational decisions about what to teach and when. To address this added
 dimension, we also manipulated participants' expectations about their
@@ -394,7 +352,7 @@ partner's knowledge across 3 conditions. Participants were told that
 their partner had either no experience with the lexicon, had the same
 experience as the speaker, or had twice the experience of the speaker.
 
-Listeners were programed with starting knowledge states initialized
+Listeners were programmed with starting knowledge states initialized
 accordingly. Listeners with no exposure began the game with knowledge of
 0 object-label pairs. Listeners with the same exposure of the speaker
 began with knowledge of five object-label pairs (3 high frequency, 1 mid
@@ -420,25 +378,22 @@ findings such that there would be higher rates of teaching behavior when
 there was an asymmetry in knowledge where the speaker knew more (none
 conditions) comapred with when there was equal knowledge (same
 conditions) or when the listener was more familiar with the languauge
-(double conditions). We also expected that particpants would be
-sensitive to the utility manipulation, such that rates of labeling and
-teaching would be higher in the `Talk is Cheap' condition.
+(double conditions). If particpants are motivated to communciate
+efficiently, we expected that particpants would also be sensitive to our
+utility manipulation, such that rates of labeling and teaching would be
+higher in the `Talk is Cheap' conditions than the other conditions.
 
-\hypertarget{results-1}{%
-\subsection{Results}\label{results-1}}
+\subsection{Results}\label{results-1}
 
 As expected, participants were sensitive to both the exposure rate and
 the relative utilities of the communication strategies. As an initial
 check of our knowledge manipulation, a logistic regression indicated
 that the more exposures to a given object-label pair during training,
 the more likely participants were to recall that label at pretest
-(\emph{B = XYZ, p \textless{} XYZ}). On average participants knew at
+(\textbf{B = XYZ, p \textless{} XYZ}). On average, participants knew at
 least 6 of the 9 words in the lexicon (mean = 6.28, sd = 2.26).
-\textbf{footnote about even for words they know, below analyses are with
-all words, but even if we restirict to known, the patterns hold\ldots{}}
 
-\hypertarget{gesture-speech-tradeoff}{%
-\subsubsection{Gesture-Speech Tradeoff}\label{gesture-speech-tradeoff}}
+\subsubsection{Gesture-Speech Tradeoff}\label{gesture-speech-tradeoff}
 
 To determine how gesture and speech are trading off across conditions,
 we looked at a mixed effects logistic regression to predict whether
@@ -468,8 +423,8 @@ degree of training, and the imposed utilities. Figure
 pattern in the double exposure condition (where the listener has more
 exposure than the speaker, as there was minimal teaching in that
 condition and thus the speech-gesture trade-off is most interpretable).
-Note that these effects merely reflect the degree of participant
-knowledge. All patterns above hold when looking only at words
+Note that these effects do not merely reflect the degree of participant
+knowledge; all patterns above hold when looking only at words
 successfully learned by the speaker at pretest.
 
 \textbf{also go through gesture results?}
@@ -485,36 +440,37 @@ successfully learned by the speaker at pretest.
 \end{figure}
 \end{CodeChunk}
 
-\hypertarget{emergence-of-teaching}{%
-\subsubsection{Emergence of Teaching}\label{emergence-of-teaching}}
+\subsubsection{Emergence of Teaching.}\label{emergence-of-teaching.}
 
 Thus far, we have focused on relatively straightforward scenarios to
 demonstrate that a pressure to communicate successfully in the moment
 can lead speakers to trade-off between gesture and speech sensibly.
+Next, we turn to the emergence of teaching behavior.
 
 In line with our hypotheses, we found that teaching is also sensitive to
-these same factors. A mixed effects logistic regression predicting
-whether or not teaching occurred on a given trial revealed that teaching
-rates across conditions depend on all of the same factors that predict
-speech and gesture. There was a significant effect of initial exposure
-to the mapping on the rates of teaching, such that more exposures to a
-word predicted higher rates of teaching behavior (\emph{B =} 0.16,
-\emph{p \textless{} 0.01}). There was also a significant effect of the
-utility manipulation such that being in the Talk is Cheap condition
-predicted higher rates of teaching than being in the Talk is Less Cheap
-condition (\emph{B =} -0.92, \emph{p \textless{} 0.01}), a rational
-response considering teaching allows one to use a less costly strategy
-in the future and that strategy is especially superior in the Talk is
-Cheap condition.
+same factors as the gesture-speech trade-off. A mixed effects logistic
+regression predicting whether or not teaching occurred on a given trial
+revealed that teaching rates across conditions depend on all of the same
+factors that predict speech and gesture. There was a significant effect
+of initial exposure to the mapping on the rates of teaching, such that
+more exposures to a word predicted higher rates of teaching behavior
+(\emph{B =} 0.16, \emph{p \textless{} 0.01}). There was also a
+significant effect of the utility manipulation such that being in the
+Talk is Cheap condition predicted higher rates of teaching than being in
+the Talk is Less Cheap condition (\emph{B =} -0.92, \emph{p \textless{}
+0.01}), a rational response considering teaching allows one to use a
+less costly strategy in the future and that strategy is especially
+superior in the Talk is Cheap condition.
 
 Critically, we found an effect for partner's exposure for teaching as
 well, such that participants were significantly more likely to teach a
-partner with no exposure than a partner with the same amount of exposure
-(\emph{B =} -1.77, \emph{p \textless{} 0.001}) or double their exposure
-(\emph{B =} -3.59, \emph{p \textless{} 0.001}).
+partner with no prior exposure to the language than a partner with the
+same amount of exposure as the speaker (\emph{B =} -1.77, \emph{p
+\textless{} 0.001}) or double their exposure (\emph{B =} -3.59, \emph{p
+\textless{} 0.001}).
 
 As a predictor in our model, we also included whether this was an
-objects first, second, or third appearance in the game. The expected
+object's first, second, or third appearance in the game. The expected
 utility of teaching on a given trial should decrease as there are fewer
 subsequent trials for that object, and the planned utility of teaching
 comes from using another, cheaper strategy (speech) on later trials;
@@ -525,10 +481,10 @@ to teach on the second appearance (\emph{B =} -0.84, \emph{p \textless{}
 0.001}) or third appearance (\emph{B =} -1.67, \emph{p \textless{}
 0.001}).
 
-\#\#Discussion
+\subsection{Discussion}\label{discussion-1}
 
 In line with our predictions, the data from our paradigm corroborate our
-findings from the corpus analysis, demonstrating that informatiopn-rich,
+findings from the corpus analysis, demonstrating that information-rich,
 pedagogical-like behavior emerges despite the initial cost when there is
 an asymmetry in knowledge and when speech is less costly than other
 modes of communication. While this paradigm has stripped away much of
@@ -536,7 +492,7 @@ the language learning and interactive environment of the naturalistic
 corpus data, it provides important proof of concept that the sturctured
 and tuned language input we see in those data could arise from a
 pressure to communicate. The paradigm's clear, quantitative predictions
-also allows us to build a formal model to try predict our empirical
+also allow us to build a formal model to try predict our empirical
 results. Below, we detail a rational planning model of communication and
 show that it can account for these data.
 
@@ -551,9 +507,8 @@ show that it can account for these data.
 \end{figure}
 \end{CodeChunk}
 
-\hypertarget{model-iterated-communication-as-rational-planning}{%
 \section{Model: Iterated Communication as Rational
-Planning}\label{model-iterated-communication-as-rational-planning}}
+Planning}\label{model-iterated-communication-as-rational-planning}
 
 The results from this experiment are qualitatively consistent with a
 model in which participants make their communicative choices to maximize
@@ -565,20 +520,20 @@ well.
 
 In a one-shot reference game maximizing expected utility is simply
 choosing the action (\(a\)) that has the highest expected utility
-\((\mathbb{E}\left[ U \right])\). The expected utility depends both on
-the action itself, and on the state of the two partners (\(s\)): For
-pointing, this expected utility is independent of referent, defined
-entirely by our experimental manipulation. In contrast, for speech, the
-utility varies with the probability of partners sharing a common label
-for the referent. Following other models in the Rational Speech Act
-framework, we use the Luce Choice Axiom, in which each choice is taken
-in probability proportional to its exponentiated utility (Frank \&
-Goodman, 2012). This choice rule has a single parameter \(\alpha\) that
-controls the noise in this choice--as \(\alpha\) approaches 0, choice is
-random and as \(\alpha\) approaches infinity choice is optimal:
+\((\E{U})\). The expected utility depends both on the action itself, and
+on the state of the two partners (\(s\)): For pointing, this expected
+utility is independent of referent, defined entirely by our experimental
+manipulation. In contrast, for speech, the utility varies with the
+probability of partners sharing a common label for the referent.
+Following other models in the Rational Speech Act framework, we use the
+Luce Choice Axiom, in which each choice is taken in probability
+proportional to its exponentiated utility (M. C. Frank \& Goodman,
+2012). This choice rule has a single parameter \(\alpha\) that controls
+the noise in this choice--as \(\alpha\) approaches 0, choice is random
+and as \(\alpha\) approaches infinity choice is optimal:
 
 \[ 
-C\left(a;s\right) \propto e^{\alpha \mathbb{E}\left[ U \left(s,a\right)) \right]}
+C\left(a;s\right) \propto e^{\alpha \E{U \left(s,a\right))}}
 \]
 
 To use this rule, agents have to estimate how likely they are to share a
@@ -649,133 +604,138 @@ trials where the speaker could use a less costly cue (i.e.~speech).
 After producing both cues, the speaker also updates their own beliefs
 about the partner's knowledge state to reflect this exposure.
 
-\hypertarget{general-discussion}{%
-\section{General Discussion}\label{general-discussion}}
+\begin{CodeChunk}
+\begin{figure}[H]
 
-We have offered preliminary evidence that pedagogical-like language
-input could arise from a pressure to communicate successfully in the
-moment. Tuning one's communicative behavior to an interlocutor's
-knolwedge state is crucial to such a process. Inspired by our corpus
-data consistent we such tuning in parents' choice of communicative
-modality, we experimentally induced information-rich input with only a
-pressure to communicate. Planning across subsequent interactions
-increases the longer-term expected utilites of providing
-information-rich (pedagoical-like) input now, without the need for a
-goal to teach. Indeed, this work shows that such input could arise from
-selfish motivations.
+{\centering \includegraphics{figs/model_fit-1} 
+
+}
+
+\caption[Plot of the fit between model predictions and empirical data]{Plot of the fit between model predictions and empirical data.}\label{fig:model_fit}
+\end{figure}
+\end{CodeChunk}
+
+\section{General Discussion}\label{general-discussion}
+
+We showed that people tune their communicative choices to varying cost
+and reward structures, and also critically to their partner's linguistic
+knowledge--teaching when partners are unlikely to know language and many
+more rounds remain. These data are consistent with the patterns shown in
+our corpus analysis of parent referential communication and demonstrate
+that such pedagogically-supportive input could arise from purely selfish
+motives to maximize the utility of communicating successfully while
+minimizing the cost of communication. We take these results as a proof
+of concept that both the features of child-directed speech that support
+learning as well as those that inhibit it may arise from a single
+unifying goal: The desire to communicative efficiently.
 
 Of course, this work is limited in a number of important ways. While our
 task allows us to distill key pressures and manipulations, there are
-signficant divergences from the corpus data collecting environment as a
+signficant divergences from the corpus data-collecting environment as a
 result. For one, there are fewer and less dynamic, reciporical
-interactions, without some of the crucial time constrained communicative
-behaivors. Also, though it may be easy for particpants to assume the
-listener with no exposure should be wholly naive to the language, it is
-difficult to determine how particpants reasoned about the listener with
-the same degree of exposure to the language. In most real world
-situations, parents are aware of not just how much lanugage their
-children know, but \emph{what} their children know (at least at a
-lexical level).
+interactions between interlocutors and no time-constraints are imposed
+on communication. Also, parents are likely aware of not just how much
+language their children know, but \emph{what} their children know (at
+least at a lexical level). Critical next steps in this line of work will
+return back to the level of parent-child interaction.
 
-While we have focused on multi-modal referetial communication based on
-gesture-speech coocurrence, our framework is not specific to these
-phenonmena. Given the right data or paradigm, our account should hold
-equally well when explaining how other information-rich language input
-might arise. Using coprus and experimental data, this work validates the
-hypothesis that communicative pressure alone can lead to supportive
-language input.
+Our framework is not specific to any particular language phenonmenon,
+though we have focused on gesture-speech coocurrence here. Given the
+right data or paradigm, our account should hold equally well when
+explaining how other information-rich language input might arise in
+naturalistic communication. Using coprus and experimental data, this
+work validates the hypothesis that communicative pressure alone can lead
+to supportive language input.
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
-\setlength{\parindent}{-0.1in} 
-\setlength{\leftskip}{0.125in}
+\setlength{\parindent}{-0.1in} \setlength{\leftskip}{0.125in}
 
 \noindent
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-bloom2000}{}%
+\hypertarget{ref-bloom2000}{}
 Bloom, P. (2000). \emph{How children learn the meanings of words}. MIT
 press: Cambridge, MA.
 
-\leavevmode\hypertarget{ref-blythe2010}{}%
+\hypertarget{ref-blythe2010}{}
 Blythe, R. A., Smith, K., \& Smith, A. D. M. (2010). Learning times for
 large lexicons through cross-situational learning. \emph{Cognitive
 Science}, \emph{34}, 620--642.
 
-\leavevmode\hypertarget{ref-brown1977}{}%
+\hypertarget{ref-brown1977}{}
 Brown, R. (1977). Introduction. In C. E. Snow \& C. A. Ferguson (Eds.),
 \emph{Talking to children: Language input and interaction}. Cambridge,
 MA.: MIT Press.
 
-\leavevmode\hypertarget{ref-eaves-jr2016}{}%
+\hypertarget{ref-eaves-jr2016}{}
 Eaves Jr, B. S., Feldman, N. H., Griffiths, T. L., \& Shafto, P. (2016).
 Infant-directed speech is consistent with teaching. \emph{Psychological
 Review}, \emph{123}(6), 758.
 
-\leavevmode\hypertarget{ref-frank2012}{}%
+\hypertarget{ref-frank2012}{}
 Frank, M. C., \& Goodman, N. D. (2012). Predicting Pragmatic Reasoning
 in Language Games. \emph{Science}, \emph{336}(6084), 998--998.
 
-\leavevmode\hypertarget{ref-goldin-meadow2014}{}%
+\hypertarget{ref-goldin-meadow2014}{}
 Goldin-Meadow, S., Levine, S. C., Hedges, L. V., Huttenlocher, J.,
 Raudenbush, S. W., \& Small, S. L. (2014). New evidence about language
 and cognitive development based on a longitudinal study: Hypotheses for
 intervention. \emph{American Psychologist}, \emph{69}(6), 588--599.
 
-\leavevmode\hypertarget{ref-kaelbling1998}{}%
+\hypertarget{ref-kaelbling1998}{}
 Kaelbling, L. P., Littman, M. L., \& Cassandra, A. R. (1998). Planning
 and acting in partially observable stochastic domains. \emph{Artificial
 Intelligence}, \emph{101}, 99--134.
 
-\leavevmode\hypertarget{ref-mcmurray2013}{}%
+\hypertarget{ref-mcmurray2013}{}
 McMurray, B., Kovack-Lesh, K. A., Goodwin, D., \& McEchron, W. (2013).
 Infant directed speech and the development of speech perception:
 Enhancing development or an unintended consequence? \emph{Cognition},
 \emph{129}(2), 362--378.
 
-\leavevmode\hypertarget{ref-newport1990}{}%
+\hypertarget{ref-newport1990}{}
 Newport, E. L. (1990). Maturational Constraints on Language Learning.
 \emph{Cognitive Science}, \emph{14}(1), 11--28.
 
-\leavevmode\hypertarget{ref-newport1977}{}%
+\hypertarget{ref-newport1977}{}
 Newport, E. L., Gleitman, H., \& Gleitman, L. R. (1977). Mother, I'd
 rather do it myself: Some effects and non-effects of maternal speech
 style. In C. A. Ferguson (Ed.), \emph{Talking to children language input
 and interaction} (pp. 109--149). Cambridge University Press.
 
-\leavevmode\hypertarget{ref-saffran2003}{}%
+\hypertarget{ref-saffran2003}{}
 Saffran, J. R., \& 2003. (2003). Statistical language learning:
 Mechanisms and constraints. \emph{Current Directions in Psychological
 Science}, \emph{12}(4), 110--114.
 
-\leavevmode\hypertarget{ref-smith2008}{}%
+\hypertarget{ref-smith2008}{}
 Smith, L. B., \& Yu, C. (2008). Infants rapidly learn word-referent
 mappings via cross-situational statistics. \emph{Cognition}, \emph{106},
 1558--1568.
 
-\leavevmode\hypertarget{ref-smith2013}{}%
+\hypertarget{ref-smith2013}{}
 Smith, L. B., \& Yu, C. (2013). Visual attention is not enough:
 Individual differences in statistical word-referent learning in infants.
 \emph{Language Learning and \ldots{}}, \emph{9}, 25--49.
 
-\leavevmode\hypertarget{ref-vlach2013}{}%
-Vlach, H. A., \& Johnson, S. P. (2013). Memory constraints on infants
+\hypertarget{ref-vlach2013}{}
+Vlach, H. A., \& Johnson, S. P. (2013). Memory constraints on infants
 cross-situational statistical learning. \emph{Cognition}, \emph{127}(3),
 375--382.
 
-\leavevmode\hypertarget{ref-vogt2012}{}%
+\hypertarget{ref-vogt2012}{}
 Vogt, P. (2012). Exploring the robustness of cross-situational learning
 under zipfian distributions. \emph{Cognitive Science}, \emph{36}(4),
 726--739.
 
-\leavevmode\hypertarget{ref-yurovsky2017}{}%
+\hypertarget{ref-yurovsky2017}{}
 Yurovsky, D. (2017). A communicative approach to early word learning.
 \emph{New Ideas in Psychology}, 1--7.
 
-\leavevmode\hypertarget{ref-yurovsky2016}{}%
+\hypertarget{ref-yurovsky2016}{}
 Yurovsky, D., Doyle, G., \& Frank, M. C. (2016). Linguistic input is
-tuned to children's developmental level. In \emph{Proceedings of the
+tuned to childrens developmental level. In \emph{Proceedings of the
 annual meeting of the cognitive science society} (pp. 2093--2098).
 
 \bibliographystyle{apacite}
