@@ -5,9 +5,9 @@ csl: apa6.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Benjamin C. Morris} \\ \texttt{benmorris@uchicago.edu} \\ Department of Psychology \\ University of Chicago
-    \And {\large \bf Daniel Yurovsky} \\ \texttt{yurovsky@uchicago.edu} \\ Department of Psychology \\ University of Chicago}
-
+ \author{Benjamin C Morris \and Daniel Yurovsky \\
+         \texttt{\{benmorris, yurovsky\}@uchicago.edu} \\
+        Department of Psychology \\ University of Chicago}
 abstract: 
     "Infants prefer to listen to and learn better from child-directed speech. This speech might support learning in part due to communicative pressure: parents must use language that their children understand. We present longitudinal corpus data of parent-child interaction to demonstrate that parents provide information-rich referential communication (using both gesture and speech during the same reference) more for infrequent referents and when their children are younger. We then present a Mechanical Turk study to experimentally validate this idea, asking Turkers to communicate with a listener who a novel language less well. Participants could communicate in 3 ways: pointing (expensive but unambiguous), labelling (cheap but knowledge-dependent), or both. They won points only for communicating successfully; using pointing and labelling together was costly, but could teach, allowing cheaper communication on later trials. Participants modulated their communicative behavior in response to their own and their partner’s knowledge and teaching emerged when the speaker had substantially more knowledge of the lexicon. While language is more than reference games, this work validates the hypothesis that communicative pressure alone can lead to supportive language input."
 #     "The abstract should be one paragraph, indented 1/8 inch on both sides,
@@ -41,6 +41,7 @@ library(lme4)
 library(here)
 
 theme_set(theme_classic(base_size = 10))
+options(digits=2)
 ```
 
 # Introduction
@@ -107,7 +108,7 @@ These corpus data were analyzed using a mixed effects regression to predict pare
 
 We find a signficant negative effect of age on multi-modal reference, such that parents are signficantly less likely to provide the gesture-speech cue as their child gets older (*B <* `r age_beta`, *p < 0.0001*). Examing referents, we find a signficant negative effect of referent frequency on multi-modal reference as well, such that parents are signficantly less likely to provide the gesture-speech cue for frequent referents than infrequent ones (*B <* `r freq_beta`, *p < 0.0001*). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children.
 
-```{r corpus_plot, cache=TRUE, fig.env = "figure", fig.width=3, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, with more infrequent items closer to zero."}
+```{r corpus_plot, cache=TRUE,  fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent referential talk with speech-gesture cooccurence across development. Lines represent child's age (14-34 months). The log of the referent's frequency is given on the x-axis, with more infrequent items closer to zero."}
 # theme_set(theme_bw(base_size = 14) + theme(panel.grid = element_blank(),
 #                   strip.background = element_blank()))
 
@@ -157,7 +158,7 @@ n_engLabels <- all_data %>% filter(manipFail==0) %>% filter(usedEnglishLabels==1
 
 Participants were told they would be introduced to novel object-label pairs and then asked to play a communication game with a partner. Participants were exposed to nine novel objects, each with a randomly assigned pseudo-word label. We manipulated the degree of exposure within subjects, such that, during training participants saw three of the nine object-label mappings four times, two times, or one time. Thus, particpants had a total of 20 training trials. Participants were then given a simple recall task to establish their baseline knowledge of the novel lexicon (pretest). 
 
-```{r exp_screenshot, fig.env = "figure", fig.pos = "H", fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
+```{r exp_screenshot, fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
 img <- png::readPNG(here("figs/exp_screenshot.png"))
 grid::grid.raster(img)
 ```
@@ -234,7 +235,7 @@ Thus, participants are sensitive to our manipulations, altering their choices ab
 **also go through gesture results?** 
 
 
-```{r exp_speech_gesture, fig.env = "figure", fig.pos = "H", fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Speakers' communicative method choice as a function of exposure and the utility manipulation. The left panel shows the 'Talk is Cheap' condition, where typing yielded 100 points and gesturing yielded 30 points. The right panel shows the 'Talk is Less Cheap' panel where typing yielded 80 points and gesturing yielded 30 points. These data are taken only from the condition Double Exposure condition (where listeners had more exposure to the lexicon than speakers). This condition had minimal amounts of teaching, thus the speech-gesture trade-off is most easily interpreted here. Rates of teaching not show."}
+```{r exp_speech_gesture, fig.height = 2.25, fig.width = 3.25, fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Speakers' communicative method choice as a function of exposure and the utility manipulation. The left panel shows the 'Talk is Cheap' condition, where typing yielded 100 points and gesturing yielded 30 points. The right panel shows the 'Talk is Less Cheap' panel where typing yielded 80 points and gesturing yielded 30 points. These data are taken only from the condition Double Exposure condition (where listeners had more exposure to the lexicon than speakers). This condition had minimal amounts of teaching, thus the speech-gesture trade-off is most easily interpreted here. Rates of teaching not show."}
 
 modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", speech = "#e8250b", gesture = "#1f11e0", both ="#54a832", label = "#e8250b", click = "#1f11e0", label_click ="#54a832")
 
@@ -260,13 +261,23 @@ prop_methods_exposures <- all_data %>%
   ungroup()
 
 
+label_data <- tibble(exposureRate = 1.25, condition = "Talk is Cheap", 
+                     method = c("gesture", "speech"), mean = c(.2, .8))
+
+
 #Exp., Plot 1., gesture speech tradeoff
-prop_methods_exposures %>% 
-  mutate(condition=factor(condition,labels=c('Talk is Cheap', 'Talk is Less Cheap'))) %>%
-  mutate(exposureRate=as.factor(exposureRate)) %>%
-  filter(partnersExposure== "Perfect",
-         method != "label_click") %>%
-  ggplot(aes(x=exposureRate, y=mean, color = method)) +
+plot_prop_methods_exposures <- prop_methods_exposures %>% 
+  mutate(condition = factor(condition, labels=c('Talk is Cheap',
+                                              'Talk is Less Cheap')),
+         exposureRate = as.factor(exposureRate),
+         method = factor(method, levels = c("click", "label"),
+                         labels = c("gesture", "speech"))) %>%
+  filter(partnersExposure == "Perfect",
+         method != "label_click") 
+
+
+plot_prop_methods_exposures %>%
+  ggplot(aes(x=exposureRate, y=mean, color = method, label = method)) +
   geom_point(size=1.5,position=position_dodge(.25)) +
   geom_line(aes(x=(exposureRate), y=mean, group=interaction(method,condition), color=method),  size=.9,
           position=position_dodge(.25)) +
@@ -275,14 +286,12 @@ prop_methods_exposures %>%
   coord_cartesian(ylim=c(0,1)) +
   facet_grid(.~condition) +
   labs(y="Proportion of Trials", x="Exposure Rate During Training") +
-  scale_color_manual(values=c(modality.colors), labels=c("Gesture", "Speech"), name = "Method")+
-    theme(legend.position = c(.68, .86),
+  scale_color_manual(values=c(modality.colors),  name = "Method")+
+    theme(legend.position = "none",
         legend.key.size = unit(.8, 'lines'),
         legend.text=element_text(size=7),
-        legend.title=element_text(size=8))
-  
-  # theme(legend.position = c(.85, .86))
-
+        legend.title=element_text(size=8)) +
+  geom_text(data = label_data)
 ```
 
 
@@ -317,11 +326,11 @@ Critically, we found an effect for partner's exposure for teaching as well, such
 
 As a predictor in our model, we also included whether this was an object's first, second, or third appearance in the game. The expected utility of teaching on a given trial should decrease as there are fewer subsequent trials for that object, and the planned utility of teaching comes from using another, cheaper strategy (speech) on later trials; thus, we predicted that teaching rates would drop dramatically. Indeed, this is consistent with the results from our model; compared with the first appearance of an object, speakers were significantly less likely to teach on the second appearance (*B =* `r teach_2nd_beta`, *p < 0.001*) or third appearance (*B =* `r teach_3rd_beta`, *p < 0.001*).
 
-##Discussion 
+## Discussion 
 
 In line with our predictions, the data from our paradigm corroborate our findings from the corpus analysis, demonstrating that information-rich, pedagogical-like behavior emerges despite the initial cost when there is an asymmetry in knowledge and when speech is less costly than other modes of communication. While this paradigm has stripped away much of the language learning and interactive environment of the naturalistic corpus data, it provides important proof of concept that the sturctured and tuned language input we see in those data could arise from a pressure to communicate. The paradigm's clear, quantitative predictions also allow us to build a formal model to try predict our empirical results. Below, we detail a rational planning model of communication and show that it can account for these data.
 
-```{r imp_teach, cache=TRUE, fig.env = "figure", fig.pos = "H", fig.align='center', set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the partner exposure manipulation and appearances taken from speaker behavior during gameplay. Both the Talk is Cheap and Talk is Less Cheap condition yielded 30 points for correctly teaching a label, but the relative benefits of later labeling differed."}
+```{r imp_teach, cache=TRUE, fig.height = 2.25, fig.width = 3.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the partner exposure manipulation and appearances taken from speaker behavior during gameplay. Both the Talk is Cheap and Talk is Less Cheap condition yielded 30 points for correctly teaching a label, but the relative benefits of later labeling differed."}
 
 prop_methods_teaching <- all_data %>%
   filter(toBeDropped != 1) %>%
@@ -336,12 +345,22 @@ prop_methods_teaching <- all_data %>%
   group_by(condition, partnersExposure, appearance, method) %>%
   summarise(mean = mean(n), se = seprop(n)) 
 
-prop_methods_teaching %>%
+plot_prop_methods_teaching <- prop_methods_teaching %>%
   ungroup() %>%
-  mutate(condition=factor(condition,labels=c('Talk is Cheap', 'Talk is Less Cheap'))) %>%
-  filter(method=="label_click") %>%
-  ggplot(aes(x=appearance, y=mean, label=partnersExposure)) +
-  geom_point(aes(x=appearance, y=mean, color=partnersExposure), size=2.25, position=position_dodge(.25)) +
+  mutate(condition = factor(condition, labels=c('Talk is Cheap', 'Talk is Less Cheap')),
+         partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect"),
+                                   labels = c("None", "Same Amt", "Twice Amt"))) %>%
+  filter(method=="label_click") 
+
+
+
+teach_label_data <- tibble(appearance = c(1.5, 1, 1), condition = "Talk is Cheap", 
+                     partnersExposure = c("None", "Same Amt", "Twice Amt"),
+                     mean = c(.3, .165, .005))
+
+plot_prop_methods_teaching %>%
+  ggplot(aes(x=appearance, y=mean, label=partnersExposure, color = partnersExposure)) +
+  geom_point(aes(y=mean), size=2.25, position=position_dodge(.25)) +
   geom_line(aes(x=appearance, y=mean, group=partnersExposure, color=partnersExposure), 
             size=1, position=position_dodge(.25)) +
   geom_linerange(aes(ymax = mean + se,
@@ -349,13 +368,13 @@ prop_methods_teaching %>%
   facet_grid(. ~ condition) +
   labs(y="Proportion of Teaching Trials", x="Object Instance during Game") +
   coord_cartesian(ylim=c(0,.4)) +
-  scale_color_manual(values=c("#87d868", "#54a832", "#2c6d12"), name = "Partner's Exposure",
-                    labels=c("None", "Same Amount", "Twice as Much")) +
-  theme(legend.position = c(.83, .8),
+  scale_color_manual(values=c("#87d868", "#54a832", "#2c6d12"), name = "Partner's Exposure") +
+  theme(legend.position = "none",
         legend.key.size = unit(.8, 'lines'),
         legend.text=element_text(size=7),
         legend.title=element_text(size=8),
-        axis.text.x = element_text(angle = 35, hjust = 1))
+        axis.text.x = element_text(angle = 35, hjust = 1)) + 
+  geom_text(data = teach_label_data, size = 2.5)
 
 
 # grid::grid.raster(img)
@@ -363,7 +382,7 @@ prop_methods_teaching %>%
 
 
 
-# Model: Iterated Communication as Rational Planning
+# Model: Communication as planning under uncertainty
 ```{r, include=FALSE}
 # empiricalVocabs_1.30 <- all_data %>%
 #   group_by(ldf_num, condition, partnersExposure, realLabel, exposureRate, trueClickPoints, trueLabelPoints) %>%
@@ -403,29 +422,37 @@ The results from this experiment are qualitatively consistent with a model in wh
 
 \newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]}
 
-In a one-shot reference game maximizing expected utility is simply choosing the action ($a$) that has the highest expected utility $(\E{U})$. The expected utility depends both on the action itself, and on the state of the two partners ($s$): For pointing, this expected utility is independent of referent, defined entirely by our experimental manipulation. In contrast, for speech, the utility varies with the probability of partners sharing a common label for the referent. Following other models in the Rational Speech Act framework, we use the Luce Choice Axiom, in which each choice is taken in probability proportional to its exponentiated utility [@frank2012]. This choice rule has a single parameter $\alpha$ that controls the noise in this choice--as $\alpha$ approaches 0, choice is random and as $\alpha$ approaches infinity choice is optimal:
+We take as inspiration the idea that communication is a kind of action--e.g. talking is a speech act [@austin1975]. Consequently, we can understand the choice of *which communicative act* a speaker should take as a question of which act would maximize their utility: achieving successful communication while minimizing their cost [@frank2012]. In this game, speakers can take three actions: talking, pointing, or teaching. In this reference games, these Utilities ($U$) are given directly by the rules. Because communication is a repeated game, people should take actions that maximize their Expected Utility ($EU$) over the course of not just this act, but all future communicative acts with the same conversational partner. We can think of communication, then as a case of recursive planning. However, people do not have perfect knowledge of each-other's vocabularies ($v$). Instead, they only have uncertain beliefs ($b$) about these vocabularies that combine their expectations about what kinds of words people with as much linguistic experience as their partner are likely to know with their observations of their partner's behavior in past communicative interactions. This makes communication a kind of planning under uncertainty well modeled as a Partially Observable Markov Decision Process [POMDP, @kaelbling1998].
+
+Optimal planning in a POMDP involves a cycle of four phases: (1) Plan, (2) Act, (3) Observe, (4) Update beliefs. When people plan, they compute the Expected Utility of each possible action ($a$) by combining the Expected Utility of that action now with the Discounted Expected Utility they will get in all future actions. The amount of discounting ($\gamma$) reflects how people care about success now compared to success in the future. In our simulations, we set $\gamma=.5$ in line with prior work. Because Utilities depend on the communicative partner's vocabulary, people should integrate over all possible vocabularies in proportion to the probability that their belief assigns to that ($\mathbb{E}_{v \sim b}$).
+
+$$
+EU\left[a\right | b] = \mathbb{E}_{v \sim b} \left(U(a|v) + \gamma \,\mathbb{E}_{v',o',a'} \,\left( EU\left[a' | b'\right]\right)\right)
+$$
+Next, people take an action as a function of its Expected Utility. Following other models in the Rational Speech Act framework, we use the Luce Choice Axiom, in which each choice is taken in probability proportional to its exponentiated utility [@frank2012; @luce1959]. This choice rule has a single parameter $\alpha$ that controls the noise in this choice--as $\alpha$ approaches 0, choice is random and as $\alpha$ approaches infinity choice is optimal. For the results reported here, we set $\alpha = 2$ based on hand-tuning, but other values produce similar results.
 
 $$ 
-C\left(a;s\right) \propto e^{\alpha \E{U \left(s,a\right))}}
+P\left(a|b\right) \propto \alpha \, e^{EU[a|b]}
 $$
 
-To use this rule, agents have to estimate how likely they are to share a common label ($s$). In our simulation, we assume for simplicity that people have an accurate representation of their own knowledge. We thus set each simulated participant's knowledge to the explicit recall judgment made by a real participant in our experiments. To estimate their partner's knowledge, participants can reason about their own learning. Again for simplicity we model learning as a simple Bernoulli process: Each exposure to novel label is like a flipping a coin with weight $p$, if it comes up heads, the label is learned. Having observed their own learning outcomes, agents can infer their own learning rate by determining the weight $p'$ under which their observed learning is most likely. Assuming that their partner would have learned at the same rate, participants can then generate a probability with which their partner would have learned each label by estimating the probability that at least one of its $n$ came up heads given learning rate $p'$: $P\left(s^{+}\right)=1-p'\left( 1-p' \right)^{n}$.
+After taking an action, people observe ($o$) their partner's choice--sometimes they pick the intended object, and sometimes they don't. They then update their beliefs about the partner's vocabulary based on this observation. For simplicity, we assume that people think their partner should always select the correct target if they point to it, or if they teach, and similarly should always select the correct target if they produce its label and the label is in their partner's vocabulary. Otherwise, they assume that their partner will select the wrong object. People could of course have more complex inferential rules, e.g. they might assume that if their partner does not know what object a word refers to they will choose among the set of objects whose label they do not know [mutual exclusivity, @markman1988]. Empirically, however, our simple model appears to accord well with people's behavior.
 
-In an iterated game, however, because actions taken on the current trial can influence the state ($s$) on future trials, the optimal action to take is not the one that optimizes the single trial's rewards, but rather the one that optimizes the expected rewards that will accumulate over all future trials [@kaelbling1998].
+$$
+b'(v') \propto P\left(o|v',a\right) \sum_{v \in V}P\left(v'|v,a\right)b\left(v\right)
+$$
 
-For the results reported here, we set $\alpha = 2$ based on hand-tuning, but other values produce similar results. **also the discounting parameter**
+The critical feature of a repeated communication game is that people can change their partner's vocabulary. In teaching, people pay the cost of both talking and pointing together, but can leverage their partner's new knowledge on future trials. We assume for simplicity that learning is approximated by a simple Binomial learning model. If someone encounters a word $w$ in an unambiguous context (e.g. teaching), they add it to their vocabulary with probability $p$. We also assume that over the course of this short game that people do not forget--words that enter the vocabulary never leave, and that no learning happens by inference from mutual exclusivity.
 
-We implemented a two-agent model of speaker and listener behavior in this game based on partially observable Markov decision processes.  The speaker is given a target referent each trial and must signal to the listener which object to select. Speakers send messages to the listener by speaking, a low cost cue that relies on the listener's knowledge, or by pointing, a higher cost cue that is unambiguous. 
+$$
+P\left(v'|v,a\right)= \begin{cases} 
+1 & \text{if } v_{w} \in v \& v'\\ 
+p & \text{if } v_{w} \notin v \& a = \text{point+talk}\\ 
+0 & otherwise\end{cases}
+$$
 
-The speaker estimates the listener's knowledge. First, the speaker uses Markov chain Monte Carlo to infer their own learning rate based on how well they were able to learn a novel lexicon after N exposures. Then, given the listener's degree of exposure, the speaker can use their own learning rate to infer the probability that the listener would know any given object-label mapping.  Across trials, the speaker gains further information about the listener through their selections, allowing them to update their beliefs about the listener's knowledge state.  
+The final detail is to specify how people estimate their partner's learning rate ($p$) and initial vocabulary ($v$). We propose that people begin by estimating their own learning rate by reasoning about the words they learned at the start of the task: Their $p$ is the rate that maximizes the probability of them having learned their initial vocabularies from the trials they observed. People can then expect their partner to have a similar $p$ [per the "like me" hypothesis, @meltzoff2005]. Having an estimate of their partner's $p$, they can estimate their vocabulary by simulating their learning from the number of learning trials we told them their partner had before the start of the game. 
 
-The model specifies the relative costs for each communicative modality. On each trial, the speaker estimates the expected utility of each modality by accounting for these costs, their own knowledge of the object's label, and the probability that the listener knows the object's label. The speaker then uses Luce's choice axiom to select a communicative modality based on the expected utilities. 
-
-When estimating expected utility, the model sums the expected utility of a given trial and any remaining trials for that particular object. This allows the speaker to engage in planning by accounting for the way a given message may induce knowledge changes and thus affect subsequent expected utilities. Utilities were scaled using an exponential discounter as a function of delay to give greater weight to immediate rewards than subsequent rewards.
-
-Crucially, speakers can also combine both communication cues, paying the upfront cost of both, to produce a message that is both unambiguous and informative.  In this way, speakers are able to teach their partners object-label mappings.  A speaker that plans may thus infer that teaching the listener, especially if there is an asymmetry in their knowledge states, may have a high expected utility after accounting for remaining trials where the speaker could use a less costly cue (i.e. speech). After producing both cues, the speaker also updates their own beliefs about the partner's knowledge state to reflect this exposure. 
-
-```{r model_fit, fig.env = "figure", fig.pos = "H", fig.align='center',  fig.height=4, set.cap.width=T, num.cols.cap=1, fig.cap = "Plot of the fit between model predictions and empirical data."}
+```{r model_fit, fig.env = "figure", fig.pos = "H", fig.align='center',  fig.width=3.5, set.cap.width=T, num.cols.cap=1, fig.cap = "Plot of the fit between model predictions and empirical data."}
 prop_methods <- all_data_model %>%
   filter(toBeDropped != 1) %>%
   ungroup() %>%
@@ -451,15 +478,16 @@ model_fit <- prop_methods %>%
   spread(isEmpirical, mean_new) %>% 
   separate(empirical, c('mean_emp', 'se_emp'), '_') %>%
   separate(predictions, c('mean_pred', 'se_pred'), '_') %>%
-  mutate_if(grepl('_', names(.)), as.numeric)
+  mutate_if(grepl('_', names(.)), as.numeric) %>%
+  rename(mean_pred_plot=mean_pred,
+         se_pred_plot=se_pred)
 
 
 
 #plot of model predictions vs empirical game data
 model_fit %>%
-  rename(mean_pred_plot=mean_pred,
-         se_pred_plot=se_pred) %>%
-  ggplot(aes(x=mean_pred_plot, y=mean_emp, color=method, shape=as.factor(partnersExposure),group=appearance,
+  ggplot(aes(x=mean_pred_plot, y=mean_emp, color=method,
+             shape=as.factor(partnersExposure),group=appearance,
              alpha=condition,
              label = appearance)) +
   geom_point(aes(size=as.factor(appearance))) +
@@ -479,11 +507,11 @@ model_fit %>%
   scale_alpha_manual(values=c(.4, 1), name="Utility Condition", labels=c("Talk is Cheap", "Talk is Less Cheap")) +
   scale_size_manual(values=c(1,2,3), name="Appearance", labels=c("First", "Second", "Third"))+
   theme(legend.direction = "vertical", 
-        legend.position = "bottom",
-        legend.box = "horizontal",
-        legend.key.size = unit(.3, 'lines'),
+        legend.position = "right",
+        legend.key.size = unit(.2, 'lines'),
         legend.text=element_text(size=7),
-        legend.title=element_text(size=8))
+        legend.title=element_text(size=7),
+        legend.box.spacing = unit(0, "in"))
 ```
 
 
