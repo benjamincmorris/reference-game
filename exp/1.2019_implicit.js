@@ -522,90 +522,108 @@ console.log(numTrials)
   //labeling points are the same (just determined by individ speed of typing label)
 bestLabelPoints = 90
 
+condition= $("#conditionHTML").html()
+console.log(condition)
 //condition 1
-speedAsLag = speedOptions[0]
-partnersExposure= "0"
-arrNumKnownByExp = [0,0,0]
-bestClickPoints= 20
-
-                              
+if(condition==1){
+  speedAsLag = speedOptions[0]
+  partnersExposure= "0"
+  arrNumKnownByExp = [0,0,0]
+  bestClickPoints= 20
+}
 
 // // condition 2
-// speedAsLag = speedOptions[0]
-// partnersExposure= "1/2"
-// arrNumKnownByExp = [2,1,0]
-// bestClickPoints= 20
-
-
+if(condition==2){
+  speedAsLag = speedOptions[0]
+  partnersExposure= "1/2"
+  arrNumKnownByExp = [2,1,0]
+  bestClickPoints= 20
+}
 
 // // condition 3
-// speedAsLag = speedOptions[0]
-// partnersExposure= "1"
-// arrNumKnownByExp = [2,2,1]
-// bestClickPoints= 20
-
+if(condition==3){
+  speedAsLag = speedOptions[0]
+  partnersExposure= "1"
+  arrNumKnownByExp = [2,2,1]
+  bestClickPoints= 20
+}
 
 // // condition 4
-// speedAsLag = speedOptions[0]
-// partnersExposure= "perfect"
-// arrNumKnownByExp = [2,2,2]
-// bestClickPoints= 20
+if(condition==4){
+  speedAsLag = speedOptions[0]
+  partnersExposure= "perfect"
+  arrNumKnownByExp = [2,2,2]
+  bestClickPoints= 20
+}
 
 
 // // condition 5
-// speedAsLag = speedOptions[1]
-// partnersExposure= "0"
-// arrNumKnownByExp = [0,0,0]
-// bestClickPoints= 50
+if(condition==5){
+  speedAsLag = speedOptions[1]
+  partnersExposure= "0"
+  arrNumKnownByExp = [0,0,0]
+  bestClickPoints= 50
+}
 
 // // condition 6
-// speedAsLag = speedOptions[1]
-// partnersExposure= "1/2"
-// arrNumKnownByExp = [2,1,0]
-// bestClickPoints= 50
-
-
+if(condition==6){
+  speedAsLag = speedOptions[1]
+  partnersExposure= "1/2"
+  arrNumKnownByExp = [2,1,0]
+  bestClickPoints= 50
+}
 
 // // condition 7
-// speedAsLag = speedOptions[1]
-// partnersExposure= "1"
-// arrNumKnownByExp = [2,2,1]
-// bestClickPoints= 50
-
+if(condition==7){
+  speedAsLag = speedOptions[1]
+  partnersExposure= "1"
+  arrNumKnownByExp = [2,2,1]
+  bestClickPoints= 50
+}
 
 // // condition 8
-// speedAsLag = speedOptions[1]
-// partnersExposure= "perfect"
-// arrNumKnownByExp = [2,2,2]
-// bestClickPoints= 50
-
+if(condition==8){
+  speedAsLag = speedOptions[1]
+  partnersExposure= "perfect"
+  arrNumKnownByExp = [2,2,2]
+  bestClickPoints= 50
+}
 
 
 
 // // condition 9
-// speedAsLag = speedOptions[2]
-// partnersExposure= "0"
-// arrNumKnownByExp = [0,0,0]
-// bestClickPoints= 80
-
+if(condition==9){
+  speedAsLag = speedOptions[2]
+  partnersExposure= "0"
+  arrNumKnownByExp = [0,0,0]
+  bestClickPoints= 80
+}
 
 // // condition 10
-// speedAsLag = speedOptions[2]
-// partnersExposure= "1/2"
-// arrNumKnownByExp = [2,1,0]
-// bestClickPoints= 80
+if(condition==10){
+  speedAsLag = speedOptions[2]
+  partnersExposure= "1/2"
+  arrNumKnownByExp = [2,1,0]
+  bestClickPoints= 80
+}
 
-// // condition 11
-// speedAsLag = speedOptions[2]
-// partnersExposure= "1"
-// arrNumKnownByExp = [2,2,1]
-// bestClickPoints= 80
+// condition 11
+if(condition==11){
+  speedAsLag = speedOptions[2]
+  partnersExposure= "1"
+  arrNumKnownByExp = [2,2,1]
+  bestClickPoints= 80
+}
 
-// // condition 12
-// speedAsLag = speedOptions[2]
-// partnersExposure= "perfect"
-// arrNumKnownByExp = [2,2,2]
-// bestClickPoints= 80
+// condition 12
+if(condition==12){
+  speedAsLag = speedOptions[2]
+  partnersExposure= "perfect"
+  arrNumKnownByExp = [2,2,2]
+  bestClickPoints= 80
+}
+
+console.log(speedAsLag + " | " + partnersExposure + " | " + arrNumKnownByExp)
 
 
 //simulate a leaderboard for later
@@ -649,6 +667,7 @@ console.log(progressBars.length)
 
              
   showSlide("welcome");
+  $("#conditionHTML").hide()
     if(turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {document.getElementById("welcomeStart").disabled=true}
     else {
       $("#welcomeStart").hide()
