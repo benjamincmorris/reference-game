@@ -3291,7 +3291,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-setTimeout(function() {experiment.prestudy(0,0,30);}, 100)
+// setTimeout(function() {experiment.prestudy(0,0,30);}, 100)
 
 
 
