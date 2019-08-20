@@ -5,16 +5,19 @@ shorttitle        : "Communicative Word Learning"
 author: 
   - name          : "Benjamin C. Morris"
     affiliation   : "1"
-    corresponding : no    # Define only one corresponding author
-  - name          : "Daniel Yurovsky"
-    affiliation   : "1"
     corresponding : yes    # Define only one corresponding author
     address       : "Department of Psychology, University of Chicago, 5848 S University Ave, Chicago, IL 60637"
     email         : "yurovsky@uchicago.edu"
+  - name          : "Daniel Yurovsky"
+    affiliation   : "1,2"
+    corresponding : no    # Define only one corresponding author
+
 
 affiliation:
   - id            : "1"
     institution   : "University of Chicago"
+  - id            : "1"
+    institution   : "Carnegie Mellon University"
 
 author_note: >
 
@@ -109,7 +112,7 @@ A spectrum of models from pedagogical to adversarial. Figure?
 # Experiments 1 and 2
   speakers adapt to beliefs about points and also speaker knowledge
 
-# Methods
+# Method
 
 ### Participants
 
@@ -123,7 +126,6 @@ A spectrum of models from pedagogical to adversarial. Figure?
 
 ## Discussion
 
-
 # Experiments 3 and 4
   this leads to better learning, but not as good as ostension (obviously)
 
@@ -132,9 +134,36 @@ A spectrum of models from pedagogical to adversarial. Figure?
 # Experiment 5
   teaching!
 
-# Experiment 6? 
-  partner game--maybe this waits until next paper?
-  
+# Consequences for Learning
+
+In the model and experiments above, we asked whether the pressure to communicate successfully with a linguistically-naive partner would lead to pedagogically supportive input. These results confirmed its' sufficiency: As long as linguistic communication is less costly than deictic gesture, speakers should be motivated to teach in order to reduce future communicative costs. Further, the strength of this motivation is modulated by predictable factors (speaker's linguistic knowledge, listener's linguistic knowledge, relative cost of speech and gesture, learning rate, etc.), and the strength of this modulation is well predicted by a rational model of planning under uncertainty about listner's vocabulary.
+
+In this final section, we take up the consequences of communicatively-motivated teaching for the listener. To do this, we adapt a framework used by @blythe2010 and colleagues to estimate the learning times for an idealized child learning language under a variety of models of both the child and their parent. We come to these estimates by simulating exposure to successive communicative events, and measuring the probability that successful learning happens after each event. The question of how different models of the parent impact the learner can then be formalized as a question of how much more quickly learning happens in the context of one model than another.
+
+We consider three parent models:
+
+1. *Teacher* - under this model, we take the parents' goal to be maximizing the child's linguistic development. Each communicative event in this model consists of an ostensive labelling event (Note: this model is equivalent to a *Communicator* that ignores communicative cost).
+
+2. *Communicator* - under this model, we take the parents' goal to be maximizing communicative success while minimizing communicative cost. This is the model we explored in the previous section.
+
+3. *Indifferent* - under this model, the parent produces a linguistic label in each communicative event regardless of the child's vocabulary state. (Note: this model is a special case of the communicator that minimizes communicative cost without seeking to maximize communicative success.)
+
+the child's linguistic development. Each communicative event in this model consists of an ostensive labelling event (Note: this model is equivalent to a *Communicator* who ignores communicative cost).
+
+SOME STUFF ABOUT CROSS SITUATIONAL LEARNING
+
+One important point to note is that we are modeling the learning of a single word rather than the entirety of a multi-word lexicon [as in @blythe2010]. Although learning times for each word could be independent, an important feature of many models of word learning is that they are not [@yurovsky2014;@yu2008;@frank2009; although c.f. @mcmurray2007]. Indeed, positive synergies across words are predicted by the majority of models and the impact of these synergies can be quite large under some assumptions about the frequency with which different words are encountered [@reisenauer2013]. We assume independence primarily for pragmatic reasons here--it makes the simulations significantly more tractable (although it is what our experimental participants appear to assume about learners). Nonetheless, it is an important issue for future consideration. Of course, synergies that support learning under a cross-situational scheme must also support learning from communcators and teachers [@markman1988, @frank2009, @yurovsky2013]. Thus, the ordering across conditions should remain unchanged. However, the magnitude of the difference sacross teacher conditions could potentially increase or decrease.
+
+Method
+
+### Teaching. 
+Because the teaching model is indifferent to communicative cost, it engages in ostensive an ostensive labeling (pointing + speaking) on each communicative event. Consequently, learning on each trial occurs with a probability that depends entirely on the learner's learning rate ($P_{k}=p$). Because we do not allow forgetting, the probability that has failed to successfully learn after $n$ trials is equal to the probability that they have failed to learn on each of $n$ successive independent trials (The probabiliy of zero successess on $n$ trials of a Binomial random variable with parameter $p$). The probability of learning after $n$ trials is thus: 
+
+$$ P_k(n) = 1 - \left(1-p\right)^{n}  $$
+### Communication.
+
+
+
 
 # General Discussion
 
