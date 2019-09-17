@@ -22,3 +22,6 @@
 *.utf8.md
 *.knit.md
 .Rproj.user
+
+*.log*
+*.tex*

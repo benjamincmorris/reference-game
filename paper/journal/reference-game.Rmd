@@ -146,9 +146,7 @@ We consider three parent models:
 
 2. *Communicator* - under this model, we take the parents' goal to be maximizing communicative success while minimizing communicative cost. This is the model we explored in the previous section.
 
-3. *Indifferent* - under this model, the parent produces a linguistic label in each communicative event regardless of the child's vocabulary state. (Note: this model is a special case of the communicator that minimizes communicative cost without seeking to maximize communicative success.)
-
-the child's linguistic development. Each communicative event in this model consists of an ostensive labelling event (Note: this model is equivalent to a *Communicator* who ignores communicative cost).
+3. *Indifferent* - under this model, the parent produces a linguistic label in each communicative event regardless of the child's vocabulary state. (Note: this model is equivalent to a *Communicator* who ignores communicative cost).
 
 SOME STUFF ABOUT CROSS SITUATIONAL LEARNING
 
@@ -157,13 +155,28 @@ One important point to note is that we are modeling the learning of a single wor
 Method
 
 ### Teaching. 
-Because the teaching model is indifferent to communicative cost, it engages in ostensive an ostensive labeling (pointing + speaking) on each communicative event. Consequently, learning on each trial occurs with a probability that depends entirely on the learner's learning rate ($P_{k}=p$). Because we do not allow forgetting, the probability that has failed to successfully learn after $n$ trials is equal to the probability that they have failed to learn on each of $n$ successive independent trials (The probabiliy of zero successess on $n$ trials of a Binomial random variable with parameter $p$). The probability of learning after $n$ trials is thus: 
+Because the teaching model is indifferent to communicative cost, it engages in ostensive an ostensive labeling (pointing + speaking) on each communicative event. Consequently, learning on each trial occurs with a probability that depends entirely on the learner's learning rate ($P_{k}=p$). Because we do not allow forgetting, the probability that a learner has failed to successfully learn after $n$ trials is equal to the probability that they have failed to learn on each of $n$ successive independent trials (The probabiliy of zero successess on $n$ trials of a Binomial random variable with parameter $p$). The probability of learning after $n$ trials is thus: 
 
 $$ P_k(n) = 1 - \left(1-p\right)^{n}  $$
+
+The expected probability of learning after $n$ trials was thus defined analytically and required no simulation. For comparison to the other models, we computed $P_{k}$ for values of $p$ that ranged from $.1$ to $1$ in increments of $.1$.
+
 ### Communication.
 
 
+### Hypothesis Testing.
 
+The literature on cross-situational learning is rich with a variety of models that could broadly be considered to be "hypothesis testers." In an eliminative hypothesis testing model, the learner begins with all possible mappings between words and objects and prunes potential mappings when they are inconsistent with the data according to some principe. A maximal version of this model relies on the principle that every time a word is heard its referent must be present, and thus prunes any word-object mappings that do not appear on the current trial. This model converges when only one hypothesis remains and is provably the fastest learner when its assumed principle is a correct assumption [@smith2011].
+
+A positive hypothesis tester begins with no hypotheses, and on each trial stores one ore more hypotheses that are consistent with the data, or alternatively strengthens one or more hypotheses that it has already stored that are consistent with the new data. A number of such models have appeared in the literature, with different assumptions about (1) how many hypotheses a learner can store, (2) existing hypotheses are strengthened, (3) how existing hypotheses are pruned, and (4) when the model converges [@siskind1996; @smith2011; @stevens2017; @trueswell2013; @yu2012].
+
+Finally, Bayesian models have been proposed that leverage some of the strengths of both of these different kinds of model, both increasing their confidence in hypotheses consisten with the data on a given learning event and decreasing their confidence in hypotheses inconsistent with the event [@frank2009]. 
+
+Because of its' more natural alignment with the learning models we use Teaching and Communication simulations, we implemented a positive hypothesis testing model[^1]. In this model, learners begin with no hypotheses and add new ones to their store as they encounter data. Upon first encountering a word and a set of objects, the model encodes up to $h$ hypothesized word-object pairs each with probability $p$. On subsequent trials, the model checks whether any of the existing hypotheses are consistent with the current data, and prunes any that are not. If no current hypotheses are consistent, it adds up to $h$ new hypotheses each with probability $p$. The model has converged when it has pruned all but the one correct hypothesis for the meaning of a word. This model is most similar to the Propose but Verify model proposed in @trueswell2013, with the exception that it allows for multiple hypotheses. Because of the data generating process, storing prior disconfirmed hypotheses [as in @stevens2017], or incrementing hypotheses consistent with some but not all of the data [as in @yu2012] has no impact on learner and so we do not implement it here. We note also that, as described in @yu2012, hypothesis testing models can mimic the behavior of associative learning models given the right parameter settings [@townsend1990]. 
+
+In contrast to the Teaching and Communication simulations, the behavior of the Hypothesis Testing model depends on which particular non-target objects are present on each naming event. We thus began each simulation by generating a copus of 100 naming events, on each sampling the correct target as well as ($C$-1) competitors from a total set of $M$ objects. We then simulated a hypothesis tester learning over this set of events as described above, and recorded the first trial on which the learner converged (having only the single correct hypothesized mapping between the target word and target object). We repeated this process 1000 times for each simulated combination of $M = (16, 32, 64, 128)$  total objects, $C = (1,2,4,8)$ objects per trial, $h = (1, 2, 3, 4)$ concurrent hypotheses, as the learning rate $p$ varied from $.1$ to $1$ in increments of $.1$. 
+ 
+[^1]: Our choice to focus on hypothesis testing rather than other learning frameworks is purely a pragmatic choice--the learning parameter $p$ in this models maps cleanly onto the learnin parameter in our other models. We encourage other researchers to adapt the code we have provided to estimate the long-term learning for other models.
 
 # General Discussion
 
