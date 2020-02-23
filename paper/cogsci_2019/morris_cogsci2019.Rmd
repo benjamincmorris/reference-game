@@ -68,7 +68,7 @@ We then experimentally induce this form of structured language input in a simple
 # Corpus Analysis
 ```{r}
 # Plot of Referential Communication from LDP Corpus Data
-corpus_data <- read_feather(here("data/coded_responses.feather"))
+corpus_data <- read_feather(("data/coded_responses.feather"))
 
 modality_data <- corpus_data %>%
   group_by(person, age, subj, freq_cut, rank, freq, referent, modality, chat) %>%
@@ -112,7 +112,7 @@ freq_beta <- round(fixef(parent_both_lm)["log(freq)"], digits=3)
 ```
 These corpus data were analyzed using a mixed effects regression to predict parent use of multi-modal reference for a given referent. Random effects of subject and referent were included in the model. Our key predictors were child age and logged referent frequency (i.e. how often a given object was referred to overall across our data).
 
-We find a significant negative effect of child age (in months) on multi-modal reference, such that parents are significantly less likely to produce the multi-modal cue as their child gets older (*B <* `r age_beta`, *p < 0.0001*). We also find a significant negative effect of referent frequency on multi-modal reference as well, such that parents are significantly less likely to provide the multi-modal cue for frequent referents than infrequent ones (*B <* `r freq_beta`, *p < 0.0001*). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children.
+We find a significant negative effect of child age (in months) on multi-modal reference, such that parents are significantly less likely to produce the multi-modal cue as their child gets older (*B =* `r age_beta`, *p < 0.0001*). We also find a significant negative effect of referent frequency on multi-modal reference as well, such that parents are significantly less likely to provide the multi-modal cue for frequent referents than infrequent ones (*B =* `r freq_beta`, *p < 0.0001*). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children.
 
 ```{r corpus_plot, cache=TRUE,  fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent multi-modal referential talk across development. The log of a referent's frequency is given on the x-axis, with less frequent items closer to zero."}
 # theme_set(theme_bw(base_size = 14) + theme(panel.grid = element_blank(),
@@ -125,7 +125,7 @@ ggplot(plot_data, aes(x = log(freq), y = prop,
                       label = as.factor(age))) + 
   geom_smooth(method = "loess") + 
   labs(y="Proportion of References\nusing Gesture + Speech", x='Log Referent Frequency') +
-  coord_cartesian(ylim=c(0,.35)) +
+  coord_cartesian(ylim=c(0,.35), xlim=c(0,6)) +
   scale_fill_manual(values=teaching_ribbons, name='Age of Child', labels=c('14 months', '18 months','22 months','26 months', "30 months", "34 months")) +
   scale_color_manual(values=cc, name='Age of Child', labels=c('14 months', '18 months','22 months','26 months', "30 months", "34 months")) +
   theme(legend.position = c(.8,.67),
@@ -169,7 +169,7 @@ grid::grid.raster(img)
 ```
 
 Prior to beginning the game, participants are told how much exposure their partner has had to the lexicon and also that they will be asked to discuss each object three times. As a manipulation check, participants are then asked to report their partner's level of exposure, and are corrected if they answer wrongly. Then during gameplay, speakers saw a target object in addition to an array of all nine objects (see Figure \ref{fig:exp_screenshot} for the speaker's perspective). Speakers had the option of either directly click on the target object in the array (gesture)- a higher cost cue but without ambiguity- or typing a label for the object (speech)- a lower cost cue but contingent on the listener's shared linguistic knowledge.  After sending the message, speakers are shown which object the listener selected.  
-  
+
 Speakers could win up to 100 points per trial if the listener correctly selected the target referent.  We manipulated the relative utility of the speech cue between-subjects across two conditions: low relative cost for speech (‘Low Relative Cost’) and higher relative cost for speech (‘Higher Relative Cost’). In the ‘Low Relative Cost’ condition, speakers were charged 70 points for gesturing and 0 points for labeling, yielding 30 points and 100 points respectively if the listener selected the target object. In the ‘Higher Relative Cost’ condition, speakers were charged 50 points for gesturing and 20 points for labeling, yielding up to 50 points and 80 points respectively. If the listener failed to identify the target object, the speaker nevertheless paid the relevant cost for that message in that condition. As a result of this manipulation, there was a higher relative expected utility for labeling in the ‘Low Relative Cost’ condition than the ‘Higher Relative Cost’ condition. 
 
 Critically, participants were told about a third type of possible message using both gesture and speech within a single trial to effectively teach the listener an object-label mapping. This action directly mirrors the multi-modal reference behavior from our corpus data-- it presents the listener with an information-rich, potentially pedagogical learning moment. In order to produce this teaching behavior, speakers had to pay the cost of producing both cues (i.e. both gesture and speech). Note that, in all utility conditions, teaching yielded participants 30 points (compared with the much more beneficial strategy of speaking which yielded 100 points or 80 points across our two utility manipulations). 
@@ -330,7 +330,7 @@ plot_prop_methods_exposures %>%
 Figure \ref{fig:exp_speech_gesture} illustrates the gesture-speech tradeoff pattern in the Double Exposure condition (as there was minimal teaching in that condition, so the speech-gesture trade-off is most interpretable). The effects on gesture mirror those found for labeling and are thus not included for brevity (*ps < 0.01*). Note that these effects cannot be explained by participant knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns directly mirror previous corpus analyses demonstrating the gesture-speech tradeoff in naturalistic parental communicative behaviors, where lexical knowledge is likely for even the least frequent referent [see @yurovsky2018].  
 \newline
     
-   
+
 ### Emergence of Teaching.
 
 <!-- Thus far, we have focused on relatively straightforward scenarios to demonstrate that a pressure to communicate successfully in the moment can lead speakers to trade-off between gesture and speech sensibly. Next, we turn to the emergence of teaching behavior.  -->
@@ -365,7 +365,7 @@ We found an effect of partner exposure on rates of teaching as well: participant
 
 As predicted, the data from our paradigm corroborate our findings from the corpus analysis, demonstrating that pedagogically supportive behavior emerges despite the initial cost when there is an asymmetry in knowledge and when speech is less costly than other modes of communication. While this paradigm has stripped away much of the interactive environment of the naturalistic corpus data, it provides important proof of concept that the structured and tuned language input we see in those data could arise from a pressure to communicate. The paradigm’s clear, quantitative predictions also allow us to build a formal model to predict our empirical results.
 
-```{r exp_teach, cache=TRUE, fig.height = 2.25, fig.width = 3.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, where the x-axis how many times an object had been the target object."}
+```{r exp_teach, cache=TRUE, fig.height = 2.25, fig.width = 3.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, plotted by how many times an object had been the target object."}
 
 prop_methods_teaching <- all_data %>%
   filter(toBeDropped != 1) %>%
@@ -434,7 +434,11 @@ empiricalVocabs_1.30 <- all_data %>%
           pointCost = 100-trueClickPoints)%>%
   as.data.frame()
 
-outcomes_exp_1.30<-webppl(program_file = "wppl/speaker.wppl", data=empiricalVocabs_1.30, data_var = "empiricalVocabs")
+#lines below will run the model and clean its outputted predictions
+  #for ease+efficiency, we will load a stored copy of the models predictions instead.
+#library(rwebppl)
+#outcomes_exp_1.30<-webppl(program_file = "wppl/speaker.wppl", data=empiricalVocabs_1.30, data_var = "empiricalVocabs")
+
 # gamePredictions_1.30 <-outcomes_exp_1.30 %>%
 #   unnest(predictions,  gameTrials) %>%
 #     cbind(appearance= rep.int(c(1,2,3), nrow(.)/3))
@@ -465,7 +469,7 @@ $$
 EU\left[a\right | b] = \mathbb{E}_{v \sim b} \left(U(a|v) + \gamma \,\mathbb{E}_{v',o',a'} \,\left( EU\left[a' | b'\right]\right)\right)
 $$
 Next, people take an action as a function of its Expected Utility. Following other models in the Rational Speech Act framework, we use the Luce Choice Axiom, in which each choice is taken in probability proportional to its exponentiated utility [@frank2012; @luce1959]. This choice rule has a single parameter $\alpha$ that controls the noise in this choice--as $\alpha$ approaches 0, choice is random and as $\alpha$ approaches infinity choice is optimal. For the results reported here, we set $\alpha = 2$ based on hand-tuning, but other values produce similar results.
-$$ 
+$$
 P\left(a|b\right) \propto \alpha \, e^{EU[a|b]}
 $$
 
@@ -566,7 +570,7 @@ Of course, many aspects of language do not differ in speech to children [e.g., s
 
 <!-- Of course, this work is limited in a number of important ways. While our task allows us to distill key pressures and manipulations, there are signficant divergences from the corpus data-collecting environment as a result. For one, there are fewer and less dynamic, reciporical interactions between interlocutors and no time-constraints are imposed on communication. Also, parents are likely aware of not just how much language their children know, but *what* their children know (at least at a lexical level). Critical next steps in this line of work will return back to the level of parent-child interaction. -->
 
-\vspace{1em}\fbox{ \parbox[b][][c]{7.5cm}{\centering The Mechanical Turk experiment was preregistered on Open Science Framework at https://osf.io/tjn7k All data and code for analyses are available at https://github.com/benjamincmorris/reference-game \ }}
+\vspace{1em}\fbox{ \parbox[b][][c]{7.5cm}{\centering The Mechanical Turk experiment was preregistered on Open Science Framework at https://osf.io/63qdg All data and code for analyses are available at https://github.com/benjamincmorris/reference-game \ }}
 
 # Acknowledgements
 This research was funded by a James S. McDonnell Foundation Scholar Award to DY.

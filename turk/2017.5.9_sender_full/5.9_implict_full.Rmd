@@ -297,6 +297,8 @@ all_data %>%
 ```
 
 
+
+
 ```{r by_appearance, include=FALSE}
 
 all_data_dropped <- all_data %>%

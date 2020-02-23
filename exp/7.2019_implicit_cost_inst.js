@@ -530,7 +530,6 @@ console.log(condition)
 if(condition==1){
   speedAsLag = speedOptions[0]
   partnersExposure= "0"
-  arrNumKnownByExp = [0,0,0]
   bestClickPoints= 20
 }
 
@@ -538,7 +537,6 @@ if(condition==1){
 if(condition==2){
   speedAsLag = speedOptions[0]
   partnersExposure= "1/2"
-  arrNumKnownByExp = [2,1,0]
   bestClickPoints= 20
 }
 
@@ -546,7 +544,6 @@ if(condition==2){
 if(condition==3){
   speedAsLag = speedOptions[0]
   partnersExposure= "1"
-  arrNumKnownByExp = [2,2,1]
   bestClickPoints= 20
 }
 
@@ -554,7 +551,6 @@ if(condition==3){
 if(condition==4){
   speedAsLag = speedOptions[0]
   partnersExposure= "perfect"
-  arrNumKnownByExp = [2,2,2]
   bestClickPoints= 20
 }
 
@@ -563,7 +559,6 @@ if(condition==4){
 if(condition==5){
   speedAsLag = speedOptions[1]
   partnersExposure= "0"
-  arrNumKnownByExp = [0,0,0]
   bestClickPoints= 50
 }
 
@@ -571,7 +566,6 @@ if(condition==5){
 if(condition==6){
   speedAsLag = speedOptions[1]
   partnersExposure= "1/2"
-  arrNumKnownByExp = [2,1,0]
   bestClickPoints= 50
 }
 
@@ -579,7 +573,6 @@ if(condition==6){
 if(condition==7){
   speedAsLag = speedOptions[1]
   partnersExposure= "1"
-  arrNumKnownByExp = [2,2,1]
   bestClickPoints= 50
 }
 
@@ -587,7 +580,6 @@ if(condition==7){
 if(condition==8){
   speedAsLag = speedOptions[1]
   partnersExposure= "perfect"
-  arrNumKnownByExp = [2,2,2]
   bestClickPoints= 50
 }
 
@@ -597,7 +589,6 @@ if(condition==8){
 if(condition==9){
   speedAsLag = speedOptions[2]
   partnersExposure= "0"
-  arrNumKnownByExp = [0,0,0]
   bestClickPoints= 80
 }
 
@@ -605,7 +596,6 @@ if(condition==9){
 if(condition==10){
   speedAsLag = speedOptions[2]
   partnersExposure= "1/2"
-  arrNumKnownByExp = [2,1,0]
   bestClickPoints= 80
 }
 
@@ -613,7 +603,6 @@ if(condition==10){
 if(condition==11){
   speedAsLag = speedOptions[2]
   partnersExposure= "1"
-  arrNumKnownByExp = [2,2,1]
   bestClickPoints= 80
 }
 
@@ -621,8 +610,15 @@ if(condition==11){
 if(condition==12){
   speedAsLag = speedOptions[2]
   partnersExposure= "perfect"
-  arrNumKnownByExp = [2,2,2]
   bestClickPoints= 80
+}
+
+if (partnersExposure =="1") {
+  arrNumKnownByExp = [2,2,1]
+} if (partnersExposure =="0") {
+  arrNumKnownByExp = [0,0,0]
+} if (partnersExposure =="perfect") {
+  arrNumKnownByExp = [2,2,2]
 }
 
 console.log(speedAsLag + " | " + partnersExposure + " | " + arrNumKnownByExp)

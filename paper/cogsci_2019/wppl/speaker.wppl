@@ -92,7 +92,6 @@ var training = function(trials, learnProb) {
 
 var estimateLearnProb = function(vocabulary) {
   Infer({ method: 'MCMC', samples: 10000, burn:2000,
-  //Infer({
     model() {
       var parameter = sample(Beta({a:.5,b:.5}));
       factor(vocabProb(vocabulary, parameter))
@@ -335,14 +334,15 @@ map(function(x) {
   var speechCost =  myVocab[1].speechCost
   var successValue = 100
 
-
   var me = x
   var utilityCondition = myVocab[1].condition
 
-  var learnPs = estimateLearnProb(myVocab)
-  // return speechCost
-  // return {learnPs}
-  var estimatedProb = expectation(learnPs)
+  
+  // var learnPs = estimateLearnProb(myVocab)
+  // // return speechCost
+  // // return {learnPs}
+  // var estimatedProb = expectation(learnPs)
+  var estimatedProb = .6
   // var estimatedProb = 0
   var partnersExposure = myVocab[1].partnersExposure
   var yourVocab = initializeVocab(myVocab, estimatedProb, partnersExposure)
