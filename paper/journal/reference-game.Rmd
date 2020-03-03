@@ -120,20 +120,80 @@ The Language Development Project corpus contains transcription of all speech and
 
 ## Results
 
-```{r corpus-plot-lm, warning=F}
-parent_both_lm <- glmer(cbind(both, speech + gesture) ~ age + log(freq) + 
-                    (1|referent) + (1|subj), 
-      data = filter(modality_data, person == "parent"),
-      family = "binomial")
+```{r corpus-plot-lm}
+mid_age <- modality_data %>% 
+  pull(age) %>%
+  unique() %>% 
+  mean() %>%
+  log()
 
-age_beta <- round(fixef(parent_both_lm)["age"], digits=3)
-freq_beta <- round(fixef(parent_both_lm)["log(freq)"], digits=3)
+mid_freq <- modality_data %>% 
+  pull(freq) %>%
+  unique() %>% 
+  mean() %>%
+  log()
+
+corpus_model_data <- modality_data %>%
+  ungroup() %>%
+  filter(person == "parent") %>%
+  mutate(age = log(age) - mid_age,
+         freq = log(freq) - mid_freq)
+
+
+parent_both_lm <- glmer(cbind(both, speech + gesture) ~ age * freq + 
+                    (1 | referent) + ( freq | subj), 
+      data = corpus_model_data, 
+      family = "binomial") %>%
+  tidy() %>%
+  filter(effect == "fixed") %>%
+  select(-effect, -group)
+
+
+corpus_age_estimate <- parent_both_lm %>% 
+  filter(term == "age") %>% 
+  pull(estimate)
+
+corpus_age_statistic <- parent_both_lm %>%
+  filter(term == "age") %>% 
+  pull(statistic)
+
+corpus_age_p <- parent_both_lm %>% 
+  filter(term == "age") %>%
+  pull(p.value) %>% 
+  printp()
+
+corpus_freq_estimate <- parent_both_lm %>% 
+  filter(term == "freq") %>% 
+  pull(estimate)
+
+corpus_freq_statistic <- parent_both_lm %>%
+  filter(term == "freq") %>% 
+  pull(statistic)
+
+corpus_freq_p <- parent_both_lm %>% 
+  filter(term == "freq") %>%
+  pull(p.value) %>% 
+  printp()
+
+corpus_interaction_estimate <- parent_both_lm %>% 
+  filter(term == "age:freq") %>% 
+  pull(estimate)
+
+corpus_interaction_statistic <- parent_both_lm %>%
+  filter(term == "age:freq") %>% 
+  pull(statistic)
+
+corpus_interaction_p <- parent_both_lm %>% 
+  filter(term == "age:freq") %>%
+  pull(p.value) %>% 
+  printp()
 
 ```
 
 These corpus data were analyzed using a mixed effects regression to predict parent use of multi-modal reference for a given referent. Random effects of subject and referent were included in the model. Our key predictors were child age and logged referent frequency (i.e. how often a given object was referred to overall across our data).
 
-We find a significant negative effect of child age (in months) on multi-modal reference, such that parents are significantly less likely to produce the multi-modal cue as their child gets older (*B =* `r age_beta`, *p < 0.0001*). We also find a significant negative effect of referent frequency on multi-modal reference as well, such that parents are significantly less likely to provide the multi-modal cue for frequent referents than infrequent ones (*B =* `r freq_beta`, *p < 0.0001*). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children.
+We fit a mixed effects logistic regression predicting whether the parent spoke and pointed together on each trial from fixed effects pf the child's age, the referent's frequency, and the interaction between the two. We also include random intercepts and slopes of frequency for subjects and random intercepts for referents. Frequency and age were both log-scaled and then centered both because age and frequency tend to have log-linear effects and to help with model convergence. The model showed that parents teach less to older children ($\beta =$  `r corpus_age_estimate`, $t =$  `r corpus_age_statistic`, $p$ `r corpus_age_p`), marginally less for more frequent targets ($\beta =$  `r corpus_freq_estimate`, $t =$  `r corpus_freq_statistic`, $p =$ `r corpus_freq_p`), and that parents teach their younger children more often for equally frequent referents ($\beta =$  `r corpus_interaction_estimate`, $t =$  `r corpus_interaction_statistic`, $p =$ `r corpus_interaction_p`). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children (Figure \ref{fig:corpus-plot).
+
 
 ```{r corpus-plot, fig.height=4, set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent multi-modal referential talk across development. The log of a referent's frequency is given on the x-axis, with less frequent items closer to zero."}
 #main corpus plot
@@ -303,9 +363,10 @@ click_pExpSame_beta <- round(fixef(gm_click)["partnersExposureSame"], digits=2)
 click_freq2_beta <- round(fixef(gm_click)["exposureRate2"], digits=2)
 click_freq4_beta <- round(fixef(gm_click)["exposureRate4"], digits=2)
 click_cond80_beta <- round(fixef(gm_click)["condition80_50"], digits=2)
-```
 
-<!-- To determine how gesture and speech are trading off across conditions, we  looked at a mixed effects logistic regression to predict whether speakers chose to produce a label during a given trial as a function of the exposure rate, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. A random subjects effects term was included in the model. There was a significant effect of exposure rate such that there was more labeling for objects with two exposures (*B =* `r label_freq2_beta`, *p < 0.0001*) or with four exposures (*B =* `r label_freq4_beta`, *p < 0.0001*), compared with objects seen only once at training. Compared with the first instance of an object, speakers were significantly more likely to produce a label on the second appearance (*B =* `r label_2nd_beta`, *p < 0.01*) or third instance of a given object (*B =* `r label_3rd_beta`, *p < 0.0001*). Participants also modulated their communicative behavior on the basis of the utility manipulation and our partner exposure manipulation.  Speakers in the Low Relative Cost condition produced significantly more labels than participants in the Higher Relative Cost condition (*B =* `r label_cond80_beta`, *p < 0.001*). Speakers did more labeling with more knowledgeable partners; compared with the listener with no exposure, there were significantly higher rates of labeling in the same exposure  (*B =* `r label_pExpSame_beta`, *p < 0.0001*) and double exposure conditions (*B =* `r label_pExpPerf_beta`, *p < 0.001*).   -->
+# <!-- To determine how gesture and speech are trading off across conditions, we  looked at a mixed effects logistic regression to predict whether speakers chose to produce a label during a given trial as a function of the exposure rate, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. A random subjects effects term was included in the model. There was a significant effect of exposure rate such that there was more labeling for objects with two exposures (*B =* `r label_freq2_beta`, *p < 0.0001*) or with four exposures (*B =* `r label_freq4_beta`, *p < 0.0001*), compared with objects seen only once at training. Compared with the first instance of an object, speakers were significantly more likely to produce a label on the second appearance (*B =* `r label_2nd_beta`, *p < 0.01*) or third instance of a given object (*B =* `r label_3rd_beta`, *p < 0.0001*). Participants also modulated their communicative behavior on the basis of the utility manipulation and our partner exposure manipulation.  Speakers in the Low Relative Cost condition produced significantly more labels than participants in the Higher Relative Cost condition (*B =* `r label_cond80_beta`, *p < 0.001*). Speakers did more labeling with more knowledgeable partners; compared with the listener with no exposure, there were significantly higher rates of labeling in the same exposure  (*B =* `r label_pExpSame_beta`, *p < 0.0001*) and double exposure conditions (*B =* `r label_pExpPerf_beta`, *p < 0.001*).   -->
+
+```
 
 ```{r speech_gesture, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
 # Speaker communicative method choice as a function of exposure and the utility manipulation. Data are taken from the Double Exposure manipulation. Rates of teaching were minimal and are not shown.
@@ -461,16 +522,16 @@ The results from this experiment are qualitatively consistent with a model in wh
 
 # Model: Communication as planning
 
-We take as our inspiration a long history of work in philosophy of language describing the functional purpose of lanuage [e.g. @wittgensetein1953; @austin1975]. In this framework, speakers choose the words they produce in order to maximize their probability of successfully communicating some intended meaning while minimizing the cost of speech production [@grice1975; @clark1996]. Recently, @frank2012 developed the Rational Speech Act framework--a formal instantiation of these ideas. In their work, speakers choose among a set of potential alternative utterances by maximizing a utility function that combines the probability that a listener will correctly infer their intended meaning along with a cost of producing each word. This framework has found successful application in a variety of linguistic applications such as scalar implicature, conventional pact formation, and production and interpretation of hyperbole [@goodman2016; see also related work from @franke2013]. These models use recursive reasoning--speakers reasoning about listeners who are reasoning about speakers--in order to capture cases in which the literal meaning and the intended meaning of sentences diverge.
+We take as our inspiration a long history of work in philosophy of language describing the functional purpose of lanuage [e.g. @wittgenstein1953; @austin1975]. In this framework, speakers choose the words they produce in order to maximize their probability of successfully communicating some intended meaning while minimizing the cost of speech production [@grice1975; @clark1996]. Recently, @frank2012 developed the Rational Speech Act framework--a formal instantiation of these ideas. In their work, speakers choose among a set of potential alternative utterances by maximizing a utility function that combines the probability that a listener will correctly infer their intended meaning along with a cost of producing each word. This framework has found successful application in a variety of linguistic applications such as scalar implicature, conventional pact formation, and production and interpretation of hyperbole [@goodman2016; see also related work from @franke2013]. These models use recursive reasoning--speakers reasoning about listeners who are reasoning about speakers--in order to capture cases in which the literal meaning and the intended meaning of sentences diverge.
 
-To date, these models have been used primarily in cases where speakers and listeners share the same conceptual and linguistic space, and the problem confronting the speaker is to efficiently leverage these shared structures for the purpose of reference. However, the problems of reference and the problems of language learning are deeply intertwined--knowing a speaker's target referent and the language used to specify it allows learners to infer the relationship between the language and the referent [@frank2012,@frank2014]. Building on this connection, @shafto2014 have developed an framework of rational pedagogy using the same kind of recursive reasoning: Teachers aim to teach a concept by choosing a set of examples that would maximize learning for students who reason about the teachers choices as attempting to maximize their learning. @rafferty2016 et al expanded framework to sequential teaching, in which teachers use students in order to infer what they have learned and choose the subsequent example. In this case, teaching can be seen as a kind of planning where teachers should choose a series of examples that will maximize students learning but can change plans if an example they thought would be too hard turns out too easy--or vice-versa. @rafferty instantiated this planning model in an educational tutor, and showed that rational teaching plans lead to significantly faster learning than selecting random examples.
+To date, these models have been used primarily in cases where speakers and listeners share the same conceptual and linguistic space, and the problem confronting the speaker is to efficiently leverage these shared structures for the purpose of reference. However, the problems of reference and the problems of language learning are deeply intertwined--knowing a speaker's target referent and the language used to specify it allows learners to infer the relationship between the language and the referent [@frank2012,@frank2014]. Building on this connection, @shafto2014 have developed an framework of rational pedagogy using the same kind of recursive reasoning: Teachers aim to teach a concept by choosing a set of examples that would maximize learning for students who reason about the teachers choices as attempting to maximize their learning. @rafferty2016 et al expanded framework to sequential teaching, in which teachers use students in order to infer what they have learned and choose the subsequent example. In this case, teaching can be seen as a kind of planning where teachers should choose a series of examples that will maximize students learning but can change plans if an example they thought would be too hard turns out too easy--or vice-versa. @rafferty2016 instantiated this planning model in an educational tutor, and showed that rational teaching plans lead to significantly faster learning than selecting random examples.
 
 Our model is inspired by both of these lines of work. We consider the problem of reference the primary problem facing speakers: Their goal is to to use language and/or gesture in order to successfully communicate with their conversational partners. However, unlike models in the Rational Speech Act framework--in which speakers assume that their communicative partners have the same linguistic and repertoire as them--we take speakers to be uncertain about what their partner knows. Instead, like in the rational pedagogy model, they have to learn what words their partners know over the course of their (successful and failed) interactions with them. However, in contrast to these models, in which the speaker's explicit goal is to teach (i.e. actions have utility if they teach the listener words), our model has no independent teaching goal. Instead, teaching emerges organically from communicative pressure: Speaker's may take actions to change a listener's linguististic representations if the cost of taking those actions today is outweighed by reducing the cost of communicating successfully about that referent in the future. Said differnetly, a rational teaching model will always teach because teaching is the goal--although the way it teaches may vary as it learns about the student. In constrast, our model will only teach when it thinks that its communicative partner is unlikely to understand a linguistic reference to a target object and it thinks that it will need to communicate with its partner about the referent again in the future.
 
 ## Model details
 
 
-```{r model-data}
+```{r model-data, eval = FALSE}
 # empiricalVocabs_1.30 <- all_data %>%
 #   group_by(ldf_num, condition, partnersExposure, realLabel, exposureRate, trueClickPoints, trueLabelPoints) %>%
 #   summarize(testCorrect=first(testCorrect)) %>%
@@ -537,7 +598,7 @@ $$
 
 The final detail is to specify how people estimate their partner's learning rate ($p$) and initial vocabulary ($v$). We propose that people begin by estimating their own learning rate by reasoning about the words they learned at the start of the task: Their $p$ is the rate that maximizes the probability of them having learned their initial vocabularies from the trials they observed. People can then expect their partner to have a similar $p$ [per the "like me" hypothesis, @meltzoff2005]. Having an estimate of their partner's $p$, they can estimate their vocabulary by simulating their learning from the amount of training we told them their partner had before the start of the game. 
 
-```{r model-fit}
+```{r model-fit, eval = FALSE}
 prop_methods <- all_data_model %>%
   filter(toBeDropped != 1) %>%
   ungroup() %>%
@@ -576,9 +637,9 @@ model_corr_test <- cor.test(model_fit$mean_emp, model_fit$mean_pred_plot)
 
 ## Model Results
 
-The fit between our model’s predictions and our empirical data from our reference game study on Amazon Turk can be seen in Figure \ref{fig:model_fit}. The model outputs trial-level action predictions (e.g., “speak”) for every speaker in our empirical data. These model outputs were aggregated across the same factors as the empirical data: modality, appearance, partner’s exposure, and utility condition. We see a significant correlation of our model predictions and our empirical data (*r = `r model_corr`, p<0.0001*). Our model provides a strong fit for these data, supporting our conclusion that richly-structured language input could emerge from in-the-moment pressure to communicate, without a goal to teach.
+The fit between our model’s predictions and our empirical data from our reference game study on Amazon Turk can be seen in Figure \ref{fig:model_fit}. The model outputs trial-level action predictions (e.g., “speak”) for every speaker in our empirical data. These model outputs were aggregated across the same factors as the empirical data: modality, appearance, partner’s exposure, and utility condition. We see a significant correlation of our model predictions and our empirical data (*r = `r #model_corr`, p<0.0001*). Our model provides a strong fit for these data, supporting our conclusion that richly-structured language input could emerge from in-the-moment pressure to communicate, without a goal to teach.
 
-```{r model_fit, fig.env = "figure", fig.pos = "H", fig.height=3,  fig.width=4, fig.cap = "Fit between model predictions and empirical data."}
+```{r model_fit, fig.env = "figure", fig.pos = "H", fig.height=3,  fig.width=4, fig.cap = "Fit between model predictions and empirical data.", eval = FALSE}
 
 #plot of model predictions vs empirical game data
 model_fit %>%
