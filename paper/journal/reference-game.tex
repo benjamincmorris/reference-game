@@ -1,3 +1,6 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
 \documentclass[english,,man,floatsintext]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -6,34 +9,31 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \usepackage{hyperref}
-\hypersetup{unicode=true,
+\hypersetup{
             pdftitle={A communicative framework for early word learning},
             pdfkeywords={language learning; communication; computational modeling},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,main=english]{babel}
-\else
-  \usepackage{polyglossia}
-  \setmainlanguage[]{english}
-\fi
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -43,26 +43,16 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
 
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
 
-
-  \title{A communicative framework for early word learning}
-    \author{true \\ true}
-    \date{}
-  
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -113,6 +103,17 @@ Correspondence concerning this article should be addressed to Benjamin C. Morris
 
 \linenumbers
 \usepackage{csquotes}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,main=english]{babel}
+\else
+  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{english}
+\fi
+
+\title{A communicative framework for early word learning}
+
+\date{}
 
 \abstract{
 Children do not learn language from passive observation of the world, but from interaction with caregivers who want to communicate with them. These communicative exchanges are structured at multiple levels in ways that support support language learning. We argue this pedagogically supportive structure can result from pressure to communicate successfully with a linguistically immature partner. We first characterize one kind of pedagogically supportive structure in a corpus analysis: caregivers provide more information-rich referential communication, using both gesture and speech to refer to a single object, when that object is rare and when their child is young. Then, in an iterated reference game experiment on Mechanical Turk (n = 480), we show how this behavior can arise from pressure to communicate successfully with a less knowledgeable partner. Lastly, we show that speaker behavior in our experiment can be explained by a rational planning model, without any explicit teaching goal. We suggest that caregivers' desire to communicate successfully may play a powerful role in structuring children's input in order to support language learning.
@@ -218,12 +219,12 @@ Crossing our 2 between-subjects manipulations yielded 6 conditions (2 utility ma
 \hypertarget{results-1}{%
 \subsection{Results}\label{results-1}}
 
-As an initial check of our exposure manipulation, a logistic regression showed that participants were significantly more likely to recall the label for objects with two exposures (\emph{B =} 1.66, \emph{p \textless{} 0.0001}) or with four exposures (\emph{B =} 3.07, \emph{p \textless{} 0.0001}), compared with objects they saw only once. On average, participants knew at least 6 of the 9 words in the lexicon (mean = 6.28, sd = 2.26).
+As an initial check of our exposure manipulation, we fist a logistic regression predicting accuracy at test from a fixed effect of exposure rate and random intercepts and slopes of exposureRate by participant as well as random intercepts by item. We found a reliable effect of exposure rate, indicating that participants were better able to learn items that appear more frequently in training (\(\beta =\) 1.09, \(t =\) 13.73, \(p\) \textless{} .001). On average, participants knew at least 6 of the 9 words in the lexicon (mean = 6.28, sd = 2.26).
 
 \hypertarget{gesture-speech-tradeoff.}{%
 \subsubsection{Gesture-Speech Tradeoff.}\label{gesture-speech-tradeoff.}}
 
-To determine how gesture and speech are trading off across conditions, we looked at a mixed effects logistic regression to predict whether speakers chose to produce a label during a given trial as a function of the exposure rate, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. A random subjects effects term was included in the model. There was a significant effect of exposure rate such that there was more labeling for objects with two exposures (\emph{B =} 0.91, \emph{p \textless{} 0.0001}) or with four exposures (\emph{B =} 1.83, \emph{p \textless{} 0.0001}), compared with objects seen only once at training. Compared with the first instance of an object, speakers were significantly more likely to produce a label on the second appearance (\emph{B =} 0.20, \emph{p \textless{} 0.01}) or third instance of a given object (\emph{B =} 0.46, \emph{p \textless{} 0.0001}). Participants also modulated their communicative behavior on the basis of the utility manipulation and our partner exposure manipulation. Speakers in the Low Relative Cost condition produced significantly more labels than participants in the Higher Relative Cost condition (\emph{B =} -0.84, \emph{p \textless{} 0.001}). Speakers did more labeling with more knowledgeable partners; compared with the listener with no exposure, there were significantly higher rates of labeling in the same exposure (\emph{B =} 1.74, \emph{p \textless{} 0.0001}) and double exposure conditions (\emph{B =} 3.14, \emph{p \textless{} 0.001}).
+To determine how gesture and speech are trading off across conditions, we looked at a mixed effects logistic regression to predict whether speakers chose to produce a label during a given trial as a function of the exposure rate, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. A random subjects effects term was included in the model. There was a significant effect of exposure rate such that there was more labeling for objects with two exposures (\emph{B =} NA, \emph{p \textless{} 0.0001}) or with four exposures (\emph{B =} NA, \emph{p \textless{} 0.0001}), compared with objects seen only once at training. Compared with the first instance of an object, speakers were significantly more likely to produce a label on the second appearance (\emph{B =} 0.20, \emph{p \textless{} 0.01}) or third instance of a given object (\emph{B =} 0.46, \emph{p \textless{} 0.0001}). Participants also modulated their communicative behavior on the basis of the utility manipulation and our partner exposure manipulation. Speakers in the Low Relative Cost condition produced significantly more labels than participants in the Higher Relative Cost condition (\emph{B =} -0.84, \emph{p \textless{} 0.001}). Speakers did more labeling with more knowledgeable partners; compared with the listener with no exposure, there were significantly higher rates of labeling in the same exposure (\emph{B =} 1.74, \emph{p \textless{} 0.0001}) and double exposure conditions (\emph{B =} 3.13, \emph{p \textless{} 0.001}).
 
 \begin{figure}
 \centering
@@ -238,7 +239,7 @@ Figure \ref{fig:exp_speech_gesture} illustrates the gesture-speech tradeoff patt
 
 Thus far, we have focused on relatively straightforward scenarios to demonstrate that a pressure to communicate successfully in the moment can lead speakers to trade-off between gesture and speech sensibly. Next, we turn to the emergence of teaching behavior.
 
-In line with our hypotheses, a mixed effects logistic regression predicting whether or not teaching occurred on a given trial revealed that teaching rates across conditions depend on all of the same factors that predict speech and gesture (see Figure \ref{fig:exp_teach}). There was a significant positive effect of initial training on the rates of teaching, such that participants were more likely to teach words with two exposures (\emph{B =} 0.26, \emph{p \textless{} 0.05}) and four exposures (\emph{B =} 0.25, \emph{p \textless{} 0.05}), compared with words seen only once at training. There was also a significant effect of the utility manipulation such that being in the Low Relative Cost condition predicted higher rates of teaching than being in the Higher Relative Cost condition (\emph{B =} -0.96, \emph{p \textless{} 0.001}), a rational response considering teaching allows one to use a less costly strategy in the future and that strategy is especially superior in the Low Relative Cost condition.
+In line with our hypotheses, a mixed effects logistic regression predicting whether or not teaching occurred on a given trial revealed that teaching rates across conditions depend on all of the same factors that predict speech and gesture (see Figure \ref{fig:exp_teach}). There was a significant positive effect of initial training on the rates of teaching, such that participants were more likely to teach words with two exposures (\emph{B =} NA, \emph{p \textless{} 0.05}) and four exposures (\emph{B =} NA, \emph{p \textless{} 0.05}), compared with words seen only once at training. There was also a significant effect of the utility manipulation such that being in the Low Relative Cost condition predicted higher rates of teaching than being in the Higher Relative Cost condition (\emph{B =} -0.96, \emph{p \textless{} 0.001}), a rational response considering teaching allows one to use a less costly strategy in the future and that strategy is especially superior in the Low Relative Cost condition.
 
 We found an effect of partner exposure on rates of teaching as well: participants were significantly more likely to teach a partner with no prior exposure to the language than a partner with the same amount of exposure as the speaker (\emph{B =} -1.63, \emph{p \textless{} 0.0001}) or double their exposure (\emph{B =} -3.51, \emph{p \textless{} 0.0001}). The planned utility of teaching comes from using another, cheaper strategy (speech) on later trials, thus the expected utility of teaching should decrease when there are fewer subsequent trials for that object, predicting that teaching rates should drop dramatically across trials for a given object. Compared with the first trial for an object, speakers were significantly less likely to teach on the second trial (\emph{B =} -0.84, \emph{p \textless{} 0.0001}) or third trial (\emph{B =} -1.67, \emph{p \textless{} 0.0001}).
 
@@ -303,7 +304,7 @@ The fit between our model's predictions and our empirical data from our referenc
 
 In the model and experiments above, we asked whether the pressure to communicate successfully with a linguistically-naive partner would lead to pedagogically supportive input. These results confirmed its' sufficiency: As long as linguistic communication is less costly than deictic gesture, speakers should be motivated to teach in order to reduce future communicative costs. Further, the strength of this motivation is modulated by predictable factors (speaker's linguistic knowledge, listener's linguistic knowledge, relative cost of speech and gesture, learning rate, etc.), and the strength of this modulation is well predicted by a rational model of planning under uncertainty about listner's vocabulary.
 
-In this final section, we take up the consequences of communicatively-motivated teaching for the listener. To do this, we adapt a framework used by Blythe, Smith, \& Smith (2010) and colleagues to estimate the learning times for an idealized child learning language under a variety of models of both the child and their parent. We come to these estimates by simulating exposure to successive communicative events, and measuring the probability that successful learning happens after each event. The question of how different models of the parent impact the learner can then be formalized as a question of how much more quickly learning happens in the context of one model than another.
+In this final section, we take up the consequences of communicatively-motivated teaching for the listener. To do this, we adapt a framework used by Blythe, Smith, and Smith (2010) and colleagues to estimate the learning times for an idealized child learning language under a variety of models of both the child and their parent. We come to these estimates by simulating exposure to successive communicative events, and measuring the probability that successful learning happens after each event. The question of how different models of the parent impact the learner can then be formalized as a question of how much more quickly learning happens in the context of one model than another.
 
 We consider three parent models:
 
@@ -319,7 +320,7 @@ We consider three parent models:
 
 SOME STUFF ABOUT CROSS SITUATIONAL LEARNING
 
-One important point to note is that we are modeling the learning of a single word rather than the entirety of a multi-word lexicon (as in Blythe et al., 2010). Although learning times for each word could be independent, an important feature of many models of word learning is that they are not (Frank, Goodman, \& Tenenbaum, 2009; Yu, 2008; Yurovsky, Fricker, Yu, \& Smith, 2014; although c.f. McMurray, 2007). Indeed, positive synergies across words are predicted by the majority of models and the impact of these synergies can be quite large under some assumptions about the frequency with which different words are encountered (Reisenauer, Smith, \& Blythe, 2013). We assume independence primarily for pragmatic reasons here--it makes the simulations significantly more tractable (although it is what our experimental participants appear to assume about learners). Nonetheless, it is an important issue for future consideration. Of course, synergies that support learning under a cross-situational scheme must also support learning from communcators and teachers (Markman \& Wachtel, 1988, Frank et al. (2009), Yurovsky, Yu, and Smith (2013)). Thus, the ordering across conditions should remain unchanged. However, the magnitude of the difference sacross teacher conditions could potentially increase or decrease.
+One important point to note is that we are modeling the learning of a single word rather than the entirety of a multi-word lexicon (as in Blythe et al., 2010). Although learning times for each word could be independent, an important feature of many models of word learning is that they are not (Frank, Goodman, \& Tenenbaum, 2009; Yu, 2008; Yurovsky, Fricker, Yu, \& Smith, 2014; although c.f. McMurray, 2007). Indeed, positive synergies across words are predicted by the majority of models and the impact of these synergies can be quite large under some assumptions about the frequency with which different words are encountered (Reisenauer, Smith, \& Blythe, 2013). We assume independence primarily for pragmatic reasons here--it makes the simulations significantly more tractable (although it is what our experimental participants appear to assume about learners). Nonetheless, it is an important issue for future consideration. Of course, synergies that support learning under a cross-situational scheme must also support learning from communcators and teachers (Markman \& Wachtel, 1988, @frank2009, @yurovsky2013). Thus, the ordering across conditions should remain unchanged. However, the magnitude of the difference sacross teacher conditions could potentially increase or decrease.
 
 \hypertarget{method-1}{%
 \subsection{Method}\label{method-1}}
@@ -338,7 +339,7 @@ The expected probability of learning after \(n\) trials was thus defined analyti
 
 To test learner under the communication model, we implemented the same model described in the paper above. However, because our interest was in understanding the relationship between parameter values and learning outcomes rather than inferring the parameters that best describe people's behavior, we made a few simplifying assumptions to allow many runs of the model to complete in a more practical amount of time. First, in the full model above, speakers begin by inferring their own learning parameters (\(P_{s}\)) from their observations of their own learning, and subsequently use their maximum likelihood estimate as a standin for their listener's learning parameter (\(P_{l}\)). Because this estimate will converge to the true value in expectation, we omit these steps and simply stipulate that the speaker correctly estimates the listener's learning parameter.
 
-Second, unless the speaker knows apriori how many times they will need to refer to a particular referent, the planning process is an infinite recursion. However, each future step in the plan is less impactful than the previous step (because of exponential discounting), this infinite process is in practice well approximated by a relatively small number of recursive steps. In our explorations we found that predictions made from models which planned over 3 future events were indistinguishable from models that planned over four or more, so we simulated 3 steps of recursion\footnote{It is an intersting empirical question to determine how the level of depth to which that people plan in this and similar games (see e.g.~bounded rationality in Simon, 1991, resource-ratinoality in Griffiths, Lieder, and Goodman (2015)). This future work is outside the scope of the current project.}. Finally, to increase the speed of the simulations we re-implemented them in the R programming language. All other aspects of the model were identical.
+Second, unless the speaker knows apriori how many times they will need to refer to a particular referent, the planning process is an infinite recursion. However, each future step in the plan is less impactful than the previous step (because of exponential discounting), this infinite process is in practice well approximated by a relatively small number of recursive steps. In our explorations we found that predictions made from models which planned over 3 future events were indistinguishable from models that planned over four or more, so we simulated 3 steps of recursion\footnote{It is an intersting empirical question to determine how the level of depth to which that people plan in this and similar games (see e.g.~bounded rationality in Simon, 1991, resource-ratinoality in @griffiths2015). This future work is outside the scope of the current project.}. Finally, to increase the speed of the simulations we re-implemented them in the R programming language. All other aspects of the model were identical.
 
 \hypertarget{hypothesis-testing.}{%
 \subsubsection{Hypothesis Testing.}\label{hypothesis-testing.}}
@@ -349,7 +350,7 @@ A positive hypothesis tester begins with no hypotheses, and on each trial stores
 
 Finally, Bayesian models have been proposed that leverage some of the strengths of both of these different kinds of model, both increasing their confidence in hypotheses consisten with the data on a given learning event and decreasing their confidence in hypotheses inconsistent with the event (Frank et al., 2009).
 
-Because of its more natural alignment with the learning models we use Teaching and Communication simulations, we implemented a positive hypothesis testing model\footnote{Our choice to focus on hypothesis testing rather than other learning frameworks is purely a pragmatic choice--the learning parameter \(p\) in this models maps cleanly onto the learnin parameter in our other models. We encourage other researchers to adapt the code we have provided to estimate the long-term learning for other models.}. In this model, learners begin with no hypotheses and add new ones to their store as they encounter data. Upon first encountering a word and a set of objects, the model encodes up to \(h\) hypothesized word-object pairs each with probability \(p\). On subsequent trials, the model checks whether any of the existing hypotheses are consistent with the current data, and prunes any that are not. If no current hypotheses are consistent, it adds up to \(h\) new hypotheses each with probability \(p\). The model has converged when it has pruned all but the one correct hypothesis for the meaning of a word. This model is most similar to the Propose but Verify model proposed in Trueswell et al. (2013), with the exception that it allows for multiple hypotheses. Because of the data generating process, storing prior disconfirmed hypotheses (as in Stevens et al., 2017), or incrementing hypotheses consistent with some but not all of the data (as in Yu \& Smith, 2012) has no impact on learner and so we do not implement it here. We note also that, as described in Yu \& Smith (2012), hypothesis testing models can mimic the behavior of associative learning models given the right parameter settings (Townsend, 1990).
+Because of its more natural alignment with the learning models we use Teaching and Communication simulations, we implemented a positive hypothesis testing model\footnote{Our choice to focus on hypothesis testing rather than other learning frameworks is purely a pragmatic choice--the learning parameter \(p\) in this models maps cleanly onto the learnin parameter in our other models. We encourage other researchers to adapt the code we have provided to estimate the long-term learning for other models.}. In this model, learners begin with no hypotheses and add new ones to their store as they encounter data. Upon first encountering a word and a set of objects, the model encodes up to \(h\) hypothesized word-object pairs each with probability \(p\). On subsequent trials, the model checks whether any of the existing hypotheses are consistent with the current data, and prunes any that are not. If no current hypotheses are consistent, it adds up to \(h\) new hypotheses each with probability \(p\). The model has converged when it has pruned all but the one correct hypothesis for the meaning of a word. This model is most similar to the Propose but Verify model proposed in Trueswell et al. (2013), with the exception that it allows for multiple hypotheses. Because of the data generating process, storing prior disconfirmed hypotheses (as in Stevens et al., 2017), or incrementing hypotheses consistent with some but not all of the data (as in Yu \& Smith, 2012) has no impact on learner and so we do not implement it here. We note also that, as described in Yu and Smith (2012), hypothesis testing models can mimic the behavior of associative learning models given the right parameter settings (Townsend, 1990).
 
 In contrast to the Teaching and Communication simulations, the behavior of the Hypothesis Testing model depends on which particular non-target objects are present on each naming event. We thus began each simulation by generating a copus of 100 naming events, on each sampling the correct target as well as (\(C\)-1) competitors from a total set of \(M\) objects. We then simulated a hypothesis tester learning over this set of events as described above, and recorded the first trial on which the learner converged (having only the single correct hypothesized mapping between the target word and target object). We repeated this process 1000 times for each simulated combination of \(M = (16, 32, 64, 128)\) total objects, \(C = (1,2,4,8)\) objects per trial, \(h = (1, 2, 3, 4)\) concurrent hypotheses, as the learning rate \(p\) varied from \(.1\) to \(1\) in increments of \(.1\).
 
@@ -476,81 +477,5 @@ Yurovsky, D., Fricker, D. C., Yu, C., \& Smith, L. B. (2014). The role of partia
 
 \leavevmode\hypertarget{ref-yurovsky2013}{}%
 Yurovsky, D., Yu, C., \& Smith, L. B. (2013). Competitive processes in cross-situational word learning. \emph{Cognitive Science}, \emph{37}, 891--921.
-
-\leavevmode\hypertarget{ref-austin1975}{}%
-Austin, J. L. (1975). \emph{How to do things with words} (Vol. 88). Oxford university press.
-
-\leavevmode\hypertarget{ref-baldwin2000}{}%
-Baldwin, D. (2000). Interpersonal understanding fuels knowledge acquisition. \emph{Current Directions in Psychological Science}, \emph{9}, 40--45.
-
-\leavevmode\hypertarget{ref-blythe2010}{}%
-Blythe, R. A., Smith, K., \& Smith, A. D. M. (2010). Learning times for large lexicons through cross-situational learning. \emph{Cognitive Science}, \emph{34}, 620--642.
-
-\leavevmode\hypertarget{ref-frank2012}{}%
-Frank, M. C., \& Goodman, N. D. (2012). Predicting pragmatic reasoning in language games. \emph{Science}, \emph{336}, 998--998.
-
-\leavevmode\hypertarget{ref-frank2009}{}%
-Frank, M. C., Goodman, N., \& Tenenbaum, J. (2009). Using speakers' referential intentions to model early cross-situational word learning. \emph{Psychological Science}, \emph{20}, 578--585.
-
-\leavevmode\hypertarget{ref-goldin-meadow2014}{}%
-Goldin-Meadow, S., Levine, S. C., Hedges, L. V., Huttenlocher, J., Raudenbush, S. W., \& Small, S. L. (2014). New evidence about language and cognitive development based on a longitudinal study: Hypotheses for intervention. \emph{American Psychologist}, \emph{69}(6), 588--599.
-
-\leavevmode\hypertarget{ref-griffiths2015}{}%
-Griffiths, T. L., Lieder, F., \& Goodman, N. D. (2015). Rational use of cognitive resources: Levels of analysis between the computational and the algorithmic. \emph{Topics in Cognitive Science}, \emph{7}(2), 217--229.
-
-\leavevmode\hypertarget{ref-kaelbling1998}{}%
-Kaelbling, L. P., Littman, M. L., \& Cassandra, A. R. (1998). Planning and acting in partially observable stochastic domains. \emph{Artificial Intelligence}, \emph{101}, 99--134.
-
-\leavevmode\hypertarget{ref-luce1959}{}%
-Luce, R. D. (1959). Individual choice behavior.
-
-\leavevmode\hypertarget{ref-markman1988}{}%
-Markman, E. M., \& Wachtel, G. F. (1988). Children's use of mutual exclusivity to constrain the meanings of words. \emph{Cognitive Psychology}, \emph{20}(2), 121--157.
-
-\leavevmode\hypertarget{ref-mcmurray2007}{}%
-McMurray, B. (2007). Defusing the childhood vocabulary explosion. \emph{Science}, \emph{317}(5838), 631--631.
-
-\leavevmode\hypertarget{ref-meltzoff2005}{}%
-Meltzoff, A. N. (2005). Imitation and other minds: The ``like me'' hypothesis. \emph{Perspectives on Imitation: From Neuroscience to Social Science}, \emph{2}, 55--77.
-
-\leavevmode\hypertarget{ref-reisenauer2013}{}%
-Reisenauer, R., Smith, K., \& Blythe, R. A. (2013). Stochastic dynamics of lexicon learning in an uncertain and nonuniform world. \emph{Physical Review Letters}, \emph{110}(25), 258701.
-
-\leavevmode\hypertarget{ref-simon1991}{}%
-Simon, H. A. (1991). Bounded rationality and organizational learning. \emph{Organization Science}, \emph{2}(1), 125--134.
-
-\leavevmode\hypertarget{ref-siskind1996}{}%
-Siskind, J. M. (1996). A computational study of cross-situational techniques for learning word-to-meaning mappings. \emph{Cognition}, \emph{61}, 39--91.
-
-\leavevmode\hypertarget{ref-smith2011}{}%
-Smith, K., Smith, A. D., \& Blythe, R. A. (2011). Cross-situational learning: An experimental study of word-learning mechanisms. \emph{Cognitive Science}, \emph{35}(3), 480--498.
-
-\leavevmode\hypertarget{ref-stevens2017}{}%
-Stevens, J. S., Gleitman, L. R., Trueswell, J. C., \& Yang, C. (2017). The pursuit of word meanings. \emph{Cognitive Science}, \emph{41}, 638--676.
-
-\leavevmode\hypertarget{ref-townsend1990}{}%
-Townsend, J. T. (1990). Serial vs. Parallel processing: Sometimes they look like tweedledum and tweedledee but they can (and should) be distinguished. \emph{Psychological Science}, \emph{1}(1), 46--54.
-
-\leavevmode\hypertarget{ref-trueswell2013}{}%
-Trueswell, J. C., Medina, T. N., Hafri, A., \& Gleitman, L. R. (2013). Propose but verify: Fast mapping meets cross-situational word learning. \emph{Cognitive Psychology}, \emph{66}(1), 126--156.
-
-\leavevmode\hypertarget{ref-yu2008}{}%
-Yu, C. (2008). A statistical associative account of vocabulary growth in early word learning. \emph{Language Learning and Development}, \emph{4}(1), 32--62.
-
-\leavevmode\hypertarget{ref-yu2012}{}%
-Yu, C., \& Smith, L. B. (2012). Modeling cross-situational word-referent learning: Prior questions. \emph{Psychological Review}, \emph{119}, 21--39.
-
-\leavevmode\hypertarget{ref-yurovsky2018}{}%
-Yurovsky, D. (2018). A communicative approach to early word learning. \emph{New Ideas in Psychology}, \emph{50}, 73--79.
-
-\leavevmode\hypertarget{ref-yurovsky2016}{}%
-Yurovsky, D., Case, S., \& Frank, M. C. (2017). Preschoolers flexibly adapt to linguistic input in a noisy channel. \emph{Psychological Science}.
-
-\leavevmode\hypertarget{ref-yurovsky2014}{}%
-Yurovsky, D., Fricker, D. C., Yu, C., \& Smith, L. B. (2014). The role of partial knowledge in statistical word learning. \emph{Psychonomic Bulletin \& Review}, \emph{21}, 1--22.
-
-\leavevmode\hypertarget{ref-yurovsky2013}{}%
-Yurovsky, D., Yu, C., \& Smith, L. B. (2013). Competitive processes in cross-situational word learning. \emph{Cognitive Science}, \emph{37}, 891--921.
-
 
 \end{document}
