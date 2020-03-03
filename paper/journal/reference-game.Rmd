@@ -120,7 +120,7 @@ We used data from the Language Development Project-- a large-scale, longitudinal
 
 The Language Development Project aimed to recruit a sample of families who are representative of the Chicago community in socio-economic and racial diversity [@goldin-meadow2014]. These data are drawn from a subsample of 10 families from the larger corpus. Our subsample contains data taken in the home every 4-months from when the child was 14-months-old until they were 34-months-old, resulting in 6 timepoints (missing one family at the 30-month timepoint). Recordings were 90 minute sessions, and participants were given no instructions.
 
-Of the 10 target children, 5 were girls, 3 were Black and 2 were Mixed-Race. Families spanned a broad range of incomes, with 2 families earning $15,000 to $34,999 and 1 family earning greater than $100,000. The median family income was $50,000 to $74,999.
+Of the 10 target children, 5 were girls, 3 were Black and 2 were Mixed-Race. Families spanned a broad range of incomes, with 2 families earning \$15,000 to \$34,999 and 1 family earning greater than \$100,000. The median family income was \$50,000 to \$74,999.
 
 
 ### Procedure
@@ -129,11 +129,11 @@ From the extant transcription and gesture coding, we specifically coded all conc
 
 ### Reliability
 
-To establish the reliability of the referent coding, 25% of the transcripts were double-coded. Inter-rater reliability was sufficently high (Cohen’s κ = 0.76). Disagreements in coding decisions were discussed and resolved by hand.
+To establish the reliability of the referent coding, 25% of the transcripts were double-coded. Inter-rater reliability was sufficently high (Cohen’s $\kappa$ = 0.76). Disagreements in coding decisions were discussed and resolved by hand.
 
 To ensure that our each referent could potentially be refered to in gesture or speech, we focused on concrete nouns and also estimated the liklihood that a given referent was physically present in the scene (and thus accessible to deitic gestures). Using the transcripts, a human rater judged whether the referant of each reference to a concrete noun was likely to be present based on primarily on discourse context (e.g., if the deitic gesture is used or used at another timepoint for the reference, or if the utterance includes demonstratives such as "This is an X"). A full description of the coding criterea can be found in the linked coding manual. 
 
-To ensure our transcript based coding was sufficiently accurate, a subset of the transcripts (5%) were directly compared to corresponding video data observation. Reliability across the video data and the transcript coding was sufficiently high (κ = 0.72). Based on transcript coding of all the referential communication about concrete nouns, 90% of the references were judged to be about referents that were likely present.
+To ensure our transcript based coding was sufficiently accurate, a subset of the transcripts (5%) were directly compared to corresponding video data observation. Reliability across the video data and the transcript coding was sufficiently high ($\kappa$ = 0.72). Based on transcript coding of all the referential communication about concrete nouns, 90% of the references were judged to be about referents that were likely present.
 
 ## Results
 
