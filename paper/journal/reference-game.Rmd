@@ -28,6 +28,9 @@ wordcount         : "X"
 
 bibliography      : ["reference-game.bib"]
 
+header-includes:
+  - \usepackage{xcolor}
+
 figsintext        : yes
 figurelist        : no
 tablelist         : no
@@ -97,7 +100,8 @@ plot_data <- modality_data %>%
   group_by(person, age, subj, freq, referent) %>%
   gather(modality, n, both, gesture, speech) %>%
   mutate(prop = n/sum(n)) %>%
-  filter(modality == "both")
+  filter(modality == "both") %>%
+  ungroup()
 
 #set gradient
 cc <- scales::seq_gradient_pal("#87d868", "#124200", "Lab")(seq(0,1,length.out=6))
@@ -106,14 +110,14 @@ teaching_ribbons <- scales::seq_gradient_pal("#cbffb7", "#124200", "Lab")(seq(0,
 teaching_ribbons[[6]] <- "#000000"
 ```
 
-We first investigate parent referential communication in a longitudinal corpus of parent-child interaction. We analyze the production of multi-modal cues (i.e. using both gesture and speech) to refer to the same object, in the same instance. While many aspects of CDS support learning, multi-modal cues (e.g., speaking while pointing or looking) are particularly powerful sources of data for young children [e.g., @baldwin2000, @gogate2000]. We take multi-modal cues to be a case-study pheonmenon of pedagogically supportive language input. While our account should hold for other language phenomena, by focusing on one phenomenon we attempt to specify the dynamics involved in the production of such input.
+We first investigate parent referential communication in a longitudinal corpus of parent-child interaction. We analyze the production of multi-modal cues (i.e. using both gesture and speech) to refer to the same object, in the same instance. While many aspects of CDS support learning, multi-modal cues (e.g., speaking while pointing or looking) are particularly powerful sources of data for young children [e.g., @baldwin2000; @gogate2000]. We take multi-modal cues to be a case-study pheonmenon of pedagogically supportive language input. While our account should hold for other language phenomena, by focusing on one phenomenon we attempt to specify the dynamics involved in the production of such input.
 
-In this analysis of naturalistic communication, we examine the prevelance of multi-modal cues in children's language environment, to demonstrate that it is a viable, pedagogically supportive form of input. Beyond being a prevelant fform of communication, multi-modal reference may be especially pedagogically supportive if usage patterns reflect adaptive linguistic tuning, with caregivers using this information-rich cue more for young children and infrequent objects. The amount of multi-modal reference should be sensitive to the child’s age, such that caregivers will be more likely to provide richer communicative information when their child is younger (and has less linguistic knowledge) than as she gets older [@yurovsky2016]. 
+In this analysis of naturalistic communication, we examine the prevelance of multi-modal cues in children's language environment, to demonstrate that it is a viable, pedagogically supportive form of input. Beyond being a prevelant form of communication, multi-modal reference may be especially pedagogically supportive if usage patterns reflect adaptive linguistic tuning, with caregivers using this information-rich cue more for young children and infrequent objects. The amount of multi-modal reference should be sensitive to the child’s age, such that caregivers will be more likely to provide richer communicative information when their child is younger (and has less linguistic knowledge) than as she gets older [@yurovsky2016]. 
 
 
 ## Methods
 
-We used data from the Language Development Project-- a large-scale, longitudinal corpus of naturalistic parent child-interaction in the home [@goldin-meadow2014]. The Language Development Project corpus contains transcription of all speech and communicative gestures produced by children and their caregivers over the course of the 90-minute home recordings. An independent coder analyzed each of these communicative instances and identified each time a concrete noun was referenced using speech, gesture, or both in the same referential expression (so called ostenstive labeling). In these analyses, we focus only on caregiver's productions of ostenstive labeling.
+We used data from the Language Development Project-- a large-scale, longitudinal corpus of naturalistic parent child-interaction in the home [@goldin-meadow2014]. The Language Development Project corpus contains transcription of all speech and communicative gestures produced by children and their caregivers over the course of the 90-minute home recordings. An independent coder analyzed each of these communicative instances and identified each time a concrete noun was referenced using speech, gesture, or both in the same referential expression (so called ostenstive labeling). In these analyses, we focus only caregiver's productions of ostenstive labeling.
 
 
 ### Participants
@@ -131,7 +135,7 @@ From the extant transcription and gesture coding, we specifically coded all conc
 
 To establish the reliability of the referent coding, 25% of the transcripts were double-coded. Inter-rater reliability was sufficently high (Cohen’s $\kappa$ = 0.76). Disagreements in coding decisions were discussed and resolved by hand.
 
-To ensure that our each referent could potentially be refered to in gesture or speech, we focused on concrete nouns. We further wanted to ensure that the referents were physically present in the scene (and thus accessible to deitic gestures). Using the transcripts, a human rater judged whether the referent was likely to be present, primarily relying on discourse context (e.g., a referent was coded as present if the deitic gesture is used or used at another timepoint for the reference, or if the utterance included demonstratives such as "This is an X"). A full description of the coding criterea can be found in the linked coding manual. 
+To ensure that our each referent could potentially be refered to in gesture or speech, we focused on concrete nouns. We further wanted to ensure that the referents were physically present in the scene (and thus accessible to deitic gestures). Using the transcripts, a human rater judged whether the referent was likely to be present, primarily relying on discourse context (e.g., a referent was coded as present if the deitic gesture is used or used at another timepoint for the reference, or if the utterance included demonstratives such as "This is an X"). A full description of the coding criterea can be found in the Supporting Materials. \textcolor{red}{MAKE SURE WE MAKE THIS}.
 
 To ensure our transcript-based coding of presentness was sufficiently accurate, a subset of the transcripts (5%) were directly compared to corresponding video data observation. Reliability across the video data and the transcript coding was sufficiently high ($\kappa$ = 0.72). Based on transcript coding of all the referential communication about concrete nouns, 90% of the references were judged to be about referents that were likely present. All references are included in our dataset for further analysis.
 
@@ -157,10 +161,13 @@ corpus_model_data <- modality_data %>%
          freq = log(freq) - mid_freq)
 
 
-parent_both_lm <- glmer(cbind(both, speech + gesture) ~ age * freq + 
+parent_both_raw <- glmer(cbind(both, speech + gesture) ~ age * freq + 
                     (1 | referent) + ( freq | subj), 
       data = corpus_model_data, 
-      family = "binomial") %>%
+      family = "binomial") 
+
+
+parent_both_lm <- parent_both_lm_raw %>%
   tidy() %>%
   filter(effect == "fixed") %>%
   select(-effect, -group)
@@ -210,21 +217,26 @@ corpus_interaction_p <- parent_both_lm %>%
 These corpus data were analyzed using a mixed effects regression to predict parent use of multi-modal reference for a given referent. The model included fixed effects of age in months, frequency of the referent, and the interaction between the two. The model included a random intercept and random slope of frequency by subject and a random intercept for each unique referent. Frequency and age were both log-scaled and then centered both because age and frequency tend to have log-linear effects and to help with model convergence. The model showed that parents teach less to older children ($\beta =$  `r corpus_age_estimate`, $t =$  `r corpus_age_statistic`, $p$ `r corpus_age_p`), marginally less for more frequent targets ($\beta =$  `r corpus_freq_estimate`, $t =$  `r corpus_freq_statistic`, $p =$ `r corpus_freq_p`), and that parents teach their younger children more often for equally frequent referents ($\beta =$  `r corpus_interaction_estimate`, $t =$  `r corpus_interaction_statistic`, $p =$ `r corpus_interaction_p`). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children (Figure \ref{fig:corpus-plot).
 
 
-```{r corpus-plot, fig.height=4, set.cap.width=T, num.cols.cap=1, fig.cap = "Proportion of parent multi-modal referential talk across development. The log of a referent's frequency is given on the x-axis, with less frequent items closer to zero."}
-#main corpus plot
-ggplot(plot_data %>% filter(person == "parent"), aes(x = log(freq), y = prop,
-                      color = as.factor(age),
-                      fill = as.factor(age),
-                      label = as.factor(age))) +
+```{r corpus-plot, fig.height=4, fig.width = 6, fig.cap = "Proportion of parent multi-modal referential talk across development. The log of a referent's frequency is given on the x-axis, with less frequent items closer to zero."}
+
+plot_data %>% 
+  ungroup() %>%
+  filter(person == "parent") %>%
+  mutate(plot_age = factor(age, labels = c('14 months', '18 months','22 months', 
+                                      '26 months', "30 months",
+                                      "34 months"))) %>%
+  ggplot(aes(x = log(freq), y = prop, color = plot_age, 
+             fill = plot_age, label = plot_age)) +
   geom_smooth(method = "loess") +
-  labs(y="Proportion of References\nusing Gesture + Speech", x='Log Referent Frequency') +
+  labs(y="References\nusing gesture + speech (proportion)", x='Referent frequency (log)') +
   coord_cartesian(ylim=c(0,.38), xlim=c(0,6)) +
-scale_fill_manual(values=teaching_ribbons, name='Age of Child', labels=c('14 months', '18 months','22 months','26 months', "30 months", "34 months")) +
-scale_color_manual(values=cc, name='Age of Child', labels=c('14 months', '18 months','22 months','26 months', "30 months", "34 months")) +
-theme(legend.position = c(.8,.67),
+  scale_fill_manual(values = teaching_ribbons, name='Child\'s age') +
+  scale_color_manual(values = teaching_ribbons, name='Child\'s age') +
+  theme(legend.position = c(.8,.67),
       legend.key.size = unit(.8, 'lines'),
       legend.text=element_text(size=7),
-      legend.title=element_text(size=8))
+      legend.title=element_text(size=8),
+      aspect.ratio = 1/1.66)
 ```
 
 ## Discussion
