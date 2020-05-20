@@ -1134,8 +1134,10 @@ var experiment = {
 			if (document.getElementById("labelInput").value =="") {
 				// if they clicked the object, leave that as the message
 				if (message==1) {
-          document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> "+ trueClickPoints +" Possible Points </em> </strong>"
-          pointChange = trueClickPoints;
+          //doing both has been disabled
+          message=0
+          document.getElementById("sendMessage").disabled = true;
+          document.getElementById("sendMessage").innerHTML="Send Message";
         }
 				// if they havent clicked an object and now have emptied the text box, revert to no message state and disable stuff
 				else {
@@ -1145,10 +1147,12 @@ var experiment = {
 			} else {
 				document.getElementById("sendMessage").disabled = false;
 				if (message==1) {
-          document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
-          pointChange = doingBothPoints;
+          // document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+          // pointChange = doingBothPoints;
         }
 				else {
+          // disable doing both
+          message=1
           document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
           pointChange = trueLabelPoints;
         }
@@ -1187,10 +1191,12 @@ var experiment = {
 					// otherwise, revert the selection 
 					this.style.border="";
 					// if there is a label typed out, keep the sendMessage button enabled and change it to X possible points
-					if (blah != '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
+					if (blah != '') {
+            document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueLabelPoints+"  Possible Points </em> </strong>"
             pointChange = trueLabelPoints;
           }
 					else {
+            document.getElementById("labelInput").disabled=false;
 						document.getElementById("sendMessage").disabled = true;
 						document.getElementById("sendMessage").innerHTML="Send Message";
 					}
@@ -1202,11 +1208,14 @@ var experiment = {
           // console.log(pairObjectLabels(this.alt));
 					this.style.border="5px solid black";
 					document.getElementById("sendMessage").disabled = false;
-					if (blah == '') {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
-                        pointChange = trueClickPoints;
+					if (blah == '') {
+            document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +trueClickPoints+" Possible Points </em> </strong>"; 
+            pointChange = trueClickPoints;
+            document.getElementById("labelInput").disabled=true;
           }
-					else {document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
-                        pointChange = doingBothPoints;
+					else {
+            document.getElementById("sendMessage").innerHTML="Send Message for <strong> <em> " +doingBothPoints+" Possible Points </em> </strong>"
+            pointChange = doingBothPoints;
           }
 					selection = pairObjectLabels(this.alt);
           selectedObject = this.alt;
@@ -1640,7 +1649,7 @@ var experiment = {
 
 //for  testing and debugging, jump to a part of the experiment directly with (the relevant version of) this line
 //breaks progressbar
-// experiment.prestudy(0,0,36);
+experiment.game(0,0,36);
 
 
 
