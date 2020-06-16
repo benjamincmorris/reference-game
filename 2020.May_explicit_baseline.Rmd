@@ -1,0 +1,112 @@
+---
+title: "2020.5_explicit_baseline_analysis"
+author: "ben morris"
+date: "6/16/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(lme4)
+```
+
+
+```{r}
+all_data <- read.csv("data/2020.May_explicit_baseline.csv")
+
+all_data_dropped <- all_data %>%
+  filter(toBeDropped==0)
+```
+
+
+
+```{r}
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+###wrangling data for plots by exposure
+prop_methods_exposures <- all_data_dropped %>%
+  filter(toBeDropped != 1) %>%
+  # filter(testCorrect == 1) %>%
+  ungroup() %>%
+  select(condition,ldf_num, partnersExposure, exposureRate,method) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
+  mutate(n = n/sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), exposureRate, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, exposureRate, method) %>%
+  summarise(mean = mean(n), se = seprop(n)) %>%
+  ungroup()
+
+
+#Exp. 1, Plot 1. 
+prop_methods_exposures %>% 
+  mutate(exposureRate=as.factor(exposureRate)) %>%
+  ggplot(aes(x=exposureRate, y=mean, color = method)) +
+  geom_point(size=1.5,position=position_dodge(.25)) +
+  geom_line(aes(x=(exposureRate), y=mean, group=interaction(method,condition), color=method),  size=.9,
+          position=position_dodge(.25)) +
+  geom_linerange(aes(ymax = mean + se,
+    ymin = mean - se),position=position_dodge(.25)) +
+  coord_cartesian(ylim=c(0,1)) +
+  facet_grid(.~condition) +
+  labs(y="Proportion of Trials", x="Exposure Rate During Training") +
+  geom_hline(yintercept = .5, linetype = "dashed")
+```
+
+
+```{r}
+#hist of labling behavior by exposure rate
+all_data_dropped %>%
+  group_by(ldf_num, condition, exposureRate) %>%
+  count(method == "label") %>%
+  mutate(propLabel = n/sum(n)) %>%
+  ggplot(aes(x=propLabel, fill = condition))+
+  geom_histogram(position = position_dodge()) +
+  facet_grid(exposureRate~.) 
+```
+
+
+```{r}
+#no random effects
+lm((method=='label') ~ condition +
+                exposureRate,
+            data=all_data_dropped) %>%
+  summary(.)
+
+#analysis
+glmer((method=='label') ~ condition + 
+            exposureRate + testCorrect + 
+            (1|ldf_num),
+            data=all_data_dropped,
+      family=binomial) %>% 
+  summary(.)
+
+#analysis of known words only
+glmer((method=='label') ~ condition +
+                exposureRate +
+                (1|ldf_num) + (1|realLabel),
+            #filtering to known words only
+            data=(all_data_dropped %>%
+                    filter(testCorrect == 1)),
+      family=binomial) %>%
+  summary(.)
+```
+
+
+```{r}
+#checking for learning differences
+all_data_dropped %>%
+  distinct(ldf_num, realLabel, .keep_all = T) %>%
+  group_by(condition, exposureRate) %>%
+  summarize(mean=mean(testCorrect), se= sd(testCorrect)/sqrt(55)) %>%
+  ggplot(aes(x=as.factor(exposureRate), y=mean, fill = exposureRate))+
+           geom_bar(stat="identity")+
+  geom_linerange(aes(ymin=mean-se, ymax=mean+se)) +
+  facet_wrap(.~condition)
+```
