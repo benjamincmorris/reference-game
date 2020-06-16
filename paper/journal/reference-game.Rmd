@@ -444,7 +444,7 @@ prop_methods_exposures <- all_data %>%
   ungroup() %>%
   mutate(method = as.factor(method)) %>%
   tidyr::complete(nesting(condition, ldf_num, partnersExposure), exposureRate, method, fill = list(n = 0)) %>%
-  group_by(condition, partnersExposure, exposureRate, method) %>%
+  group_by(condition, partnersExposure, method) %>%
   summarise(mean = mean(n), se = seprop(n)) %>%
   ungroup()
 
@@ -458,31 +458,32 @@ label_data <- label_data %>% mutate(condition = factor(condition,
 #Exp., Plot 1., gesture speech tradeoff
 plot_prop_methods_exposures <- prop_methods_exposures %>% 
   mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
-      condition = as.factor(condition),
+      partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect")),
       condition = factor(condition, 
                             levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE),
-         exposureRate = as.factor(exposureRate),
-         method = factor(method, levels = c("click", "label"),
-                         labels = c("gesture", "speech"))) %>%
-  filter(partnersExposure == "Perfect",
-         method != "label_click") 
+       #  exposureRate = as.factor(exposureRate),
+         method = factor(method, levels = c("click", "label", "label_click"),
+                         labels = c("gesture", "speech", "teach")))# %>%
+  #filter(method != "label_click") 
 
 plot_prop_methods_exposures %>%
-  ggplot(aes(x=exposureRate, y=mean, color = method, label = method)) +
-  geom_point(size=1.5,position=position_dodge(.25)) +
-  geom_line(aes(x=(exposureRate), y=mean, group=interaction(method,condition), color=method),  size=.9,
-          position=position_dodge(.25)) +
-  geom_linerange(aes(ymax = mean + se,
+  ggplot(aes(x=partnersExposure, y=mean, color = method, label = method,
+             group=interaction(method,condition))) +
+  facet_wrap(~ condition) +
+  #geom_point(size=1.5,position=position_dodge(.25)) +
+  geom_line(  size=.9,     
+            position=position_dodge(.25)) +
+  geom_pointrange(aes(ymax = mean + se,
     ymin = mean - se),position=position_dodge(.25)) +
   coord_cartesian(ylim=c(0,1)) +
-  facet_grid(cols = vars(condition)) +
+  #facet_grid(method ~ .) +
   labs(y="Proportion of Trials", x="Exposure Rate During Training") +
   scale_color_manual(values=c(modality.colors),  name = "Method")+
     theme(legend.position = "none",
         legend.key.size = unit(.8, 'lines'),
         legend.text=element_text(size=7),
-        legend.title=element_text(size=8)) +
-    geom_text(data = label_data)
+        legend.title=element_text(size=8)) #+
+  #  geom_text(data = label_data)
 ```
 
 Figure \ref{fig:exp_speech_gesture} illustrates the gesture-speech tradeoff pattern in the Double Exposure condition (as there was minimal teaching in that condition, so the speech-gesture trade-off is most interpretable). The effects on gesture mirror those found for labeling and are thus not included for brevity (*ps < 0.01*). Note that these effects cannot be explained by participant knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns directly mirror previous corpus analyses demonstrating the gesture-speech tradeoff in naturalistic parental communicative behaviors, where lexical knowledge is likely for even the least frequent referent [see @yurovsky2018].  
@@ -498,7 +499,6 @@ gm_teach <- glmer((method=='label_click') ~ appearance +
                 condition +
                 exposureRate +
                (1|ldf_num),
-               control = glmerControl(optimizer = "bobyqa"),
             data=all_data %>% filter(toBeDropped==0),
       family=binomial)
 
