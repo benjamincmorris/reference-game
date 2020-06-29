@@ -23,7 +23,7 @@ author_note: >
 abstract: >
   Children do not learn language from passive observation of the world, but from interaction with caregivers who want to communicate with them. These communicative exchanges are structured at multiple levels in ways that support support language learning. We argue this pedagogically supportive structure can result from pressure to communicate successfully with a linguistically immature partner. We first characterize one kind of pedagogically supportive structure in a corpus analysis: caregivers provide more information-rich referential communication, using both gesture and speech to refer to a single object, when that object is rare and when their child is young. Then, in an iterated reference game experiment on Mechanical Turk (n = 480), we show how this behavior can arise from pressure to communicate successfully with a less knowledgeable partner. Lastly, we show that speaker behavior in our experiment can be explained by a rational planning model, without any explicit teaching goal. We suggest that caregivers’ desire to communicate successfully may play a powerful role in structuring children’s input in order to support language learning.
   
-keywords          : "language learning; communication; computational modeling"
+keywords          : "language learning; communication; computational modeling; child-directed speech"
 wordcount         : "X"
 
 bibliography      : ["reference-game.bib"]
@@ -262,11 +262,11 @@ img <- png::readPNG("figs/exp_screenshot.png")
 grid::grid.raster(img)
 ```
 
-# Experiment 1   
+
+## Method
 
 In this experiment, participants were recruited to play our reference game via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment. In this study, all participants were placed in the role of speaker and listener responses were programmed. 
 
-## Method
 ```{r e2-data}
 all_data <- read_csv(here("data/1.30_turk_exp.csv"))
 
@@ -300,7 +300,7 @@ Listeners were programmed with starting knowledge states initialized according t
 
 To simulate knowledgable listener behavior when the speaker typed an object label, the listener  was programmed to consult their own knowledge. Messages were evaluate by taking the Levenshtein distance (LD) between the typed label and each possible label in the listener's vocabulary. Listeners then selected the candidate with the smallest edit distance (e.g., if a speaker entered the message "tomi", the programmed listener would select the referent corresponding to "toma", provided toma was found in its vocabulary). If the speaker message had an LD greater than two with each of the words in the listener's vocabulary, the listener selected an unknown object. If the speaker clicked on object (gesture message), the listener was programmed to simply make the same selection. 
 
-Speakers could win up to 100 points per trial if the listener correctly selected the target referent based on their message.  If the listener failed to identify the target object, the speaker received no points.  We manipulated the relative utility of the speech cue between-subjects across two conditions: low relative cost (‘Low Relative Cost’) and higher relative cost (‘Higher Relative Cost’). In the 'Higher Relative Cost' condition, speakers received 30 points for gesturing and 100 points for labeling, and thus gesturing was very costly relative to speech and pariticpants should be highly incentivized to speak. In the 'Low Relative Cost' condition speakers received 50 points for gesturing and 80 points for labeling, and thus gesturing is still costly relative to speech but much less so and pariticpants should be less incentivized to speak.
+Speakers could win up to 100 points per trial if the listener correctly selected the target referent based on their message.  If the listener failed to identify the target object, the speaker received no points.  We manipulated the relative utility of the speech cue between-subjects across two conditions: low relative cost (‘Low Relative Cost’) and higher relative cost (‘Higher Relative Cost’). In the 'Low Relative Cost' condition, speakers received 30 points for gesturing and 100 points for labeling, and thus speech had very little cost relative to gesture and pariticpants should be highly incentivized to speak. In the 'Higher Relative Cost' condition speakers received 50 points for gesturing and 80 points for labeling, and thus gesturing is still costly relative to speech but much less so and pariticpants should be less incentivized to speak.
 
 Participants were told about a third type of possible message using both gesture and speech within a single trial to effectively teach the listener an object-label mapping. This action directly mirrors the multi-modal reference behavior from our corpus data-- it presents the listener with an information-rich, potentially pedagogical learning moment. In order to produce this teaching behavior, speakers had to pay the cost of producing both cues (i.e. both gesture and speech). Note that, in all utility conditions, teaching yielded participants 30 points (compared with the much more beneficial strategy of speaking which yielded 100 points or 80 points across our two utility manipulations). Listeners were programmed to integrate new taught words into their knowledge of the lexicon, and check those taught labels on subsequent trials when evaluating speaker messages.
 
@@ -308,7 +308,9 @@ Crossing our 2 between-subjects manipulations yielded 6 conditions (2 utility ma
 
 ## Results
 
-[Something big picture] To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logisitc mixed effects models for each behavior, reported below. It should be noted that these three behaviors are mutually exhaustive. First, we establish how well participants learned our novel lexicon during training.
+<!-- add model details and parameter estimates to a supplemental and keep this results section somewhat trim.  -->
+
+In each trial, participants are able to choose one of 3 communicative strategies: gesture, speech, or teaching. We primarily expect flexibile trade-off between the use of each strategy given their relative utilities, participant's knowledge of the lexicon, and the listener's knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logisitc mixed effects models for each behavior, reported below. It should be noted that these three behaviors are mutually exhaustive. First, we establish how well participants learned our novel lexicon during training.
 
 ```{r e2-results}
 filtered_data <- all_data %>%
@@ -358,6 +360,69 @@ As an initial check of our exposure manipulation, we first conducted a logistic 
 
 ### Gesture
 
+```{r modalities, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
+
+modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", speech = "#e8250b", gesture = "#1f11e0", both ="#54a832", label = "#e8250b", click = "#1f11e0", label_click ="#54a832")
+
+seprop <- function(props) {
+  mean_prop = mean(props)
+  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
+}
+
+###wrangling data for plots by exposure
+prop_methods_exposures <- all_data %>%
+  filter(toBeDropped != 1) %>%
+  ungroup() %>%
+  select(condition,ldf_num, partnersExposure, exposureRate,method) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
+  mutate(n = n/sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), exposureRate, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, method) %>%
+  summarise(mean = mean(n), se = seprop(n)) %>%
+  ungroup()
+
+
+label_data <- tibble(exposureRate = 1.25, condition = "Low Relative Cost",
+                     method = c("gesture", "speech"), mean = c(.2, .8))
+
+label_data <- label_data %>% mutate(condition = factor(condition, 
+                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE))
+
+#Exp. Plot 1., modality tradeoff (condition x partnerExp x utility)
+plot_prop_methods_exposures <- prop_methods_exposures %>% 
+  mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
+      partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect")),
+      condition = factor(condition, 
+                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE),
+       #  exposureRate = as.factor(exposureRate),
+         method = factor(method, levels = c("click", "label", "label_click"),
+                         labels = c("gesture", "speech", "teach")))# %>%
+  #filter(method != "label_click") 
+
+plot_prop_methods_exposures %>%
+  ggplot(aes(x=partnersExposure, y=mean, color = method, label = method,
+             group=interaction(method,condition))) +
+  facet_wrap(~ condition) +
+  #geom_point(size=1.5,position=position_dodge(.25)) +
+  geom_line(  size=.9,     
+            position=position_dodge(.25)) +
+  geom_pointrange(aes(ymax = mean + se,
+    ymin = mean - se),position=position_dodge(.25)) +
+  coord_cartesian(ylim=c(0,1)) +
+  #facet_grid(method ~ .) +
+  labs(y="Proportion of Trials", x="Exposure Rate During Training") +
+  scale_color_manual(values=c(modality.colors),  name = "Method")+
+    theme(legend.position = "none",
+        legend.key.size = unit(.8, 'lines'),
+        legend.text=element_text(size=7),
+        legend.title=element_text(size=8)) #+
+  #  geom_text(data = label_data)
+```
+
 ```{r e1-gesture-model}
 gm_click <- glmer((method == 'click') ~ partnersExposureNumeric * exposureRate + 
                     partnersExposureNumeric * appearanceNumeric +
@@ -400,16 +465,16 @@ click_condition80_p <-  gm_click %>%
 
 ```
 
-When should we expect participants to rely on gesture? Gesturing has the highest utility for words you failed to learn during training and when utility scheme is relatively biased toward gesturing (i.e., the 'Low Relative Cost' condition). To test these predictions, we ran a mixed effects logistic regression to predict whether speakers chose to gesture during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subjects and object were included in the model.
+When should we expect participants to rely on gesture? Gesturing has the highest utility for words you failed to learn during training, words you think your partner is unlikely to know (i.e., for lower partner knowledge conditions), when utility scheme is relatively biased toward gesturing (i.e., the 'Higher Relative Cost' condition). To test these predictions, we ran a mixed effects logistic regression to predict whether speakers chose to gesture during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model.
 
-Consistent with our predictions, exposure rate during training was a signficant negative predictor of gesturing during the game, such that participants were less likely to rely on gesture for well trained (and thus well learned) objects ($\beta =$ `r click_exposureRate_beta`, $p$ `r click_exposureRate_p`). Additionally, participants were signfinatly more likely to gesture in the Low Relative Cost condition where gesture is relatively less costly, compared iwth the High Relative Cost condition ($\beta =$ `r click_condition80_beta`, $p$ `r click_condition80_p`). We also found a significant negative effect of partner's knowledge, such that particpants used gesture less for partners with more knowledge of the lexicon ($\beta =$ `r click_partnersExposure_beta`, $p$ `r click_partnersExposure_p`).
+Consistent with our predictions, exposure rate during training was a signficant negative predictor of gesturing during the game (see Figure \ref{fig:modalities}), such that participants were less likely to rely on gesture for well trained (and thus well learned) objects ($\beta =$ `r click_exposureRate_beta`, $p$ `r click_exposureRate_p`). Additionally, participants were signfinatly more likely to gesture in the Higher Relative Cost condition where gesture is relatively less costly, compared with the Low Relative Cost condition ($\beta =$ `r click_condition80_beta`, $p$ `r click_condition80_p`) (see Figure \ref{fig:modalities}). We also found a significant negative effect of partner's knowledge, such that particpants used gesture more for partners with less knowledge of the lexicon ($\beta =$ `r click_partnersExposure_beta`, $p$ `r click_partnersExposure_p`) (see Figure \ref{fig:modalities}). 
 
 <!-- Note that these effects cannot be explained by participant knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns directly mirror previous corpus analyses demonstrating adult's use of gesture in naturalistic parental communicative behaviors, where lexical knowledge is likely for even the least frequent referent [see @yurovsky2018].   -->
 
 
 ### Speech
 
-```{r e1-speech-model, eval = FALSE}
+```{r e1-speech-model}
 gm_label <- glmer((method == 'label') ~ partnersExposureNumeric * exposureRate + 
                     partnersExposureNumeric * appearanceNumeric +
                     condition + 
@@ -421,116 +486,105 @@ gm_label <- glmer((method == 'label') ~ partnersExposureNumeric * exposureRate +
   select(-effect, -group) %>%
   mutate(p.value = printp(p.value))
 
-label_2nd_beta <- round(fixef(gm_label)["appearanceSecond"], digits=2)
-label_3rd_beta <- round(fixef(gm_label)["appearanceThird"], digits=2)
-label_pExpPerf_beta <- round(fixef(gm_label)["partnersExposurePerfect"], digits=2)
-label_pExpSame_beta <- round(fixef(gm_label)["partnersExposureSame"], digits=2)
-label_freq2_beta <- round(fixef(gm_label)["exposureRate2"], digits=2)
-label_freq4_beta <- round(fixef(gm_label)["exposureRate4"], digits=2)
-label_cond80_beta <- round(fixef(gm_label)["condition80_50"], digits=2)
+label_appearance_beta <- gm_label %>%
+  filter(term == "appearanceNumeric") %>%
+  pull(estimate)
+label_appearance_p <- gm_label %>%
+  filter(term == "appearanceNumeric") %>%
+  pull(p.value)
 
+#exposure rate during training, continuous
+label_exposureRate_beta <-  gm_label %>%
+  filter(term == "exposureRate") %>%
+  pull(estimate)
+label_exposureRate_p <-  gm_label %>%
+  filter(term == "exposureRate") %>%
+  pull(p.value)
 
+#partner exposure manipulation, continuous
+label_partnersExposure_beta <- gm_label %>%
+  filter(term == "partnersExposureNumeric") %>%
+  pull(estimate)
+label_partnersExposure_p <- gm_label %>%
+  filter(term == "partnersExposureNumeric") %>%
+  pull(p.value)
 
+#condition, reference category is 100_30 low relative cost
+label_condition80_beta <-  gm_label %>%
+  filter(term == "condition80_50") %>%
+  pull(estimate)
+label_condition80_p <-  gm_label %>%
+  filter(term == "condition80_50") %>%
+  pull(p.value)
 
 # <!-- To determine how gesture and speech are trading off across conditions, we  looked at a mixed effects logistic regression to predict whether speakers chose to produce a label during a given trial as a function of the exposure rate, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. A random subjects effects term was included in the model. There was a significant effect of exposure rate such that there was more labeling for objects with two exposures (*B =* `r label_freq2_beta`, *p < 0.0001*) or with four exposures (*B =* `r label_freq4_beta`, *p < 0.0001*), compared with objects seen only once at training. Compared with the first instance of an object, speakers were significantly more likely to produce a label on the second appearance (*B =* `r label_2nd_beta`, *p < 0.01*) or third instance of a given object (*B =* `r label_3rd_beta`, *p < 0.0001*). Participants also modulated their communicative behavior on the basis of the utility manipulation and our partner exposure manipulation.  Speakers in the Low Relative Cost condition produced significantly more labels than participants in the Higher Relative Cost condition (*B =* `r label_cond80_beta`, *p < 0.001*). Speakers did more labeling with more knowledgeable partners; compared with the listener with no exposure, there were significantly higher rates of labeling in the same exposure  (*B =* `r label_pExpSame_beta`, *p < 0.0001*) and double exposure conditions (*B =* `r label_pExpPerf_beta`, *p < 0.001*).   -->
 
 ```
 
-When should we expect participants to use speech? Speech has the highest utility for words you learned during training and when utility scheme is relatively biased toward speech (i.e., the 'High Relative Cost' condition). Becuase the success of speech as a communicative signal depends on the interlocutor's knowledge, speech has a higher utility the more that the listener partner knows. To test these predictions, we ran a mixed effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subjects and object were included in the model.
+When should we expect participants to use speech? Speech has the highest utility for words you learned during training, words you think your partner is likely to know (i.e., for higher partner knowledge conditions), when utility scheme is relatively biased toward speech (i.e., the 'Low Relative Cost' condition). To test these predictions, we ran a mixed effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subjects and object were included in the model.
 
-
-```{r speechGesture, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
-# Speaker communicative method choice as a function of exposure and the utility manipulation. Data are taken from the Double Exposure manipulation. Rates of teaching were minimal and are not shown.
-
-modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", speech = "#e8250b", gesture = "#1f11e0", both ="#54a832", label = "#e8250b", click = "#1f11e0", label_click ="#54a832")
-
-seprop <- function(props) {
-  mean_prop = mean(props)
-  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
-}
-
-###wrangling data for plots by exposure
-prop_methods_exposures <- all_data %>%
-  filter(toBeDropped != 1) %>%
-  ungroup() %>%
-  select(condition,ldf_num, partnersExposure, exposureRate,method) %>%
-  group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
-  summarise(n = n()) %>%
-  group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
-  mutate(n = n/sum(n)) %>%
-  ungroup() %>%
-  mutate(method = as.factor(method)) %>%
-  tidyr::complete(nesting(condition, ldf_num, partnersExposure), exposureRate, method, fill = list(n = 0)) %>%
-  group_by(condition, partnersExposure, method) %>%
-  summarise(mean = mean(n), se = seprop(n)) %>%
-  ungroup()
-
-
-label_data <- tibble(exposureRate = 1.25, condition = "Low Relative Cost",
-                     method = c("gesture", "speech"), mean = c(.2, .8))
-
-label_data <- label_data %>% mutate(condition = factor(condition, 
-                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE))
-
-#Exp., Plot 1., gesture speech tradeoff
-plot_prop_methods_exposures <- prop_methods_exposures %>% 
-  mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
-      partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect")),
-      condition = factor(condition, 
-                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE),
-       #  exposureRate = as.factor(exposureRate),
-         method = factor(method, levels = c("click", "label", "label_click"),
-                         labels = c("gesture", "speech", "teach")))# %>%
-  #filter(method != "label_click") 
-
-plot_prop_methods_exposures %>%
-  ggplot(aes(x=partnersExposure, y=mean, color = method, label = method,
-             group=interaction(method,condition))) +
-  facet_wrap(~ condition) +
-  #geom_point(size=1.5,position=position_dodge(.25)) +
-  geom_line(  size=.9,     
-            position=position_dodge(.25)) +
-  geom_pointrange(aes(ymax = mean + se,
-    ymin = mean - se),position=position_dodge(.25)) +
-  coord_cartesian(ylim=c(0,1)) +
-  #facet_grid(method ~ .) +
-  labs(y="Proportion of Trials", x="Exposure Rate During Training") +
-  scale_color_manual(values=c(modality.colors),  name = "Method")+
-    theme(legend.position = "none",
-        legend.key.size = unit(.8, 'lines'),
-        legend.text=element_text(size=7),
-        legend.title=element_text(size=8)) #+
-  #  geom_text(data = label_data)
-```
+Consistent with our predictions, speech seemed to largely tradeoff with gesture. Exposure rate during training was a signficant positive predictor of speaking during the game, such that participants were more likely to utlize speech for well trained (and thus well learned) objects ($\beta =$ `r label_exposureRate_beta`, $p$ `r label_exposureRate_p`). Additionally, participants were signfinatly less likely to speak in the High Relative Cost condition where speech is relatively more costly, compared with the Low Relative Cost condition ($\beta =$ `r label_condition80_beta`, $p$ `r label_condition80_p`). We also found a significant positive effect of partner's knowledge, such that particpants used speech more for partners with more knowledge of the lexicon ($\beta =$ `r label_partnersExposure_beta`, $p$ `r label_partnersExposure_p`). Unlike for gesture, there is a signifanct effect of object instance in the game (i.e., whether this is the first, second, or third trial with this target object) on the rate of speaking, such that later trials are more likely to elicit speech ($\beta =$ `r label_appearance_beta`, $p$ `r label_appearance_p`). This effect of order likely stems from a trade-off with the effects we see in teaching (described below); after a speaker teaches a word on the first or second trial, the utility of speech is much higher on subesequent trials.
 
 
 ### Emergence of Teaching.
 
 Thus far, we have focused on relatively straightforward scenarios to demonstrate that a pressure to communicate successfully in the moment can lead speakers to trade-off between gesture and speech sensibly. Next, we turn to the emergence of teaching behavior.
 
-```{r}
+```{r teaching-rates}
+# gm_teach <- glmer((method=='label_click') ~ appearance +
+#                 partnersExposure +
+#                 condition +
+#                 exposureRate +
+#                (1|ldf_num),
+#             data=all_data %>% filter(toBeDropped==0),
+#       family=binomial)
 
-gm_teach <- glmer((method=='label_click') ~ appearance +
-                partnersExposure +
-                condition +
-                exposureRate +
-               (1|ldf_num),
-            data=all_data %>% filter(toBeDropped==0),
-      family=binomial)
+gm_teach <- glmer((method == 'label_click') ~ partnersExposureNumeric * exposureRate + 
+                    partnersExposureNumeric * appearanceNumeric +
+                    condition + 
+                    (1| ldf_num) + (1|realLabel),
+            data = filtered_data,
+            family = binomial, offset = base) %>%
+  tidy() %>%
+  filter(effect == "fixed") %>%
+  select(-effect, -group) %>%
+  mutate(p.value = printp(p.value))
 
-teach_pExpPerf_beta <- round(fixef(gm_teach)["partnersExposurePerfect"], digits=2)
-teach_pExpSame_beta <- round(fixef(gm_teach)["partnersExposureSame"], digits=2)
-teach_freq2_beta <- round(fixef(gm_teach)["exposureRate2"], digits=2)
-teach_freq4_beta <- round(fixef(gm_teach)["exposureRate4"], digits=2)
-teach_cond80_beta <- round(fixef(gm_teach)["condition80_50"], digits=2)
-teach_2nd_beta <- round(fixef(gm_teach)["appearanceSecond"], digits=2)
-teach_3rd_beta <- round(fixef(gm_teach)["appearanceThird"], digits=2)
+teach_appearance_beta <- gm_teach %>%
+  filter(term == "appearanceNumeric") %>%
+  pull(estimate)
+teach_appearance_p <- gm_teach %>%
+  filter(term == "appearanceNumeric") %>%
+  pull(p.value)
 
+#exposure rate during training, continuous
+teach_exposureRate_beta <-  gm_teach %>%
+  filter(term == "exposureRate") %>%
+  pull(estimate)
+teach_exposureRate_p <-  gm_teach %>%
+  filter(term == "exposureRate") %>%
+  pull(p.value)
+
+#partner exposure manipulation, continuous
+teach_partnersExposure_beta <- gm_teach %>%
+  filter(term == "partnersExposureNumeric") %>%
+  pull(estimate)
+teach_partnersExposure_p <- gm_teach %>%
+  filter(term == "partnersExposureNumeric") %>%
+  pull(p.value)
+
+#condition, reference category is 100_30 low relative cost
+teach_condition80_beta <-  gm_teach %>%
+  filter(term == "condition80_50") %>%
+  pull(estimate)
+teach_condition80_p <-  gm_teach %>%
+  filter(term == "condition80_50") %>%
+  pull(p.value)
 ```
 
-<!-- In line with our hypotheses, a mixed effects logistic regression predicting whether or not teaching occurred on a given trial revealed that teaching rates across conditions depend on all of the same factors that predict speech and gesture (see Figure \ref{fig:exp_teach}). There was a significant positive effect of initial training on the rates of teaching, such that participants were more likely to teach words with two exposures (*B =* `r teach_freq2_beta`, *p < 0.05*) and four exposures (*B =* `r teach_freq4_beta`, *p < 0.05*), compared with words seen only once at training. There was also a significant effect of the utility manipulation such that being in the Low Relative Cost condition predicted higher rates of teaching than being in the Higher Relative Cost condition (*B =* `r teach_cond80_beta`, *p < 0.001*), a rational response considering teaching allows one to use a less costly strategy in the future and that strategy is especially superior in the Low Relative Cost condition.  -->
+When should we expect participants to teach? Teaching has the highest utility for words you learned during training, words you think your partner is unlikely to know (i.e., for lower partner knowledge conditions), when utility scheme is relatively biased toward speech (i.e., the 'Low Relative Cost' condition). To test these predictions, we ran a mixed effects logistic regression to predict whether speakers chose to teach during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subjects and object were included in the model.
 
-<!-- We found an effect of partner exposure on rates of teaching as well: participants were significantly more likely to teach a partner with no prior exposure to the language than a partner with the same amount of exposure as the speaker (*B =* `r teach_pExpSame_beta`, *p < 0.0001*) or double their exposure (*B =* `r teach_pExpPerf_beta`, *p < 0.0001*). The planned utility of teaching comes from using another, cheaper strategy (speech) on later trials, thus the expected utility of teaching should decrease when there are fewer subsequent trials for that object, predicting that teaching rates should drop dramatically across trials for a given object. Compared with the first trial for an object, speakers were significantly less likely to teach on the second trial (*B =* `r teach_2nd_beta`, *p < 0.0001*) or third trial (*B =* `r teach_3rd_beta`, *p < 0.0001*). -->
+Consistent with our predictions, rates of teaching were higher for better trained words, less knowledgeable partners, and when speech had the highest utility. Exposure rate during training was a signficant positive predictor of teaching during the game, such that participants were more likely to teach for well trained (and thus well learned) objects ($\beta =$ `r teach_exposureRate_beta`, $p$ `r teach_exposureRate_p`). While costly in the momement, teaching can be a beneifical strategy in our reference game because it subsequently allows for lower cost strategy (i.e. speaking), thus when speaking has a lower cost, particpants should be more incentivized to teach. Indded, participants were signfinatly less likely to teach in the High Relative Cost condition where speech is relatively more costly, compared with the Low Relative Cost condition ($\beta =$ `r teach_condition80_beta`, $p$ `r teach_condition80_p`). We also found a significant negative effect of partner's knowledge, such that particpants taught more with partners that had less knowledge of the lexicon ($\beta =$ `r teach_partnersExposure_beta`, $p$ `r teach_partnersExposure_p`). There was also a signifanct effect of object instance in the game (i.e., whether this is the first, second, or third trial with this target object) on the rate of teaeching. The planned utility of teaching comes from using another, cheaper strategy (speech) on later trials, thus the expected utility of teaching should decrease when there are fewer subsequent trials for that object, predicting that teaching rates should drop dramatically across trials for a given object. Participants were significantly less likely to teach on the later appearances of the target object ($\beta =$ `r teach_appearance_beta`, $p$ `r teach_appearance_p`). 
 
 ## Discussion 
 
