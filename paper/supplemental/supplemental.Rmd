@@ -1,0 +1,184 @@
+---
+title: "\\LARGE A communicative framework for early word learning"
+author: "\\large \\emph{XXXXX and XXXXX}"
+header-includes:
+  - \usepackage[section]{placeins}
+  - \usepackage{float}
+  - \floatplacement{figure}{h!} # make every figure with caption = t
+  - \raggedbottom
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    number_sections: true
+documentclass: article
+bibliography: 
+fontsize: 11pt
+geometry: margin=1in
+csl: apa6.csl
+---
+
+```{r load-libraries, message=FALSE, warning=FALSE, include = F}
+library(readxl)
+library(janitor)
+library(here)
+library(knitr)
+library(papaja)
+library(kableExtra)
+library(tidyverse)
+library(tidyboot)
+library(feather)
+library(lme4)
+library(lmerTest)
+library(broom)
+library(broom.mixed)
+library(boot)
+
+opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = TRUE, 
+               tidy = FALSE, echo = FALSE)
+
+theme_set(theme_classic(base_size = 12))
+
+options(digits=2)
+```
+
+\renewcommand\thesection{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}  
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\section{Corpus Details}
+
+\section{Model Details}
+
+```{r}
+all_data <- read_csv(here("data/1.30_turk_exp.csv"))
+
+filtered_data <- all_data %>%
+  filter(toBeDropped != 1) %>%
+  mutate(base = logit(1/3),
+         appearanceNumeric = as.numeric(as.factor(appearance)),
+         partnersExposure = factor(partnersExposure, 
+                                   levels = c("None", "Same", "Perfect")),
+         partnersExposureNumeric = as.numeric(partnersExposure) - 1)
+```
+
+For readability, the main text includes only the key effects for each statistical model rather than a full specification. We include those here. Each model included at least a random intercept for each subject and item. Models were estimated using version XXXX of the lme4 package (Bates, Mächler, Bolker, & Walker, 2015).
+
+\subsection{Learning}
+
+To first confirm that we sucessfully manipulated participants' learning, we asked whether items with more exposure during training were better learned at pretest. To do this we fit a logitistic mixed-effects model to analyze learning at baseline (i.e. prior to gameplay). We see the predicted signficant effect of exposure rate on learning. The full results of this model are presented in Table \ref{tab:learningTable}. 
+
+Additionally, we can test our critical between-subjects manipulations to ensure that learning of the lexicon does not differ signficantly at pretest. Neither utility condition or partner's exposure signficantly predicts performance at pretest (full results in Table \ref{tab:learningTable}). This provides an important sanity check that participants in each condition learned the lexicon similarly.
+
+```{r learning}
+learningByExposure <- filtered_data %>% 
+  group_by(ldf_num, condition, partnersExposureNumeric, realLabel, exposureRate) %>%
+  summarize(testCorrect = first(testCorrect))
+
+gm_known <- glmer(testCorrect ~ exposureRate + condition + partnersExposureNumeric + (exposureRate|ldf_num) + 
+                    (1|realLabel),
+            data = learningByExposure,
+      family=binomial) %>%
+  tidy() %>%
+  filter(effect == "fixed") %>%
+  select(-effect, -group) %>%
+  mutate(p.value = printp(p.value)) %>%
+  rename(`$z$-value` = statistic, `$p$-value` = p.value) %>%
+  mutate(term = c("intercept", "exposure rate", "utility condition", "partner's exposure"))
+```
+
+```{r learningTable}
+apa_table(gm_known, format.args = list(na_string = ""), font_size = "footnotesize",
+            caption = "Pariticpant learning at baseline, specified as \\texttt{testCorrect $\\sim$ exposureRate + condition + (exposureRate | subj) + (1 | realLabel)}.", escape = FALSE, placement = "h")
+```
+
+\subsection{Communicative Strategy}
+
+Our key analyses concerned participants choice of communicative strategy. In each trial, participants were able to choose one of 3 communicative strategies: gesture, speech, or teaching. We expected flexibile trade-off between the use of each strategy given their relative utilities, participant's knowledge of the lexicon, and the listener's knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logisitc mixed effects models for each behavior, reported below. It should be noted that these three behaviors are mutually exhaustive.
+
+\subsubsection{Gesture}
+
+Looking first at gesture, we ran a mixed effects logistic regression to predict whether speakers chose to gesture during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model.
+
+```{r click, results="asis", cache = T}
+gm_click <- glmer((method == 'click') ~  exposureRate * partnersExposureNumeric + 
+                    partnersExposureNumeric * appearanceNumeric +
+                    condition + 
+                    (1| ldf_num) + (1|realLabel),
+            data = filtered_data,
+            family = binomial, offset = base) %>%
+  tidy() %>%
+  filter(effect == "fixed") %>%
+  select(-effect, -group) %>%
+  mutate(p.value = printp(p.value)) %>%
+  rename(`$z$-value` = statistic, `$p$-value` = p.value) %>%
+  mutate(term = c("intercept", "exposure rate", "partner's exposure", "instance",
+                  "high relative cost condition", "partner's exposure * exposure rate",
+                  "partner's exposure * instance"))
+```
+
+```{r clickTable}
+apa_table(gm_click, format.args = list(na_string = ""), font_size = "footnotesize",
+            caption = "Propensity to use gesture as a strategy, specified as \\texttt{gesture $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE, placement = "h")
+```
+
+
+\subsubsection{Speech}
+
+
+```{r label, results="asis", cache = T}
+gm_label <- glmer((method == 'label') ~ exposureRate * partnersExposureNumeric + 
+                    partnersExposureNumeric * appearanceNumeric +
+                    condition + 
+                    (1| ldf_num) + (1|realLabel),
+            data = filtered_data,
+            family = binomial, offset = base) %>%
+  tidy() %>%
+  filter(effect == "fixed") %>%
+  select(-effect, -group) %>%
+  mutate(p.value = printp(p.value)) %>%
+  rename(`$z$-value` = statistic, `$p$-value` = p.value) %>%
+  mutate(term = c("intercept", "exposure rate", "partner's exposure", "instance",
+                  "high relative cost condition", "partner's exposure * exposure rate",
+                  "partner's exposure * instance"))
+
+apa_table(gm_label, format.args = list(na_string = ""), font_size = "footnotesize",
+            caption = "Propensity to use labeling as a strategy, specified as \\texttt{label $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
+```
+
+
+\subsubsection{Teaching}
+
+
+```{r teach, results="asis"}
+gm_teach <- glmer((method == 'label_click') ~ exposureRate * partnersExposureNumeric  + 
+                    partnersExposureNumeric * appearanceNumeric +
+                    condition + 
+                    (1| ldf_num) + (1|realLabel),
+            data = filtered_data,
+            family = binomial, offset = base) %>%
+  tidy() %>%
+  filter(effect == "fixed") %>%
+  select(-effect, -group) %>%
+  mutate(p.value = printp(p.value)) %>%
+  rename(`$z$-value` = statistic, `$p$-value` = p.value) %>%
+  mutate(term = case_when(term == "condition80_50" ~ "High Relative Cost",
+                          TRUE ~ term)) %>%
+  mutate(term = c("intercept", "exposure rate", "partner's exposure", "instance",
+                  "high relative cost condition", "partner's exposure * exposure rate",
+                  "partner's exposure * instance"))
+
+apa_table(gm_teach, format.args = list(na_string = ""), font_size = "footnotesize",
+            caption = "Propensity to use teaching as a strategy, specified as \\texttt{teach $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
+```
+
+\newpage
+
+\section*{References}
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+
+\noindent
+
+<div id = "refs"></div>
+\endgroup
