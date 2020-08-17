@@ -905,11 +905,9 @@ We see this account as building on established, crucial statistical learning ski
 
 A full account that explains variability in modification across aspects of language will rely on a fully specified model of optimal communication. Such a model will allow us to determine both which structures are predictably unmodified, and which structures must be modified for other reasons. Nonetheless, this work is an important first step in validating the hypothesis that language input that is structured to support language learning could arise from a single unifying goal: The desire to communicate effectively.
 
-
-
 # Conclusion
 
-Building of early functional account of langauge learning (e.g., Brown, 1977), our account emphasizes the importance of communicative success in shaping language input and language learning. We have developed an intitial formal framework for jointly considering parent productions and child language learning within the same system. We showed that such an account helps to explain parents' naturalistic communicative behavior and participant behavior in an iterated reference game. Formalized model predictions explain these behaviors without an explicit teaching goal, and show demonstrable effects on learning in model simulations. In sum, this work 
+Building off of early functional account of langauge learning (e.g., Brown, 1977), our account emphasizes the importance of communicative success in shaping language input and language learning. We have developed an intitial formal framework for jointly considering parent productions and child language learning within the same system. We showed that such an account helps to explain parents' naturalistic communicative behavior and participant behavior in an iterated reference game. Formalized model predictions explain these behaviors without an explicit teaching goal, and show demonstrable effects on learning in model simulations. In sum, this work 
 
 # Acknowledgement
 
