@@ -1,0 +1,144 @@
+---
+title             : "A communicative framework for early word learning"
+shorttitle        : "Communicative Word Learning"
+
+author: 
+  - name          : "Benjamin C. Morris"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Department of Psychology, University of Chicago, 5848 S University Ave, Chicago, IL 60637"
+    email         : "benmorris@uchicago.edu"
+  - name          : "Daniel Yurovsky"
+    affiliation   : "1,2"
+    corresponding : no    # Define only one corresponding author
+
+affiliation:
+  - id            : "1"
+    institution   : "University of Chicago"
+  - id            : "2"
+    institution   : "Carnegie Mellon University"
+
+author_note: >
+
+abstract: >
+  Children do not learn language from passive observation of the world, but from interaction with caregivers who want to communicate with them. These communicative exchanges are structured at multiple levels in ways that support support language learning. We argue this pedagogically supportive structure can result from pressure to communicate successfully with a linguistically immature partner. We first characterize one kind of pedagogically supportive structure in a corpus analysis: caregivers provide more information-rich referential communication, using both gesture and speech to refer to a single object, when that object is rare and when their child is young. In an iterated reference game experiment on Mechanical Turk (n = 480), we show how this behavior can arise from pressure to communicate successfully with a less knowledgeable partner. Then, we show that speaker behavior in our experiment can be explained by a rational planning model, without any explicit teaching goal. Lastly, in a series of simulations, we explore the language learning consequences of having a communicatively-motivated caregiver. In sum, this perspective offers the first steps toward a unifying, formal account of both the child’s learning and the parents’ production: Both are driven by a pressure to communicate successfully. 
+  
+keywords          : "language learning; communication; computational modeling; child-directed speech"
+wordcount         : "X"
+
+bibliography      : ["reference-game.bib"]
+
+header-includes:
+  - \usepackage{xcolor}
+
+figsintext        : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r load-packages, warning = F}
+library(papaja)
+library(feather)
+library(here)
+library(lme4)
+library(lmerTest)
+library(png)
+library(boot)
+library(broom)
+library(broom.mixed)
+library(ggthemes)
+library(tidyverse)
+library(tidyboot)
+
+knitr::opts_chunk$set(fig.pos = 'tb', echo = FALSE, cache = TRUE, 
+                      warning = FALSE, message = FALSE, 
+                      sanitize = TRUE, fig.path='figs/', fig.width = 3,
+                      fig.height = 3)
+
+theme_set(theme_few(base_size = 12))
+options(digits = 3)
+set.seed(42)
+```
+
+\newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]}
+
+One of the most striking aspects of children’s language learning is just how quickly they master the complex system of their natural language [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency in a way that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
+
+Distributional learning presents a unifying account of early language learning: Infants come to language acquisition with a powerful ability to learn the latent structure of language from the statistical properties of speech in their ambient environment [@saffran2003]. Distributional learning mechanisms can be seen in accounts across language including phonemic discrminitation (Maye, Werker, & Gerken, 2002), word segmentation (Saffran, 2003), learning the meanings of both nouns (Smith & Yu, 2008) and verbs (Scott & Fisher, 2012), learning the meanings of words at multiple semantic levels (Xu & Tenenbaum, 2007), and perhaps even the grammatical categories to which a word belongs (Mintz, 2003). A number of experiments clearly demonstrate both the early availability of distributional learning mechanisms and their potential utility across these diverse language phenomena (DeCasper & Fifer, 1980; DeCasper & Spence, 1986; Gomez & Gerken, 1999; Graf Estes, Evans, Alibali, & Saffran, 2007; Maye, Werker, & Gerken, 2002; Saffran, Newport, & Aslin, 1996; Smith & Yu, 2008; Xu & Tenenbaum, 2007). 
+
+However, there is reason to be suspicious about just how precocious statistical learning abilities are in early development. Although these abilities are available early, they are highly constrained by limits on other developing cognitive capacities. For example, infants’ ability to track the co-occurrence information connecting words to their referents is constrained significantly by their developing memory and attention systems (Smith & Yu, 2013; Vlach & Johnson, 2013). Computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics (e.g., Vogt, 2012). Models of cross-situational learning have demonstrated that the Zipfian distribution of word frequencies and word meanings yields a learning problem that cross-situational learning alone cannot explain over a reasonable time frame (Vogt, 2012). Further, a great deal of empirical work demonstrates that cross-situational learning even in adults drops off rapidly when participants are asked to track more referents, and also when the number of intervening trials is increased (e.g., Yurovsky & Frank, 2015). Thus, precocious unsupervised statistical learning appears to fall short of a complete explanation for rapid early language learning.
+
+Even relatively constrained statistical learning could be rescued, however, if caregivers structured their language in a way that simplified the learning problem and promoted learning. For example, in phoneme learning, infant-directed speech provides examples that seem to facilitate the acquisition of phonemic categories (Eaves et al., 2016). In word segmentation tasks, infant-directed speech facilitates infant learning more than matched adult-directed speech (Thiessen, Hill, & Saffran, 2005). In word learning scenarios, caregivers produce more speech during episodes of joint attention with young infants, which uniquely predicts later vocabulary (Tomasello & Farrar, 1986).  Child-directed speech even seems to support learning at multiple levels in parallel-- e.g., simultaneous speech segmentation and word learning (Yurovsky et al., 2012). For each of these language problems faced by the developing learner, caregiver speech exhibits structure that seems uniquely beneficial for learning. 
+
+Under distributional learning accounts, the existence of this kind of structure is a theory-external feature of the world that does not have an independently motivated explanation. Such accounts view the generative process of structure in the language environment as a problem separate from language learning. However, across a number of language phenomena, the language environment is not merely supportive, but seems calibrated to children’s changing learning mechanisms. For example, across development, caregivers engage in more multimodal naming of novel objects than familiar objects, and rely on this synchrony most with young children (Gogate, Bahrick, & Watson, 2000). The role of synchrony in child-directed speech parallels infant learning mechanisms: young infants appear to rely more on synchrony as a cue for word learning than older infants, and language input mirrors this developmental shift (Gogate, Bahrick, & Watson, 2000). Beyond age-related changes, caregiver speech may also support learning through more local calibration to a child’s knowledge; caregivers have been shown to provide more language to refer to referents that are unknown to their child, and show sensitivity to the knowledge their child displays during a referential communication game (Leung et al., 2019).  The calibration of parents production to the child’s learning suggests a co-evolution such that these processes should not be considered in isolation.  
+
+What then gives rise to structure in early language input that mirrors child learning mechanisms? Because of widespread agreement that parental speech is not usually motivated by explicit pedagogical goals (Newport et al., 1977), the calibration of speech to learning mechanisms seems a happy accident; parental speech just happens to be calibrated to children’s learning needs. Indeed, if parental speech was pedagogically-motivated, we would have a framework for deriving predictions and expectations (e.g., Shafto, Goodman, & Griffiths, 2014). Models of optimal teaching have been successfully generalized to phenomena as broad as phoneme discrimination (Eaves et al., 2016) to active learning (Yang et al., 2019). These models take the goal to be to teach some concept to a learner and attempt to optimize that learner’s outcomes. While these optimal pedagogy accounts have proven impressively useful, such models are theoretically unsuited to explaining parent language production where there is widespread agreement that caregiver goals are not pedagogical (e.g., Newport et al., 1977).
+
+Instead, the recent outpouring of work exploring optimal communication (the Rational Speech Act model, see Frank & Goodman, 2012) provides another framework for understanding parent production. Under optimal communication accounts, speakers and listeners engage in recursive reasoning to produce and interpret speech cues by making inferences over one another’s intentions (Frank & Goodman, 2012). These accounts have made room for advances in our understanding of a range of language phenomena previously uncaptured by formal modeling, notably a range of pragmatic inferences (e.g., Frank & Goodman, 2012; other RSA papers). In this work, we consider the communicative structure that emerges from an optimal communication system across a series of interactions where one partner has immature linguistic knowledge. This perspective offers the first steps toward a unifying account of both the child’s learning and the parents’ production: Both are driven by a pressure to communicate successfully [@brown1977]. 
+
+Early, influential functionalist accounts of language learning focused on the importance of communicative goals (e.g., Brown, 1977). Our goal in this work is to formalize the intuitions in these accounts in a computational model, and to test this model against experimental data. We take as the caregiver’s goal the desire to communicate with the child, not about language itself, but instead about the world in front of them. To succeed, the caregiver must produce the kinds of communicative signals that the child can understand and respond contingently, potentially leading caregivers to tune the complexity of their speech as a byproduct of in-the-moment pressure to communicate successfully (Yurovsky, 2017).
+
+To examine this hypothesis, we focus on ostensive labeling (i.e. using both gesture and speech in the same referential expression) as a case-study phenomenon of information-rich structure in the language learning environment.  We first analyze naturalistic parent communicative behavior in a longitudinal corpus of parent-child interaction in the home [@goldin-meadow2014]. We investigate the extent to which parents tune their ostensive labeling across their child’s development to align to their child’s developing linguistic knowledge (Yurovsky, Doyle, & Frank, 2016). 
+
+We then experimentally induce this form of structured language input in a simple model system: an iterated reference game in which two players earn points for communicating successfully with each other. Modeled after our corpus data, participants are asked to make choices about which communicative strategy to use (akin to modality choice). In an experiment on Mechanical Turk using this model system, we show that pedagogically-supportive input can arise from a pressure to communicate. We then show that participants’ behavior in our game conforms to a model of communication as rational planning: People seek to maximize their communicative success while minimizing their communicative cost over expected future interactions. Lastly, we demonstrate potential benefits for the learner through a series of simulations to show that communicative pressure facilitates learning compared with various distributional learning accounts. 
+
+```{r child = "sections/corpus_analysis.Rmd"}
+```
+
+```{r child = "sections/experiment.Rmd"}
+```
+
+```{r child = "sections/model.Rmd"}
+```
+
+```{r child = "sections/learning_simulation.Rmd"}
+```
+
+# General Discussion
+
+Across naturalistic corpus data, experimental data, and model predictions, we see evidence that pressure to communicate successfully with a linguistically immature partner could fundamentally structure parent production. In our experiment, we showed that people tune their communicative choices to varying cost and reward structures, and also critically to their partner’s linguistic knowledge–providing richer cues when partners are unlikely to know the language and many more rounds remain. These data are consistent with the patterns shown in our corpus analysis of parent referential communication and demonstrate that such pedagogically supportive input could arise from a motivation to maximize communicative success while minimizing communicative cost– no additional motivation to teach is necessary.  In simulation, we demonstrate that such structure could have profound implications for child language learning, simplifying the learning problem posed by most distributional accounts of language learning.
+
+Accounts of language learning often aim to explain its striking speed in light of the sheer complexity of the language learning problem itself. Many such accounts argue that simple (associative) learning mechanisms alone seem insufficient to explain the rapid growth of language skills and appeal instead to additional explanatory factors, such as the so-called language acquisition device, working memory limitations, word learning biases, etc. (e.g., Chomsky, 1965; Goldowsky & Newport, 1993; Markman, 1990). While some have argued for the simplifying role of language distributions (e.g., McMurray, 2007), these accounts largely focus on learner-internal explanations. For example, Elman (1993) simulates language learning under two possible explanations to intractability of the language learning problem: one environmental, and one internal. He first demonstrates that learning is significantly improved if the language input data is given incrementally, rather than all-at-once (Elman, 1993). He then demonstrates that similar benefits can arise from learning under limited working memory, consistent with the “less-is-more” proposal (Elman, 1993; Goldowsky & Newport, 1993). Elman dismisses the first account arguing that ordered input is implausible, while shifts in cognitive maturation are well-documented in the learner (Elman, 1993); however, our account’s emphasis on changing calibration to such learning mechanisms suggests the role of ordered or incremental input from the environment may be crucial. 
+
+This account is consonant with work in other areas of development, such as recent demonstrations that the infant’s visual learning environment has surprising consistency and incrementality, which could be a powerful tool for visual learning. Notably, research using head mounted cameras has found that infant’s visual perspective privileges certain scenes and that these scenes change across development (Fausey, Jayaraman, & Smith, 2016). In early infancy, the child’s egocentric visual environment is dominated by faces, but shifts across infancy to become more hand and hand-object oriented in later infancy (Fausey et al., 2016). This observed shift in environmental statistics mirrors learning problems solved by infants at those ages, namely face recognition and object-related goal attribution respectively (Fausey et al., 2016). These changing environmental statistics have clear implications for learning and demonstrate that the environment itself is a key element to be captured by formal efforts to evaluate statistical learning (Smith et al., 2018). Frameworks of visual learning must incorporate both the relevant learning abilities and this motivated, contingent structure in the environment (Smith et al., 2018).
+
+By analogy, the work we have presented here aims to draw a similar argument for the language environment, which is also demonstrably beneficial for learning and changes across development. In the case of language, the contingencies between learner and environment are even clearer than visual learning. Functional pressures to communicate and be understood make successful caregiver speech highly dependent on the learner. Any structure in the language environment that is continually suited to changing learning mechanisms must come in large part from caregivers themselves. Thus, a comprehensive account of language learning that can successfully grapple with the infant curriculum (Smith et al., 2018) must explain parent production, as well as learning itself. In this work, we have taken first steps toward providing such an account.
+
+Explaining parental modification is a necessary condition for building a complete theory of language learning, but modification is certainly not a sufficient condition for language learning. No matter how callibrated the language input, non-human primates are unable to acquire language. Indeed, parental modification need not even be a necessary condition for language learning. Young children are able to learn novel words from (unmodified) overheard speech between adults (Foushee & Xu, 2016), although there is reason to think that overheard sources may have limited impact on language learning broadly (e.g., Schniedman & Goldin-Meadow, 2012).  Our argument is that the rate and ultimate attainment of language learners will vary substantially as a function of parental modification, and that describing the cause of this variability is a necessary feature of models of language learning.
+
+### Generalizability and Limitations
+
+Our account aims to think about parent production and child learning in the same system, putting these processes into explicit dialogue. While we have focused on ostensive labeling as a case-study phenomenon, our account should reasonably extend to the changing structure found in other aspects of child-directed speech-- though see below for important limitations to this extension. Some such phenomena will be easily accounted for: aspects of language that shape communicative efficiency should shift in predictable patterns across development.  
+
+While these language phenomena can be captured by our proposed framework, incorporating them will likely require altering aspects of our account and decisions about which alterations are most appropriate. For example, the exaggerated pitch contours seen in infant-directed speech could be explained by our account if we expand the definition of communicative success to include the goal of maintaining attention. Alternatively, one could likely accomplish the same goal by altering the cost structure to penalize loss of engagement. Thus, while this account should generalize to other modifications found in child-directed speech, such generalizations will likely require non-trivial alterations to the extant structure of the framework. 
+
+Of course, not all aspects of language should be calibrated to the child’s language development. Our account also provides an initial framework for explaining aspects of communication that would not be modified in child-directed speech: namely, aspects of communication that minimally effect communicative efficiency. In other words, communication goals and learning goals are not always aligned. For example, children frequently overregularize past and plural forms, producing incorrect forms such as "runn-ed" (rather than the irregular verb "ran") or "foots" (rather than the irregular plural "feet") (citation on overregularization). Mastering the proper tense endings (i.e. the learning goal) might be aided by feedback from parent; however, adults rarely provide corrective feedback for these errors (citation for lack of correction), perhaps because incorrect grammatical forms are often sufficient to allow for successful communication (i.e. the communicative goal). The degree of alignment between communication and learning goals should predict the extent to which a linguistic phenomenon is modified in child-directed speech. Fully establishing the degree to which modification is expected for a given language phenomena will likely require working through a number of limitations in the generalizability of the framework as it stands.
+
+Some aspects of parent production are likely entirely unrepresented in our framework, such as aspects of production driven by speaker-side constraints. Furthermore, our account is formulated primarily around concrete noun learning and future work must address its viability in other language learning problems. We chose to focus on ostensive labeling as a case-study phenomenon because it is an undeniably information-rich cue for young language learners, however ostensive labeling varies substantially across socio-economic status and cross-linguistically (citation for SES + lang ostensive labeling). This is to be expected to the extent that parent-child interaction is driven by different goals (or goals given different weights) across these populations-- variability in goals could give rise to variability in the degree of modification. Nonetheless, the generalizability of our account across populations remains unknown. Indeed, child-directed speech itself varies cross-linguistically, both in its features (citation) and quantity (citation). There is some evidence that CDS predicts learning even in cultures where CDS is qualitatively different and less prevalent than in American samples [@schneidman2012].  Future work is needed to establish the generalizability of our account beyond the western samples studied here.
+
+We see this account as building on established, crucial statistical learning skills-- distributional information writ large and (unmodified) language data from overheard speech are undoubtedly helpful for some learning problems (e.g., phoneme learning). There is likely large variability in the extent to which statistical learning skills drive the learning for a given learning problem. The current framework is limited by its inability to account for such differences across learning problems, which could derive from domain or cultural differences. Understanding generalizability of this sort and the limits of statistical learning will likely require a full account spanning both parent production and child learning. 
+
+A full account that explains variability in modification across aspects of language will rely on a fully specified model of optimal communication. Such a model will allow us to determine both which structures are predictably unmodified, and which structures must be modified for other reasons. Nonetheless, this work is an important first step in validating the hypothesis that language input that is structured to support language learning could arise from a single unifying goal: The desire to communicate effectively.
+
+
+# Conclusion
+
+Building of early functional account of language learning [e.g., @brown1977], our account emphasizes the importance of communicative success in shaping language input and language learning. We have developed an initial formal framework for jointly considering parent productions and child language learning within the same system. We showed that such an account helps to explain parents' naturalistic communicative behavior and participant behavior in an iterated reference game. Formalized model predictions explain these behaviors without an explicit teaching goal, and show demonstrable effects on learning in model simulations. In sum, this work 
+
+# Acknowledgement
+
+The authors are grateful to XX and YY for their thoughtful feedback on this manuscript. The authors are grateful to Madeline Meyers for her work coding referential communication in the corpus data. This research was supported by a James S McDonnell Foundation Scholars Award to DY.
+
+\newpage
+
+# References
+
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
