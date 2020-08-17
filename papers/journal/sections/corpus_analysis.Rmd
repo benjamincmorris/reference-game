@@ -8,7 +8,6 @@ modality_data <- corpus_data %>%
   summarise(n = n()) %>%
   spread(modality, n, fill = 0)
 
-
 plot_data <- modality_data %>%
   group_by(person, age, subj, freq, referent) %>%
   gather(modality, n, both, gesture, speech) %>%
@@ -23,9 +22,9 @@ teaching_ribbons <- scales::seq_gradient_pal("#cbffb7", "#124200", "Lab")(seq(0,
 teaching_ribbons[[6]] <- "#000000"
 ```
 
-We first investigate parent referential communication in a longitudinal corpus of parent-child interaction. We analyze the production of multi-modal cues (i.e. using both gesture and speech) to refer to the same object, in the same instance. While many aspects of child-directed speech support learning, multi-modal cues (e.g., speaking while pointing or looking) are particularly powerful sources of data for young children [e.g., @baldwin2000; @gogate2000]. We take multi-modal cues to be a case-study pheonmenon of pedagogically supportive language input. While our account should hold for other language phenomena, by focusing on one phenomenon we attempt to specify the dynamics involved in the production of such input.
+We first investigate parent referential communication in a longitudinal corpus of parent-child interaction. We analyze the production of multi-modal cues (i.e. using both gesture and speech) to refer to the same object, in the same instance. While many aspects of child-directed speech support learning, multi-modal cues (e.g., speaking while pointing or looking) are particularly powerful sources of data for young children [e.g., @baldwin2000; @gogate2000]. We take multi-modal cues to be a case-study phenomenon of pedagogically supportive language input. While our account should hold for other language phenomena, by focusing on one phenomenon we attempt to specify the dynamics involved in the production of such input.
 
-In this analysis of naturalistic communication, we examine the prevelance of multi-modal cues in children's language environment, to demonstrate that it is a viable, pedagogically supportive form of input. Beyond being a prevelant form of communication, multi-modal reference may be especially pedagogically supportive if usage patterns reflect adaptive linguistic tuning, with caregivers using this information-rich cue more for young children and infrequent objects. The amount of multi-modal reference should be sensitive to the child’s age, such that caregivers will be more likely to provide richer communicative information when their child is younger (and has less linguistic knowledge) than as she gets older [@yurovsky2016]. 
+In this analysis of naturalistic communication, we examine the prevalence of multi-modal cues in children's language environment, to demonstrate that it is a viable, pedagogically supportive form of input. Beyond being a prevalent form of communication, multi-modal reference may be especially pedagogically supportive if usage patterns reflect adaptive linguistic tuning, with caregivers using this information-rich cue more for young children and infrequent objects. The amount of multi-modal reference should be sensitive to the child’s age, such that caregivers will be more likely to provide richer communicative information when their child is younger (and has less linguistic knowledge) than as she gets older [@yurovsky2016]. 
 
 
 ## Methods
@@ -153,4 +152,4 @@ plot_data %>%
 
 ## Discussion
 
-Caregivers are not indiscriminate in their use of multi-modal reference; in these data, they provided more of this support when their child was younger and when discussing less familiar objects. These longitudinal corpus findings are consistent with an account of parental alignment: parents are sensitive to their child’s linguistic knowledge and adjust their communication accordingly (Yurovsky et al., 2016). Ostensive labeling is perhaps the most explicit form of pedagogical support, so we chose to focus on it for our first case study. We argue that these data could be explained by a simple, potentially-selfish pressure: to communicate successfully. The influence of communicative pressure is difficult to draw in naturalistic data, so we developed a paradigm to try to experimentally induce richly-structured, aligned input from a pressure to communicate in the moment.
+Caregivers are not indiscriminate in their use of multi-modal reference; in these data, they provided more of this support when their child was younger and when discussing less familiar objects. These longitudinal corpus findings are consistent with an account of parental alignment: parents are sensitive to their child’s linguistic knowledge and adjust their communication accordingly [@yurovsky2016]. Ostensive labeling is perhaps the most explicit form of pedagogical support, so we chose to focus on it for our first case study. We argue that these data could be explained by a simple, potentially-selfish pressure: to communicate successfully. The influence of communicative pressure is difficult to draw in naturalistic data, so we developed a paradigm to try to experimentally induce richly-structured, aligned input from a pressure to communicate in the moment.
