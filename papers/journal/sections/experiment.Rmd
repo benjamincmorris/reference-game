@@ -191,6 +191,7 @@ label_data <- label_data %>% mutate(condition = factor(condition,
 
 #Exp. Plot 1., modality tradeoff (condition x partnerExp x utility)
 plot_prop_methods_exposures <- prop_methods_exposures %>% 
+  ungroup() %>%
   mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
       partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect")),
       condition = factor(condition, 
@@ -204,13 +205,11 @@ plot_prop_methods_exposures %>%
   ggplot(aes(x=partnersExposure, y=empirical_stat, color = method, label = method,
              group=interaction(method,condition))) +
   facet_wrap(~ condition) +
-  #geom_point(size=1.5,position=position_dodge(.25)) +
   geom_line(  size=.9,     
             position=position_dodge(.25)) +
   geom_pointrange(aes(ymax = ci_upper,
     ymin = ci_lower),position=position_dodge(.25)) +
   coord_cartesian(ylim=c(0,1)) +
-  #facet_grid(method ~ .) +
   labs(y="Proportion of Trials", x="Exposure Rate During Training") +
   scale_color_manual(values=c(modality.colors),  name = "Method")+
     theme(legend.position = "none",
@@ -400,7 +399,8 @@ prop_methods_teaching <- all_data %>%
   mutate(method = as.factor(method)) %>%
   tidyr::complete(nesting(condition, ldf_num, partnersExposure), appearance, method, fill = list(n = 0)) %>%
   group_by(condition, partnersExposure, appearance, method) %>%
-  summarise(mean = mean(n), se = seprop(n)) 
+  tidyboot_mean(n)
+  # summarise(mean = mean(n), se = seprop(n)) 
 
 plot_prop_methods_teaching <- prop_methods_teaching %>%
   ungroup() %>%
@@ -423,8 +423,7 @@ plot_prop_methods_teaching %>%
   geom_point(aes(y=mean), size=2.25, position=position_dodge(.25)) +
   geom_line(aes(x=appearance, y=mean, group=partnersExposure, color=partnersExposure), 
             size=1, position=position_dodge(.25)) +
-  geom_linerange(aes(ymax = mean + se,
-    ymin = mean - se, color=partnersExposure), position=position_dodge(.25)) +
+  geom_linerange(aes(ymax = ci_upper, ymin = ci_lower, color=partnersExposure), position=position_dodge(.25)) +
   facet_grid(. ~ condition) +
   labs(y="Proportion of Teaching Trials", x="Object Instance during Game") +
   coord_cartesian(ylim=c(0,.4)) +
