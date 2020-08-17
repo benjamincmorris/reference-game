@@ -55,18 +55,36 @@ library(broom.mixed)
 library(ggthemes)
 library(tidyverse)
 library(tidyboot)
+library(glue)
 
 knitr::opts_chunk$set(fig.pos = 'tb', echo = FALSE, cache = TRUE, 
                       warning = FALSE, message = FALSE, 
                       sanitize = TRUE, fig.path='figs/', fig.width = 3,
                       fig.height = 3)
 
-theme_set(theme_few(base_size = 12))
-options(digits = 3)
+theme_set(theme_few(base_size = 12) + theme(legend.position = "none")) 
+options(digits = 3, dplyr.summarise.inform = FALSE)
 set.seed(42)
 ```
 
 \newcommand{\E}[1]{\mathbb{E}\left[ #1 \right]}
+
+
+```{r make-text-vars}
+make_text_vars <- function(df, term_name, term_filter = NULL) {
+  if(!is.null(term_filter)) {
+    filtered_df <- df %>%
+      filter(term == term_filter) 
+  } else{
+    filtered_df <- df
+  }
+    
+  walk(c("estimate", "statistic", "p.value"), 
+      ~assign(glue("{term_name}_{.x}"), 
+              filtered_df %>% pull(!!.x), 
+         envir = globalenv()))
+}
+```
 
 One of the most striking aspects of children’s language learning is just how quickly they master the complex system of their natural language [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency in a way that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
 
