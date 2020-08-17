@@ -66,9 +66,9 @@ options(digits = 3)
 set.seed(42)
 ```
 
-One of the most striking aspects of children’s language learning is just how quickly they master the complex system of their natural language (Bloom, 2000). In just a few short years, children go from complete ignorance to conversational fluency in a way that is the envy of second-language learners attempting the same feat later in life (Newport, 1990). What accounts for this remarkable transition?
+One of the most striking aspects of children’s language learning is just how quickly they master the complex system of their natural language [@bloom2000]. In just a few short years, children go from complete ignorance to conversational fluency in a way that is the envy of second-language learners attempting the same feat later in life [@newport1990]. What accounts for this remarkable transition?
 
-Distributional learning presents a unifying account of early language learning: Infants come to language acquisition with a powerful ability to learn the latent structure of language from the statistical properties of speech in their ambient environment (Saffran, 2003). Distributional learning mechanisms can be seen in accounts across language including phonemic discrminitation (Maye, Werker, & Gerken, 2002), word segmentation (Saffran, 2003), learning the meanings of both nouns (Smith & Yu, 2008) and verbs (Scott & Fisher, 2012), learning the meanings of words at multiple semantic levels (Xu & Tenenbaum, 2007), and perhaps even the grammatical categories to which a word belongs (Mintz, 2003). A number of experiments clearly demonstrate both the early availability of distributional learning mechanisms and their potential utility across these diverse language phenomena (DeCasper & Fifer, 1980; DeCasper & Spence, 1986; Gomez & Gerken, 1999; Graf Estes, Evans, Alibali, & Saffran, 2007; Maye, Werker, & Gerken, 2002; Saffran, Newport, & Aslin, 1996; Smith & Yu, 2008; Xu & Tenenbaum, 2007). 
+Distributional learning presents a unifying account of early language learning: Infants come to language acquisition with a powerful ability to learn the latent structure of language from the statistical properties of speech in their ambient environment [@saffran2003]. Distributional learning mechanisms can be seen in accounts across language including phonemic discrminitation (Maye, Werker, & Gerken, 2002), word segmentation (Saffran, 2003), learning the meanings of both nouns (Smith & Yu, 2008) and verbs (Scott & Fisher, 2012), learning the meanings of words at multiple semantic levels (Xu & Tenenbaum, 2007), and perhaps even the grammatical categories to which a word belongs (Mintz, 2003). A number of experiments clearly demonstrate both the early availability of distributional learning mechanisms and their potential utility across these diverse language phenomena (DeCasper & Fifer, 1980; DeCasper & Spence, 1986; Gomez & Gerken, 1999; Graf Estes, Evans, Alibali, & Saffran, 2007; Maye, Werker, & Gerken, 2002; Saffran, Newport, & Aslin, 1996; Smith & Yu, 2008; Xu & Tenenbaum, 2007). 
 
 However, there is reason to be suspicious about just how precocious statistical learning abilities are in early development. Although these abilities are available early, they are highly constrained by limits on other developing cognitive capacities. For example, infants’ ability to track the co-occurrence information connecting words to their referents is constrained significantly by their developing memory and attention systems (Smith & Yu, 2013; Vlach & Johnson, 2013). Computational models of these processes show that the rate of acquisition is highly sensitive to variation in environmental statistics (e.g., Vogt, 2012). Models of cross-situational learning have demonstrated that the Zipfian distribution of word frequencies and word meanings yields a learning problem that cross-situational learning alone cannot explain over a reasonable time frame (Vogt, 2012). Further, a great deal of empirical work demonstrates that cross-situational learning even in adults drops off rapidly when participants are asked to track more referents, and also when the number of intervening trials is increased (e.g., Yurovsky & Frank, 2015). Thus, precocious unsupervised statistical learning appears to fall short of a complete explanation for rapid early language learning.
 
@@ -359,16 +359,53 @@ exposure_p <- gm_known %>%
 
 As an initial check of our exposure manipulation, we first conducted a logistic regression predicting accuracy at test from a fixed effect of exposure rate and random intercepts and slopes of exposureRate by participant as well as random intercepts by item. We found a reliable effect of exposure rate, indicating that participants were better able to learn items that appear more frequently in training ($\beta =$  `r exposure_estimate`, $t =$ `r exposure_statistic`, $p$ `r exposure_p`). On average, participants knew at least 6 of the 9 words in the lexicon (mean = `r descriptives$meanK`, sd = `r descriptives$sdK`). There were no significant differences between any of our between subjects manipulations for baseline learning ($ps$ > 0.05).
 
+
+```{r}
+expanded_speak_data <- all_data %>%
+  filter(toBeDropped != 1) %>%
+  ungroup() %>%
+  select(condition,ldf_num, partnersExposure, exposureRate,method) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
+  mutate(n = n / sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), 
+                  exposureRate, method, fill = list(n = 0))
+
+acc_data <- all_data %>%
+  filter(toBeDropped != 1) %>%
+  distinct(exposureRate, realLabel, ldf_num, testCorrect) %>%
+  group_by(exposureRate, ldf_num) %>%
+  summarise(testCorrect = mean(testCorrect)) %>%
+  tidyboot_mean(testCorrect) %>%
+  mutate(measure = "accuracy")
+
+speak_data <- expanded_speak_data %>%
+  filter(method == "label") %>%
+  group_by(exposureRate) %>%
+  tidyboot_mean(n) %>%
+  mutate(measure = "label")
+
+plot_1_data <- bind_rows(acc_data, speak_data)
+
+ggplot(acc_data, aes(x = as.factor(exposureRate), y = empirical_stat, 
+                     ymin = ci_lower, ymax = ci_upper)) +
+  geom_col(fill = "grey") + 
+  geom_linerange(group = 1) + 
+  geom_pointrange(data = speak_data, color = "#e8250b") + 
+  geom_line(data = speak_data, color = "#e8250b", group = 1) +
+  xlab("Exposure Rate During Training")
+```
+
+
 ### Gesture
 
 ```{r modalities, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
-
-modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", speech = "#e8250b", gesture = "#1f11e0", both ="#54a832", label = "#e8250b", click = "#1f11e0", label_click ="#54a832")
-
-seprop <- function(props) {
-  mean_prop = mean(props)
-  sqrt( (mean_prop*(1 - mean_prop)) / length(props))
-}
+modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", 
+                     speech = "#e8250b", gesture = "#1f11e0", both ="#54a832", 
+                     label = "#e8250b", click = "#1f11e0", label_click ="#54a832")
 
 ###wrangling data for plots by exposure
 prop_methods_exposures <- all_data %>%
@@ -378,13 +415,13 @@ prop_methods_exposures <- all_data %>%
   group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
   summarise(n = n()) %>%
   group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
-  mutate(n = n/sum(n)) %>%
+  mutate(n = n / sum(n)) %>%
   ungroup() %>%
   mutate(method = as.factor(method)) %>%
-  tidyr::complete(nesting(condition, ldf_num, partnersExposure), exposureRate, method, fill = list(n = 0)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), 
+                  exposureRate, method, fill = list(n = 0)) %>%
   group_by(condition, partnersExposure, method) %>%
-  summarise(mean = mean(n), se = seprop(n)) %>%
-  ungroup()
+  tidyboot_mean(n)
 
 
 label_data <- tibble(exposureRate = 1.25, condition = "Low Relative Cost",
@@ -395,24 +432,25 @@ label_data <- label_data %>% mutate(condition = factor(condition,
 
 #Exp. Plot 1., modality tradeoff (condition x partnerExp x utility)
 plot_prop_methods_exposures <- prop_methods_exposures %>% 
+  ungroup() %>%
   mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
       partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect")),
       condition = factor(condition, 
                             levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE),
-       #  exposureRate = as.factor(exposureRate),
-         method = factor(method, levels = c("click", "label", "label_click"),
+      #  exposureRate = as.factor(exposureRate),
+      method = factor(method, levels = c("click", "label", "label_click"),
                          labels = c("gesture", "speech", "teach")))# %>%
   #filter(method != "label_click") 
 
 plot_prop_methods_exposures %>%
-  ggplot(aes(x=partnersExposure, y=mean, color = method, label = method,
+  ggplot(aes(x=partnersExposure, y=empirical_stat, color = method, label = method,
              group=interaction(method,condition))) +
   facet_wrap(~ condition) +
   #geom_point(size=1.5,position=position_dodge(.25)) +
   geom_line(  size=.9,     
             position=position_dodge(.25)) +
-  geom_pointrange(aes(ymax = mean + se,
-    ymin = mean - se),position=position_dodge(.25)) +
+  geom_pointrange(aes(ymax = ci_upper,
+    ymin = ci_lower),position=position_dodge(.25)) +
   coord_cartesian(ylim=c(0,1)) +
   #facet_grid(method ~ .) +
   labs(y="Proportion of Trials", x="Exposure Rate During Training") +
@@ -709,12 +747,14 @@ When people plan, they compute the expected utility of each possible action ($a$
 $$
 EU\left[a\right | b] = \mathbb{E}_{v \sim b} \left(U(a|v) + \gamma \,\mathbb{E}_{v',o',a'} \,\left( EU\left[a' | b'\right]\right)\right)
 $$
+
 ### Act 
 
 Next, people take an action as a function of its expected utility. Following other models in the Rational Speech Act framework, we use the Luce Choice Axiom, in which each choice is taken in probability proportional to its exponentiated utility [@frank2012; @luce1959]. This choice rule has a single parameter $\alpha$ that controls the noise in this choice--as $\alpha$ approaches 0, choice is random and as $\alpha$ approaches infinity, choice is optimal.
 $$
 P\left(a|b\right) \propto \alpha \, e^{EU[a|b]}
 $$
+
 ### Update beliefs
 
 After taking an action, people observe ($o$) their partner's choice--sometimes they correctly select the intended object, and sometimes they do not. People then update their beliefs about the partner's vocabulary based on this observation. For simplicity, we assume that people think their partner should always select the correct target if they point to it, or if they teach, and similarly should always select the correct target if they produce its label and the label is in their partner's vocabulary. Otherwise, they assume that their partner will select the wrong object. People could of course have more complex inferential rules, e.g. assuming that if their partner does know a word they will choose among the set of objects whose labels they do not know [mutual exclusivity, @markman1988]. Empirically, however, our simple model appears to accord well with people's behavior.
@@ -907,7 +947,7 @@ A full account that explains variability in modification across aspects of langu
 
 # Conclusion
 
-Building off of early functional account of langauge learning (e.g., Brown, 1977), our account emphasizes the importance of communicative success in shaping language input and language learning. We have developed an intitial formal framework for jointly considering parent productions and child language learning within the same system. We showed that such an account helps to explain parents' naturalistic communicative behavior and participant behavior in an iterated reference game. Formalized model predictions explain these behaviors without an explicit teaching goal, and show demonstrable effects on learning in model simulations. In sum, this work 
+Building off of early functional account of langauge learning (e.g., Brown, 1977), our account emphasizes the importance of communicative success in shaping language input and language learning. We have developed an intitial formal framework for jointly considering parent productions and child language learning within the same system. We showed that such an account helps to explain parents' naturalistic communicative behavior and participant behavior in an iterated reference game. Formalized model predictions explain these behaviors without an explicit teaching goal, and show demonstrable effects on learning in model simulations. In sum, this work demsontrates that the pressure to communicate sucessfully may sturcture language input and language tuning in ways that support eventual language learning.
 
 # Acknowledgement
 
