@@ -13,7 +13,7 @@ Our communicative game was designed to reward in-the-moment communication, and t
 
 
 ```{r exp_screenshot,set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
-img <- png::readPNG("figs/exp_screenshot.png")
+img <- png::readPNG(here("papers/journal/figs/exp_screenshot.png"))
 grid::grid.raster(img)
 ```
 
@@ -40,7 +40,7 @@ n_engLabels <- all_data %>%
 ```
 
 ### Participants
-`r n_Ps` participants were recruited though Amazon Mechanical Turk and received $1 for their participation. Data from `r n_manipFail` participants were excluded from subsequent analysis for failing the critical manipulation check and a further `r n_engLabels` for producing pseudo-English labels (e.g., 'pricklyyone'). The analyses reported here exclude the data from those participants, but all analyses were also conducted without excluding any participants and all patterns hold (*ps < 0.05*).
+`r n_Ps` participants were recruited though Amazon Mechanical Turk and received \$1 for their participation. Data from `r n_manipFail` participants were excluded from subsequent analysis for failing the critical manipulation check and a further `r n_engLabels` for producing pseudo-English labels (e.g., "pricklyyone"). The analyses reported here exclude the data from those participants, but all analyses were also conducted without excluding any participants and all patterns hold ($ps < 0.05$).
 
 ### Design and Procedure
 
@@ -66,7 +66,7 @@ Crossing our 2 between-subjects manipulations yielded 6 conditions (2 utility ma
 
 In each trial, participants are able to choose one of 3 communicative strategies: gesture, speech, or teaching. We primarily expect flexible trade-off between the use of each strategy given their relative utilities, participant's knowledge of the lexicon, and the listener's knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logistic mixed effects models for each behavior, reported below. It should be noted that these three behaviors are mutually exhaustive. First, we establish how well participants learned our novel lexicon during training.
 
-```{r e2-results}
+```{r experiment-learning}
 filtered_data <- all_data %>%
   filter(toBeDropped != 1) %>%
   mutate(base = logit(1/3),
