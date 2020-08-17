@@ -63,12 +63,12 @@ prop_methods_exposures %>%
 ```{r}
 #hist of labling behavior by exposure rate
 all_data_dropped %>%
-  group_by(ldf_num, condition, exposureRate) %>%
+  group_by(ldf_num, condition, testCorrect) %>%
   count(method == "label") %>%
   mutate(propLabel = n/sum(n)) %>%
   ggplot(aes(x=propLabel, fill = condition))+
   geom_histogram(position = position_dodge()) +
-  facet_grid(exposureRate~.) 
+  facet_grid(testCorrect~.) 
 ```
 
 

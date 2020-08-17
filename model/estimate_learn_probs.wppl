@@ -1,0 +1,53 @@
+var COUNTS = 3
+
+var unknownProb = function(times, prob) {
+  Binomial({p:prob, n:times}).score(0)
+}
+
+var knownProb = function(times, prob) {
+  Math.log(1-Math.exp(unknownProb(times, prob)))
+}
+
+var vocabProb = function(vocab, prob) {
+
+  var totalProb = map(function(elem) {
+    return knownProb(elem.exposures, prob) * elem.knows +
+      unknownProb(elem.exposures, prob) * (COUNTS - elem.knows)
+    }, vocab)
+
+  return sum(totalProb)
+}
+
+
+var estimateLearnProb = function(vocab) {
+  Infer({ method: 'MCMC', samples: 10000, burn:2000,
+  //Infer({
+    model() {
+      var parameter = sample(Beta({a:.5,b:.5}));
+      factor(vocabProb(vocab, parameter))
+
+      return parameter;
+    }
+  })
+}
+//
+// var vocab = [{exposures: 1, knows: 3}, {exposures: 2, knows: 2},
+//   {exposures: 4, knows: 0}]
+//
+// var learnPs = estimateLearnProb(vocab)
+// var estimatedProb = expectation(learnPs)
+
+//------------------------------------------------------------------------------
+
+var ps = map(function(possibility) {
+
+  var vocab = [{exposures: 1, knows: possibility.known1},
+               {exposures: 2, knows: possibility.known2},
+               {exposures: 4, knows: possibility.known3}]
+
+  var learnPs = estimateLearnProb(vocab)
+
+  return expectation(learnPs)
+}, possibilities)
+
+ps

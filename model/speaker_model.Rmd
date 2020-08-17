@@ -1,0 +1,362 @@
+---
+title: "Speaker WebPPL Model"
+author: "Ben Morris and Dan Yurovsky"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    highlight: tango
+    theme: flatly
+    toc: true
+    toc_float:
+      collapsed: true
+    code_folding: hide
+---
+
+
+### Setup
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.align='center', echo=FALSE, messages=FALSE, warning = FALSE,
+                      fig.height = 3, fig.width=5)
+
+#Load packages + setup
+library(rwebppl)
+library(here)
+library(directlabels)
+library(ggthemes)
+library(lme4)
+library(tidyverse)
+library(tictoc)
+library(here)
+library(glue)
+theme_set(theme_few(base_size = 14))
+```
+
+Estimate learn probs
+```{r estimate-ps, eval = FALSE}
+possibilities <-  expand_grid(known1 = c(0, 1, 2, 3),
+                              known2 = c(0, 1, 2, 3), 
+                              known3 = c(0, 1, 2, 3)) 
+
+
+webbpl_estimated_ps <- webppl(
+  program_file = here("model/estimate_learn_probs.wppl"), 
+  data = possibilities, data_var = "possibilities")
+
+estimated_ps <- possibilities %>%
+  mutate(estimated_p = webbpl_estimated_ps)
+
+write_csv(estimated_ps, here("model_output/estimated_ps.csv"))
+
+```
+
+Read in participant data
+```{r read-datamodel}
+full_explicit <- read_csv(here("data/1.30_turk_exp.csv")) %>%
+  select(-X1, -X1_1)
+
+estimated_ps <- read_csv(here("model_output/estimated_ps.csv"))
+
+all_data_dropped <- full_explicit %>% 
+  filter(toBeDropped == 0) %>%
+  rename(exposures = exposureRate, label = realLabel) %>%
+  mutate(pointCost = 100 - trueClickPoints,
+         speechCost = 100- trueLabelPoints,
+         condition = as.factor(condition)) 
+
+empiricalExplicitVocabs <- all_data_dropped %>%
+  group_by(ldf_num, condition, partnersExposure, label, exposures, 
+           trueClickPoints, trueLabelPoints, pointCost, speechCost) %>%
+  summarise(testCorrect = first(testCorrect)) %>%
+  mutate(known = if_else(testCorrect == 1, TRUE, FALSE)) %>%
+  ungroup()
+
+tidy_vocabs <- empiricalExplicitVocabs %>%
+  group_by(condition,ldf_num, exposures) %>%
+  summarise(known = sum(known)) 
+
+participant_ps <- tidy_vocabs %>%
+  pivot_wider(names_from = "exposures", values_from = "known") %>%
+  left_join(estimated_ps, by = c(`1` = "known1", `2` = "known2", 
+                                 `4` = "known3")) %>%
+  select(condition, ldf_num, estimated_p)
+
+model_data <- empiricalExplicitVocabs %>%
+  left_join(participant_ps, by = c("condition", "ldf_num"))
+
+trial_level_data <- model_data %>%
+  right_join(select(all_data_dropped, ldf_num, condition, partnersExposure, 
+                    label, appearance, method, score), 
+             by = c("ldf_num", "condition", "partnersExposure", "label"))
+```
+
+Webppl sometimes crashes, so I ran this code in batches of 50 participants and wrote them out disk
+
+```{r fake-hierarchical, eval = FALSE}
+sample_data <- trial_level_data %>% filter(ldf_num %in% 301:300)
+
+run_single_model <- function(data) {
+  num <- data[[1,"num"]]
+  print(num)
+  output <- webppl(program_file = here("model/fit_single_participant.wppl"),
+                                      data = data, data_var = "empiricalData")
+  write_csv(output, here(glue("model/samples/p{num}.csv")))
+  return(output)
+}
+
+nested_data <- sample_data %>%
+  mutate(num = ldf_num) %>%
+  group_by(ldf_num) %>%
+  nest() %>%
+  mutate(outcomes = map(data, run_single_model)) %>%
+  unnest(cols = c(outcomes))
+
+```
+
+```{r load-individual-fits}
+files <- list.files(here("model/samples"), pattern = "*.csv", 
+                    full.names = TRUE)
+
+
+read_file <- function(filename) {
+  ldf_num <- str_split(filename, "/") %>%
+    unlist() %>%
+    last() %>%
+    str_extract(.,"[0-9]+") %>%
+    as.numeric()
+  
+  read_csv(filename) %>%
+    mutate(ldf_num = ldf_num)
+}
+
+nested_data <- suppressMessages(map_dfr(files, read_file))
+```
+
+```{r estimate-params, eval = FALSE}
+mean_data <- nested_data %>%
+  group_by(Parameter, ldf_num) %>%
+  summarise(value = mean(value)) %>%
+  pivot_wider(names_from = Parameter, values_from = value)
+
+mean_data %>%
+  summarise(alpha = mean(alpha), discount = mean(discount))
+
+ggplot(mean_data %>% pivot_longer(cols = c(score, alpha, discount), 
+                                  names_to = "Parameter"), 
+       aes(x = value)) + 
+  geom_histogram() + 
+  facet_wrap(~ Parameter, scales = "free")
+
+hyper_parameters <- webppl(program_file = "model/estimate_aggregate_param.wppl", 
+                          data = mean_data, 
+                          data_var = "empiricalData") 
+
+tidy_hyper_parameters <- hyper_parameters %>%
+  pivot_wider(names_from = "Parameter", values_from = "value")
+
+ggplot(hyper_parameters, aes(x = Iteration, y = value)) + 
+  geom_point() +
+  facet_wrap(~ Parameter, scales = "free")
+
+mean_hyper_parameters <- hyper_parameters %>%
+  group_by(Parameter) %>%
+  summarise(value = mean(value))
+
+mean_hyper_parameters
+
+```
+
+```{r write-parameters}
+write_csv(hyper_parameters, here("output/hyper_parameters.csv"))
+```
+
+```{r run-model}
+predicted_data <- trial_level_data %>%
+  ungroup() %>%
+  mutate(action = webppl(program_file = here("webppl/run_model.wppl"), 
+                 data = trial_level_data, 
+                 data_var = "empiricalVocabs") %>%
+           bind_rows() %>%
+           as_tibble() %>%
+           pull())
+
+write_csv(predicted_data, here("output/predicted_data.csv"))
+```
+
+```{r plot1}
+modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", 
+                     speech = "#e8250b", gesture = "#1f11e0", both ="#54a832", 
+                     label = "#e8250b", click = "#1f11e0", label_click ="#54a832")
+
+###wrangling data for plots by exposure
+prop_methods_exposures <- predicted_data %>%
+  select(-method) %>%
+  rename(method = action, exposureRate = exposures) %>%
+  ungroup() %>%
+  select(condition,ldf_num, partnersExposure, exposureRate,method) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, exposureRate) %>%
+  mutate(n = n / sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), 
+                  exposureRate, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, method) %>%
+  tidyboot_mean(n, nboot = 100)
+
+
+label_data <- tibble(exposureRate = 1.25, condition = "Low Relative Cost",
+                     method = c("gesture", "speech"), mean = c(.2, .8))
+
+label_data <- label_data %>% mutate(condition = factor(condition, 
+                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE))
+
+#Exp. Plot 1., modality tradeoff (condition x partnerExp x utility)
+plot_prop_methods_exposures <- prop_methods_exposures %>% 
+  ungroup() %>%
+  mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
+      partnersExposure = factor(partnersExposure, labels = c("None", "Same", "Perfect")),
+      condition = factor(condition, 
+                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE),
+       #  exposureRate = as.factor(exposureRate),
+         method = factor(method, levels = c("point", "speak", "teach"),
+                         labels = c("gesture", "speech", "teach")))# %>%
+  #filter(method != "label_click") 
+
+plot_prop_methods_exposures %>%
+  ggplot(aes(x=partnersExposure, y=empirical_stat, color = method, label = method,
+             group=interaction(method,condition))) +
+  facet_wrap(~ condition) +
+  #geom_point(size=1.5,position=position_dodge(.25)) +
+  geom_line(  size=.9,     
+            position=position_dodge(.25)) +
+  geom_pointrange(aes(ymax = ci_upper,
+    ymin = ci_lower),position=position_dodge(.25)) +
+  coord_cartesian(ylim=c(0,1)) +
+  #facet_grid(method ~ .) +
+  labs(y="Proportion of Trials", x="Exposure Rate During Training") +
+  scale_color_manual(values=c(modality.colors),  name = "Method")+
+    theme(legend.key.size = unit(.8, 'lines'),
+        legend.text=element_text(size=7),
+        legend.title=element_text(size=8)) #+
+  #  geom_text(data = label_data)
+```
+
+```{r teach, cache=TRUE, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, plotted by how many times an object had been the target object."}
+
+prop_methods_teaching <- predicted_data %>%
+  select(-method) %>%
+  rename(method = action, exposureRate = exposures) %>%
+  select(condition,ldf_num, partnersExposure, appearance,method) %>%
+  group_by(condition, ldf_num,partnersExposure, appearance, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, appearance) %>%
+  mutate(n = n/sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>%
+  tidyr::complete(nesting(condition, ldf_num, partnersExposure), appearance, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, appearance, method) %>%
+  summarise(mean = mean(n), se = seprop(n)) 
+
+plot_prop_methods_teaching <- prop_methods_teaching %>%
+  ungroup() %>%
+  mutate(condition = factor(condition, labels=c('Low Relative Cost', 'Higher Relative Cost')),
+         partnersExposure = factor(partnersExposure,
+                                   labels = c("None", "Same Amt", "Twice Amt"))) %>%
+  filter(method %in% "teach")
+
+
+
+teach_label_data <- tibble(appearance = c(1.5, 1, 1), condition = "Low Relative Cost", 
+                     partnersExposure = c("None", "Same Amt", "Twice Amt"),
+                     mean = c(.3, .165, .005))
+
+teach_label_data <- teach_label_data %>% mutate(condition = factor(condition, 
+                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE))
+
+plot_prop_methods_teaching %>%
+  ggplot(aes(x=appearance, y=mean, label=partnersExposure, color = partnersExposure)) +
+  geom_point(aes(y=mean), size=2.25, position=position_dodge(.25)) +
+  geom_line(aes(x=appearance, y=mean, group=partnersExposure, color=partnersExposure), 
+            size=1, position=position_dodge(.25)) +
+  geom_linerange(aes(ymax = mean + se,
+    ymin = mean - se, color=partnersExposure), position=position_dodge(.25)) +
+  facet_grid(. ~ condition) +
+  labs(y="Proportion of Teaching Trials", x="Object Instance during Game") +
+ # coord_cartesian(ylim=c(0,.4)) +
+  scale_color_manual(values=c("#87d868", "#54a832", "#2c6d12"), name = "Partner's Exposure") +
+  theme(legend.position = "none",
+        legend.key.size = unit(.8, 'lines'),
+        legend.text=element_text(size=7),
+        legend.title=element_text(size=8),
+        axis.text.x = element_text(angle = 35, hjust = 1)) + 
+  geom_text(data = teach_label_data, size = 2.5)
+```
+
+#Plot of Model Predictions vs. Empirical Data
+```{r}
+model_plot_data <- predicted_data %>%
+ select(condition,ldf_num, partnersExposure, appearance, exposures, method, action) %>%
+  rename(empirical = method, model = action) %>%
+  pivot_longer(cols = c(empirical, model), names_to = "type", 
+               values_to = "method") %>%
+  ungroup() %>%
+  group_by(condition, ldf_num, partnersExposure, exposures, appearance, type, method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num,partnersExposure, exposures, type, appearance) %>%
+  mutate(n = n/sum(n)) %>%
+  ungroup() %>%
+  mutate(method = as.factor(method)) %>% 
+  complete(nesting(condition, ldf_num, partnersExposure), type, appearance, exposures,  method, 
+           fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, method, type, appearance) %>%
+  tidyboot_mean(n, nboot = 100)
+
+
+model_wide_data <- model_plot_data %>%
+  ungroup() %>%
+  filter(type == "model") %>%
+  select(-mean, -type) %>%
+  rename(model_mean = empirical_stat, model_lower = ci_lower, 
+         model_upper = ci_upper)
+
+empirical_wide_data <- model_plot_data %>%
+  ungroup() %>%
+  filter(type == "empirical") %>%
+  select(-mean, -type) %>%
+  rename(empirical_mean = empirical_stat, empirical_lower = ci_lower, 
+         empirical_upper = ci_upper)
+  
+wide_data <- left_join(model_wide_data, empirical_wide_data, 
+                       by = c("condition", "partnersExposure", "method", 
+                              "appearance", "n"))
+  
+
+ggplot(wide_data, aes(x = model_mean, y = empirical_mean, color = method,
+             shape = as.factor(partnersExposure), group = appearance,
+             alpha = condition, label = appearance)) +
+  geom_point(aes(size = as.factor(appearance))) +
+  geom_abline(intercept =0, slope=1) +
+  geom_linerange(aes(ymax = empirical_upper,
+                     ymin = empirical_lower),
+                 alpha =.4) +
+  geom_errorbarh(aes(xmin = model_lower,
+                     xmax = model_upper),
+                 alpha = .4 )+
+  coord_cartesian(xlim=c(0,.8), ylim=c(0,.8)) + 
+  labs(y="Empirical Proportion of Trials", x="Model Predictions") +
+  scale_color_manual(values=modality.colors, name='Modality', labels=c("Gesture", "Speech", "Teach")) +
+  scale_shape_manual(values=c(15,17,16),name="Partner's Exposure", labels=c("None", "Same Amount", "Twice as Much")) + 
+  scale_alpha_manual(values=c(.4, 1), name="Utility Condition", labels=c("Low Relative Cost", "Higher Relative Cost")) +
+  scale_size_manual(values=c(1,2,3), name="Appearance", labels=c("First", "Second", "Third"))+
+  theme(legend.direction = "vertical", 
+        legend.position = "right",
+        legend.key.size = unit(.15, 'lines'),
+        legend.title=element_text(size=7),
+        legend.text=element_text(size=6),
+        legend.spacing = unit(0, "in"),
+        legend.box.spacing = unit(0, "in"))
+
+cor(wide_data$model_mean, wide_data$empirical_mean)
+```
+

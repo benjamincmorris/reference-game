@@ -1,0 +1,44 @@
+var discountHyperPrior = Gaussian({mu: 0, sigma: 1})
+var alphaHyperPrior = Gamma({shape: 1, scale: 1})
+//var alphaHyperPrior = Gaussian({mu: 0, sigma: 1})
+
+var logit = function(x) {
+  Math.log(x / (1 - x))
+}
+
+var inv_logit = function(x) {
+  Math.exp(x) / (1 + Math.exp(x))
+}
+
+var fitOneParticipant = function(hyperAlpha, hyperDiscount, x) {
+  var p_score =  Gaussian({mu: hyperDiscount, sigma: 1}).score(logit(x.discount)) + Gamma({shape: hyperAlpha, scale: 1}).score(x.alpha) + x.score
+
+
+  //Gamma({shape: hyperAlpha, scale: 1}).score(x.alpha)
+  //Gaussian({mu: hyperAlpha, sigma: 1}).score(Math.log(x.alpha))
+
+  return p_score
+}
+
+var gaussianKernel = function(prevVal) {
+  return Gaussian({mu: prevVal, sigma: .1});
+};
+
+var modelPosterior = function() {
+  Infer({method: "MCMC", samples: 10000, burn: 2000, verbose: true,
+    model() {
+
+      var hyperAlpha = sample(alphaHyperPrior, {driftKernel: gaussianKernel})
+      var hyperDiscount = sample(discountHyperPrior, {driftKernel: gaussianKernel})
+
+      //for everyone
+      var newScore = map(function(x) {fitOneParticipant(hyperAlpha, hyperDiscount, x)}, empiricalData)
+
+      factor(_.sum(newScore))
+
+      return {hyperAlpha: hyperAlpha, hyperDiscount: inv_logit(hyperDiscount)}
+    }
+  })
+}
+
+modelPosterior()
