@@ -106,7 +106,6 @@ gm_known <- glmer(testCorrect ~ exposureRate + condition +
   mutate(p.value = printp(p.value))
 
 make_text_vars(gm_known, "learning_exposure", "exposureRate")
-
 ```
 
 ```{r experiment-learning-anova}
@@ -247,7 +246,6 @@ walk2(c("label_appearance", "label_exposure", "label_partners_exposure",
 When should we expect participants to use speech? Speech has the highest utility for words you learned during training, words you think your partner is likely to know (i.e., for higher partner knowledge conditions), when utility scheme is relatively biased toward speech (i.e., the 'Low Relative Cost' condition). To test these predictions, we ran a mixed effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subjects and object were included in the model.
 
 Consistent with our predictions, speech seemed to largely tradeoff with gesture. Exposure rate during training was a signficant positive predictor of speaking during the game, such that participants were more likely to utilize speech for well trained (and thus well learned) objects ($\beta =$ `r label_exposure_estimate`, $p$ `r label_exposure_p.value`). Additionally, participants were signfinatly less likely to speak in the High Relative Cost condition where speech is relatively more costly, compared with the Low Relative Cost condition ($\beta =$ `r label_condition_estimate`, $p$ `r label_condition_p.value`). We also found a significant positive effect of partner's knowledge, such that particpants used speech more for partners with more knowledge of the lexicon ($\beta =$ `r label_partners_exposure_estimate`, $p$ `r label_partners_exposure_p.value`). Unlike for gesture, there is a signifanct effect of object instance in the game (i.e., whether this is the first, second, or third trial with this target object) on the rate of speaking, such that later trials are more likely to elicit speech ($\beta =$ `r label_appearance_estimate`, $p$ `r label_appearance_p.value`). This effect of order likely stems from a trade-off with the effects we see in teaching (described below); after a speaker teaches a word on the first or second trial, the utility of speech is much higher on subesequent trials.
-
 
 ### Emergence of Teaching.
 

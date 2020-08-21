@@ -41,7 +41,7 @@ Of the 10 target children, 5 were girls, 3 were Black and 2 were Mixed-Race. Fam
 
 ### Procedure
 
-From the extant transcription and gesture coding, we specifically coded all concrete noun referents produced in either the spoken or gestural modality (or both). Spoken reference was coded only when a specific noun form was used (e.g., "ball"), to exclude pronouns and anaphoric usages (e.g., "it"). Gesture reference was coded only for deitic gestures (e.g., pointing to or holding an object) to minimize ambiguity in determining the intended referent. In order to fairly compare rates of communication across modalities, we need to examine concepts that can be referred to in either gesture or speech (or both) with similar ease. Because abstract entities are difficult to gesture about using deitic gestures, we coded only on references to concrete nouns. 
+From the extant transcription and gesture coding, we specifically coded all concrete noun referents produced in either the spoken or gestural modality (or both). Spoken reference was coded only when a specific noun form was used (e.g., "ball"), to exclude pronouns and anaphoric usages (e.g., "it"). Gesture reference was coded only for deictic gestures (e.g., pointing to or holding an object) to minimize ambiguity in determining the intended referent. In order to fairly compare rates of communication across modalities, we need to examine concepts that can be referred to in either gesture or speech (or both) with similar ease. Because abstract entities are difficult to gesture about using deictic gestures, we coded only on references to concrete nouns. 
 
 ### Reliability
 
