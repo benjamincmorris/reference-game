@@ -105,7 +105,7 @@ var sampleSpeakerPlanner = function() {
   var expectedUtility = function(action, target, speakerVocab, receiverVocab, someTrials, delay, discountParam, alphaParam, estimatedLearnProb, pointPoints, speechPoints) {
 
     var outcome = selectReferent(action, target, speakerVocab, receiverVocab)
-    var util = (utility(outcome, pointPoints, speechPoints)) + Math.log(expDiscount(discountParam, delay))
+    var util = utility(outcome, pointPoints, speechPoints) * expDiscount(discountParam, delay)
 
     if (someTrials.length == 0) {
       return util;
