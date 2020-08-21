@@ -190,7 +190,7 @@ ggplot(prop_methods_exposures,
   geom_line(size=.9, position = position_dodge(.25)) +
   geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
                   position = position_dodge(.25)) +
-  labs(y="Proportion of Trials", x="Exposure Rate During Training") +
+  labs(y="Proportion of Trials", x = "Exposure Rate During Training") +
   scale_color_manual(values=c(modality.colors), name = "Method") +
   geom_text(data = label_data)
 ```
