@@ -5,7 +5,7 @@ MODALITY_LABELS <- c("point", "speak", "teach")
 CONDITION_LABELS <- c("Pointing relatively cheap", "Pointing relatively costly")
 ```
 
-To study the emergence of pedagogically supportive input from communicative pressure, we developed a simple reference game in which participants would be motivated to communicate successfully. After giving people varying amounts of training on novel names for 9 novel objects, we asked them to play a communicative game in which they were given one of the objects as their referential goal, and they were rewarded if their partner successfully selected this referent from among the set of competitors (Figure \ref{fig:exp_screenshot}). 
+To study the emergence of pedagogically supportive input from communicative pressure, we developed a simple reference game in which participants would be motivated to communicate successfully. After giving people varying amounts of training on novel names for 9 novel objects, we asked them to play a communicative game in which they were given one of the objects as their referential goal, and they were rewarded if their partner successfully selected this referent from among the set of competitors (Figure \ref{fig:exp-screenshot}). 
 
 Participants could choose to refer either using the novel labels they had been exposed to, or they could use a deictic gesture to indicate the referent to their partner. The gesture was unambiguous, and thus would always succeed. However, in order for language to be effective, the participant and their partner would have to know the correct novel label for the referent. 
 
@@ -16,7 +16,7 @@ If people are motivated to communicate successfully, their choice of referential
 Critically, participants were told that they will play this game repeatedly with their partner. In these repeated interactions, participants are then able to learn about an interlocutor and potentially influence their learning. Thus, there is a third type of message: using both gesture and speech within a single trial to effectively teach the listener an object-label mapping. This strategy necessitates making inferences about the listener's knowledge state, so we induced knowledge asymmetries between speaker and listener. To do so, we manipulated how much training they thought their partner had received. 
 Our communicative game was designed to reward in-the-moment communication, and thus teaching required the speaker pay a high cost upfront. However, rational communicators may understand that if one is accounting for future trials, paying the cost upfront to teach the listener allows a speaker to use a less costly message strategy on subsequent trials (namely, speech). Manipulating the listener knowledge and the utility of communicative strategies, we aimed to experimentally determine the circumstances under which richly-structured input emerges, without an explicit pedagogical goal.
 
-```{r exp_screenshot,set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot of speaker view during gameplay."}
+```{r exp-screenshot, fig.width = 4.5, set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot showing the participant view during gameplay."}
 img <- png::readPNG(here("papers/journal/figs/exp_screenshot.png"))
 grid::grid.raster(img)
 ```
@@ -125,7 +125,7 @@ condition_learning_esposure_f_num <- learning_anova %>%
 As an initial check of our exposure manipulation, we first conducted a logistic regression predicting accuracy at test from a fixed effect of exposure rate and random intercepts and slopes of exposure rate by participant as well as random intercepts by item. We found a reliable effect of exposure rate, indicating that participants were better able to learn items that appear more frequently in training ($\beta =$ `r learning_exposure_estimate`, $p$ `r learning_exposure_p.value`). On average, participants knew at least 6 of the 9 words in the lexicon ($M(sd)$ = `r descriptives$meanK` (`r descriptives$sdK`)). An analysis of variance confirmed that learning did not differ systematically across participants by partner's exposure, utility manipulation, or their interaction ($ps$ > 0.05).
 
 
-```{r learning-and-speaking-plot, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Participants' performance on the baseline recall task for the lexicon, as function of amount of exposure during training (grey bars). The red line shows the propotion of trials in the game in which participants used the learned labels."}
+```{r learning-and-speaking-plot, fig.height = 3, fig.width = 3, set.cap.width=T, num.cols.cap=1, fig.cap = "Participants' performance on the baseline recall task for the lexicon, as function of amount of exposure during training (grey bars). The red line shows the propotion of trials in the game in which participants used the learned labels."}
 expanded_data <- filtered_data %>%
   group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
   summarise(n = n()) %>%
@@ -221,7 +221,7 @@ When should we expect participants to rely on gesture? Gesturing has the highest
 
 Consistent with our predictions, exposure rate during training was a significant negative predictor of gesturing during the game (see Figure \ref{fig:modalities}), such that participants were less likely to rely on gesture for well trained (and thus well learned) objects ($\beta =$ `r point_exposure_estimate`, $p$ `r point_exposure_p.value`). Additionally, participants were significantly more likely to gesture in the Higher Relative Cost condition where gesture is relatively less costly, compared with the Low Relative Cost condition ($\beta =$ `r point_condition_estimate`, $p$ `r point_condition_p.value`) (see Figure \ref{fig:modalities}). We also found a significant negative effect of partner's knowledge, such that participants used gesture more for partners with less knowledge of the lexicon ($\beta =$ `r point_partners_exposure_estimate`, $p$ `r point_partners_exposure_p.value`).
 
-Note that these effects cannot be explained by solely speaker knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns directly mirror previous corpus analyses demonstrating adult's use of gesture in naturalistic parental communicative behaviors, and parents likely have lexical knowledge of even even the least frequent referent [see @yurovsky2018].
+Note that these effects cannot be explained by solely speaker knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns directly mirror previous corpus analyses demonstrating adult's use of gesture in naturalistic parental communicative behaviors, and parents likely have lexical knowledge of even even the least frequent referent [see @yurovsky2018children].
 
 ### Speech
 
@@ -280,7 +280,7 @@ Consistent with our predictions, rates of teaching were higher for better traine
 
 As predicted, the data from our paradigm corroborate our findings from the corpus analysis, demonstrating that pedagogically supportive behavior emerges despite the initial cost when there is an asymmetry in knowledge and when speech is less costly than other modes of communication. While this paradigm has stripped away much of the interactive environment of the naturalistic corpus data, it provides important proof of concept that the structured and tuned language input we see in those data could arise from a pressure to communicate. The paradigm’s clear, quantitative predictions also allow us to build a formal model to predict our empirical results.
 
-```{r teach, cache=TRUE, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, plotted by how many times an object had been the target object."}
+```{r teach, cache=TRUE, fig.height = 3, fig.width = 4.5, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, plotted by how many times an object had been the target object."}
 
 prop_methods_teaching <- all_data %>%
   filter(toBeDropped != 1) %>%
@@ -298,19 +298,16 @@ prop_methods_teaching <- all_data %>%
 
 plot_prop_methods_teaching <- prop_methods_teaching %>%
   ungroup() %>%
-  mutate(condition = factor(condition, labels=c('Low Relative Cost', 'Higher Relative Cost')),
+  mutate(condition = factor(condition, labels = CONDITION_LABELS),
          partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect"),
                                    labels = c("None", "Same Amt", "Twice Amt"))) %>%
   filter(method=="label_click") 
 
 
 
-teach_label_data <- tibble(appearance = c(1.5, 1, 1), condition = "Low Relative Cost", 
+teach_label_data <- tibble(appearance = c(1.5, 1, 1), condition = CONDITION_LABELS[1], 
                      partnersExposure = c("None", "Same Amt", "Twice Amt"),
                      mean = c(.3, .165, .005))
-
-teach_label_data <- teach_label_data %>% mutate(condition = factor(condition, 
-                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE))
 
 plot_prop_methods_teaching %>%
   ggplot(aes(x=appearance, y=mean, label=partnersExposure, color = partnersExposure)) +
@@ -327,7 +324,7 @@ plot_prop_methods_teaching %>%
         legend.text=element_text(size=7),
         legend.title=element_text(size=8),
         axis.text.x = element_text(angle = 35, hjust = 1)) + 
-  geom_text(data = teach_label_data, size = 2.5)
+  geom_text(data = teach_label_data, size = 3.5)
 ```
 
 The results from this experiment are qualitatively consistent with a model in which participants make their communicative choices to maximize their expected utility from the reference game. We next formalize this model to determine if these results are predicted quantitatively as well.
