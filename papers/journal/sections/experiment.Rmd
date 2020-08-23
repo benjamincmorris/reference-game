@@ -67,8 +67,6 @@ Crossing our 2 between-subjects manipulations yielded 6 conditions (2 utility ma
 
 ## Results
 
-<!-- add model details and parameter estimates to a supplemental and keep this results section somewhat trim.  -->
-
 In each trial, participants are able to choose one of 3 communicative strategies: gesture, speech, or teaching. We primarily expect flexible trade-off between the use of each strategy given their relative utilities, participant's knowledge of the lexicon, and the listener's knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logistic mixed effects models for each behavior, reported below. It should be noted that these three behaviors are mutually exhaustive. First, we establish how well participants learned our novel lexicon during training.
 
 ```{r experiment-learning-descriptives}
@@ -121,7 +119,7 @@ condition_learning_esposure_f_num <- learning_anova %>%
 
 ### Learning
 
-As an initial check of our exposure manipulation, we first conducted a logistic regression predicting accuracy at test from a fixed effect of exposure rate and random intercepts and slopes of exposure rate by participant as well as random intercepts by item. We found a reliable effect of exposure rate, indicating that participants were better able to learn items that appear more frequently in training ($\beta =$ `r learning_exposure_estimate`, $p$ `r learning_exposure_p.value`). On average, participants knew at least 6 of the 9 words in the lexicon ($M(sd)$ = `r descriptives$meanK` (`r descriptives$sdK`)). An analysis of variance confirmed that learning did not differ systematically across participants by partner's exposure, utility manipulation, or their interaction ($ps$ > 0.05).
+As an initial check of our exposure manipulation, we first conducted a logistic regression predicting accuracy at test from a fixed effect of exposure rate and random intercepts and slopes of exposure rate by participant as well as random intercepts by item. We found a reliable effect of exposure rate, indicating that participants were better able to learn items that appeared more frequently in training ($\beta =$ `r learning_exposure_estimate`, $p$ `r learning_exposure_p.value`, see Figure \ref{fig:learning-and-speaking-plot}). On average, participants knew at least 6 of the 9 words in the lexicon ($M(sd)$ = `r descriptives$meanK` (`r descriptives$sdK`)). An analysis of variance confirmed that learning did not differ systematically across participants by partner's exposure, utility manipulation, or their interaction ($ps$ > 0.05).
 
 
 ```{r learning-and-speaking-plot, fig.height = 3, fig.width = 3, set.cap.width=T, num.cols.cap=1, fig.cap = "Participants' performance on the baseline recall task for the lexicon, as function of amount of exposure during training (grey bars). The red line shows the propotion of trials in the game in which participants used the learned labels."}
