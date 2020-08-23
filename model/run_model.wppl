@@ -2,9 +2,6 @@ var successValue = 100
 
 var actions = ["speak", "point", "teach"];
 
-var alpha = 1.17
-var discountParam = .504
-
 var utility = function(outcome, pointCost, speechCost) {
   var table = {
     point_success: successValue - pointCost,
@@ -81,6 +78,8 @@ var selectReferent = function(modality, referent, speakerVocab, receiverVocab) {
   }
 }
 
+var alpha = empiricalVocabs[0].alpha
+var discountParam = empiricalVocabs[0].discount
 
 // exponential discounting function used to offset future rewards
 var expDiscount = function(delay) {
@@ -108,7 +107,7 @@ var sampleSpeakerPlanner = function() {
   var expectedUtility = function(action, target, speakerVocab, receiverVocab, someTrials, delay, estimatedLearnProb, pointPoints, speechPoints) {
 
     var outcome = selectReferent(action, target, speakerVocab, receiverVocab)
-    var util = utility(outcome, pointPoints, speechPoints) * expDiscount(discountParam, delay)
+    var util = utility(outcome, pointPoints, speechPoints) * expDiscount(delay)
 
     if (someTrials.length == 0) {
       return util;
@@ -180,7 +179,6 @@ var ldfs = _.uniq(
     return element.ldf_num
   }, empiricalVocabs)
 )
-
 // just a subset of participants if debugging code
 
 var outcomes = map(function(x) {

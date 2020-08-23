@@ -86,7 +86,11 @@ model_data <- empiricalExplicitVocabs %>%
 trial_level_data <- model_data %>%
   right_join(select(all_data_dropped, ldf_num, condition, partnersExposure, 
                     label, appearance, method, score), 
-             by = c("ldf_num", "condition", "partnersExposure", "label"))
+             by = c("ldf_num", "condition", "partnersExposure", "label")) %>%
+  rename(partnersExposureDescriptive = partnersExposure) %>%
+  mutate(partnersExposure = case_when(partnersExposureDescriptive == "None" ~ 0,
+                                      partnersExposureDescriptive == "Same" ~ 1,
+                                      partnersExposureDescriptive == "Perfect" ~ 2))
 ```
 
 Webppl sometimes crashes, so I ran this code in batches of 50 participants and wrote them out disk
@@ -166,20 +170,26 @@ mean_hyper_parameters
 ```
 
 ```{r write-parameters}
-write_csv(hyper_parameters, here("output/hyper_parameters.csv"))
+write_csv(hyper_parameters, here("model_output/hyper_parameters.csv"))
 ```
 
 ```{r run-model}
 predicted_data <- trial_level_data %>%
   ungroup() %>%
-  mutate(action = webppl(program_file = here("webppl/run_model.wppl"), 
-                 data = trial_level_data, 
-                 data_var = "empiricalVocabs") %>%
+  mutate(alpha = mean_hyper_parameters %>% 
+           filter(Parameter == "hyperAlpha") %>%
+           pull(value),
+         discount = mean_hyper_parameters %>% 
+           filter(Parameter == "hyperDiscount") %>%
+           pull(value)) %>%
+  mutate(action = webppl(program_file = here("model/run_model.wppl"), 
+                         data = ., 
+                         data_var = "empiricalVocabs") %>%
            bind_rows() %>%
            as_tibble() %>%
            pull())
 
-write_csv(predicted_data, here("output/predicted_data.csv"))
+write_csv(predicted_data, here("model_output/predicted_data.csv"))
 ```
 
 ```{r plot1}
