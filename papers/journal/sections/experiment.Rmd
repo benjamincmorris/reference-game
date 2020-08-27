@@ -160,37 +160,45 @@ ggplot(acc_data, aes(x = as.factor(exposureRate), y = empirical_stat,
 
 ### Gesture
 
-```{r modalities, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
+```{r modality-plot-function}
 modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832")
 
-###wrangling data for plots by exposure
-prop_methods_exposures <- filtered_data %>%
-  group_by(condition, ldf_num, partnersExposure, exposureRate, method) %>%
-  summarise(n = n()) %>%
-  mutate(n = n / sum(n)) %>%
-  ungroup() %>%
-  mutate(method = as.factor(method)) %>%
-  tidyr::complete(nesting(condition, ldf_num, partnersExposure), 
-                  exposureRate, method, fill = list(n = 0)) %>%
-  group_by(condition, partnersExposure, method) %>%
-  tidyboot_mean(n)
+modality_plot <- function(df, method_column, label_data) {
+  method_column <- enquo(method_column)
+  
+  prop_methods_exposures <- df %>%
+    group_by(condition, ldf_num, partnersExposure, exposureRate, !!method_column) %>%
+    summarise(n = n()) %>%
+    mutate(n = n / sum(n)) %>%
+    ungroup() %>%
+    complete(nesting(condition, ldf_num, partnersExposure),
+             exposureRate, !!method_column, fill = list(n = 0)) %>%
+    group_by(condition, partnersExposure, !!method_column) %>%
+    tidyboot_mean(n, nboot = 10)
+ 
+  
+  ggplot(prop_methods_exposures,
+       aes(x = partnersExposure, y = empirical_stat, color = !!method_column, 
+           label = !!method_column, group = interaction(!!method_column, condition))) +
+    facet_wrap(~ condition) +
+    geom_line(size=.9, position = position_dodge(.25)) +
+    geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
+                  position = position_dodge(.25)) +
+    labs(y="Proportion of Trials", x = "Exposure Rate During Training") +
+    scale_color_manual(values=c(modality.colors), name = "Method") +
+    geom_text(data = label_data)
+}
+```
 
-label_data <- tibble(partnersExposure = c(2.6, 2.6, 2.6),
+```{r modalities-empirical, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
+
+empirical_label_data <- tibble(partnersExposure = c(2.6, 2.6, 2.6),
                      empirical_stat = c(.45, .7, .15),
                      method = MODALITY_LABELS) %>%
   mutate(condition = first(CONDITION_LABELS))
 
+modality_plot(filtered_data, method, empirical_label_data)
 
-ggplot(prop_methods_exposures,
-       aes(x = partnersExposure, y = empirical_stat, color = method, 
-           label = method, group = interaction(method, condition))) +
-  facet_wrap(~ condition) +
-  geom_line(size=.9, position = position_dodge(.25)) +
-  geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
-                  position = position_dodge(.25)) +
-  labs(y="Proportion of Trials", x = "Exposure Rate During Training") +
-  scale_color_manual(values=c(modality.colors), name = "Method") +
-  geom_text(data = label_data)
 ```
 
 ```{r e1-gesture-model}
