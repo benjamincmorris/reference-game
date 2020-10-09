@@ -2,7 +2,7 @@
 
 ```{r text_labels}
 MODALITY_LABELS <- c("point", "speak", "teach")
-CONDITION_LABELS <- c("Pointing relatively cheap", "Pointing relatively costly")
+CONDITION_LABELS <- c("Higher speech efficiency", "Lower speech efficiency")
 ```
 
 To study the emergence of pedagogically supportive input from communicative pressure, we developed a simple reference game in which participants would be motivated to communicate successfully. After giving people varying amounts of training on novel names for 9 novel objects, we asked them to play a communicative game in which they were given one of the objects as their referential goal, and they were rewarded if their partner successfully selected this referent from among the set of competitors (Figure \ref{fig:exp-screenshot}). 
@@ -75,7 +75,8 @@ filtered_data <- all_data %>%
   mutate(base = logit(1/3),
          appearanceNumeric = as.numeric(as.factor(appearance)),
          partnersExposure = factor(partnersExposure, 
-                                   levels = c("None", "Same", "Perfect")),
+                                   levels = c("None", "Same", "Perfect"),
+                                   labels = c("None", "Same", "Twice")),
          partnersExposureNumeric = as.numeric(partnersExposure) - 1,
          method = factor(method, levels = c("click", "label", "label_click"),
                          labels = MODALITY_LABELS),
@@ -303,7 +304,7 @@ prop_methods_teaching <- all_data %>%
 plot_prop_methods_teaching <- prop_methods_teaching %>%
   ungroup() %>%
   mutate(condition = factor(condition, labels = CONDITION_LABELS),
-         partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Perfect"),
+         partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Twice"),
                                    labels = c("None", "Same Amt", "Twice Amt"))) %>%
   filter(method=="label_click") 
 

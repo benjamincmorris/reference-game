@@ -64,7 +64,7 @@ $$
 
 The final detail is to specify how people estimate their partner's learning rate ($p$) and initial vocabulary ($v$). We propose that people begin by estimating their own learning rate by reasoning about the words they learned at the start of the task: Their learning rate ($p$) is the rate that maximizes the probability of them having learned their initial vocabularies from the trials they observed. People can then expect their partner to have a similar $p$ [per the "like me" hypothesis, @meltzoff2005]. Having an estimate of their partner's $p$, they can estimate their vocabulary by simulating their learning from the amount of prior exposure to language their partner had before the game. In our experiments, we explicitly manipulated this expectation by telling participants how much exposure their partner had relative to their own exposure. 
 
-```{r model-fit, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
+```{r model-predictions, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Speaker communicative method choice as a function of exposure and the utility manipulation."}
 
 model_label_data <- tibble(partnersExposure = c(2.6, 2.6, 2.6),
                      empirical_stat = c(.45, .6, .15),
@@ -72,44 +72,13 @@ model_label_data <- tibble(partnersExposure = c(2.6, 2.6, 2.6),
   mutate(condition = first(CONDITION_LABELS))
 
 modality_plot(all_data_model, action, model_label_data)
-
-###wrangling data for plots by exposure
-model_prop_methods_exposures <- all_data_model %>%
-  group_by(condition, ldf_num, partnersExposure, exposures, action) %>%
-  summarise(n = n()) %>%
-  mutate(n = n / sum(n)) %>%
-  ungroup() %>%
-  mutate(action = as.factor(action)) %>%
-  tidyr::complete(nesting(condition, ldf_num, partnersExposure), 
-                  exposures, action, fill = list(n = 0)) %>%
-  group_by(condition, partnersExposure, action) %>%
-  tidyboot_mean(n)
-
-label_data <- tibble(partnersExposure = c(2.6, 2.6, 2.6),
-                     empirical_stat = c(.45, .6, .15),
-                     action = MODALITY_LABELS) %>%
-  mutate(condition = first(CONDITION_LABELS))
-
-
-model_plot1 <- ggplot(model_prop_methods_exposures,
-       aes(x = partnersExposure, y = empirical_stat, color = action, 
-           label = action, group = interaction(action, condition))) +
-  facet_wrap(~ condition) +
-  geom_line(size=.9, position = position_dodge(.25)) +
-  geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
-                  position = position_dodge(.25)) +
-  labs(y="Proportion of Trials", x = "Exposure Rate During Training") +
-  scale_color_manual(values=c(modality.colors), name = "Method") +
-  geom_text(data = label_data)
-
-model_plot1
 ```
 
 ## Method
 
 We implemented the planning model using the WebPPL-- a programming language designed for specifying probabilistic models [@goodman2014]. To derive predictions from the model, we exposed it to the same trial-by-trial stimuli as the participants in our experiment, and used the probabilistic equations defined above to determine the likelihood of choosing each behavior (e.g., "speak", "point", or "teach") on every trial. Separate predictions were made for each trial for each participant on the basis of all of the information available to each participant at that point in time (e.g., how many words they had learned, their partner's observed behavior previously, etc).
 
-The model's behavior is contingent on two parameters--discounting ($\gamma$), and it's rationality ($\alpha$). In order to determine the values of these parameters that best characterize human participants, we used Bayesian inference to estimate the posterior means of both. Using estimates rather than the maximum likelihood estimates naturally penalizes the models for their ability to predict patterns of data that were not observed, applying a kind of Bayesian Ockham's razor [@mackay1992]. Because of we found substantial variability in the best parameter estimates across individual participants, we estimated parameters hierarchically, with group-level parameters forming the priors for individual participants' parameters. This hierarchical estimation process achieves the same partial pooling as as subject-level random effects in mixed-effects models, giving estimates of the group-level parameters [@gelman2006]. Details of the estimation procedure can be found in the Supplemental Materials.
+The model's behavior is contingent on two parameters--discounting ($\gamma$), and it's rationality ($\alpha$). In order to determine the values of these parameters that best characterize human participants, we used Bayesian inference to estimate the posterior means of both. Using estimates rather than the maximum likelihood estimates naturally penalizes the models for their ability to predict patterns of data that were not observed, applying a kind of Bayesian Occam's razor [@mackay1992]. Because of we found substantial variability in the best parameter estimates across individual participants, we estimated parameters hierarchically, with group-level parameters forming the priors for individual participants' parameters. This hierarchical estimation process achieves the same partial pooling as as subject-level random effects in mixed-effects models, giving estimates of the group-level parameters [@gelman2006]. Details of the estimation procedure can be found in the Supplemental Materials.
 
 ## Model Results
 
@@ -123,28 +92,95 @@ hyper_means <- hyper_parameters %>%
             ci_upper = quantile(value, .975))
 ```
 
-In line with previous work on rational speech act models, and decision making, we expected rationality ($\alpha$) to be around 1 or 2 [@frank2012, @frank2014]. We estimated the posterior mean rationality ($\alpha$) to be `r pull(filter(hyper_means, Parameter == "hyperAlpha"), mean)` with 95% credible intervals of [`r pull(filter(hyper_means, Parameter == "hyperAlpha"), ci_lower)`, `r pull(filter(hyper_means, Parameter == "hyperAlpha"), ci_upper)`]. We did not have strong expectations for the value of the discounting parameter ($\gamma$), but estimated it to be `r pull(filter(hyper_means, Parameter == "hyperDiscount"), ci_lower)` [`r pull(filter(hyper_means, Parameter == "hyperDiscount"), ci_lower)`, `r pull(filter(hyper_means, Parameter== "hyperDiscount"), ci_upper)`], suggesting that on average participants weighed the next occurrence of a referent as slightly less than half as important as the current occurrence.
+In line with previous work on rational speech act models, and decision making, we expected rationality ($\alpha$) to be around 1 or 2 [@frank2012, @frank2014]. We estimated the posterior mean rationality ($\alpha$) to be `r pull(filter(hyper_means, Parameter == "hyperAlpha"), mean)` with 95% credible intervals of [`r pull(filter(hyper_means, Parameter == "hyperAlpha"), ci_lower)`, `r pull(filter(hyper_means, Parameter == "hyperAlpha"), ci_upper)`]. We did not have strong expectations for the value of the discounting parameter ($\gamma$), but estimated it to be `r pull(filter(hyper_means, Parameter == "hyperDiscount"), mean)` [`r pull(filter(hyper_means, Parameter == "hyperDiscount"), ci_lower)`, `r pull(filter(hyper_means, Parameter== "hyperDiscount"), ci_upper)`], suggesting that on average participants weighed the next occurrence of a referent as slightly less than half as important as the current occurrence.
 
-<!-- The fit between our model’s predictions and our empirical data from our reference game study on Amazon Turk can be seen in Figure \ref{fig:model_fit}. The model outputs trial-level action predictions (e.g., “speak”) for every speaker in our empirical data. These model outputs were aggregated across the same factors as the empirical data: modality, appearance, partner’s exposure, and utility condition. We see a significant correlation of our model predictions and our empirical data (*r = `r #model_corr`, p<0.0001*). Our model provides a strong fit for these data, supporting our conclusion that richly-structured language input could emerge from in-the-moment pressure to communicate, without a goal to teach. -->
+```{r load-predicted-data}
+predicted_files <- list.files(here("model_output/predicted_data"),
+                              full.names = TRUE) 
 
-```{r model_fit, fig.env = "figure", fig.pos = "H", fig.height=3,  fig.width=4, fig.cap = "Fit between model predictions and empirical data.", eval = FALSE}
+predicted_data <- map_dfr(predicted_files, read_csv, .id = "sample")
+```
 
-#plot of model predictions vs empirical game data
-model_fit %>%
-  ggplot(aes(x=mean_pred_plot, y=mean_emp, color=method,
-             shape=as.factor(partnersExposure),group=appearance,
-             alpha=condition,
-             label = appearance)) +
-  geom_point(aes(size=as.factor(appearance))) +
+```{r plot-predicted-data}
+get_model_output <- function(sample_data) {
+  
+  sample_data %>%
+    select(condition,ldf_num, partnersExposure, appearance, exposures, action) %>%
+    rename(method = action) %>%
+    ungroup() %>%
+    group_by(condition, ldf_num, partnersExposure, exposures, appearance, method) %>%
+    summarise(n = n()) %>%
+    group_by(condition, ldf_num, partnersExposure, exposures, appearance) %>%
+    mutate(n = n/sum(n)) %>%
+    ungroup() %>%
+    complete(nesting(condition, ldf_num, partnersExposure), appearance, exposures, 
+             method, fill = list(n = 0)) %>%
+    group_by(condition, partnersExposure, method, appearance) %>%
+    summarise(model_mean = mean(n),
+              n = n())
+}
+
+model_wide_data <- predicted_data %>%
+  group_by(sample) %>%
+  nest() %>%
+  mutate(expectations = map(data, get_model_output)) %>%
+  select(-data) %>%
+  unnest(cols = c(expectations)) %>%
+  group_by(condition, partnersExposure, method, appearance) %>%
+  summarise(model_upper = quantile(model_mean, .975),
+            model_lower = quantile(model_mean, .025),
+            model_mean = mean(model_mean),
+            n = mean(n)) %>%
+  ungroup() %>%
+  mutate(condition = factor(condition, labels = CONDITION_LABELS),
+         method = factor(method, labels = MODALITY_LABELS),
+         appearance = factor(appearance, 
+                             labels = c("First", "Second", "Third")),
+         partnersExposure = factor(partnersExposure, 
+                                   labels = c("None", "Same", "Twice")))
+
+
+empirical_wide_data <- filtered_data %>%
+  rename(exposures = exposureRate) %>%
+  group_by(condition, ldf_num, partnersExposure, exposures, appearance, 
+           method) %>%
+  summarise(n = n()) %>%
+  group_by(condition, ldf_num, partnersExposure, exposures, appearance) %>%
+  mutate(n = n / sum(n)) %>%
+  ungroup() %>%
+  complete(nesting(condition, ldf_num, partnersExposure), 
+                  appearance, exposures, method, fill = list(n = 0)) %>%
+  group_by(condition, partnersExposure, method, appearance) %>%
+  tidyboot_mean(n) %>%
+  rename(empirical_mean = empirical_stat, empirical_lower = ci_lower, 
+         empirical_upper = ci_upper)
+
+wide_data <- left_join(model_wide_data, empirical_wide_data, 
+                       by = c("condition", "partnersExposure", "method", 
+                              "appearance", "n"))
+
+model_human_correlation <- cor.test(wide_data$model_mean, wide_data$empirical_mean) %>%
+  tidy() %>%
+  mutate(p.value = printp(p.value))
+```
+
+How well did our model characterize people's communicative behavior? We ran 100 simulations of the model's choices participant by participant and trial by trial using our posterior estimates of the hyper-parameters $\alpha$ and $\gamma$, Because we did not use our participant-level parameter estimates, this reduces the correlation between predictions and empirical data, but reflects best the best predictions about what a replication experiment. Across experimental manipulations, the model's predictions were highly correlated with participant behavior ($r =$ `r pull(model_human_correlation, estimate)` [`r pull(model_human_correlation, conf.low)`, `r pull(model_human_correlation, conf.high)`], $t($ `r pull(model_human_correlation, parameter)` $)=$ `r pull(model_human_correlation, statistic)`, $p$ `r pull(model_human_correlation, p.value)`; Figure \ref{fig:model-fit}).
+
+
+```{r model-fit, fig.env = "figure", fig.pos = "H", fig.height=3,  fig.width=4, fig.cap = "Fit between model predictions and empirical data."}
+
+
+ggplot(wide_data, aes(x = model_mean, y = empirical_mean, color = method,
+             shape = as.factor(partnersExposure), group = appearance,
+             alpha = condition, label = appearance)) +
+  geom_point(aes(size = as.factor(appearance))) +
   geom_abline(intercept =0, slope=1) +
-  geom_linerange(aes(ymax = mean_emp + se_emp,
-                     ymin = mean_emp - se_emp),
-                 alpha=.4) +
-  geom_errorbarh(aes(xmin = mean_pred_plot - se_pred_plot,
-                     xmax = mean_pred_plot + se_pred_plot),
-                 alpha = .4)+
-  # geom_text(aes(label=appearance),hjust=0, vjust=0) + 
-  # facet_grid(.~condition)+
+  geom_linerange(aes(ymax = empirical_upper,
+                     ymin = empirical_lower),
+                 alpha =.4) +
+  geom_errorbarh(aes(xmin = model_lower,
+                     xmax = model_upper),
+                 alpha = .4 )+
   coord_cartesian(xlim=c(0,.8), ylim=c(0,.8)) + 
   labs(y="Empirical Proportion of Trials", x="Model Predictions") +
   scale_color_manual(values=modality.colors, name='Modality', labels=c("Gesture", "Speech", "Teach")) +
