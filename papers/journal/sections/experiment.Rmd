@@ -162,7 +162,7 @@ ggplot(acc_data, aes(x = as.factor(exposureRate), y = empirical_stat,
 ### Gesture
 
 ```{r modality-plot-function}
-modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832")
+modality_colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832")
 
 modality_plot <- function(df, method_column, label_data) {
   method_column <- enquo(method_column)
@@ -175,8 +175,7 @@ modality_plot <- function(df, method_column, label_data) {
     complete(nesting(condition, ldf_num, partnersExposure),
              exposureRate, !!method_column, fill = list(n = 0)) %>%
     group_by(condition, partnersExposure, !!method_column) %>%
-    tidyboot_mean(n, nboot = 10)
- 
+    tidyboot_mean(n)
   
   ggplot(prop_methods_exposures,
        aes(x = partnersExposure, y = empirical_stat, color = !!method_column, 
@@ -185,8 +184,8 @@ modality_plot <- function(df, method_column, label_data) {
     geom_line(size=.9, position = position_dodge(.25)) +
     geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
                   position = position_dodge(.25)) +
-    labs(y="Proportion of Trials", x = "Exposure Rate During Training") +
-    scale_color_manual(values=c(modality.colors), name = "Method") +
+    labs(y = "Proportion of trials", x = "Exposure rate during training") +
+    scale_color_manual(values = modality_colors, name = "Method") +
     geom_text(data = label_data)
 }
 ```
@@ -259,7 +258,7 @@ Consistent with our predictions, speech seemed to largely tradeoff with gesture.
 Thus far, we have focused on relatively straightforward scenarios to demonstrate that a pressure to communicate successfully in the moment can lead speakers to trade-off between gesture and speech sensibly. Next, we turn to the emergence of teaching behavior.
 
 ```{r teaching-rates}
-glm_teach <- glmer((method == "teach") ~ partnersExposureNumeric * exposureRate + 
+glm_teach <- glmer((method == MODALITY_LABELS[3]) ~ partnersExposureNumeric * exposureRate + 
                     partnersExposureNumeric * appearanceNumeric +
                     condition + 
                     (1| ldf_num) + (1|realLabel),
@@ -285,51 +284,50 @@ Consistent with our predictions, rates of teaching were higher for better traine
 
 As predicted, the data from our paradigm corroborate our findings from the corpus analysis, demonstrating that pedagogically supportive behavior emerges despite the initial cost when there is an asymmetry in knowledge and when speech is less costly than other modes of communication. While this paradigm has stripped away much of the interactive environment of the naturalistic corpus data, it provides important proof of concept that the structured and tuned language input we see in those data could arise from a pressure to communicate. The paradigm’s clear, quantitative predictions also allow us to build a formal model to predict our empirical results.
 
-```{r teach, cache=TRUE, fig.height = 3, fig.width = 4.5, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, plotted by how many times an object had been the target object."}
+```{r teach-plot-function}
+teach_colors <- c(None = "#87d868", Same = "#54a832", Twice = "#2c6d12")
 
-prop_methods_teaching <- all_data %>%
-  filter(toBeDropped != 1) %>%
-  select(condition,ldf_num, partnersExposure, appearance,method) %>%
-  group_by(condition, ldf_num,partnersExposure, appearance, method) %>%
-  summarise(n = n()) %>%
-  group_by(condition, ldf_num,partnersExposure, appearance) %>%
-  mutate(n = n/sum(n)) %>%
-  ungroup() %>%
-  mutate(method = as.factor(method)) %>%
-  tidyr::complete(nesting(condition, ldf_num, partnersExposure), appearance, method, fill = list(n = 0)) %>%
-  group_by(condition, partnersExposure, appearance, method) %>%
-  tidyboot_mean(n)
-  # summarise(mean = mean(n), se = seprop(n)) 
+teach_plot <- function(df, method_column, label_data) {
+  method_column <- enquo(method_column)
+  
+  prop_methods_teaching <- df %>%
+    group_by(condition, ldf_num, partnersExposure, appearance, !!method_column) %>%
+    summarise(n = n()) %>%
+    group_by(condition, ldf_num, partnersExposure, appearance) %>%
+    mutate(n = n / sum(n)) %>%
+    ungroup() %>%
+    complete(nesting(condition, ldf_num, partnersExposure),
+             appearance, !!method_column, fill = list(n = 0)) %>%
+    filter(!!method_column == MODALITY_LABELS[3]) %>%
+    group_by(condition, partnersExposure, appearance, !!method_column) %>%
+    tidyboot_mean(n)
 
-plot_prop_methods_teaching <- prop_methods_teaching %>%
-  ungroup() %>%
-  mutate(condition = factor(condition, labels = CONDITION_LABELS),
-         partnersExposure = factor(partnersExposure, levels = c("None", "Same", "Twice"),
-                                   labels = c("None", "Same Amt", "Twice Amt"))) %>%
-  filter(method=="label_click") 
+  ggplot(prop_methods_teaching,
+       aes(x = appearance, y = empirical_stat, label = partnersExposure,
+           color = partnersExposure, group = partnersExposure)) +
+    geom_line(size = 1, position = position_dodge(.25)) +
+    geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
+                    position = position_dodge(.25)) +
+    facet_grid(. ~ condition) +
+    labs(y="Proportion of Teaching Trials", x = "Object Instance during Game") +
+   # coord_cartesian(ylim = c(0,.4)) +
+    scale_color_manual(values = teach_colors, name = "Partner's Exposure") +
+    geom_text(data = label_data) +
+    theme(legend.position = "none",
+          legend.key.size = unit(.8, 'lines'),
+          legend.text=element_text(size=7),
+          legend.title=element_text(size=8),
+          axis.text.x = element_text(angle = 35, hjust = 1))
+}
+```
 
-
+```{r teach-empirical, fig.height = 3, fig.width = 4.25, set.cap.width=T, num.cols.cap=1, fig.cap = "Rates of teaching across the 6 conditions, plotted by how many times an object had been the target object."}
 
 teach_label_data <- tibble(appearance = c(1.5, 1, 1), condition = CONDITION_LABELS[1], 
-                     partnersExposure = c("None", "Same Amt", "Twice Amt"),
-                     mean = c(.3, .165, .005))
+                     partnersExposure = c("None", "Same", "Twice"),
+                     empirical_stat = c(.3, .165, .005))
 
-plot_prop_methods_teaching %>%
-  ggplot(aes(x=appearance, y=mean, label=partnersExposure, color = partnersExposure)) +
-  geom_point(aes(y=mean), size=2.25, position=position_dodge(.25)) +
-  geom_line(aes(x=appearance, y=mean, group=partnersExposure, color=partnersExposure), 
-            size=1, position=position_dodge(.25)) +
-  geom_linerange(aes(ymax = ci_upper, ymin = ci_lower, color=partnersExposure), position=position_dodge(.25)) +
-  facet_grid(. ~ condition) +
-  labs(y="Proportion of Teaching Trials", x="Object Instance during Game") +
-  coord_cartesian(ylim=c(0,.4)) +
-  scale_color_manual(values=c("#87d868", "#54a832", "#2c6d12"), name = "Partner's Exposure") +
-  theme(legend.position = "none",
-        legend.key.size = unit(.8, 'lines'),
-        legend.text=element_text(size=7),
-        legend.title=element_text(size=8),
-        axis.text.x = element_text(angle = 35, hjust = 1)) + 
-  geom_text(data = teach_label_data, size = 3.5)
+teach_plot(filtered_data, method, teach_label_data) 
 ```
 
 The results from this experiment are qualitatively consistent with a model in which participants make their communicative choices to maximize their expected utility from the reference game. We next formalize this model to determine if these results are predicted quantitatively as well.

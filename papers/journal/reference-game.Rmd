@@ -56,6 +56,8 @@ library(ggthemes)
 library(tidyverse)
 library(tidyboot)
 library(glue)
+library(egg)
+library(latex2exp)
 
 knitr::opts_chunk$set(fig.pos = 'tb', echo = FALSE, cache = TRUE, 
                       warning = FALSE, message = FALSE, 
