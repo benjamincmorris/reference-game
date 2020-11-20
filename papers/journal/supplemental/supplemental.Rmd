@@ -45,164 +45,25 @@ options(digits=2)
 \renewcommand{\thetable}{S\arabic{table}}  
 \renewcommand{\thefigure}{S\arabic{figure}}
 
-\section{Corpus Referential Talk and Gesture Coding Guide}
-\subsection{The Language Devlepment Project}
-The Language Development Project is a longitudinal study that follows a diverse sample of children and their parents periodically from when they first begin to acquire language through high school. Researchers filmed parents and their children interacting for 90 minutes. This may include them making a snack, playing outside, reading books, or whatever activities the parent decides. The transcripts only include speech that was directed at or produced by the child.
+\section{Corpus Referential Talk and Gesture Coding Supplemental}
 
-\subsection*{Coding Guide}
-\subsection{Goals}
-Using the session transcripts, we are interested in coding all the concrete nouns spoken throughout the session by both parent and child. They may not necessarily be present at the moment, but they are nouns that can be gestured to if present. Coding was led by Madeline Meyers. This coding manual was primarily authored by Madeline Meyers.
+Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found at **XYZ.COM**
+
+\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
+
 \subsection{Coding A Referent}
-When deciding which referents are concrete, ask yourself if they can be pointed to, regardless of whether you believe they are present in the environment. This is the most useful determiner for what should be included. 
 
-- Referents should be converted to their *lemmas*. A lemma is the "dictionary form" --usually the singular form-- of the word. Here are some examples of lemmas:
-  - teeth = tooth
-  - pajamas = pajamas
-  - doggie = dog
+In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a signle utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
 
-- Each referent should be in the form of *one word*--if it is a two-word phrase, or a noun that is more specific, connect the words with an underscore "_," e.g.:
-  - birthday cake = birthday_cake
-  - belly button = belly_button
+Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
 
-- Multiple referents should be separated with a *semicolon* ";"
-- Referents should be coded using *lowercase* letters only
-- Figure out what the child and siblings' names are so you can code them as necessary 
+\subsection{Coding for Presentness}
 
-\subsection{Defining A Referent}
+Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms ("e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual at **XYZ.COM** 
 
-What is a concrete noun? It depends on the context. We want to capture any concrete nouns that are gestured to or that are spoken in the transcript, which includes:  
-  
-  - **Proper nouns** that could be found across subjects
-    - All **family members**, even if it is the actual name of the family member that is said. For example, all references to the child's name will be coded as "child", or if you know that a child's sibling is named Esmerelda, all mentions of Esmerelda should be coded as "sister." 
-    - Additionally, if you know the name of a **pet**, code references to the pet as whatever animal the pet is (ex. if the family has a cat named Smelly, all references of Smelly the cat should be coded as "cat"). 
-    - **Common characters** included in the following list. These characters were included because they were present across subjects and across ages. Therefore, they functioned as any other concrete noun--they did not represent just a single object, but were found across media in different forms. All other character names should be coded as what they actually represent if possible (ex. minnie mouse is a mouse, cinderella is a princess, nemo is a fish). More obscure references that can't be generalized (ex. Goldilocks is just a girl), can be left uncoded. Similarly, we do not code everything as "toy."
-    - **Characters that should be coded**
-          
-            - Pooh = pooh
-            - Tigger = tigger
-            - Elmo = elmo
-            - Mickey = mickey_mouse
-            - Scooby Doo = scooby 
-            - Spongebob = spongebob
-            - Cookie Monster = cookie_monster
-            - Patrick (from spongebob) = patrick_star
-            - Barney = barney
-            - Dora = dora
-            - Any Teletubby character (e.g., Dipsie)  = teletubby
-            - Any Star Wars character = star_wars 
-            - Santa Claus = santa
-            - Rescue Hero toy = rescue_hero
-            
-  - Universal **rooms** in the house
-    - ex. different rooms like living_room, bedroom, kitchen, bathroom
-  - **Shape words**, including smiley_face (:, if they are referring only to the shape and are not background words.
-  - **Nicknames for objects**, as long as you are certain of what object the nickname refers to. For example, if you know that "bidiba" is the child's name for blanket, every time the child says "bidiba" you should code it as "blanket."
+\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
 
-
-Our definition of a concrete noun does **not** include:
-
-  - **Pet names** (ex. do not code "honey" as a referent for the utterance "Oh honey, it's okay")
-  - Words that have **multiple meanings** (ex. if the child is saying "cheese" to the camera, do not code that as a referent for cheese, or if someone says "you're chicken", do not code that as a referent for chicken)
-  - **Background objects** including words like sky, page, paper only coded when stand alone, not if there is a foreground referent present
-  - **Pronouns**, like "me" and "you" are not coded as concrete referents for the people they refer to
-  - Words that **could be nouns but are being used as verbs**, even if the usage is switching rapidly
-    - ex. "button that"(V) versus "how many buttons?"(N)
-  - Gestures to **vague locations**
-    - ex. a gesture to an object that is "over there" or "used to be there"
-    - general terms like "bottom", "top", "back", "front", "inside", "outside", although "lid" is a concrete referent 
-  - **Gestures that cannot be identified**. Typically, all deictic palm/point/hold/give gestures will be coded, except for those where the Obj is undefined
-  - **Numbers**
-  - References to the experimenter 
-
-\subsection{Potential Areas of Confusion}
-
-**Color.** Sometimes, parents and children will speak about the color of the object instead of the object itself, but they will also point to the object. Because it is difficult to distinguish the intention of their point, code all gestures as referring to the object that is being pointed to, and only code verbal referents if they include a concrete noun. For example, if a child says "Blue" and points to a blue crayon, you should leave spoken_obj blank and code "crayon" for gestured_obj. 
-
-**Siblings.** It is sometimes difficult to know if a sibling is present or not. Try watching a few minutes of the video to get a feel for the layout of the environment and persons present in said environment. 
-
-**Photos.** In photos, it is difficult to distinguish what is foreground, what is background, and who is being mentioned. The transcripts are generally coded very well to indicate that a gesture is toward a particular character (ex. grandma) in the photo. If you are not able to identify the relation of a person (ex. Shelby--who is she?), leave spoken_obj blank, and indicate that the gestured referent is "photo." 
-
-**Nouns vs. Verbs.** If you are unsure whether a word is being used as a noun or verb, and cannot tell based on context clues, as often happens with child speech, take the conservative route and assume the referent is being used as a verb. 
-
-**Counting.** Sometimes, when parents and children are counting, they will say the numbers while pointing to objects. Just as with colors, code the gestured objects but do not code the numbers under spoken_obj. 
-
-**Letters.** If either the gestured or spoken columns contain the word "letter", code the referent as "letter". Do not code a referent of child if the child's name is spelled out letter-by-letter. All letters that are said individually have an "@" next to them, so they are easy to distinguish.  
-
-**One vs. Multiple Referents.** There will be situations where you are unsure whether to code an object as a single referent using an underscore, or as multiple separate referents. As a rule of thumb, if the whole is not the sum of the parts, and the referent is common, code it as one word. If the whole is the sum of the parts, especially if the referent is uncommon, code it as two separate referents. For example, when you see the words "ice cream", you have an immediate mental image of a lovely dessert. Seeing the words "ice cream" do not activate your "ice" or "cream" schemas, because "ice cream" is its own separate category, which is just as large or larger than "ice" or "cream" categories. Therefore, the whole is not the sum of the parts and "ice cream" should be coded as one word (ice_cream). However, when you hear the words "juice bottle", there are multiple schemas activated. Notably, either "juice" or "bottle" could be present alone to refer to the same concept--the collective entity of juice in a bottle. In this instance, the whole is the sum of the parts, because the juice bottle contains two words that can stand alone as their own categories, and when combined, they create the resultant concept. Especially because they are often uttered separately to refer to the same object, when they are both mentioned in the same utterance, they should both be coded as referents.  
-
-**Pretend Play.** Pretend play is most confusing when coding gestures and referent presentness. You should take what the child says as the rule. For example, if a child creates a blob-like playdoh creation and says "that is a snake", the gestured_obj should be coded as snake (not playdoh; snake, as playdoh is the background feature in this context). If the parent counters and points to the pretend snake and says, "that is a rope", you should code her gestured_obj as a rope, even though the snake and the rope are the same object. 
-
-**Referent Specificity. ** How specific should a referent be? It depends on the context. A referent should always be coded as the most specific way it is referred to in the surrounding discourse, even if it is mentioned at different levels of specificity. A referent should not be coded as being more specific than it is, if that specificity is never mentioned in the discourse. There is only one exception to this rule--if the less specific referent has a contradictory meaning from the actual referent. For example, if the parent and child refer to a wood chip on the ground only as a "chip," it should still be coded as a wood_chip. In these cases, there is usually a more specific referent mentioned in the context or Obj columns. Here are some general guidelines:
-
-  - stuffed animals, real animals, and pictures of animals are coded the same (as the animal) *except* teddy bears because they are mentioned widely across children and seem to be a unique category (coded as teddy_bear)
-  - similarly, baby dolls are coded as babies and not both babies and dolls
-  - pieces of objects are coded separately if they are referred to or gestured to multiple times in the discourse (ex. puzzle_piece vs. puzzle)
-    - Baby animals, such as "puppy" should be coded in their adult form, "dog", unless the animals are being compared to one another (ex. there is a story about a mom dog and a puppy)
-  - fake/toy objects and real objects are coded the same (as the object)
-  - if you know that a parent and child are talking about a toolbelt, as they use the word "toolbelt" earlier in the discourse, but then switch to using the word "belt", continue to code "belt" as "toolbelt". 
-  - generally speaking, occupations are coded as one referent rather than two, for example, an ice cream man would be coded as ice_cream_man instead of ice_cream; man, because this second package does not contain the whole meaning of an ice cream man. 
-        
-**Synonyms. ** A lot of the time, you will run across words that have the same meaning, and we want to code those as the same referent. Check out the handy "Quick Coding Vocabulary Chart" at the end of the document to see what vocab to use. 
-
-\section{Presentness Coding Guide}
-
-Not all concrete referents that are mentioned in speech are actually present in the environment, because people commonly talk about objects that are in other rooms, things that happened in the past, or things that have yet to happen. However, it is necessary to identify which referents are in the environment, especially because it is impossible to gesture to an object that is not present. Therefore, the goal of determining referent presentness is to make sure that all referents included in the speech/gesture tradeoff analysis have nonzero probabilities of being spoken about or gestured to.
-
-While it would be ideal to watch every video to determine whether the referent is present in the environment, that is not feasible, so we will be predicting whether the referent is present by using information in the transcripts.
-
-It is helpful to watch the beginning of every video to understand who is present, and what the layout of the environment is. Can you point to the kitchen from the living room? The bedroom from the bathroom?
-
-Keep in mind that objects can be present in the environment without the subjects attending to the object. It is common that one person sees an object, but the other does not. Coding these predictions takes great attention to detail.
-
-Context clues are enormously helpful. If an object is gestured to at any point while the parent and child are in the same location, this object can be assumed to be present in the environment. However, if either the parent or the child does not know where the object is (ex. "where is x?"), they could not have pointed to the object, so it should be counted as not present.
-
-Objects that are present are coded as "1", and objects that are not present are coded as "0". You should include one code for every referent in the utterance, so if there are multiple referents, use semicolons to separate your 1's and 0's.
-
-It is necessary to consider whether the referent is not just present, but pointable, and how a gesture to that referent would be coded during transcription. For example, parents talk about how the batteries in a toy might be dead. Even though the batteries are present in the environment, if the parent pointed towards the toy and said "the [point] are dead", that would be interpreted as "the [point to toy] are dead", meaning that the toy is dead, instead of "the [point to batteries] are dead", which is the actual meaning of the phrase. This rarely happens with words other than battery and diaper.
-
-If the subject believes that the referent is present, it should be coded as present. This topic only becomes confusing during pretend play, where a child makes up a new object, or changes the meaning of an item. If the child labels the item, it is present. During these pretend play situations, parents often ask what an item is, and any time the parent is not sure what the item is, the parent's referents should be marked as not present. For example, a parent may ask "Is it a lemur? Is it a monkey?" If the child says "It is a lemur," the parent's utterances should still be coded as not present for the following reason. The child could have easily said "No, it is an orangutan," in which case, the parent's utterances would have been not present as well.
-
-One last thing to keep in mind is that the same referent can be present in one line and not present in the next depending on its meaning. For example, if a parent and child are looking at a photograph of grandmother mary, grandmother is present. If, however, in the next line, the child asks where grandmother kathleen is, grandmother is not present. This is similar to an example where there are multiple objects and only one is present--if the parent has a red ball, but the child is looking for the yellow ball.
-
-**Referents that are always present**
-
-- objects that are gestured to
-- objects that have been previously gestured to unless there has been a change in room location 
-- body parts of people/dolls that are present
-- objects that are directly labeled, ex. "this/that is..." even if they are incorrectly labeled 
-- the subjects that are present, though be careful to not code "Dad" as being present if he is not there. Occasionally, "mom" will not be present if it is referring to someone else's mom (ex. if parent and child are reading a story and "his mom is not there"). 
-- all referents during storytimes are assumed to be present in the pictures of the book
-    
-
-**Referents that are likely not present**
-
-- "go get your X" if the target referent is in a different room
-- "your Y is not here"
-- "that's not a Z"
-- "that goes with another X, not this one" or phrases that are the opposite of a label for the referent that is coded
-- "I need..."
-- "make a..." watch out for these phrases during craft projects. You cannot point to a circle that has not been drawn yet. 
-- "where is the X?" look at what the response is to determine if it is present or not. Parents often will be looking through books, in which case they believe the object is present, and are just quizzing the child.  
-- "Is it 'x' or 'y'?" There is no way the person uttering this statement could point to the specific referent of the object they are asking about if they are not sure what the object is. This happens often in pretend play, where a parent is asking what the child believes an object to be. 
-- things that are heard, but not seen 
-- rote songs or phrases 
-- conversations that involve stories about the past or future 
-
-\subsection{Coding Examples}
-\begin{enumerate}
-\item 
-\begin{tabular}{c c c}
-	\hline person & chat & spoken\_obj \\
-	\hline parent	& here . & NA\\
-	child & honey .	& honey \\
-	parent & honey . & NA \\
-	parent & who's my honey ? & NA \\
-	child & Pooh . 	& pooh\\
-	parent	& oh, Pooh likes honey . & pooh; honey\\
-	parent	& he does . & NA\\
-	parent	& does Pooh eat honey ? & pooh; honey \\
-\end{tabular}
-\item 
+\subsection{Coding Example}
 \begin{tabular} {c c c c}
 	\hline person & chat & spoken obj & ref\_pres\_predicted \\
     \hline parent &	want a bite of banana ?	 & banana &  1\\
@@ -210,127 +71,14 @@ One last thing to keep in mind is that the same referent can be present in one l
     parent	& that's all the orange we have . & orange & 0	\\
     parent & that's it . & & \\
 \end{tabular}
-\item 
-\begin{tabular}{c c c c}
-\hline person & chat & spoken\_obj & ref\_pres\_predicted \\
-    \hline parent &	oh CHILD, what was that ? & child & 1 \\
-parent	& did you see the semi ? & semitrailer & 0 \\
-parent	& did you see the semitrailer ? & semitrailer & 0 \\
-parent	& big one . & & \\
-child	& small . &&\\
-parent	& small ? && \\
-child&	train . & train & 0 \\
-child	& train . &train&0 \\
-child	&train . &train&0\\
-parent	&have to wait for the train .&train&0 \\
-\end{tabular}
-\item
-\begin{tabular}{c c c c}
-\hline person & chat & spoken\_obj & ref\_pres\_predicted \\
-\hline parent&	but the, the top to the pineapple is gone . & lid; pineapple & 0; 1 \\
-parent & where's the top to the pineapple ? & lid; pineapple & 0;1 \\
-parent	& what+about the bananas ? & banana & 1 \\
-parent	& oh, here's the top to the pineapple . & lid; pineapple & 1; 1\\
-\end{tabular}
-\item
-\begin{tabular}{c c c c}
-\hline person & chat & spoken\_obj & ref\_pres\_predicted \\
-\hline child &	I want a hat . & hat & 0 \\
-child	& I want a hat . & hat & 0\\
-child	& want a hat . & hat & 0 \\
-parent&	okay, it's all ready for you . && \\
-child &	it not a hat . & hat & 0  \\
-child & not a hat . & hat & 0 \\
-child &	no it not a hat . & hat &0 \\
-child &	it not a hat . & hat &0 \\
-parent &	it's not a hat ? & hat & 1 \\
-child	 & no, it is a bunny . & bunny & 1 \\
-child &	not a bunny . & bunny & 0 \\
-child	& it is a hat . & hat & 1 \\
-child &	it is not a blue bunny . & bunny & 0 \\
-child &	it a hat . & hat & 1 \\
-child	& it not a blue bunny .  & bunny & 0\\
-\end{tabular}
-\item 
-\begin{tabular}{c c c c c c c c}
-\hline person & chat & form & gloss & obj & spoken\_obj & gestured\_obj & ref\_pres\_predicted \\
-\hline parent & what's that ?	\\		
-parent &	an eye+ball ? & && & eye; ball &  & 1; 1 \\			
-parent &	yeah .	&&& \\		
-child	&&&& \\			
-parent	 & going to juggle ?	&&&\\		
-parent	& want to juggle ?	&&&\\	
-child	&&&&	\\		
-parent	&	& hold & give balls	& balls  && ball & 1 \\
-\end{tabular}
-\end{enumerate}
-
-
-\subsection{Quick Coding Vocabulary Chart}
-
-\begin{tabular}{ |c|c|}
-\hline 
-Word & Coded Referent \\
-\hline \hline trash, trash can & garbage \\
- \hline stomach, belly  & tummy \\
- \hline lace & shoelace \\
- \hline plane, airplane  & airplane\\
- \hline remote control, clicker, remote & remote  \\
- \hline rabbit, bunny, bunny\_rabbit  &bunny \\
- \hline mickey, mickey\_mouse & mickey\_mouse \\ 
- \hline grandma, nana, granny, etc. & grandmother \\
- \hline grampy, gramps, grandpa, etc. & grandfather \\ 
- \hline potty, toilet & potty \\
- \hline bottom, butt, tushy, tushie & butt \\
- \hline boo+boo, ouchie & cut \\
- \hline pull+up, diaper & diaper \\
- \hline socket, outlet & outlet \\
- \hline airplane, plane & airplane \\
- \hline Santa Claus & santa \\
- \hline teeter+totter & seesaw \\
- \hline smiley face image & smiley\_face \\
- \hline ice cream cone, ice cream dish, etc. & ice\_cream \\
- \hline possum, opossum & possum \\
- \hline tissue, kleenex & tissue \\
- \hline bookbag, backpack & backpack \\
- \hline road, street & street \\
- \hline stool, stepstool & stepstool \\
- \hline play dough, play doh, playdo, play\_dough, etc. & play\_doh \\
- \hline mower, lawn mower & lawn\_mower \\
- \hline glass, cup, sippy cup & cup \\
- \hline sucker, lolipop & lolipop \\
- \hline noggin, head & head \\
- \hline mama, ma+ma, mommy & mom \\
- \hline dada, da+da, dad, daddy & dad \\
- \hline VCR & vcr \\
- \hline picture (=photo) & photo \\
- \hline picture (=drawing) & picture \\
- \hline Mr. Potatohead & potatohead \\
- \hline telephone, cell phone, landline phone & phone \\
- \hline fire engine, firetruck & firetruck \\
- \hline toy box & toybox \\
- \hline hippopotamus & hippo \\
- \hline dino & dinosaur \\
- \hline television & tv\\
- \hline drawing, painted picture & picture \\
- \hline photograph, "picture" & photo \\
- \hline 
- \end{tabular}
- \clearpage
- \begin{tabular}{|c|c|}
- \hline refrigerator, fridge & refrigerator \\
- \hline clotheshanger, coathanger, hanger & coathanger \\
- \hline hot tub & hot\_tub \\
- \hline  donut & doughnut \\
- \hline jack in the box & jack\_box \\
- \hline
-
-\end{tabular}
 
 
 
 
-\section{Model Details}
+
+
+
+\section{Experimental Results}
 
 ```{r}
 all_data <- read_csv(here("data/1.30_turk_exp.csv"))
@@ -348,7 +96,7 @@ For readability, the main text includes only the key effects for each statistica
 
 \subsection{Learning}
 
-To first confirm that we sucessfully manipulated participants' learning, we asked whether items with more exposure during training were better learned at pretest. To do this we fit a logitistic mixed-effects model to analyze learning at baseline (i.e. prior to gameplay). We see the predicted signficant effect of exposure rate on learning, confirming that object-label mappings that were presented more in training were better learned. 
+To confirm that we sucessfully manipulated participants' learning, we asked whether items with more exposure during training were better learned at pretest. To do this we fit a logitistic mixed-effects model to analyze learning at baseline (i.e. prior to gameplay). We see the predicted signficant effect of exposure rate on learning, confirming that object-label mappings that were presented more in training were better learned. 
 
 Additionally, we can test our critical between-subjects manipulations to ensure that learning of the lexicon does not differ significantly at pretest (prior to the manipulations). Neither utility condition or partner's exposure signficantly predicts performance at pretest. This provides a simple check that participants in each condition learned the lexicon similarly. The full results of this model are presented in Table \ref{tab:learningTable}.
 
@@ -380,7 +128,7 @@ Our key analyses concerned participants choice of communicative strategy. In eac
 
 \subsubsection{Gesture}
 
-Looking first at gesture, we ran a mixed effects logistic regression to predict whether speakers chose to gesture during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants gestured more for words that recieved less training, with partners who had less knowledge, and in the condition where gesture's utility was higher. The full results of this model are presented in Table \ref{tab:clickTable}.
+To examine gesture, we ran a mixed effects logistic regression to predict whether speakers chose to gesture during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants gestured more for words that recieved less training, with partners who had less knowledge, and in the condition where gesture's utility was higher. The full results of this model are presented in Table \ref{tab:clickTable}.
 
 ```{r click, results="asis", cache = T}
 gm_click <- glmer((method == 'click') ~  exposureRate * partnersExposureNumeric + 
@@ -407,7 +155,7 @@ apa_table(gm_click, format.args = list(na_string = ""), font_size = "footnotesiz
 
 \subsubsection{Speech}
 
-Looking next at speech, we ran a mixed effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants used labels more for words that recieved more training, with partners who had more knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:labelTable}.
+To examine speech, we ran a mixed effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants used labels more for words that recieved more training, with partners who had more knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:labelTable}.
 
 
 ```{r label, results="asis", cache = T}
@@ -436,7 +184,7 @@ apa_table(gm_label, format.args = list(na_string = ""), font_size = "footnotesiz
 
 \subsubsection{Teaching}
 
-Lastly to examine teaching, we ran a mixed effects logistic regression to predict whether speakers chose to teach during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants taught labels more often (i.e. used both the gesture and speech strategy simultaneously) for words that recieved more training, with partners who had less knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:teachTable}.
+To examine teaching, we ran a mixed effects logistic regression to predict whether speakers chose to teach during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants taught labels more often (i.e. used both the gesture and speech strategy simultaneously) for words that recieved more training, with partners who had less knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:teachTable}.
 
 
 
