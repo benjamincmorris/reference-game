@@ -52,6 +52,12 @@ In contrast to the Teaching and Communication simulations, the behavior of the T
 
 ## Results
 
+```{r read-sim-data}
+teach_props <- read_csv(here("data/teach_props.csv"))
+com_props <- read_csv(here("data/com_props_newmodel.csv"))
+pbv_props <- read_csv(here("data/pbv_props.csv"))
+```
+
 In order to understand how learning rates vary with model parameters, we first discuss the dependence of each of the three test models on it's parameters, and then discuss relationships between the models. In addition the results reported here, we have made the full set of simulated results available in an interactive web application at dyurovsky.shinyapps.io/ref-sims. We encourage readers to fully explore the relationships among the models beyond the summary we provide. 
 
 ### Teaching.
@@ -60,14 +66,49 @@ Because the Teaching model behaves identically on each trial regardless of the l
 
 ### Communication
 
-The communication model's behavior depends on parameters of both the child learner and the parent communicator.
+```{r com-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, fig.cap = ""}
+THRESHOLD <- .9
 
-Surprisingly, both the speaker's rationality ($\alpha$) and future discounting ($\gamma$) had relatively small effects on the rate of learning. 
+time_to_90 <- com_props %>%
+  group_by(alpha, lambda, p, P, S) %>%
+  filter(prob >= THRESHOLD) %>%
+  slice(1)
 
+ggplot(time_to_90 %>%
+         filter(alpha %in% c(.5,  2),
+             #   p %in% c(.2, .5, .8),
+                lambda %in% c(.2, .8)),
+       aes(x = p, y = trial, color = as.factor(alpha), shape = as.factor(lambda),
+           linetype = as.factor(lambda))) + 
+  geom_point()+
+  scale_color_brewer(palette = "Set1") +
+  geom_line(aes(group = interaction(alpha, lambda, P))) +
+  facet_grid(S ~ P) +
+  theme_few()
+```
 
-As the speaker's rationality  of parameters: The speaker's rationality $\alpha$, and the the speaker's discounting of the future , the costs of both speaking ($S$) and pointing ($P$). Perhaps surprisingly, there both rationality and discounting had 
+The communication model's behavior depends on parameters of both the child learner and the parent communicator. In general, parameters of both participants had predictable effects on learning: Children learned faster when they had higher learning rates, when parents were more rational, and when parents gave greater weight to the future. Further, the effects of parents' parameters were more pronounced at the lowest learning rates. However, as the cost of speaking increased relative to pointing, the effects of parents' parameters changed. In particular, highly rational parents who heavily discounted the lead to significantly slower learning. At these parameter settings, the parent becomes very likely to point on any given trial in order to maximize the local utility at the expense of discounted future utility gained from teaching. Figure ~\ref{fig:com-tradeoffs} shows the number of trials required for 90% of learners to acquire the word as a function of parameters in the Communication model.
 
 ### Talking.
 
-Finally, the cross-situational learner's behavior depends on a number of learner paramteres. 
+Finally, when parents spoke on each trial and children had to learn from cross-situational statistics, learning was controlled by the the child's learning rate, the number of hypotheses the child could entertain, the number of objects per event, and to a small extent the total vocabulary size. In general, children learned faster when they had a higher learning rate, and could entertain more hypotheses. Learning was also predictably slower when there were more objects on each event and thus ambiguity was higher. Finally, as the total vocabulary size increased, the rate of learning increased slightly, as it does with human cross-situational learners [@yu2007]. This counter-intuitive outcome occurs because the rate of spurious co-occurrences, in which the target word consistently co-occurs with an object that is not its referent, decreases as the set of potential foils expands. 
 
+```{r talk-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, fig.cap = ""}
+xsit_time_to_90 <- pbv_props %>%
+  group_by(nguesses, M, C, p) %>%
+  filter(prob >= THRESHOLD) %>%
+  slice(1)
+
+
+ggplot(xsit_time_to_90 %>%
+          filter(C %in% c(4,  8),
+                 M %in% c(16, 128),
+                 nguesses %in% c(1, 4)),
+       aes(x = p, y = trial, color = as.factor(C), shape = as.factor(nguesses),
+           linetype = as.factor(nguesses))) + 
+  geom_point()+
+  scale_color_brewer(palette = "Set1") +
+  geom_line(aes(group = interaction(nguesses, C, M))) +
+  facet_grid(. ~ M) +
+  theme_few()
+```
