@@ -58,6 +58,7 @@ library(tidyboot)
 library(glue)
 library(egg)
 library(latex2exp)
+library(directlabels)
 
 knitr::opts_chunk$set(fig.pos = 'tb', echo = FALSE, cache = TRUE, 
                       warning = FALSE, message = FALSE, 

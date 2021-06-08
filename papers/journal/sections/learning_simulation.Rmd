@@ -54,7 +54,7 @@ In contrast to the Teaching and Communication simulations, the behavior of the T
 
 ```{r read-sim-data}
 teach_props <- read_csv(here("data/teach_props.csv"))
-com_props <- read_csv(here("data/com_props_newmodel.csv"))
+com_props <- read_csv(here("data/join_com_props.csv"))
 pbv_props <- read_csv(here("data/pbv_props.csv"))
 ```
 
@@ -69,29 +69,31 @@ Because the Teaching model behaves identically on each trial regardless of the l
 ```{r com-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, fig.cap = ""}
 THRESHOLD <- .9
 
-time_to_90 <- com_props %>%
+com_time_to_90 <- com_props %>%
   group_by(alpha, lambda, p, P, S) %>%
   filter(prob >= THRESHOLD) %>%
   slice(1)
 
-ggplot(time_to_90 %>%
+ggplot(com_time_to_90 %>%
          filter(alpha %in% c(.5,  2),
-             #   p %in% c(.2, .5, .8),
+              # p %in% c(.2, .8),
                 lambda %in% c(.2, .8)),
-       aes(x = p, y = trial, color = as.factor(alpha), shape = as.factor(lambda),
+       aes(x = p, y = trial, color = as.factor(alpha), 
            linetype = as.factor(lambda))) + 
   geom_point()+
   scale_color_brewer(palette = "Set1") +
   geom_line(aes(group = interaction(alpha, lambda, P))) +
-  facet_grid(S ~ P) +
-  theme_few()
+  facet_grid(P ~ S) +
+  theme_few() +
+  labs(x = TeX(r'(learning rate ($p$))'),
+       y = "instances to 90% learning")
 ```
 
-The communication model's behavior depends on parameters of both the child learner and the parent communicator. In general, parameters of both participants had predictable effects on learning: Children learned faster when they had higher learning rates, when parents were more rational, and when parents gave greater weight to the future. Further, the effects of parents' parameters were more pronounced at the lowest learning rates. However, as the cost of speaking increased relative to pointing, the effects of parents' parameters changed. In particular, highly rational parents who heavily discounted the lead to significantly slower learning. At these parameter settings, the parent becomes very likely to point on any given trial in order to maximize the local utility at the expense of discounted future utility gained from teaching. Figure ~\ref{fig:com-tradeoffs} shows the number of trials required for 90% of learners to acquire the word as a function of parameters in the Communication model.
+The communication model's behavior depends on parameters of both the child learner and the parent communicator. In general, parameters of both participants had predictable effects on learning: Children learned faster when they had higher learning rates, when parents were more rational, and when parents gave greater weight to the future. Further, the effects of parents' parameters were more pronounced at the lowest learning rates. However, as the cost of speaking increased relative to pointing, the effects of parents' parameters changed. In particular, highly rational parents who heavily discounted the future lead to significantly slower learning. At these parameter settings, the parent becomes very likely to point on any given trial in order to maximize the local utility at the expense of discounted future utility gained from teaching. Figure \ref{fig:com-tradeoffs} shows the number of trials required for 90% of learners to acquire a word as a function of parameters in the Communication model.
 
 ### Talking.
 
-Finally, when parents spoke on each trial and children had to learn from cross-situational statistics, learning was controlled by the the child's learning rate, the number of hypotheses the child could entertain, the number of objects per event, and to a small extent the total vocabulary size. In general, children learned faster when they had a higher learning rate, and could entertain more hypotheses. Learning was also predictably slower when there were more objects on each event and thus ambiguity was higher. Finally, as the total vocabulary size increased, the rate of learning increased slightly, as it does with human cross-situational learners [@yu2007]. This counter-intuitive outcome occurs because the rate of spurious co-occurrences, in which the target word consistently co-occurs with an object that is not its referent, decreases as the set of potential foils expands. 
+Finally, when parents spoke on each trial and children had to learn from cross-situational statistics, learning was controlled by the the child's learning rate, the number of hypotheses the child could entertain, the number of objects per event, and to a small extent the total vocabulary size. In general, children learned faster when they had a higher learning rate, and could entertain more hypotheses. Learning was also predictably slower when there were more objects on each event and thus ambiguity was higher. Finally, as the total vocabulary size increased, the rate of learning increased slightly, as it does with human cross-situational learners [@yu2007]. This counter-intuitive outcome occurs because the rate of spurious co-occurrences, in which the target word consistently co-occurs with an object that is not its referent, decreases as the set of potential foils expands. Figure \ref{fig:talk-tradeoffs} shows the number of trials required for 90% of learners to acquire a word as a function of parameters in the Communication model.
 
 ```{r talk-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, fig.cap = ""}
 xsit_time_to_90 <- pbv_props %>%
@@ -111,4 +113,110 @@ ggplot(xsit_time_to_90 %>%
   geom_line(aes(group = interaction(nguesses, C, M))) +
   facet_grid(. ~ M) +
   theme_few()
+```
+
+
+## Comparing the Models
+
+```{r compare-models-setup}
+teach_time_to_90 <- teach_props %>%
+  group_by(p) %>%
+  filter(prob >= THRESHOLD) %>%
+  slice(1) %>%
+  mutate(model = "teach")
+
+selected_com_to_90 <- com_time_to_90 %>%
+  ungroup() %>%
+  filter((P == 50 & S == 20) | (P == 70 & S == 0)) %>%
+  group_by(S, P, p) %>%
+  summarise(min = min(trial), max = max(trial)) %>%
+  left_join(com_time_to_90 %>%
+              filter((P == 50 & S == 20) | (P == 70 & S == 0),
+                     alpha == 1.5, lambda == .4) %>%
+              group_by(S, P, p) %>%
+              summarise(trial = mean(trial)),
+            by = c("S", "P", "p")) %>%
+  mutate(model = "communicate") %>%
+  unite(costs, S, P, sep = " ")
+
+selected_xsit_to_90 <- xsit_time_to_90 %>%
+  ungroup() %>%
+  filter(M == 128, C > 1) %>%
+  mutate(model = "talk") %>%
+  mutate(C = paste0("Context Size (C) = ", C),
+         nguesses = paste0(nguesses, " hyp."))
+
+plot_com <- selected_xsit_to_90 %>%
+  distinct(C, nguesses, p) %>%
+  left_join(selected_com_to_90, by = "p") %>%
+  mutate(costs = factor(costs, labels = c("Higher speech efficiency",
+                                                  "Lower speech efficiency")))
+
+plot_xsit <- selected_com_to_90 %>%
+  distinct(costs, p) %>%
+  left_join(selected_xsit_to_90, by = "p") %>%
+  mutate(costs = factor(costs, labels = c("Higher speech efficiency",
+                                                  "Lower speech efficiency")))
+```
+
+
+```{r model-ratios}
+com_teach_ratio <- com_time_to_90 %>% 
+  filter(P + S < 100) %>%
+  group_by(p) %>% 
+  summarise(min_trial = min(trial),
+            max_trial = max(trial)) %>%
+  left_join(teach_time_to_90, by = c("p")) %>%
+  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial) %>%
+  summarise(min_ratio = mean(min_ratio),
+            max_ratio = mean(max_ratio))
+
+empirical_teach_ratio <-com_time_to_90 %>%
+  filter((P == 50 & S == 20) | (P == 70 & S == 0),
+         alpha == 1.5, lambda == .4) %>%
+  group_by(p) %>% 
+  summarise(min_trial = min(trial),
+            max_trial = max(trial)) %>%
+  left_join(teach_time_to_90, by = c("p")) %>%
+  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial) %>%
+  summarise(min_ratio = mean(min_ratio),
+            max_ratio = mean(max_ratio))
+
+
+xsit_teach_ratio <-xsit_time_to_90 %>% 
+  filter(M == 128, C > 1) %>%
+  group_by(p) %>% 
+  summarise(min_trial = min(trial),
+            max_trial = max(trial)) %>%
+  left_join(teach_time_to_90, by = c("p")) %>%
+  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial) %>%
+  summarise(min_ratio = mean(min_ratio),
+            max_ratio = mean(max_ratio))
+```
+
+
+Because the real-world parameters appropriate for each model are difficult to determine, we consider the relationship between the models over the range of possible parameters. Figure \ref{fig:compare-models} shows the time for 90% of learning to acquire a word in each of the three models. Across all possible child learning rates ($p$), the Teach model lead to the fastest learning as expected. We can treat this model as a lower bound how quickly learning could possibly happen. 
+
+For the Communication model, we considered the range of all possible rates of learning that could unfold as the parameters of both child and parent varied. The range was substantial. If parents weight the future near equally to the present, and are highly rational, the child's resultant rate of learning is nearly identical to the rate of learning under the Teach model: Children required `r com_teach_ratio$min_ratio` times as many learning instances under the Communicate model as the Teach model. In contrast, if the parent weighs the future much less than the present, and is relatively irrational about maximizing utility, the rate of learning can be quite slow--in the worst case requiring children to have `r com_teach_ratio$min_ratio` as many learning instances as under the Teach model. Despite this bad worst case scenario, if parents' parameters are close to the ones we estimated in our experiment, Communicate would require only `r empirical_teach_ratio$min_ratio` as many instances as Teach if speech is high efficiency relative to pointing, and `r empirical_teach_ratio$max_ratio` as many instances if speech is lower efficiency. 
+
+For the Talk model, we also observed a wide range of times to learn as a function of both the ambiguity of the learning environment defined by the number of objects that could be candidate referents ($C$) and the number of simultaneous hypotheses that the child could maintain. When the environment was unambiguous--only 2 objects were present at a time, and the child could encode both, learning under Talk was almost identical to learning under Teach (requiring `r xsit_teach_ratio$min_ratio` times as many instances). In contrast, if ambiguity was high and learners could only track a single hypothesis, learning was significantly slower under Talk than teach, (requiring `r xsit_teach_ratio$max_ratio` times as many instances).
+
+Comparing Communicate and Talk to each-other, we find that that Talk wins out unambiguously when context is low in ambiguity and learners can encode multiple hypotheses. However, as context grows in ambiguity, Communicate outpaces Teach--especially when learners can store only one or a few hypotheses. 
+
+```{r compare-models, fig.width = 6, fig.height = 4}
+ggplot(plot_xsit, aes(x = p)) +
+  facet_grid(costs ~ C) +
+  geom_point(aes(y = trial, color = as.factor(nguesses))) + 
+  geom_line(aes(y = trial, color = as.factor(nguesses))) +
+  geom_dl(aes(label = nguesses, y = trial, color = as.factor(nguesses)), 
+          method = list(dl.trans(x=x - .2), "first.points", cex = .5))  +
+  scale_x_continuous(limits = c(-.1, 1)) +
+  geom_ribbon(aes(ymin = min, ymax = max), alpha = .15,
+              data = plot_com) +
+  geom_line(aes(y = trial), data = teach_time_to_90) +
+  geom_line(aes(y = trial), data = plot_com, linetype = "dashed") +
+  scale_color_ptol() +
+  labs(x = TeX(r'(learning rate ($p$))'),
+       y = "instances to 90% learning")
+  
 ```
