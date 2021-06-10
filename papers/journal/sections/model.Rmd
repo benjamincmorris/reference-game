@@ -165,7 +165,7 @@ ggarrange(p1, p2, nrow = 2, widths = c(1, 1), labels = c("a", "b"), padding = 2)
 ```
 
 
-```{r model-fit, fig.env = "figure", fig.pos = "H", fig.height=3,  fig.width=4.5, fig.cap = "Fit between model predictions and empirical data."}
+```{r model-fit, fig.env = "figure", fig.height=3, fig.width=4.5, fig.cap = "Fit between model predictions and empirical data."}
 
 ggplot(wide_data, aes(x = model_mean, y = empirical_mean, color = method,
              shape = as.factor(partnersExposure), group = appearance,

@@ -14,7 +14,7 @@ We consider three parents that have three possible goals:
 
 Under all of these models, we consider the child's goal to be to learn the correct word-referent mappings that explain the parent's communications. If a communicative event is unambiguous--i.e. the parent is teaching--the child is limited only by their ability to encode this correct mapping. If the event is instead ambiguous, the child needs to both encode potential word-object mappings, and to track their statistical consistency. That is, the child needs to solve the cross-situational learning problem [@yu2007]. Across models, we vary both the fidelity of the child's encoding ability, and their capacity for cross-situational learning.
 
-One important point to note is that we are modeling the learning of a single word rather than the entirety of a multi-word lexicon [as in @blythe2010]. Although learning times for each word could be independent, an important feature of many models of word learning is that they are not [@yurovsky2014; @yu2008; @frank2009; although c.f. @mcmurray2007]. Indeed, positive synergies across words are predicted by the majority of models and the impact of these synergies can be quite large under some assumptions about the frequency with which different words are encountered [@reisenauer2013]. We assume independence primarily for pragmatic reasons here--it makes the simulations significantly more tractable (although it is what our experimental participants appear to assume about learners). Nonetheless, it is an important issue for future consideration. Of course, synergies that support learning under a cross-situational scheme must also support learning from communicators and teachers [@markman1988; @frank2009; @yurovsky2013]. Thus, the ordering across conditions should remain unchanged. However, the magnitude of the difference across teacher conditions could potentially increase or decrease.
+One important point to note is that we are modeling the learning of a single word rather than the entirety of a multi-word lexicon [as in @blythe2010]. Although learning times for each word could be independent, an important feature of many models of word learning is that they are not [@yurovsky2014; @yu2008; @frank2009; although c.f. @mcmurray2007]. Indeed, positive synergies across words are predicted by the majority of models and the impact of these synergies can be quite large under some assumptions about the frequency with which different words are encountered [@reisenauer2013]. We assume independence primarily for pragmatic reasons here--it makes the simulations significantly more tractable (although it is also what our experimental participants appear to assume about learners). Nonetheless, it is an important issue for future consideration. Of course, synergies that support learning under a cross-situational scheme must also support learning from communicators and teachers [@markman1988; @frank2009; @yurovsky2013]. Thus, the ordering across conditions should remain unchanged. However, the magnitude of the difference across teacher conditions could potentially increase or decrease.
 
 ## Method
 
@@ -30,9 +30,11 @@ The expected probability of learning after $n$ trials was thus defined analytica
 
 ### Communication.
 
-To test learner under the communication model, we implemented the same model described in the paper above. However, because our interest was in understanding the relationship between parameter values and learning outcomes rather than inferring the parameters that best describe people's behavior, we made a few simplifying assumptions to allow many runs of the model to complete in a more practical amount of time. First, in the full model above, speakers begin by inferring their own learning parameters ($P_{s}$) from their observations of their own learning, and subsequently use their maximum likelihood estimate as a stand-in for their listener's learning parameter ($P_{l}$). Because this estimate will converge to the true value in expectation, we omit these steps and simply stipulate that the speaker correctly estimates the listener's learning parameter. 
+To test learner under the communication model, we implemented the same model described in the paper above. However, because our interest was in understanding the relationship between parameter values and learning outcomes rather than inferring the parameters that best describe people's behavior, we made a few simplifying assumptions to allow many runs of the model to complete in a more practical amount of time. First, in the full model above, speakers begin by inferring their own learning parameters ($p_{s}$) from their observations of their own learning, and subsequently use their maximum likelihood estimate as a stand-in for their listener's learning parameter ($p_{l}$). Because this estimate will converge to the true value in expectation, we omit these steps and simply stipulate that the speaker correctly estimates the listener's learning parameter. 
 
 Second, unless the speaker knows a priori how many times they will need to refer to a particular referent, the planning process is an infinite recursion. However, each future step in the plan is less impactful than the previous step (because of exponential discounting). This infinite process is in practice well approximated by a relatively small number of recursive steps. In our explorations we found that predictions made from models which planned over 3 future events were indistinguishable from models that planned over four or more, so we simulated 3 steps of recursion[^1]. Finally, to increase the speed of the simulations we re-implemented them in the R programming language. All other aspects of the model were identical.
+
+In our simulations, we varied the child's learning rate ($p$) from .1 to 1 in steps of .1 as in the Teaching simulation, the parents' future-weighting ($\lambda$) from .1 to 1 in steps of .1, the parents' rationality ($\alpha$) from .5 to 3 in steps of .5, and considered three values each of the cost of speaking ($S = (0, 10, 20)$) and pointing ($P = (50, 60, 70)$). The utility of communicating successfully was always 100.
 
 [^1]: It is an interesting empirical question to determine how the level of depth to which that people plan in this and similar games [see e.g. bounded rationality in @simon1991; resource-rationality in @griffiths2015]. This future work is outside the scope of the current project.
 
@@ -40,13 +42,11 @@ Second, unless the speaker knows a priori how many times they will need to refer
 
 The literature on cross-situational learning is rich with a variety of models that could broadly be considered to be "hypothesis testers." In an eliminative hypothesis testing model, the learner begins with all possible mappings between words and objects and prunes potential mappings when they are inconsistent with the data according to some principle. A maximal version of this model relies on the principle that every time a word is heard its referent must be present, and thus prunes any word-object mappings that do not appear on the current trial. This model converges when only one hypothesis remains and is probably the fastest learner when the assumption it relies on is correct [@smith2011].
 
-A positive hypothesis tester begins with no hypotheses, and on each trial stores one ore more hypotheses that are consistent with the data, or alternatively strengthens one or more hypotheses that it has already stored that are consistent with the new data. A number of such models have appeared in the literature, with different assumptions about (1) how many hypotheses a learner can store, (2) existing hypotheses are strengthened, (3) how existing hypotheses are pruned, and (4) when the model converges [@siskind1996; @smith2011; @stevens2017; @trueswell2013; @yu2012].
+A positive hypothesis tester begins with no hypotheses, and on each trial stores one ore more hypotheses that are consistent with the data, or alternatively strengthens one or more hypotheses that it has already stored that are consistent with the new data. A number of such models have appeared in the literature, with different assumptions about (1) how many hypotheses a learner can store, (2) existing hypotheses are strengthened, (3) how existing hypotheses are pruned, and (4) when the model converges [@siskind1996; @smith2011; @stevens2017; @trueswell2013; @yu2012]. Finally, Bayesian models have been proposed that leverage some of the strengths of both of these different kinds of model, both increasing their confidence in hypotheses consistent with the data on a given learning event and decreasing their confidence in hypotheses inconsistent with the event [@frank2009]. 
 
-Finally, Bayesian models have been proposed that leverage some of the strengths of both of these different kinds of model, both increasing their confidence in hypotheses consistent with the data on a given learning event and decreasing their confidence in hypotheses inconsistent with the event [@frank2009]. 
+Because of its more natural alignment with the learning models we use in the Teaching and Communication simulations, we implemented a positive hypothesis testing model[^2]. In this model, learners begin with no hypotheses and add new ones to their store as they encounter data. Upon first encountering a word and a set of objects, the model encodes up to $h$ hypothesized word-object pairs each with probability $p$. On subsequent trials, the model checks whether any of the existing hypotheses are consistent with the current data, and prunes any that are not. If no current hypotheses are consistent, it adds up to $h$ new hypotheses each with probability $p$. The model has converged when it has pruned all but the one correct hypothesis for the meaning of a word. This model is most similar to the Propose but Verify model proposed in @trueswell2013, with the exception that it allows for multiple hypotheses. Because of the data generating process, storing prior disconfirmed hypotheses [as in @stevens2017], or incrementing hypotheses consistent with some but not all of the data [as in @yu2012] has no impact on learner and so we do not implement it here. We note also that, as described in @yu2012, hypothesis testing models can mimic the behavior of associative learning models given the right parameter settings [@townsend1990]. 
 
-Because of its more natural alignment with the learning models we use Teaching and Communication simulations, we implemented a positive hypothesis testing model[^2]. In this model, learners begin with no hypotheses and add new ones to their store as they encounter data. Upon first encountering a word and a set of objects, the model encodes up to $h$ hypothesized word-object pairs each with probability $p$. On subsequent trials, the model checks whether any of the existing hypotheses are consistent with the current data, and prunes any that are not. If no current hypotheses are consistent, it adds up to $h$ new hypotheses each with probability $p$. The model has converged when it has pruned all but the one correct hypothesis for the meaning of a word. This model is most similar to the Propose but Verify model proposed in @trueswell2013, with the exception that it allows for multiple hypotheses. Because of the data generating process, storing prior disconfirmed hypotheses [as in @stevens2017], or incrementing hypotheses consistent with some but not all of the data [as in @yu2012] has no impact on learner and so we do not implement it here. We note also that, as described in @yu2012, hypothesis testing models can mimic the behavior of associative learning models given the right parameter settings [@townsend1990]. 
-
-In contrast to the Teaching and Communication simulations, the behavior of the Talking model depends on which particular non-target objects are present on each naming event. We thus began each simulation by generating a corpus of 100 naming events. On each event, we sampled the correct target as well as ($C$-1) competitors from a total set of $M$ objects. We then simulated learning over this set of events as described above, and recorded the first trial on which the learner converged (having only the single correct hypothesized mapping between the target word and target object). We repeated this process 1000 times for each simulated combination of $M = (8, 16, 32, 64, 128)$  total objects, $C = (1, 2 , 4, 8)$ objects per trial, $h = (1, 2, 3, 4)$ concurrent hypotheses, as the learning rate $p$ varied from $.1$ to $1$ in increments of $.1$. 
+In contrast to the Teaching and Communication simulations, the behavior of the Talking model depends on which particular non-target objects are present on each naming event. We thus began each simulation by generating a corpus of 100 naming events. On each event, we sampled the correct target as well as ($C$-1) competitors from a total set of $M$ objects. We then simulated learning over this set of events as described above, and recorded the first trial on which the learner converged (having only the single correct hypothesized mapping between the target word and target object). We repeated this process 1000 times for each simulated combination of $M = (8, 16, 32, 64, 128)$  total objects, $C = (1, 2 , 4, 8)$ objects per trial, $h = (1, 2, 3, 4)$ concurrent hypotheses, as the child's learning rate $p$ varied from $.1$ to $1$ in increments of $.1$. 
  
 [^2]: Our choice to focus on hypothesis testing rather than other learning frameworks is purely a pragmatic choice--the learning parameter $p$ in this models maps cleanly onto the learning parameter in our other models. We encourage other researchers to adapt the code we have provided to estimate the long-term learning for other models.
 
@@ -54,55 +54,69 @@ In contrast to the Teaching and Communication simulations, the behavior of the T
 
 ```{r read-sim-data}
 teach_props <- read_csv(here("data/teach_props.csv"))
-com_props <- read_csv(here("data/join_com_props.csv"))
+com_props <- read_csv(here("data/join_com_props.csv")) %>%
+    filter(P <= 70, S <= 20)
 pbv_props <- read_csv(here("data/pbv_props.csv"))
+
+THRESHOLD <- .75
 ```
 
-In order to understand how learning rates vary with model parameters, we first discuss the dependence of each of the three test models on it's parameters, and then discuss relationships between the models. In addition the results reported here, we have made the full set of simulated results available in an interactive web application at dyurovsky.shinyapps.io/ref-sims. We encourage readers to fully explore the relationships among the models beyond the summary we provide. 
+In order to understand how learning rates vary with model parameters, we first discuss the dependence of each of the three tested models on it's parameters, and then discuss relationships between the models. For clarity of exposition, we analyze the number of events required for `r THRESHOLD*100`% of simulated learners to acquire the target word, and plot a representative subset of parameter values. 
+
+In addition the results reported here, we have made the full set of simulated results available in an interactive web application at dyurovsky.shinyapps.io/ref-sims. We encourage readers to fully explore the relationships among the models beyond the summary we provide. 
 
 ### Teaching.
 
-Because the Teaching model behaves identically on each trial regardless of the learner, the rate of learning under this model depends entirely on the learner's learning rate $p$. If the learning rate was high (e.g. .8), more than 90% of learners acquired the word after 2 learning instances. If the learning rate was medium, closer to the range we estimated for adult learners (.6), more than 90% of learners acquired the word after only 3 instances. Finally, if the learning rate was very low (.2), the same threshold was reached after 10 instances. Thus, the model is predictably sensitive to learning rate, but even very slow learners are expected to acquire words after a small number of communicative events
+Because the Teaching model behaves identically on each trial regardless of the learner, the rate of learning under this model depends entirely on the learner's learning rate $p$. If the learning rate was high (e.g. .8), more than `r THRESHOLD*100`% of learners acquired the word after a single learning instance. If the learning rate was medium, closer to the range we estimated for adult learners (.6), more than `r THRESHOLD*100`% of learners acquired the word after only 2 instances. Finally, if the learning rate was very low (.2), the same threshold was reached after 7 instances. Thus, the model is predictably sensitive to learning rate, but even very slow learners are expected to acquire words after a small number of communicative events. 
 
 ### Communication
 
-```{r com-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, fig.cap = ""}
-THRESHOLD <- .9
+```{r com-tradeoffs, fig.height = 3, fig.width = 7, set.cap.width = T, num.cols.cap = 1, fig.cap = "Number of exposures required for 75\\% of children to learn a word under the Communication model as parameters vary. Color shows rationality ($\\alpha$), Linetype shows future weighting ($\\lambda$), facets indicate the the cost of speaking ($S$) and pointing ($P$). The middle two facets corresponds to Higher Speech Efficiency and Lower Speech efficiency conditions of the experiment."}
 
-com_time_to_90 <- com_props %>%
+com_time_to_thresh <- com_props %>%
   group_by(alpha, lambda, p, P, S) %>%
   filter(prob >= THRESHOLD) %>%
   slice(1)
 
-ggplot(com_time_to_90 %>%
-         filter(alpha %in% c(.5,  2),
-              # p %in% c(.2, .8),
-                lambda %in% c(.2, .8)),
-       aes(x = p, y = trial, color = as.factor(alpha), 
+single_row_com <- com_time_to_thresh %>%
+  filter(alpha %in% c(.5,  2),
+         lambda %in% c(.2, .8),
+         S %in% c(0, 20),
+         P %in% c(50, 70)) %>%
+  mutate(S = paste0("S=", S),
+         P = paste0("P=", P)) %>%
+  unite(costs, S, P, sep = ", ")
+
+ggplot(single_row_com, aes(x = p, y = trial, color = as.factor(alpha), 
            linetype = as.factor(lambda))) + 
-  geom_point()+
+ # geom_point()+
   scale_color_brewer(palette = "Set1") +
-  geom_line(aes(group = interaction(alpha, lambda, P))) +
-  facet_grid(P ~ S) +
+  geom_line(aes(group = interaction(alpha, lambda, costs))) +
+  facet_wrap(~ costs, ncol = 4) +
   theme_few() +
-  labs(x = TeX(r'(learning rate ($p$))'),
-       y = "instances to 90% learning")
+  labs(x = TeX("learning rate ($p$)"),
+       y = "instances to 75% learning",
+       color = TeX("$\\alpha$"),
+       linetype = TeX("$\\lambda$")) + 
+  theme(legend.position = "bottom") 
 ```
 
-The communication model's behavior depends on parameters of both the child learner and the parent communicator. In general, parameters of both participants had predictable effects on learning: Children learned faster when they had higher learning rates, when parents were more rational, and when parents gave greater weight to the future. Further, the effects of parents' parameters were more pronounced at the lowest learning rates. However, as the cost of speaking increased relative to pointing, the effects of parents' parameters changed. In particular, highly rational parents who heavily discounted the future lead to significantly slower learning. At these parameter settings, the parent becomes very likely to point on any given trial in order to maximize the local utility at the expense of discounted future utility gained from teaching. Figure \ref{fig:com-tradeoffs} shows the number of trials required for 90% of learners to acquire a word as a function of parameters in the Communication model.
+The Communication model's behavior depends on parameters of both the child learner and the parent communicator. In general, parameters of both participants had predictable effects on learning: Children learned faster when they had higher learning rates, when parents were more rational, and when parents gave greater weight to the future. Further, the effects of parents' parameters were more pronounced at the lowest learning rates. However, as the cost of speaking increased relative to pointing, the effects of parents' parameters changed. In particular, highly rational parents who heavily discounted the future lead to significantly slower learning. At these parameter settings, the parent becomes very likely to point on any given trial in order to maximize the local utility at the expense of discounted future utility gained from teaching. In addition, as the cost of both modalities increases, the utility of communicating successfully (here defined as 100 points) becomes less motivating. Thus, parents become less discriminating among their communicative choices. Figure \ref{fig:com-tradeoffs} shows the number of trials required for `r THRESHOLD*100`% of learners to acquire a word as a function of parameters in the Communication model.
 
 ### Talking.
 
-Finally, when parents spoke on each trial and children had to learn from cross-situational statistics, learning was controlled by the the child's learning rate, the number of hypotheses the child could entertain, the number of objects per event, and to a small extent the total vocabulary size. In general, children learned faster when they had a higher learning rate, and could entertain more hypotheses. Learning was also predictably slower when there were more objects on each event and thus ambiguity was higher. Finally, as the total vocabulary size increased, the rate of learning increased slightly, as it does with human cross-situational learners [@yu2007]. This counter-intuitive outcome occurs because the rate of spurious co-occurrences, in which the target word consistently co-occurs with an object that is not its referent, decreases as the set of potential foils expands. Figure \ref{fig:talk-tradeoffs} shows the number of trials required for 90% of learners to acquire a word as a function of parameters in the Communication model.
+Finally, when parents spoke on each trial and children had to learn from cross-situational statistics, learning was controlled by the the child's learning rate, the number of hypotheses the child could entertain, the number of objects per event, and to a small extent the total vocabulary size. In general, children learned faster when they had a higher learning rate, and could entertain more hypotheses. Learning was also predictably slower when there were more objects on each event and thus ambiguity was higher. Finally, as the total vocabulary size increased, the rate of learning increased slightly, as it does with human cross-situational learners [@yu2007]. This counter-intuitive outcome occurs because the rate of spurious co-occurrences, in which the target word consistently co-occurs with an object that is not its referent, decreases as the set of potential foils expands. The the effect of context size ($C$) and number of hypotheses can be seen along with the learning rates of the other two models in Figure \ref{fig:compare-models}.
 
-```{r talk-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, fig.cap = ""}
-xsit_time_to_90 <- pbv_props %>%
+```{r xsit-time}
+xsit_time_to_thresh <- pbv_props %>%
   group_by(nguesses, M, C, p) %>%
   filter(prob >= THRESHOLD) %>%
   slice(1)
+```
 
+```{r talk-tradeoffs, fig.height = 3, fig.width = 8, set.cap.width=T, num.cols.cap=1, eval = FALSE}
 
-ggplot(xsit_time_to_90 %>%
+ggplot(xsit_time_to_thresh %>%
           filter(C %in% c(4,  8),
                  M %in% c(16, 128),
                  nguesses %in% c(1, 4)),
@@ -115,22 +129,21 @@ ggplot(xsit_time_to_90 %>%
   theme_few()
 ```
 
-
 ## Comparing the Models
 
 ```{r compare-models-setup}
-teach_time_to_90 <- teach_props %>%
+teach_time_to_thresh <- teach_props %>%
   group_by(p) %>%
   filter(prob >= THRESHOLD) %>%
   slice(1) %>%
   mutate(model = "teach")
 
-selected_com_to_90 <- com_time_to_90 %>%
+selected_com_to_thresh <- com_time_to_thresh %>%
   ungroup() %>%
   filter((P == 50 & S == 20) | (P == 70 & S == 0)) %>%
   group_by(S, P, p) %>%
   summarise(min = min(trial), max = max(trial)) %>%
-  left_join(com_time_to_90 %>%
+  left_join(com_time_to_thresh %>%
               filter((P == 50 & S == 20) | (P == 70 & S == 0),
                      alpha == 1.5, lambda == .4) %>%
               group_by(S, P, p) %>%
@@ -139,71 +152,77 @@ selected_com_to_90 <- com_time_to_90 %>%
   mutate(model = "communicate") %>%
   unite(costs, S, P, sep = " ")
 
-selected_xsit_to_90 <- xsit_time_to_90 %>%
+selected_xsit_to_thresh <- xsit_time_to_thresh %>%
   ungroup() %>%
   filter(M == 128, C > 1) %>%
   mutate(model = "talk") %>%
   mutate(C = paste0("Context Size (C) = ", C),
          nguesses = paste0(nguesses, " hyp."))
 
-plot_com <- selected_xsit_to_90 %>%
+plot_com <- selected_xsit_to_thresh %>%
   distinct(C, nguesses, p) %>%
-  left_join(selected_com_to_90, by = "p") %>%
+  left_join(selected_com_to_thresh, by = "p") %>%
   mutate(costs = factor(costs, labels = c("Higher speech efficiency",
                                                   "Lower speech efficiency")))
 
-plot_xsit <- selected_com_to_90 %>%
+plot_xsit <- selected_com_to_thresh %>%
   distinct(costs, p) %>%
-  left_join(selected_xsit_to_90, by = "p") %>%
+  left_join(selected_xsit_to_thresh, by = "p") %>%
   mutate(costs = factor(costs, labels = c("Higher speech efficiency",
                                                   "Lower speech efficiency")))
 ```
 
 
 ```{r model-ratios}
-com_teach_ratio <- com_time_to_90 %>% 
-  filter(P + S < 100) %>%
+com_teach_ratio <- com_time_to_thresh %>% 
   group_by(p) %>% 
   summarise(min_trial = min(trial),
-            max_trial = max(trial)) %>%
-  left_join(teach_time_to_90, by = c("p")) %>%
-  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial) %>%
+            max_trial = max(trial),
+            mean_trial = mean(trial)) %>%
+  left_join(teach_time_to_thresh, by = c("p")) %>%
+  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial,
+         mean_ratio = mean_trial/trial) %>%
   summarise(min_ratio = mean(min_ratio),
-            max_ratio = mean(max_ratio))
+            max_ratio = mean(max_ratio),
+            mean_trial = mean(mean_ratio))
 
-empirical_teach_ratio <-com_time_to_90 %>%
+empirical_teach_ratio <-com_time_to_thresh %>%
   filter((P == 50 & S == 20) | (P == 70 & S == 0),
          alpha == 1.5, lambda == .4) %>%
   group_by(p) %>% 
   summarise(min_trial = min(trial),
             max_trial = max(trial)) %>%
-  left_join(teach_time_to_90, by = c("p")) %>%
+  left_join(teach_time_to_thresh, by = c("p")) %>%
   mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial) %>%
   summarise(min_ratio = mean(min_ratio),
             max_ratio = mean(max_ratio))
 
 
-xsit_teach_ratio <-xsit_time_to_90 %>% 
+xsit_teach_ratio <-xsit_time_to_thresh %>% 
   filter(M == 128, C > 1) %>%
   group_by(p) %>% 
   summarise(min_trial = min(trial),
-            max_trial = max(trial)) %>%
-  left_join(teach_time_to_90, by = c("p")) %>%
-  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial) %>%
+            max_trial = max(trial),
+            mean_trial = mean(trial)) %>%
+  left_join(teach_time_to_thresh, by = c("p")) %>%
+  mutate(min_ratio = min_trial/trial, max_ratio = max_trial/trial, 
+         mean_ratio = mean_trial/trial) %>%
   summarise(min_ratio = mean(min_ratio),
-            max_ratio = mean(max_ratio))
+            max_ratio = mean(max_ratio),
+            mean_ratio = mean(mean_ratio))
 ```
 
+Because the real-world parameters appropriate for each model are difficult to determine, we consider the relationship between the models over the range of their possible parameters. Figure \ref{fig:compare-models} shows the time for `r THRESHOLD*100`% of learning to acquire a word in each of the three models. Across all possible child learning rates ($p$), the Teaching model lead to the fastest learning as expected. We can treat this model as a lower bound how quickly learning could possibly happen. 
 
-Because the real-world parameters appropriate for each model are difficult to determine, we consider the relationship between the models over the range of possible parameters. Figure \ref{fig:compare-models} shows the time for 90% of learning to acquire a word in each of the three models. Across all possible child learning rates ($p$), the Teach model lead to the fastest learning as expected. We can treat this model as a lower bound how quickly learning could possibly happen. 
+For the Communication model, we considered the range of all possible rates of learning that could unfold as the parameters of both child and parent varied. The range was substantial. If parents weigh the future near equally to the present, and are highly rational, the child's resultant rate of learning is nearly identical to the rate of learning under the Teaching model: Children required `r com_teach_ratio$min_ratio` times as many learning instances under the Communication model as the Teaching model when averaging over all child learning rates. In contrast, if the parent weighs the future much less than the present, and is relatively irrational about maximizing utility, the rate of learning can be quite slow--in the worst case requiring children to have `r com_teach_ratio$min_ratio` as many learning instances as under the Teaching model. Despite this bad worst case scenario, if parents' parameters are close to the ones we estimated in our experiment, Communication would require only `r empirical_teach_ratio$min_ratio` as many instances as Teaching if speech is high efficiency relative to pointing, and `r empirical_teach_ratio$max_ratio` as many instances if speech is lower efficiency. 
 
-For the Communication model, we considered the range of all possible rates of learning that could unfold as the parameters of both child and parent varied. The range was substantial. If parents weight the future near equally to the present, and are highly rational, the child's resultant rate of learning is nearly identical to the rate of learning under the Teach model: Children required `r com_teach_ratio$min_ratio` times as many learning instances under the Communicate model as the Teach model. In contrast, if the parent weighs the future much less than the present, and is relatively irrational about maximizing utility, the rate of learning can be quite slow--in the worst case requiring children to have `r com_teach_ratio$min_ratio` as many learning instances as under the Teach model. Despite this bad worst case scenario, if parents' parameters are close to the ones we estimated in our experiment, Communicate would require only `r empirical_teach_ratio$min_ratio` as many instances as Teach if speech is high efficiency relative to pointing, and `r empirical_teach_ratio$max_ratio` as many instances if speech is lower efficiency. 
+For the Talking model, we also observed a wide range of learning times as a function of both the ambiguity of the learning environment and the number of simultaneous hypotheses that the child can maintain. When the environment was unambiguous--only 2 objects were present at a time--and the child could encode both, learning under Talking took only `r xsit_teach_ratio$min_ratio` times as many instances as Teaching. In contrast, if ambiguity was high, and learners could only track a single hypothesis, learning was significantly slower under Talking than Teaching, (requiring `r xsit_teach_ratio$max_ratio` times as many instances).
 
-For the Talk model, we also observed a wide range of times to learn as a function of both the ambiguity of the learning environment defined by the number of objects that could be candidate referents ($C$) and the number of simultaneous hypotheses that the child could maintain. When the environment was unambiguous--only 2 objects were present at a time, and the child could encode both, learning under Talk was almost identical to learning under Teach (requiring `r xsit_teach_ratio$min_ratio` times as many instances). In contrast, if ambiguity was high and learners could only track a single hypothesis, learning was significantly slower under Talk than teach, (requiring `r xsit_teach_ratio$max_ratio` times as many instances).
+Comparing Communication and Talking to each-other, we find that that Talking can lead to faster learning under some parameter settings. In particular, if events are low in ambiguity, or children can maintain a very large number of hypotheses about the meaning of a word relative the number of objects in each event, children can learn rapidly even if parents are just Talking. This learning can be faster than simpler child models learnign from highly myopic or relatively irrational parents Communicating, especially if speech is high-cost. At medium levels of ambiguity, Communication and Talking are similar and their ordering depends on other parameters. At high levels of ambiguity Communication is the clear winner. 
 
-Comparing Communicate and Talk to each-other, we find that that Talk wins out unambiguously when context is low in ambiguity and learners can encode multiple hypotheses. However, as context grows in ambiguity, Communicate outpaces Teach--especially when learners can store only one or a few hypotheses. 
+Together, these results suggest that if the set of possible candidate referents is small, even simple cross-situational learners can cope just fine even if their parent is just Talking; they learn roughly two to three times more slowly than if their parent was Teaching them. However, if the set of possible referents is four, or, eight, or even more on average, cross-situational learners need to have very high bandwidth or their rates of learning will be an order of magnitude slower than if their parent were Teaching them. In these cases, even the simplest learner--who can encode a single hypothesis about the meaning of a word and gets no information from co-occurrence statistics--can learn quite rapidly if they are learning from a parent that Communicates with them. 
 
-```{r compare-models, fig.width = 6, fig.height = 4}
+```{r compare-models, fig.height = 4, fig.width = 7, set.cap.width = T, num.cols.cap = 1, fig.cap = "Comparing the number of exposures required for 75\\% of children to learn a word under all three models as parameters vary. Columns show variation in context size ($C$), a parameter of the Talking model. Rows show the two variations in the costs of Speech and Pointing for the Communication model used in our experiments. In each facet, the solid black line shows learning under the Teaching model, the light gray region shows an envelope of learning times corresponding to all variations in Communication model parameters, and the black dotted line shows learning time under the Communication model with parameters equal to the empirical estimates from experiments. Colored lines show learning times under the Teaching model with varying numbers of hypotheses. Because there was little effect of total number of objects ($M$) in the Talking model, all panels show results for 128 objects. Because only Communication model parameters vary across rows, the results of the Talking model are identical in each row."}
 ggplot(plot_xsit, aes(x = p)) +
   facet_grid(costs ~ C) +
   geom_point(aes(y = trial, color = as.factor(nguesses))) + 
@@ -213,10 +232,18 @@ ggplot(plot_xsit, aes(x = p)) +
   scale_x_continuous(limits = c(-.1, 1)) +
   geom_ribbon(aes(ymin = min, ymax = max), alpha = .15,
               data = plot_com) +
-  geom_line(aes(y = trial), data = teach_time_to_90) +
+  geom_line(aes(y = trial), data = teach_time_to_thresh) +
   geom_line(aes(y = trial), data = plot_com, linetype = "dashed") +
   scale_color_ptol() +
-  labs(x = TeX(r'(learning rate ($p$))'),
-       y = "instances to 90% learning")
+  labs(x = TeX("learning rate ($p$)"),
+       y = "instances to 75% learning")
   
 ```
+
+## Discussion
+
+Most of the language that children hear from their parents is unlikely to be designed to teach them language. However, the language that parents direct to them *is* designed to communicate successfully. Here we consider the learning consequences of these differences in design. How different are the learning consequences of language designed for teaching, language designed for communication, and ambient language not designed for the child at all?
+
+If input is not designed for teaching, the rate of learning depends entirely on what the learner brings to the table. In line with prior analyses of cross-situational learning, we find that learning can be quite rapid if environments are low in ambiguity or the learner has very high bandwidth for storing candidate hypotheses [@smith2011, @yu2012]. However, the child's environment is neither guaranteed to be unambiguous nor are young children likely to have high bandwidth for statistical information [@medina2011, @vlach2013, @woodard2016]. In fact, when the set of candidate referents is small, it is quite likely to be small in part because parents have designed the context to support communication [@tomasello1986].
+
+However, the rate of learning from communication is almost as fast as learning from teaching under many possible parameter settings we explored. On average, across all possible parameter values, learning from communication is only 2.5 times slower than learning from teaching. Further, in this model, the learner gets no information co-occurrence statistics at all. Combining learning from communication with low-bandwidth cross-situational learning could bring the expected rate of learning down to very close to learning from teaching [@macdonald2017]. We thus might make significanft progress on understanding how children learn language so quickly not just by studying children, but also by understanding how parents design the language they produce in order to support successful communication [@leung2021].
