@@ -22,7 +22,7 @@ We used data from the Language Development Project--a large-scale, longitudinal 
 
 The Language Development Project aimed to recruit a sample of families who are representative of the Chicago community in socio-economic and racial diversity [@goldin-meadow2014]. These data are drawn from a subsample of 10 families from the larger corpus. Our subsample contains data taken in the home every 4-months from when the child was 14-months-old until they were 34-months-old, resulting in 6 timepoints (missing one family at the 30-month timepoint). Recordings were 90 minute sessions, and participants were given no instructions.
 
-Of the 10 target children, 5 were girls, 3 were Black and 2 were Mixed-Race. Families spanned a broad range of incomes, with 2 families earning \$15,000 to \$34,999 and 1 family earning greater than \$100,000. The median family income was \$50,000 to \$74,999.
+Of the ten target children, five were girls, three were Black and two were Mixed-Race. Families spanned a broad range of incomes, with two families earning \$15,000 to \$34,999 and 1 family earning greater than \$100,000. The median family income was \$50,000 to \$74,999.
 
 ### Procedure
 
@@ -32,7 +32,7 @@ From the extant transcription and gesture coding, we specifically coded all conc
 
 To establish the reliability of the referent coding, 25% of the transcripts were double-coded. Inter-rater reliability was sufficiently high (Cohen’s $\kappa$ = 0.76). Disagreements in coding decisions were discussed and resolved by hand.
 
-To ensure that our each referent could potentially be referred to in gesture or speech, we focused on concrete nouns. We further wanted to ensure that the referents were physically present in the scene (and thus accessible to deictic gestures). Using the transcripts, a human rater judged whether the referent was likely to be present, primarily relying on discourse context (e.g., a referent was coded as present if the deictic gesture is used or used at another timepoint for the reference, or if the utterance included demonstratives such as "This is an X"). A full description of the coding criteria can be found in the Supporting Materials. \textcolor{red}{MAKE SURE WE MAKE THIS}.
+To ensure that our each referent could potentially be referred to in gesture or speech, we focused on concrete nouns. We further wanted to ensure that the referents were physically present in the scene (and thus accessible to deictic gestures). Using the transcripts, a human rater judged whether the referent was likely to be present, primarily relying on discourse context (e.g., a referent was coded as present if the deictic gesture is used or used at another timepoint for the reference, or if the utterance included demonstratives such as "This is an X"). A full description of the coding criteria can be found in the Supporting Materials.
 
 To ensure our transcript-based coding of referent presence was sufficiently accurate, a subset of the transcripts (5%) were directly compared to corresponding video data observation. Reliability across the video data and the transcript coding was sufficiently high ($\kappa$ = 0.72). Based on transcript coding of all the referential communication about concrete nouns, 90% of the references were judged to be about referents that were likely present. All references are included in our dataset for further analysis.
 
@@ -54,64 +54,49 @@ mid_freq <- modality_data %>%
 corpus_model_data <- modality_data %>%
   ungroup() %>%
   filter(person == "parent") %>%
-  mutate(age = log(age) - mid_age,
-         freq = log(freq) - mid_freq)
+  mutate(model_age = log(age) - mid_age,
+         model_freq = log(freq) - mid_freq)
 
 
-parent_both_raw <- glmer(cbind(both, speech + gesture) ~ age * freq + 
-                    (1 | referent) + ( freq | subj), 
+parent_both_raw <- glmer(cbind(both, speech + gesture) ~ model_age * model_freq + 
+                    (1 | referent) + ( model_freq | subj), 
       data = corpus_model_data, 
       family = "binomial") 
-
 
 parent_both_lm <- parent_both_raw %>%
   tidy() %>%
   filter(effect == "fixed") %>%
-  select(-effect, -group)
+  select(-effect, -group) %>%
+  mutate(p.value = printp(p.value))
 
+walk2(c("corpus_age", "corpus_freq", "corpus_interaction"),
+      c("model_age", "model_freq", "model_age:model_freq"),
+      ~make_text_vars(parent_both_lm, .x, .y))
+```
 
-corpus_age_estimate <- parent_both_lm %>% 
-  filter(term == "age") %>% 
-  pull(estimate)
-
-corpus_age_statistic <- parent_both_lm %>%
-  filter(term == "age") %>% 
-  pull(statistic)
-
-corpus_age_p <- parent_both_lm %>% 
-  filter(term == "age") %>%
-  pull(p.value) %>% 
-  printp()
-
-corpus_freq_estimate <- parent_both_lm %>% 
-  filter(term == "freq") %>% 
-  pull(estimate)
-
-corpus_freq_statistic <- parent_both_lm %>%
-  filter(term == "freq") %>% 
-  pull(statistic)
-
-corpus_freq_p <- parent_both_lm %>% 
-  filter(term == "freq") %>%
-  pull(p.value) %>% 
-  printp()
-
-corpus_interaction_estimate <- parent_both_lm %>% 
-  filter(term == "age:freq") %>% 
-  pull(estimate)
-
-corpus_interaction_statistic <- parent_both_lm %>%
-  filter(term == "age:freq") %>% 
-  pull(statistic)
-
-corpus_interaction_p <- parent_both_lm %>% 
-  filter(term == "age:freq") %>%
-  pull(p.value) %>% 
-  printp()
+```{r in-data}
+predicted_both <- model.frame(parent_both_raw) %>%
+  as_tibble() %>%
+  mutate(prop = inv.logit(predict(parent_both_raw, ., re.form = NA))) %>%
+  clean_names() %>%
+  rowwise() %>%
+  mutate(in_prop = cbind_both_speech_gesture[1]/sum(cbind_both_speech_gesture)) %>%
+  group_by(model_age, model_freq, subj, referent) %>%
+  summarise(prop = mean(prop)) %>%
+  summarise(prop = mean(prop)) %>%
+  summarise(prop = mean(prop)) %>%
+  ungroup() %>%
+  left_join(corpus_model_data %>% 
+              select(age, model_age, freq, model_freq) %>%
+              distinct(),
+            by = c("model_age","model_freq")) %>%
+  mutate(plot_age = factor(age, labels = c('14 mo.', '18 mo.','22 mo.', 
+                                      '26 mo.', "30 mo.",
+                                      "34 mo.")))
 
 ```
 
-These corpus data were analyzed using a mixed effects regression to predict parents' use of multi-modal reference for a given referent. The model included fixed effects of age in months, frequency of the referent, and the interaction between the two. The model included a random intercept and random slope of frequency by subject and a random intercept for each unique referent. Frequency and age were both log-scaled and then centered both because age and frequency tend to have log-linear effects and to help with model convergence. The model showed that parents use ostensive labeling less with older children ($\beta =$  `r corpus_age_estimate`, $t =$  `r corpus_age_statistic`, $p$ `r corpus_age_p`) and  marginally less for more frequent referents ($\beta =$  `r corpus_freq_estimate`, $t =$  `r corpus_freq_statistic`, $p =$ `r corpus_freq_p`). In addition, the interaction between the two was significant, indicating that for parents ostensively label more for younger children when referents are infrequent ($\beta =$  `r corpus_interaction_estimate`, $t =$  `r corpus_interaction_statistic`, $p =$ `r corpus_interaction_p`). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children (Figure \ref{fig:corpus-plot).
+These corpus data were analyzed using a mixed effects regression to predict parents' use of multi-modal reference for a given referent. The model included fixed effects of age in months, frequency of the referent, and the interaction between the two. The model included a random intercept and random slope of frequency by subject and a random intercept for each unique referent. Frequency and age were both log-scaled and then centered both because age and frequency tend to have log-linear effects and to help with model convergence. The model showed that parents use ostensive labeling less with older children ($\beta =$  `r corpus_age_estimate`, $t =$  `r corpus_age_statistic`, $p$ `r corpus_age_p.value`) and  marginally less for more frequent referents ($\beta =$  `r corpus_freq_estimate`, $t =$  `r corpus_freq_statistic`, $p =$ `r corpus_freq_p.value`). In addition, the interaction between the two was significant, indicating that for parents ostensively label more for younger children when referents are infrequent ($\beta =$  `r corpus_interaction_estimate`, $t =$  `r corpus_interaction_statistic`, $p =$ `r corpus_interaction_p.value`). Thus, in these data, we see early evidence that parents are providing richer, structured input about rarer things in the world for their younger children (Figure \ref{fig:corpus-plot).
 
 ```{r plot-setup}
 plot_data <- modality_data %>%
@@ -132,19 +117,22 @@ teaching_ribbons[[6]] <- "#000000"
 ```
 
 ```{r corpus-plot, fig.height=4, fig.width = 6, fig.cap = "Parents' rate of ostensive labelling via multi-modal reference. Parents used ostensive labeling more for younger children and infrequent referents. Lines show model  "}
-plot_annotations <- tibble(prop= c(.35, .15, .07, .09, .045, .025),
+plot_annotations <- tibble(prop= c(.18, .12, .09, .07, .055, .035),
                            plot_age = c("14 mo.", "18 mo.","22 mo.", 
                                       '26 mo.', "30 mo.",
                                       "34 mo."),
                            freq = .7)
 
 plot_data %>% 
+  group_by(freq, plot_age, subj) %>%
+  summarise(prop = mean(prop)) %>%
+  summarise(prop = mean(prop)) %>%
   ggplot(aes(x = log(freq), y = prop, color = plot_age, 
              fill = plot_age, label = plot_age)) +
-  geom_smooth(method = "loess") +
-  #geom_jitter(alpha = .1, width = .01, height = .01) +
+  geom_jitter(alpha = 1, width = .01, height = .01) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = FALSE, data = predicted_both) + 
   labs(y="Multi-modal references (prop.)", x='Referent frequency (log)') +
-  coord_cartesian(ylim=c(0,.38), xlim=c(-.5,6)) +
+  coord_cartesian(ylim=c(0,.3), xlim=c(-.5,6)) +
   scale_fill_manual(values = teaching_ribbons, name='Child\'s age') +
   scale_color_manual(values = teaching_ribbons, name='Child\'s age') +
   theme(legend.position = "none", aspect.ratio = 1/1.66) +
