@@ -1,7 +1,14 @@
 # Corpus Analysis
 ```{r corpus-data}
 # Plot of Referential Communication from LDP Corpus Data
-corpus_data <- read_feather(here("data/coded_responses.feather"))
+corpus_data <- read_feather(here("data/coded_responses.feather")) %>%
+  mutate(freq_cut = cut(log(freq), 10))%>%
+  separate(freq_cut, into = c("freq_cut_left", "freq_cut_right"), sep = ",",
+           remove = FALSE) %>%
+  mutate(freq_cut_left = as.numeric(str_remove_all(freq_cut_left,"\\(")),
+         freq_cut_right = as.numeric(str_remove_all(freq_cut_right,"\\]")),
+         freq_cut = (freq_cut_left + freq_cut_right)/2) %>%
+  select(-freq_cut_left, -freq_cut_right)
 
 modality_data <- corpus_data %>%
   group_by(person, age, subj, freq_cut, rank, freq, referent, modality, chat) %>%
@@ -100,7 +107,7 @@ These corpus data were analyzed using a mixed effects regression to predict pare
 
 ```{r plot-setup}
 plot_data <- modality_data %>%
-  group_by(person, age, subj, freq, referent) %>%
+  group_by(person, age, subj, freq_cut, referent) %>%
   gather(modality, n, both, gesture, speech) %>%
   mutate(prop = n/sum(n)) %>%
   ungroup() %>%
@@ -124,15 +131,17 @@ plot_annotations <- tibble(prop= c(.18, .12, .09, .07, .055, .035),
                            freq = .7)
 
 plot_data %>% 
-  group_by(freq, plot_age, subj) %>%
+  group_by(freq_cut, plot_age, subj) %>%
   summarise(prop = mean(prop)) %>%
   summarise(prop = mean(prop)) %>%
+  mutate(freq_cut = exp(freq_cut)) %>%
+  rename(freq  = freq_cut) %>%
   ggplot(aes(x = log(freq), y = prop, color = plot_age, 
              fill = plot_age, label = plot_age)) +
-  geom_jitter(alpha = 1, width = .01, height = .01) +
+  geom_jitter(width = .1, height = 0) +
   geom_smooth(method = "loess", formula = "y ~ x", se = FALSE, data = predicted_both) + 
   labs(y="Multi-modal references (prop.)", x='Referent frequency (log)') +
-  coord_cartesian(ylim=c(0,.3), xlim=c(-.5,6)) +
+  coord_cartesian(ylim=c(0,.2), xlim=c(-.5,6)) +
   scale_fill_manual(values = teaching_ribbons, name='Child\'s age') +
   scale_color_manual(values = teaching_ribbons, name='Child\'s age') +
   theme(legend.position = "none", aspect.ratio = 1/1.66) +
