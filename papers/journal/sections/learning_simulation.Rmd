@@ -18,7 +18,7 @@ One important point to note is that we are modeling the learning of a single wor
 
 ## Method
 
-In each fo the sections below, we describe the join models of parents' communication and child's learning that predict learning times under each of the three models of parents' goals.
+In each of the sections below, we describe the join models of parents' communication and child's learning that predict learning times under each of the three models of parents' goals.
 
 ### Teaching. 
 
@@ -61,7 +61,7 @@ pbv_props <- read_csv(here("data/pbv_props.csv"))
 THRESHOLD <- .75
 ```
 
-In order to understand how learning rates vary with model parameters, we first discuss the dependence of each of the three tested models on it's parameters, and then discuss relationships between the models. For clarity of exposition, we analyze the number of events required for `r THRESHOLD*100`% of simulated learners to acquire the target word, and plot a representative subset of parameter values. 
+In order to understand how learning rates vary with model parameters, we first discuss the dependence of each of the three tested models on its parameters, and then discuss relationships between the models. For clarity of exposition, we analyze the number of events required for `r THRESHOLD*100`% of simulated learners to acquire the target word, and plot a representative subset of parameter values. 
 
 In addition the results reported here, we have made the full set of simulated results available in an interactive web application at dyurovsky.shinyapps.io/ref-sims. We encourage readers to fully explore the relationships among the models beyond the summary we provide. 
 

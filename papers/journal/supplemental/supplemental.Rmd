@@ -45,38 +45,6 @@ options(digits=2)
 \renewcommand{\thetable}{S\arabic{table}}  
 \renewcommand{\thefigure}{S\arabic{figure}}
 
-\section{Corpus Referential Talk and Gesture Coding Supplemental}
-
-Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found at **XYZ.COM**
-
-\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
-
-\subsection{Coding A Referent}
-
-In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a signle utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
-
-Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
-
-\subsection{Coding for Presentness}
-
-Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms ("e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual at **XYZ.COM** 
-
-\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
-
-\subsection{Coding Example}
-\begin{tabular} {c c c c}
-	\hline person & chat & spoken obj & ref\_pres\_predicted \\
-    \hline parent &	want a bite of banana ?	 & banana &  1\\
-    child & orange . & orange & 0\\
-    parent	& that's all the orange we have . & orange & 0	\\
-    parent & that's it . & & \\
-\end{tabular}
-
-
-
-
-
-
 
 \section{Experimental Results}
 
@@ -211,6 +179,36 @@ gm_teach <- glmer((method == 'label_click') ~ exposureRate * partnersExposureNum
 apa_table(gm_teach, format.args = list(na_string = ""), font_size = "footnotesize",
             caption = "Propensity to use teaching as a strategy, specified as \\texttt{teach $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
 ```
+
+\newpage
+
+\section{Corpus Referential Talk and Gesture Coding Supplemental}
+
+Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found at **XYZ.COM**
+
+\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
+
+\subsection{Coding A Referent}
+
+In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a signle utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
+
+Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
+
+\subsection{Coding for Presentness}
+
+Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms ("e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual at **XYZ.COM** 
+
+\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
+
+\subsection{Coding Example}
+\begin{tabular} {c c c c}
+	\hline person & chat & spoken obj & ref\_pres\_predicted \\
+    \hline parent &	want a bite of banana ?	 & banana &  1\\
+    child & orange . & orange & 0\\
+    parent	& that's all the orange we have . & orange & 0	\\
+    parent & that's it . & & \\
+\end{tabular}
+
 
 
 \newpage

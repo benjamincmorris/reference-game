@@ -123,7 +123,7 @@ condition_learning_esposure_f_num <- learning_anova %>%
 As an initial check of our exposure manipulation, we first conducted a logistic regression predicting accuracy at test from a fixed effect of exposure rate and random intercepts and slopes of exposure rate by participant as well as random intercepts by item. We found a reliable effect of exposure rate, indicating that participants were better able to learn items that appeared more frequently in training ($\beta =$ `r learning_exposure_estimate`, $p$ `r learning_exposure_p.value`, see Figure \ref{fig:learning-and-speaking-plot}). On average, participants knew at least 6 of the 9 words in the lexicon ($M(sd)$ = `r descriptives$meanK` (`r descriptives$sdK`)). An analysis of variance confirmed that learning did not differ systematically across participants by partner's exposure, utility manipulation, or their interaction ($ps$ > 0.05).
 
 
-```{r learning-and-speaking-plot, fig.height = 3, fig.width = 3, set.cap.width=T, num.cols.cap=1, fig.cap = "Participants' performance on the baseline recall task for the lexicon, as function of amount of exposure during training (grey bars). The red line shows the propotion of trials in the game in which participants used the learned labels."}
+```{r learning-and-speaking-plot, fig.height = 3, fig.width = 3, set.cap.width=T, num.cols.cap=1, fig.cap = "Participants' performance on the baseline recall task for the lexicon, as function of amount of exposure during training (grey bars). The red line shows the propotion of trials in the game in which participants used the learned labels, excluding teaching behaviors."}
 expanded_data <- filtered_data %>%
   group_by(condition, ldf_num,partnersExposure, exposureRate, method) %>%
   summarise(n = n()) %>%
@@ -155,7 +155,8 @@ ggplot(acc_data, aes(x = as.factor(exposureRate), y = empirical_stat,
   geom_linerange(group = 1) + 
   geom_pointrange(data = speak_data, color = "#e8250b") + 
   geom_line(data = speak_data, color = "#e8250b", group = 1) +
-  xlab("Exposure Rate During Training")
+  xlab("Exposure Rate During Training") +
+  ylab("Baseline Learning (grey) \n Label Production (red)")
 
 ```
 
@@ -226,7 +227,7 @@ When should we expect participants to rely on gesture? Gesturing has the highest
 
 Consistent with our predictions, exposure rate during training was a significant negative predictor of gesturing during the game (see Figure \ref{fig:modalities-empirical}), such that participants were less likely to rely on gesture for well trained (and thus well learned) objects ($\beta =$ `r point_exposure_estimate`, $p$ `r point_exposure_p.value`). Additionally, participants were significantly more likely to gesture in the Higher Relative Cost condition where gesture is relatively less costly, compared with the Low Relative Cost condition ($\beta =$ `r point_condition_estimate`, $p$ `r point_condition_p.value`) (see Figure \ref{fig:modalities-empirical}). We also found a significant negative effect of partner's knowledge, such that participants used gesture more for partners with less knowledge of the lexicon ($\beta =$ `r point_partners_exposure_estimate`, $p$ `r point_partners_exposure_p.value`).
 
-Note that these effects cannot be explained by solely speaker knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns directly mirror previous corpus analyses demonstrating adult's use of gesture in naturalistic parental communicative behaviors, and parents likely have lexical knowledge of even even the least frequent referent [see @yurovsky2018children].
+Note that these effects cannot be explained by solely speaker knowledge; all patterns above hold when looking *only* at words known by the speaker at pretest (*ps < 0.01*). Further, these patterns mirror previous corpus analyses demonstrating adult's use of gesture in naturalistic parental communicative behaviors, and parents likely have lexical knowledge of even the least frequent referent [see @yurovsky2018children].
 
 ### Speech
 
