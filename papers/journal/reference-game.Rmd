@@ -40,6 +40,8 @@ lineno            : yes
 lang              : "english"
 class             : "man"
 output            : papaja::apa6_pdf
+csl               : "apa7.csl"
+documentclass     : "apa7"
 ---
 
 ```{r load-packages, warning = FALSE, message = FALSE}
