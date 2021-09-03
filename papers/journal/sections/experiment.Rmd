@@ -1,4 +1,4 @@
-# Experimental Framework
+# Experiment
 
 ```{r text_labels}
 MODALITY_LABELS <- c("point", "speak", "teach")
@@ -9,7 +9,7 @@ To study the emergence of pedagogically supportive input from communicative pres
 
 Participants could choose to refer either using the novel labels they had been exposed to, or they could use a deictic gesture (i.e. point) to indicate the referent to their partner. The point was unambiguous, and thus would always succeed. However, in order for language to be effective, the participant and their partner would have to know the correct novel label for the referent. 
 
-Across conditions, we manipulated the relative costs of these two communicative methods (point and speak), as we did not have a direct way of assessing these costs in our naturalistic data, and they likely vary across communicative contexts. In all cases, we assumed that pointing was more costly than speech.  Though this need not be the case for all gestures and contexts, our framework compares simple lexical labeling and unambiguous deictic gestures, which likely are slower and more effortful to produce [e.g., see @yurovsky2018children]. We set the relative costs by explicitly implementing strategy utility, assigning point values to each communicative method.
+Across conditions, we manipulated the relative costs of these two communicative methods (point and speak), as we did not have a direct way of assessing these costs in our naturalistic data, and they likely vary across communicative contexts. In all cases, we assumed that pointing was more costly than speech.  Though this need not be the case for all gestures and contexts, our task compares simple lexical labeling and unambiguous deictic gestures, which likely are slower and more effortful to produce [e.g., see @yurovsky2018children]. We set the relative costs by explicitly implementing strategy utility, assigning point values to each communicative method.
 
 If people are motivated to communicate successfully, their choice of referential modality should reflect the tradeoff between the cost of producing the communicative signal with the likelihood that the communication would succeed. We thus predicted that peoples' choice of referential modality would reflect this tradeoff: People should be more likely to use language if they have had more exposures to the novel object's correct label, and they should be more likely to use language as pointing becomes relatively more costly. 
 

@@ -16,9 +16,9 @@ modality_data <- corpus_data %>%
   spread(modality, n, fill = 0)
 ```
 
-We first investigate parent referential communication in a longitudinal corpus of parent-child interaction. We analyze the production of ostensive labeling (i.e. using both gesture and speech) to refer to the same object in the same instance. While many aspects of child-directed speech support learning, ostensive labeling (e.g., speaking while pointing or looking) is a particularly powerful source of data for young children [e.g., @baldwin2000; @gogate2000]. We take the ostensive labeling produced by multi-modal cues to be a case-study phenomenon of pedagogically supportive language input. While our account should hold for other language phenomena, by focusing on one phenomenon we attempt to specify the dynamics involved in the production of such input.
+We first investigate parent referential communication in a longitudinal corpus of parent-child interaction. We analyze the production of ostensive labeling. Ostensive labeling refers to information-rich referential commmunication wherein the inteded referent of a label is made salient, in this case using both gesture and speech to refer to the same object in the same instance. While many aspects of child-directed speech support learning, ostensive labeling is a particularly powerful source of data for young children [e.g., @baldwin2000; @gogate2000]. We take the ostensive labeling with multi-modal cues to be a case-study phenomenon of pedagogically supportive language input. While our account should hold for other language phenomena, by focusing on one phenomenon we attempt to specify the dynamics involved in the production of such input.
 
-In this analysis of naturalistic communication, we examine the prevalence of ostensive labeling in children's language environment at different ages. We find that this pedagogically-supportive form of input shows a key halmark of adaptive tuning: caregivers using this information-rich cue more for young children and infrequent objects. Thus, parents production of ostensive labeling is tuned to children's developing linguistic knowledge [@yurovsky2016]. 
+In this analysis of naturalistic communication, we examine the prevalence of ostensive labeling in children's language environment at different ages. We find that this pedagogically-supportive form of input shows a key halmark of adaptive tuning: caregivers using this information-rich cue more for young children and infrequent objects. Thus, parents' production of ostensive labeling is tuned to children's developing linguistic knowledge [@yurovsky2016]. 
 
 ## Methods
 
@@ -84,14 +84,15 @@ walk2(c("corpus_age", "corpus_freq", "corpus_interaction"),
 ```{r in-data}
 predicted_both <- model.frame(parent_both_raw) %>%
   as_tibble() %>%
-  mutate(prop = inv.logit(predict(parent_both_raw, ., re.form = NA))) %>%
   clean_names() %>%
+  # distinct(. , .keep_all = T) %>%
+  mutate(prop = inv.logit(predict(parent_both_raw, ., re.form = NA))) %>%
   rowwise() %>%
   mutate(in_prop = cbind_both_speech_gesture[1]/sum(cbind_both_speech_gesture)) %>%
   group_by(model_age, model_freq, subj, referent) %>%
-  summarise(prop = mean(prop)) %>%
-  summarise(prop = mean(prop)) %>%
-  summarise(prop = mean(prop)) %>%
+  summarise(prop = mean(prop), in_prop = mean(in_prop)) %>%
+  summarise(prop = mean(prop), in_prop = mean(in_prop)) %>%
+  summarise(prop = mean(prop), in_prop = mean(in_prop)) %>%
   ungroup() %>%
   left_join(corpus_model_data %>% 
               select(age, model_age, freq, model_freq) %>%
@@ -149,4 +150,8 @@ plot_data %>%
 
 ## Discussion
 
-Caregivers are not indiscriminate in their use of multi-modal reference; in these data, they provided more of this support when their child was younger and when discussing less familiar objects. These longitudinal corpus findings are consistent with an account of parental alignment: parents are sensitive to their child's linguistic knowledge and adjust their communication accordingly [@yurovsky2016]. Ostensive labeling is perhaps the most explicit form of pedagogical support, so we chose to focus on it for our case study. We argue that these data could be explained by a simple, potentially-selfish pressure: to communicate successfully. The influence of communicative pressure is difficult to draw in naturalistic data, so we developed a paradigm to try to experimentally induce richly-structured, aligned input from a pressure to communicate in the moment.
+Caregivers are not indiscriminate in their use of ostensive labeling; in these data, they provided more of this support when their child was younger and when discussing less familiar objects. These longitudinal corpus findings are consistent with an account of parental alignment: parents are sensitive to their child's linguistic knowledge and adjust their communication accordingly [@yurovsky2016].
+
+This parental alignment is straightforwardly predicted from a dyadic framework [@yurovsky2018] that privleges commmunicative goals, yet wholly missing from learner-centric accounts of language learning. While some early accounts of language learning suggested a powerful role of tuned input [e.g., @levelt1975], influential investigations of possible alignment in language input susggested that fine-tuning was unlikely, perhaps because these investigations largely focused on syntax [@newport1977]. As a result, the role and importance of alignment has been understudied in research on language acquisition, but this work and other recent demonstrations show that parental alignment may aid language learning for a variety of communicatively-relevant language problems [e.g., @yurovsky2016, @leung2021].
+
+While language input that is tuned to the child's linguistic competence could undoubtedly aid in language learning, the presence of such input does not necessarily imply pedagogical goals. We argue that these data could be explained by a simple, potentially-selfish pressure: to communicate successfully. The influence of communicative pressure is difficult to draw in naturalistic data, so we developed a paradigm to try to experimentally induce richly-structured, aligned input from a pressure to communicate in the moment.
