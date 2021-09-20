@@ -17,6 +17,8 @@ Critically, participants were told that they would play this game repeatedly wit
 
 Our communicative game was designed to reward in-the-moment communication, and thus teaching required the participant pay a high cost upfront. However, rational communicators may understand that if one is accounting for future trials, paying the cost upfront to teach their partner allows them to use a less costly message strategy on subsequent trials (namely, speech). Manipulating the partner's knowledge and the utility of communicative strategies, we aimed to experimentally determine the circumstances under which richly-structured input emerges, without an explicit pedagogical goal.
 
+While our reference game setting has limited ecologial validity, this setup allows us to explicitly manipulate the crucial features of the communiative setting (e.g., communicative cost, strategy, and partner knowledge). In this controlled task, we can look for the emergence of structure that parralells the naturalistic input described in our corpus evidence, while also experimentally testing for possible drivers of such structure. This experimental setup further allows us to straightforwardly test and compare key predictions using a formal model to explain participant behavior. 
+
 ```{r exp-screenshot, fig.width = 4.5, set.cap.width=T, num.cols.cap=1, fig.cap = "Screenshot showing the participant view during gameplay."}
 img <- png::readPNG(here("papers/journal/figs/exp_screenshot.png"))
 grid::grid.raster(img)
