@@ -10,7 +10,7 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(lubridate)
-library(langcog)
+library(tidyboot)
 
 novelWords <- as.vector(c("blicket", "kreeb", "wug", "fep", "toma", "dax", "gazzer", "kiv","manu"))
 theme_set(theme_bw())

@@ -46,6 +46,7 @@ documentclass     : "apa7"
 
 ```{r load-packages, warning = FALSE, message = FALSE}
 library(papaja)
+library(data.table)
 library(feather)
 library(here)
 library(lme4)

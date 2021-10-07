@@ -53,10 +53,11 @@ In contrast to the Teaching and Communication simulations, the behavior of the T
 ## Results
 
 ```{r read-sim-data}
-teach_props <- read_csv(here("data/teach_props.csv"))
-com_props <- read_csv(here("data/join_com_props.csv")) %>%
+teach_props <- read_csv(here("data/teach_props.csv"), show_col_types = FALSE)
+com_props <- read_csv(here("data/join_com_props.csv"), 
+                      show_col_types = FALSE) %>%
     filter(P <= 70, S <= 20)
-pbv_props <- read_csv(here("data/pbv_props.csv"))
+pbv_props <- read_csv(here("data/pbv_props.csv"), show_col_types = FALSE)
 
 THRESHOLD <- .75
 ```

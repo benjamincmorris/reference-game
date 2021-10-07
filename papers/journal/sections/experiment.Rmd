@@ -159,8 +159,8 @@ ggplot(acc_data, aes(x = as.factor(exposureRate), y = empirical_stat,
   geom_linerange(group = 1) + 
   geom_pointrange(data = speak_data, color = "#e8250b") + 
   geom_line(data = speak_data, color = "#e8250b", group = 1) +
-  xlab("Exposure Rate During Training") +
-  ylab("Learning at Baseline")
+  xlab("Partner's training exposure") +
+  ylab("Learning at baseline")
 
 ```
 
@@ -189,7 +189,7 @@ modality_plot <- function(df, method_column, label_data) {
     geom_line(size=.9, position = position_dodge(.25)) +
     geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
                   position = position_dodge(.25)) +
-    labs(y = "Proportion of trials", x = "Exposure rate during training") +
+    labs(y = "Proportion of trials", x = "Partner's training exposure rate") +
     scale_color_manual(values = modality_colors, name = "Method") +
     geom_text(data = label_data)
 }
@@ -309,7 +309,7 @@ teach_plot <- function(df, method_column, label_data) {
     geom_pointrange(aes(ymax = ci_upper, ymin = ci_lower),
                     position = position_dodge(.25)) +
     facet_grid(. ~ condition) +
-    labs(y="Proportion of Teaching Trials", x = "Object Instance during Game") +
+    labs(y="Proportion of Teaching Trials", x = "Object instance during game") +
    # coord_cartesian(ylim = c(0,.4)) +
     scale_color_manual(values = teach_colors, name = "Partner's Exposure") +
     geom_text(data = label_data) +

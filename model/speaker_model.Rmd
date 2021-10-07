@@ -19,7 +19,8 @@ knitr::opts_chunk$set(fig.align='center', echo=FALSE, messages=FALSE, warning = 
                       fig.height = 3, fig.width=5)
 
 #Load packages + setup
-library(rwebppl)
+library(rwebppl) #use dyurovsky/rwebppl
+library(data.table)
 library(here)
 library(directlabels)
 library(ggthemes)
@@ -50,11 +51,13 @@ write_csv(estimated_ps, here("model_output/estimated_ps.csv"))
 ```
 
 Read in participant data
-```{r read-datamodel}
-full_explicit <- read_csv(here("data/1.30_turk_exp.csv")) %>%
-  select(-X1, -X1_1)
+```{r read-datamodel, message = FALSE}
+full_explicit <- read_csv(here("data/1.30_turk_exp.csv"),
+                          show_col_types = FALSE) %>%
+  select(-`...1`, -X1)
 
-estimated_ps <- read_csv(here("model_output/estimated_ps.csv"))
+estimated_ps <- read_csv(here("model_output/estimated_ps.csv"),
+                         show_col_types = FALSE)
 
 all_data_dropped <- full_explicit %>% 
   filter(toBeDropped == 0) %>%
@@ -90,20 +93,25 @@ trial_level_data <- model_data %>%
   rename(partnersExposureDescriptive = partnersExposure) %>%
   mutate(partnersExposure = case_when(partnersExposureDescriptive == "None" ~ 0,
                                       partnersExposureDescriptive == "Same" ~ 1,
-                                      partnersExposureDescriptive == "Perfect" ~ 2))
+                                      partnersExposureDescriptive == "Perfect" ~ 2),
+         method = case_when(method == "label" ~ "speak",
+                            method == "click" ~ "point",
+                            method == "label_click" ~ "teach"))
 ```
 
 Webppl sometimes crashes, so I ran this code in batches of 50 participants and wrote them out disk
 
 ```{r fake-hierarchical, eval = FALSE}
-sample_data <- trial_level_data %>% filter(ldf_num %in% 301:300)
+model_names = c("full_model", "no_planning", "no_cost", "no_success")
+
+sample_data <- trial_level_data %>% filter(ldf_num %in% 301:480)
 
 run_single_model <- function(data) {
   num <- data[[1,"num"]]
   print(num)
-  output <- webppl(program_file = here("model/fit_single_participant.wppl"),
+  output <- webppl(program_file = here("model/comparisons/fit_single_participant_nosuccess.wppl"),
                                       data = data, data_var = "empiricalData")
-  write_csv(output, here(glue("model/samples/p{num}.csv")))
+  write_csv(output, here(glue("model/samples/no_success/p{num}.csv")))
   return(output)
 }
 
@@ -117,7 +125,7 @@ nested_data <- sample_data %>%
 ```
 
 ```{r load-individual-fits}
-files <- list.files(here("model/samples"), pattern = "*.csv", 
+files <- list.files(here("model/samples/no_cost"), pattern = "*.csv", 
                     full.names = TRUE)
 
 
@@ -128,11 +136,12 @@ read_file <- function(filename) {
     str_extract(.,"[0-9]+") %>%
     as.numeric()
   
-  read_csv(filename) %>%
+  fread(filename) %>%
+    as_tibble() %>%
     mutate(ldf_num = ldf_num)
 }
 
-nested_data <- suppressMessages(map_dfr(files, read_file))
+nested_data <- map_dfr(files, read_file)
 ```
 
 ```{r estimate-params, eval = FALSE}
@@ -144,7 +153,7 @@ mean_data <- nested_data %>%
 mean_data %>%
   summarise(alpha = mean(alpha), discount = mean(discount))
 
-ggplot(mean_data %>% pivot_longer(cols = c(score, alpha, discount), 
+ggplot(mean_data %>% pivot_longer(cols = c(alpha, discount, score), 
                                   names_to = "Parameter"), 
        aes(x = value)) + 
   geom_histogram() + 
@@ -160,6 +169,15 @@ tidy_hyper_parameters <- hyper_parameters %>%
 ggplot(hyper_parameters, aes(x = Iteration, y = value)) + 
   geom_point() +
   facet_wrap(~ Parameter, scales = "free")
+```
+
+```{r write-parameters}
+write_csv(hyper_parameters, here("model_output/no_success/hyper_parameters.csv"))
+```
+
+```{r read-hyperparameters}
+hyper_parameters <- read_csv(here("model_output/no_success/hyper_parameters.csv"),
+                             show_col_types = FALSE)
 
 mean_hyper_parameters <- hyper_parameters %>%
   group_by(Parameter) %>%
@@ -168,29 +186,65 @@ mean_hyper_parameters <- hyper_parameters %>%
 mean_hyper_parameters
 
 ```
-
-```{r write-parameters}
-write_csv(hyper_parameters, here("model_output/hyper_parameters.csv"))
-```
-
-```{r run-model}
-predicted_data <- trial_level_data %>%
+`
+```{r run-model, eval = FALSE}
+setup_data <- trial_level_data %>%
   ungroup() %>%
   mutate(alpha = mean_hyper_parameters %>% 
            filter(Parameter == "hyperAlpha") %>%
            pull(value),
          discount = mean_hyper_parameters %>% 
            filter(Parameter == "hyperDiscount") %>%
-           pull(value)) %>%
-  mutate(action = webppl(program_file = here("model/run_model.wppl"), 
+           pull(value)) 
+
+predict_outcomes <- function(sample) {
+  predicted_data <- setup_data %>%
+    mutate(action = webppl(
+      program_file = here("model/comparisons/run_model_nosuccess.wppl"), 
                          data = ., 
                          data_var = "empiricalVocabs") %>%
-           bind_rows() %>%
-           as_tibble() %>%
-           pull())
+           bind_rows()) %>%
+            mutate(likelihood = action[,2],
+                   action = action[,1]) %>%
+           as_tibble()
 
-write_csv(predicted_data, here("model_output/predicted_data.csv"))
+  write_csv(predicted_data,
+            here(glue("model_output/no_success/predicted_data/predicted_data{sample}.csv")))
+}
+
+walk(1:2, predict_outcomes)
 ```
+
+```{r load-model-predictions}
+out_files <- list.files(here("model_output/no_cost/predicted_data/"), pattern = "*.csv", 
+                    full.names = TRUE)
+
+
+read_output_file <- function(filename) {
+  sample_num <- str_split(filename, "/") %>%
+    unlist() %>%
+    last() %>%
+    str_extract(.,"[0-9]+") %>%
+    as.numeric()
+  
+  fread(filename) %>%
+    as_tibble() %>%
+    mutate(sample = sample_num)
+}
+
+predicted_data <- map_dfr(out_files, read_output_file)
+```
+
+```{r}
+no_planning_likelihood <- predicted_data %>%
+  group_by(sample) %>%
+  summarise(likelihood = sum(likelihood), alpha = mean(alpha), 
+            discount = mean(discount)) %>%
+  mutate(likelihood = likelihood + dnorm(logit(discount), log = TRUE) + 
+           dgamma(alpha, 1, 1, log = TRUE)) %>%
+  tidyboot_mean(likelihood)
+```
+
 
 ```{r plot1}
 modality.colors <- c(speak = "#e8250b", point = "#1f11e0", teach ="#54a832", 
@@ -227,11 +281,7 @@ plot_prop_methods_exposures <- prop_methods_exposures %>%
   mutate(condition = ifelse(condition=="100_30", "Low Relative Cost", "Higher Relative Cost"),
       partnersExposure = factor(partnersExposure, labels = c("None", "Same", "Perfect")),
       condition = factor(condition, 
-                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE),
-       #  exposureRate = as.factor(exposureRate),
-         method = factor(method, levels = c("point", "speak", "teach"),
-                         labels = c("gesture", "speech", "teach")))# %>%
-  #filter(method != "label_click") 
+                            levels=c("Low Relative Cost","Higher Relative Cost"), ordered=TRUE))
 
 plot_prop_methods_exposures %>%
   ggplot(aes(x=partnersExposure, y=empirical_stat, color = method, label = method,
@@ -266,7 +316,7 @@ prop_methods_teaching <- predicted_data %>%
   mutate(method = as.factor(method)) %>%
   tidyr::complete(nesting(condition, ldf_num, partnersExposure), appearance, method, fill = list(n = 0)) %>%
   group_by(condition, partnersExposure, appearance, method) %>%
-  summarise(mean = mean(n), se = seprop(n)) 
+  summarise(mean = mean(n), se = .1) 
 
 plot_prop_methods_teaching <- prop_methods_teaching %>%
   ungroup() %>%

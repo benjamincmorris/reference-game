@@ -215,6 +215,7 @@ var outcomes = map(function(x) {
 
       var act_dist = act(myVocab, yourVocab, _.filter(remainingTrials, ['label', thisTrial.label]), thisTrial.label, 0, estimatedProb, pointCost, speechCost)
 
+      var likelihood = act_dist.score(thisTrial.method)
 
       var action = sample(act_dist)
       var outcome = selectReferent(action, thisTrial.label, myVocab, yourVocab)
@@ -222,7 +223,8 @@ var outcomes = map(function(x) {
       var newVocab = updateVocab(yourVocab, thisTrial.label, outcome, estimatedProb)
 
       startingArray.push({
-        action: action
+        action: action,
+        likelihood: likelihood
       }) //action
 
       return (remainingTrials.length > 0) ? predictingTrials(remainingTrials, newVocab, startingArray) : startingArray

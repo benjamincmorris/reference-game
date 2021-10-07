@@ -242,7 +242,7 @@ var one_sample = function(alphaParam, discountParam) {
 }
 
 var modelPosterior = function() {
-  Infer({method: "MCMC", samples: 200, burn: 100, verbose: true,
+  Infer({method: "MCMC", samples: 2, burn: 0, verbose: true,
     model() {
 
       var discount = sample(Uniform({a: 0, b: 1}))
