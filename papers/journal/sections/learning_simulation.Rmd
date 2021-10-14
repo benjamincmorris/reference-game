@@ -52,10 +52,10 @@ In our simulations, we varied the children's learning rate ($p$) from .1 to 1 in
 
 ```{r read-sim-data}
 teach_props <- read_csv(here("data/teach_props.csv"), show_col_types = FALSE)
-com_props <- read_csv(here("data/join_com_props.csv"), 
+com_props <- read_csv(here("data/com_props.csv"), 
                       show_col_types = FALSE) %>%
     filter(P <= 70, S <= 20)
-pbv_props <- read_csv(here("data/pbv_props.csv"), show_col_types = FALSE)
+talk_props <- read_csv(here("data/talk_props.csv"), show_col_types = FALSE)
 
 THRESHOLD <- .75
 ```
@@ -107,7 +107,7 @@ The Communication model's behavior depends on parameters of both the child learn
 Finally, when parents spoke on each trial and children had to learn from cross-situational statistics, learning was controlled by the the child's learning rate, the number of hypotheses the child could entertain, the number of objects per event, and to a small extent the total vocabulary size. In general, children learned faster when they had a higher learning rate, and could entertain more hypotheses. Learning was also predictably slower when there were more objects on each event and thus ambiguity was higher. Finally, as the total vocabulary size increased, the rate of learning increased slightly, as it does with human cross-situational learners [@yu2007]. This counter-intuitive outcome occurs because the rate of spurious co-occurrences, in which the target word consistently co-occurs with an object that is not its referent, decreases as the set of potential foils expands. The the effect of context size ($C$) and number of hypotheses can be seen along with the learning rates of the other two models in Figure \ref{fig:compare-models}.
 
 ```{r xsit-time}
-xsit_time_to_thresh <- pbv_props %>%
+xsit_time_to_thresh <- talk_props %>%
   group_by(nguesses, M, C, p) %>%
   filter(prob >= THRESHOLD) %>%
   slice(1)

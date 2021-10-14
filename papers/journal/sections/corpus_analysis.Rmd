@@ -2,7 +2,7 @@
 ```{r corpus-data}
 # Plot of Referential Communication from LDP Corpus Data
 corpus_data <- read_feather(here("data/coded_responses.feather")) %>%
-  mutate(freq_cut = cut(log(freq), 10))%>%
+  mutate(freq_cut = cut(log(freq), 4))%>%
   separate(freq_cut, into = c("freq_cut_left", "freq_cut_right"), sep = ",",
            remove = FALSE) %>%
   mutate(freq_cut_left = as.numeric(str_remove_all(freq_cut_left,"\\(")),
@@ -46,26 +46,15 @@ To ensure our transcript-based coding of referent presence was sufficiently accu
 ## Results
 
 ```{r corpus-plot-lm}
-mid_age <- modality_data %>% 
-  pull(age) %>%
-  unique() %>% 
-  mean() %>%
-  log()
-
-mid_freq <- modality_data %>% 
-  pull(freq) %>%
-  unique() %>% 
-  mean() %>%
-  log()
-
 corpus_model_data <- modality_data %>%
   ungroup() %>%
   filter(person == "parent") %>%
-  mutate(model_age = log(age) - mid_age,
-         model_freq = log(freq) - mid_freq)
+  mutate(model_age = scale(log(age), scale = FALSE),
+         model_freq = scale(log(freq), scale = FALSE))
 
 
-parent_both_raw <- glmer(cbind(both, speech + gesture) ~ model_age * model_freq + 
+parent_both_raw <- glmer(cbind(both, speech + gesture) ~ 
+                           model_age * model_freq + 
                     (1 | referent) + ( model_freq | subj), 
       data = corpus_model_data, 
       family = "binomial") 
@@ -81,20 +70,20 @@ walk2(c("corpus_age", "corpus_freq", "corpus_interaction"),
       ~make_text_vars(parent_both_lm, .x, .y))
 ```
 
-```{r in-data}
+```{r in-data, eval = FALSE}
 predicted_both <- model.frame(parent_both_raw) %>%
   as_tibble() %>%
   clean_names() %>%
-  # distinct(. , .keep_all = T) %>%
-  mutate(prop = inv.logit(predict(parent_both_raw, ., re.form = NA))) %>%
+  mutate(prop = inv.logit(predict(parent_both_raw, re.form = NA, .))) %>%
   rowwise() %>%
-  mutate(in_prop = cbind_both_speech_gesture[1]/sum(cbind_both_speech_gesture)) %>%
+  mutate(in_prop = cbind_both_speech_gesture[1]/
+           sum(cbind_both_speech_gesture)) %>%
   group_by(model_age, model_freq, subj, referent) %>%
   summarise(prop = mean(prop), in_prop = mean(in_prop)) %>%
   summarise(prop = mean(prop), in_prop = mean(in_prop)) %>%
   summarise(prop = mean(prop), in_prop = mean(in_prop)) %>%
   ungroup() %>%
-  left_join(corpus_model_data %>% 
+   left_join(corpus_model_data %>% 
               select(age, model_age, freq, model_freq) %>%
               distinct(),
             by = c("model_age","model_freq")) %>%
@@ -108,13 +97,25 @@ These corpus data were analyzed using a mixed effects regression to predict pare
 ```{r plot-setup}
 plot_data <- modality_data %>%
   group_by(person, age, subj, freq_cut, referent) %>%
-  gather(modality, n, both, gesture, speech) %>%
+  pivot_longer(cols = c(both, gesture, speech), 
+               names_to = "modality", values_to = "n") %>%
   mutate(prop = n/sum(n)) %>%
   ungroup() %>%
   filter(modality == "both", person == "parent") %>%
   mutate(plot_age = factor(age, labels = c('14 mo.', '18 mo.','22 mo.', 
                                       '26 mo.', "30 mo.",
                                       "34 mo.")))
+
+ci_funs <- list("ci_lower" = ci_lower, "ci_upper" = ci_upper)
+new_plot_data <- plot_data %>%
+  group_by(age, freq_cut, subj, referent) %>%
+  summarise(prop = mean(prop), n = n()) %>%
+  summarise(prop = weighted.mean(prop, w = n), n = n()) %>%
+  tidyboot(summary_function = function(x) x %>%
+             summarise(stat = weighted.mean(prop, n)),
+           statistics_functions = function(x) x %>%
+             summarise(across(stat, ci_funs, .names = "{.fn}"))) %>%
+  rename(prop = empirical_stat)
 
 #set gradient
 cc <- scales::seq_gradient_pal("#87d868", "#124200", "Lab")(seq(0,1,length.out=6))
@@ -123,29 +124,27 @@ teaching_ribbons <- scales::seq_gradient_pal("#cbffb7", "#124200", "Lab")(seq(0,
 teaching_ribbons[[6]] <- "#000000"
 ```
 
-```{r corpus-plot, fig.height=4, fig.width = 6, fig.cap = "Parents' rate of ostensive labelling via multi-modal reference. Parents used ostensive labeling more for younger children and infrequent referents. Lines show model predictions for each age group."}
-plot_annotations <- tibble(prop= c(.18, .12, .09, .07, .055, .035),
-                           plot_age = c("14 mo.", "18 mo.","22 mo.", 
-                                      '26 mo.', "30 mo.",
-                                      "34 mo."),
-                           freq = .7)
+```{r corpus-plot, fig.height=4, fig.width = 6, fig.cap = "Parents' rate of ostensive labelling via multi-modal reference for referents of varying frequency. Log frequences were binned into quartiles for visualization. Points show empirical frequencies along with 95\\% confidence intervals computed by non-parametric bootstrapping. Lines show estimates from a logisitic regression along with ribbons indicating one standard error. Parents used ostensive labeling more for younger children and infrequent referents. "}
+plot_annotations <- tibble(prop= c(.18, .11, .06, .05, .04, .02),
+                           age = c(14, 18, 26,  30, 22, 34),
+                           label = glue("{age} mo."),
+                           freq_cut = .35)
 
-plot_data %>% 
-  group_by(freq_cut, plot_age, subj) %>%
-  summarise(prop = mean(prop)) %>%
-  summarise(prop = mean(prop)) %>%
-  mutate(freq_cut = exp(freq_cut)) %>%
-  rename(freq  = freq_cut) %>%
-  ggplot(aes(x = log(freq), y = prop, color = plot_age, 
-             fill = plot_age, label = plot_age)) +
-  geom_jitter(width = .1, height = 0) +
-  geom_smooth(method = "loess", formula = "y ~ x", se = FALSE, data = predicted_both) + 
-  labs(y="Ostensive Labeling (prop.)", x='Referent frequency (log)') +
-  coord_cartesian(ylim=c(0,.2), xlim=c(-.5,6)) +
-  scale_fill_manual(values = teaching_ribbons, name='Child\'s age') +
-  scale_color_manual(values = teaching_ribbons, name='Child\'s age') +
+ggplot(new_plot_data, aes(x = freq_cut, y = prop, color = as.factor(age),
+                          fill = as.factor(age), group = as.factor(age))) + 
+  geom_smooth(method = "lm", formula = "y ~ log(x)", 
+              position = position_dodge(.5), data = plot_data,
+              alpha = .25) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  position = position_dodge(.5)) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  geom_text(aes(label = label), data = plot_annotations) +
+  coord_cartesian(ylim=c(0,.2), xlim=c(.2,7)) +
+  labs(y="Ostensive Labeling (prop.)", 
+       x="Referent (log) frequency quartile") +
   theme(legend.position = "none", aspect.ratio = 1/1.66) +
-  geom_text(data = plot_annotations)
+  scale_x_continuous(breaks = seq(1,7,2), labels = 1:4)
 ```
 
 ## Discussion
