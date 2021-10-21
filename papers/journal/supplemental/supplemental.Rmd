@@ -1,6 +1,6 @@
 ---
-title: "\\LARGE A communicative framework for early word learning"
-author: "\\large \\emph{XXXXX and XXXXX}"
+title: "\\LARGE Communicative pressure on parents leads to language input that supports children's word learning"
+author: "\\large \\emph{Benjamin C. Morris and Daniel Yurovsky}"
 header-includes:
   - \usepackage[section]{placeins}
   - \usepackage{float}
@@ -11,7 +11,7 @@ output:
     latex_engine: xelatex
     number_sections: true
 documentclass: article
-bibliography: 
+bibliography: ../reference-game.bib
 fontsize: 11pt
 geometry: margin=1in
 csl: apa6.csl
@@ -32,48 +32,53 @@ library(lmerTest)
 library(broom)
 library(broom.mixed)
 library(boot)
+library(ggthemes)
 
-opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = TRUE, 
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = TRUE, 
                tidy = FALSE, echo = FALSE)
 
-theme_set(theme_classic(base_size = 12))
+theme_set(theme_few(base_size = 12))
 
-options(digits=2)
+options(digits = 3, dplyr.summarise.inform = FALSE)
+set.seed(42)
 ```
 
 \renewcommand\thesection{S\arabic{section}}
 \renewcommand{\thetable}{S\arabic{table}}  
 \renewcommand{\thefigure}{S\arabic{figure}}
 
-
 \section{Experimental Results}
 
 ```{r}
-all_data <- read_csv(here("data/1.30_turk_exp.csv"))
+all_data <- read_csv(here("data/1.30_turk_exp.csv"),
+                     show_col_types = FALSE) %>%
+  select(-`...1`, -X1)
 
 filtered_data <- all_data %>%
   filter(toBeDropped != 1) %>%
   mutate(base = logit(1/3),
          appearanceNumeric = as.numeric(as.factor(appearance)),
          partnersExposure = factor(partnersExposure, 
-                                   levels = c("None", "Same", "Perfect")),
+                                   levels = c("None", "Same", "Perfect"),
+                                   labels = c("None", "Same", "Twice")),
          partnersExposureNumeric = as.numeric(partnersExposure) - 1)
 ```
 
-For readability, the main text includes only the key effects for each statistical model rather than a full specification. We include those here. Each model included at least a random intercept for each subject and item. Models were estimated using version XXXX of the lme4 package (Bates, Mächler, Bolker, & Walker, 2015).
+For readability, the main text includes only the key effects for each statistical model rather than a full specification. We include those here. Each model included at least a random intercept for each subject and item. Models were estimated using version 1.1-27.1 of the lme4 package [@bates2015].
 
 \subsection{Learning}
 
-To confirm that we sucessfully manipulated participants' learning, we asked whether items with more exposure during training were better learned at pretest. To do this we fit a logitistic mixed-effects model to analyze learning at baseline (i.e. prior to gameplay). We see the predicted signficant effect of exposure rate on learning, confirming that object-label mappings that were presented more in training were better learned. 
+To confirm that we successfully manipulated participants' learning, we asked whether items with more exposure during training were better learned at pretest. To do this we fit a logistics mixed-effects model to analyze learning at baseline (i.e. prior to gameplay). We see the predicted significant effect of exposure rate on learning, confirming that object-label mappings that were presented more in training were better learned. 
 
-Additionally, we can test our critical between-subjects manipulations to ensure that learning of the lexicon does not differ significantly at pretest (prior to the manipulations). Neither utility condition or partner's exposure signficantly predicts performance at pretest. This provides a simple check that participants in each condition learned the lexicon similarly. The full results of this model are presented in Table \ref{tab:learningTable}.
+Additionally, we tested our critical between-subjects manipulations to ensure that learning of the lexicon did not differ significantly at pretest (prior to the manipulations). Neither utility condition or partner's exposure significantly predicted performance at pretest. This provides a simple check that participants in each condition learned the lexicon similarly. The full results of this model are presented in Table \ref{tab:learningTable}.
 
 ```{r learning}
 learningByExposure <- filtered_data %>% 
   group_by(ldf_num, condition, partnersExposureNumeric, realLabel, exposureRate) %>%
   summarize(testCorrect = first(testCorrect))
 
-gm_known <- glmer(testCorrect ~ exposureRate + condition + partnersExposureNumeric + (exposureRate|ldf_num) + 
+gm_known <- glmer(testCorrect ~ exposureRate + condition + 
+                    partnersExposureNumeric + (exposureRate|ldf_num) + 
                     (1|realLabel),
             data = learningByExposure,
       family=binomial) %>%
@@ -92,11 +97,11 @@ apa_table(gm_known, format.args = list(na_string = ""), font_size = "footnotesiz
 
 \subsection{Communicative Strategy}
 
-Our key analyses concerned participants choice of communicative strategy. In each trial, participants were able to choose one of 3 communicative strategies: gesture, speech, or teaching. We expected flexibile trade-off between the use of each strategy given their relative utilities, participant's knowledge of the lexicon, and the listener's knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logisitc mixed effects models for each behavior, reported below. The mixed effects model for each communicative behavior has an identical effect structure for comprability. Each model includes a random effect of subject and item. It should be noted that these three behaviors are mutually exhaustive.
+Our key analyses concerned participants choice of communicative strategy. In each trial, participants were able to choose one of 3 communicative strategies: point, speak, or teach We expected flexible trade-off between the use of each strategy given their relative utilities, participants' knowledge of the lexicon, and the partners' knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logistic mixed-effects models for each behavior, reported below. The mixed effects model for each communicative behavior has an identical effect structure for comparability. Each model included a random effect of subject and item. It should be noted that these three behaviors are mutually exhaustive.
 
-\subsubsection{Gesture}
+\subsubsection{Poiting}
 
-To examine gesture, we ran a mixed effects logistic regression to predict whether speakers chose to gesture during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants gestured more for words that recieved less training, with partners who had less knowledge, and in the condition where gesture's utility was higher. The full results of this model are presented in Table \ref{tab:clickTable}.
+To examine pointing, we ran a mixed effects logistic regression to predict whether speakers chose to point during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants gestured more for words that received less training, with partners who had less knowledge, and in the condition where the utility of pointing was higher. The full results of this model are presented in Table \ref{tab:clickTable}.
 
 ```{r click, results="asis", cache = T}
 gm_click <- glmer((method == 'click') ~  exposureRate * partnersExposureNumeric + 
@@ -117,13 +122,13 @@ gm_click <- glmer((method == 'click') ~  exposureRate * partnersExposureNumeric 
 
 ```{r clickTable}
 apa_table(gm_click, format.args = list(na_string = ""), font_size = "footnotesize",
-            caption = "Propensity to use gesture as a strategy, specified as \\texttt{gesture $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE, placement = "h")
+            caption = "Propensity to point, specified as \\texttt{point $\\sim$ exposureRate * partnersExposure + appearanceNum * partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE, placement = "h")
 ```
 
 
-\subsubsection{Speech}
+\subsubsection{Speaking}
 
-To examine speech, we ran a mixed effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants used labels more for words that recieved more training, with partners who had more knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:labelTable}.
+To examine speaking, we ran a mixed-effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants used labels more for words that received more training, with partners who had more knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:labelTable}.
 
 
 ```{r label, results="asis", cache = T}
@@ -145,16 +150,12 @@ gm_label <- glmer((method == 'label') ~ exposureRate * partnersExposureNumeric +
 
 ```{r labelTable}
 apa_table(gm_label, format.args = list(na_string = ""), font_size = "footnotesize",
-            caption = "Propensity to use labeling as a strategy, specified as \\texttt{label $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
+            caption = "Propensity to use labeling as a strategy, specified as \\texttt{speak $\\sim$ exposureRate * partnersExposure + appearanceNum * partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
 ```
-
-
 
 \subsubsection{Teaching}
 
-To examine teaching, we ran a mixed effects logistic regression to predict whether speakers chose to teach during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants taught labels more often (i.e. used both the gesture and speech strategy simultaneously) for words that recieved more training, with partners who had less knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:teachTable}.
-
-
+To examine teaching, we ran a mixed-effects logistic regression to predict whether speakers chose to teach during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants taught labels more often (i.e. used both the pointing and speaking strategy simultaneously) for words that received more training, with partners who had less knowledge, and in the condition where the utility of speech was higher. The full results of this model are presented in Table \ref{tab:teachTable}.
 
 ```{r teach, results="asis"}
 gm_teach <- glmer((method == 'label_click') ~ exposureRate * partnersExposureNumeric  + 
@@ -177,26 +178,26 @@ gm_teach <- glmer((method == 'label_click') ~ exposureRate * partnersExposureNum
 
 ```{r teachTable}
 apa_table(gm_teach, format.args = list(na_string = ""), font_size = "footnotesize",
-            caption = "Propensity to use teaching as a strategy, specified as \\texttt{teach $\\sim$ exposureRate*partnersExposure + appearanceNum*partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
+            caption = "Propensity to use teaching as a strategy, specified as \\texttt{teach $\\sim$ exposureRate * partnersExposure + appearanceNum * partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
 ```
 
 \newpage
 
 \section{Corpus Referential Talk and Gesture Coding Supplemental}
 
-Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found at **XYZ.COM**
+Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found on the Open Science Foundation project page: https://osf.io/d9gkw/
 
 \textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
 
 \subsection{Coding A Referent}
 
-In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a signle utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
+In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a single utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
 
 Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
 
 \subsection{Coding for Presentness}
 
-Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms ("e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual at **XYZ.COM** 
+Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms (e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual on the Open Science Foundation project page: https://osf.io/d9gkw/.
 
 \textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
 
@@ -208,8 +209,6 @@ Not all concrete referents that are mentioned in speech are actually present in 
     parent	& that's all the orange we have . & orange & 0	\\
     parent & that's it . & & \\
 \end{tabular}
-
-
 
 \newpage
 
