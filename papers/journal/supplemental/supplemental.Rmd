@@ -21,6 +21,8 @@ csl: apa6.csl
 library(readxl)
 library(janitor)
 library(here)
+library(latex2exp)
+library(data.table)
 library(knitr)
 library(papaja)
 library(kableExtra)
@@ -181,8 +183,6 @@ apa_table(gm_teach, format.args = list(na_string = ""), font_size = "footnotesiz
             caption = "Propensity to use teaching as a strategy, specified as \\texttt{teach $\\sim$ exposureRate * partnersExposure + appearanceNum * partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
 ```
 
-\newpage
-
 \section{Corpus Referential Talk and Gesture Coding Supplemental}
 
 Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found on the Open Science Foundation project page: https://osf.io/d9gkw/
@@ -209,6 +209,74 @@ Not all concrete referents that are mentioned in speech are actually present in 
     parent	& that's all the orange we have . & orange & 0	\\
     parent & that's it . & & \\
 \end{tabular}
+
+\section{Estimating model parameters}
+
+In order to explain how people choose their communicative modality in our reference game, we developed a model of communication as planning under uncertainty. This model has two parameters that need to be specified in order to get quantitative predictions out of it: (1) A rationality parameter $\alpha$ that controls how sensitive the model is to differences in utility, and (2) a discounting parameter $\gamma$ that controls how much less the model cares about the utility it would get on its next trial than on the current trial when it makes its plan.
+
+One way of determining the values for these parameters would be to use a Maximum Likelihood estimator to find the unique values that make the data most likely (provide the best fit). However, these point estimates would not give us a way of quantifying our uncertainty about the right parameters, nor would they correctly penalize the model correctly if only a very narrow range of the possible parameter values gave a good account for the data [see e.g. @pitt2002]. Instead, we used Empirical Bayesian methods to estimate the full posterior probabilities of model parameters conditioned on both parameter priors and the observed data. The values reported in the paper are estimated means for these posterior distributions.
+
+Ideally, we would like to condition on all of the data from all of the participants simultaneously. However, because of variability in the parameter values that gave good fits for different participants, the estimation algorithm did not converge in a tractable number of samples when all of the data points were considered simultaneously. To address this, we instead chose to estimate the model parameters hierarchically. We defined the generative process as one in which participants have their own individual $\alpha$ and $\gamma$ parameters drawn from a single population $\alpha$ and $\gamma$ distribution respectively as in the equation below (like random effects in a mixed-effects model). These group-level level rationality and discounting parameters are reported in the main text.
+
+\begin{align*}
+P\left(\alpha,\gamma \vert D\right) &
+\propto P\left(D \vert \alpha,\gamma \right)P\left(\alpha\right)P\left(\gamma\right)\\
+& \propto \left(\prod_{i}P\left(D_i \vert \alpha_i,\gamma_i \right) P\left(\alpha_i \vert \alpha\right)P\left(\gamma_i \vert \gamma\right)\right)P\left(\alpha\right)P\left(\gamma\right)
+\end{align*}
+
+```{r load-individual-fits}
+files <- list.files(here("model/samples/full_model"), pattern = "*.csv", 
+                    full.names = TRUE)
+
+
+read_file <- function(filename) {
+  ldf_num <- str_split(filename, "/") %>%
+    unlist() %>%
+    last() %>%
+    str_extract(.,"[0-9]+") %>%
+    as.numeric()
+  
+  fread(filename) %>%
+    as_tibble() %>%
+    mutate(ldf_num = ldf_num)
+}
+
+nested_data <- map_dfr(files, read_file)
+
+mean_data <- nested_data %>%
+  filter(Parameter != "score") %>%
+  mutate(Parameter = factor(Parameter, levels = c("alpha", "discount"),
+                            labels = c(TeX("rationality ($\\alpha$)", 
+                                           output = "character"),
+                                       TeX("discount ($\\gamma$)", 
+                                           output = "character")))) %>%
+  group_by(Parameter, ldf_num) %>%
+  summarise(value = mean(value))
+
+n_participants <- mean_data %>%
+  ungroup() %>%
+  distinct(ldf_num) %>%
+  pull() %>%
+  length()
+```
+
+Unfortunately, estimating this full hierarchical model also proved intractable. Consequently, we first estimated each participant's individual parameters from their data using 200 steps of Metropolis-Hastings sampling after 100 burn-in samples. We used a $\text{Uniform}\left(0,20\right)$ prior for $\alpha$ and a $\text{Uniform}\left(0,1\right)$ prior for $\gamma$. The goal of these Uniform priors was to minimally impact the inferred parameter values as the true priors for them should be the population level distributions. Figure \ref{fig:participant-means} shows the distribution of posterior means $\alpha$ and $\gamma$ estimated for for each of the `r n_participants` participants.
+
+```{r participant-means, fig.width = 4.5, fig.height = 2.5, fig.cap = "\\label{fig:participant-means}Estimated rationality and discount parameters for individual participants."}
+
+ggplot(mean_data, 
+       aes(x = value)) + 
+  geom_histogram() + 
+  facet_wrap( ~ Parameter, scales = "free", labeller = label_parsed) +
+  labs(y = "# participants")
+```
+
+
+We used each the posterior mean of each participant's parameter distributions, as well as the likelihood of of observing each participant's data given these parameters to estimate the population-level parameters. To do this we used 10,000 steps of Metropolis-Hastings sampling after 2,000 burn-in samples. To help the sampler converge, instead of using the prior distribution as the proposal function, we used a $\text{Normal}$ distribution centered at the last sample with a standard deviation if .1. In this step, we used the priors given in the paper: 
+
+$$P\left(\alpha\right) \sim \text{Gamma}\left(1,1\right)$$
+$$P\left(logit\left(\gamma\right)\right) \sim \text{Normal}\left(0,1\right)$$
+This sampling procedure was identical for all models described in the main paper. All code is available in the project page: https://osf.io/d9gkw/, as are all the samples generated in these sampling procedures.
 
 \newpage
 
