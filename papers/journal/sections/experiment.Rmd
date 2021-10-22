@@ -25,7 +25,7 @@ While our reference game setting has limited ecological validity, this setup all
 
 ## Method
 
-In this experiment, participants were recruited to play our reference game via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment. In this study, all participants were placed in the role of speaker and listener responses were programmed. 
+In this pre-registered experiment, participants were recruited to play our reference game via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment. In this study, all participants were placed in the role of speaker and listener responses were programmed. 
 
 ```{r e2-data}
 all_data <- read_csv(here("data/1.30_turk_exp.csv"),
