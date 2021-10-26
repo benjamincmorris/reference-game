@@ -25,7 +25,11 @@ While our reference game setting has limited ecological validity, this setup all
 
 ## Method
 
-In this pre-registered experiment, participants were recruited to play our reference game via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment. In this study, all participants were placed in the role of speaker and listener responses were programmed. 
+In this experiment, participants were recruited to play our reference game via Amazon Mechanical Turk, an online platform that allows workers to complete surveys and short tasks for payment. In this study, all participants were placed in the role of speaker and listener responses were programmed. 
+
+### Transparency and Openness
+
+This sample size, experimental design, and analysis plan were pre-registered at https://osf.io/63qdg. Sample size was determined based on prior pilot experiments. All data, analysis code, and research materials are available at https://osf.io/d9gkw/.
 
 ```{r e2-data}
 all_data <- read_csv(here("data/1.30_turk_exp.csv"),
@@ -49,7 +53,7 @@ n_engLabels <- all_data %>%
 
 ### Participants
 
-`r n_Ps` participants were recruited though Amazon Mechanical Turk and received \$1 for their participation. Data from `r n_manipFail` participants were excluded from subsequent analysis for failing the critical manipulation check and a further `r n_engLabels` for producing pseudo-English labels (e.g., "pricklyyone"). The analyses reported here exclude the data from those participants, but all analyses were also conducted without excluding any participants and all patterns hold ($ps < 0.05$).
+`r n_Ps` participants were recruited though Amazon Mechanical Turk and received \$1 for their participation. Data from `r n_manipFail` participants were excluded from subsequent analysis for failing the critical manipulation check (accurately reporting their partners knowledge prior to gameplay) and a further `r n_engLabels` for producing pseudo-English labels (e.g., "pricklyyone"). The analyses reported here exclude the data from those participants, but all analyses were also conducted without excluding any participants and all patterns hold ($ps < 0.05$).
 
 ### Design and Procedure
 
