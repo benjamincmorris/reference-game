@@ -111,16 +111,6 @@ We implemented the planning model using $\texttt{WebPPL}$--a programming languag
 
 The model's behavior is contingent on two parameters--discounting ($\gamma$), and its rationality ($\alpha$). In order to determine the values of these parameters that best characterize human participants, we used empirical Bayesian inference to estimate the posterior means of both. Using posterior mean estimates rather than the maximum likelihood estimates naturally penalizes models for their ability to predict patterns of data that were not observed, applying a kind of Bayesian Occam's razor [@mackay1992]. Because of we found substantial variability in the best parameter estimates across individual participants, we estimated parameters hierarchically, with group-level hyper-parameters forming the priors for individual participants' parameters. This hierarchical estimation process achieves the same partial pooling as as subject-level random effects in mixed-effects models, giving estimates of the group-level parameters [@gelman2006]. Details of the estimation procedure can be found in the Supplemental Materials.
 
-Estimating these parameters also required us to give each a prior. The rationality parameter $\alpha$ controls the sensitivity of the model to differences in utility and can range over the non-negative real numbers $\left[0,\infty\right)$. A rationality value of 1 corresponds to probability matching--in which actions are chosen according to the @luce1959 Choice rule, and larger values correspond to increasingly great moves towards maximizing. For this chose a distribution of the prior with a mean of 1, but an Exponential shape with a long right tail: 
-
-$$P\left(\alpha\right) \sim \text{Gamma}\left(1,1\right)$$
-
-The discounting parameter $\gamma$ controls how much the model values utility it will gain on the next step in its plan relative to the current step. This parameter can take all values between 0 and 1. Rather than assigning this parameter a prior directly, we modeled the log odds ratio between the next trial and the previous trial with the $\text{logit}$ function. Like the squashing function in neural network models, or the linking function in logistic regression, this allows us to model instead sample from all real-number values and then transform to the $\left(0,1\right)$ range. We thus used a $\text{Normal}$ distribution with a mean of 0 in logit space, equivalent to a $\gamma$ of .5. 
-
-$$P\left(logit\left(\gamma\right)\right) \sim \text{Normal}\left(0,1\right)$$
-
-Importantly, because the model's parameters were estimated many trials of behavior from hundreds of participants, the priors are dwarfed by the likelihoods in estimating the parameters' posterior distributions. The estimates reported below are thus robust to many other prior choices.
-
 ## Model Results
 
 ```{r model-parameters}
