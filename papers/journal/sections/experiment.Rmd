@@ -29,7 +29,7 @@ In this experiment, participants were recruited to play our reference game via A
 
 ### Transparency and Openness
 
-This sample size, experimental design, and analysis plan were pre-registered at https://osf.io/63qdg. Sample size was determined based on prior pilot experiments. All data, analysis code, and research materials are available at https://osf.io/d9gkw/.
+This sample size, experimental design, and analysis plan were pre-registered at https://osf.io/63qdg. Sample size was determined based on prior pilot experiments. All data, analysis code, and research materials are available at https://osf.io/d9gkw/. Data were analyzed using \texttt{R} version 4.1.1 [@r-core-team2021]. Models were estimated using version 1.1-27.1 of the \texttt{lme4} package [@bates2015]. 
 
 ```{r e2-data}
 all_data <- read_csv(here("data/1.30_turk_exp.csv"),
