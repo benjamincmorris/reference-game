@@ -61,7 +61,7 @@ We take as inspiration the idea that communication is a kind of action--e.g., ta
 
 Optimal planning in a Partially Observable Markov Decision Process involves a cycle of three phases: (1) Plan, (2) Act, and (3) Update beliefs. On each trial of the referential game, the model first makes a plan--reasoning about which action it should take on this trial and on subsequent trials to come. To help build intuition for the model, we first describe how it might operate in a series of example trials. We then give a formal description of the model's learning and behavior.
 
-```{r comm-pomdp, fig.width = 4.5, fig.cap = "A schematic of the plan-act-update cycle of communication as a partially observable Markov decision process (POMDP). The red figure correponds to caregivers in the world, or participants in the experiment. The blue figure corresponds to children or experimental partners."}
+```{r comm-pomdp, fig.width = 4.5, fig.cap = "A schematic of the plan-act-update cycle of communication as a partially observable Markov decision process (POMDP). The red figure correponds to caregivers in the world, or participants in the experiment. The blue figure corresponds to children or experimental partners. The caregiver is using their beliefs ($b$) about their child's true vocabulary ($v$) to plan their next communicative act. Teaching by ostensive labeling is costly in the moment, but has utility because it enables a plan to speak in the future."}
 img <- png::readPNG(here("papers/journal/figs/comm-pomdp.png"))
 grid::grid.raster(img)
 ```

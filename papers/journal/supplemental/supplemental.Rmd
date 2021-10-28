@@ -1,5 +1,5 @@
 ---
-title: "\\LARGE Communicative pressure on parents leads to language input that supports children's word learning"
+title: "\\LARGE Communicative pressure on caregivers leads to language input that supports children's word learning"
 author: "\\large \\emph{Benjamin C. Morris and Daniel Yurovsky}"
 header-includes:
   - \usepackage[section]{placeins}
@@ -14,7 +14,7 @@ documentclass: article
 bibliography: ../reference-game.bib
 fontsize: 11pt
 geometry: margin=1in
-csl: apa6.csl
+csl               : "../apa7.csl"
 ---
 
 ```{r load-libraries, message=FALSE, warning=FALSE, include = F}
@@ -274,13 +274,11 @@ At this group-level, we used theoretically-motivated priors. The rationality par
 
 $$P\left(\alpha\right) \sim \text{Gamma}\left(1,1\right)$$
 
-The discounting parameter $\gamma$ controls how much the model values utility it will gain on the next step in its plan relative to the current step. This parameter can take all values between 0 and 1. Rather than assigning this parameter a prior directly, we modeled the log odds ratio between the next trial and the previous trial with the $\text{logit}$ function. Like the squashing function in neural network models, or the linking function in logistic regression, this allows us to model instead sample from all real-number values and then transform to the $\left(0,1\right)$ range. We thus used a $\text{Normal}$ distribution with a mean of 0 in logit space, equivalent to a $\gamma$ of .5. 
+The discounting parameter $\gamma$ controls how much the model values utility it will gain on the next step in its plan relative to the current step. This parameter can take all values between 0 and 1. As a mathematical convenience, we modeled the log odds ratio between the next trial and the previous trial with the $\text{logit}$ function rather than assigning this parameter a prior directly. Like the squashing function in neural network models, or the linking function in logistic regression, this allows us to instead sample from all real-number values and then transform to the $\left(0,1\right)$ range. We thus used a $\text{Normal}$ distribution with a mean of 0 in logit space, equivalent to a $\gamma$ of .5. 
 
 $$P\left(logit\left(\gamma\right)\right) \sim \text{Normal}\left(0,1\right)$$
 
-Importantly, because the model's parameters were estimated from many trials of behavior from hundreds of participants, the priors are dwarfed by the likelihoods in estimating the parameters' posterior distributions. The estimates reported below are thus robust to many other prior choices. This sampling procedure was identical for all models described in the main paper. All code is available in the project page: https://osf.io/d9gkw/, as are all the samples generated in these sampling procedures.
-
-\newpage
+Importantly, because the model's parameters were estimated from many trials of behavior from hundreds of participants, the priors are dwarfed by the likelihoods in estimating the parameters' posterior distributions. The estimates reported in the paper are thus robust to many other prior choices. This sampling procedure was identical for all models described in the main paper. All code is available in the project page: https://osf.io/d9gkw/, as are all the samples generated in these sampling procedures.
 
 \section*{References}
 
