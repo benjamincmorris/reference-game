@@ -49,6 +49,29 @@ set.seed(42)
 \renewcommand{\thetable}{S\arabic{table}}  
 \renewcommand{\thefigure}{S\arabic{figure}}
 
+\section{Corpus Referential Talk and Gesture Coding Supplemental}
+
+Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found on the Open Science Foundation project page: https://osf.io/ums45/.
+
+\subsection{Coding A Referent}
+
+In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a single utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
+
+Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
+
+\subsection{Coding for Presentness}
+
+Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms (e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual on the Open Science Foundation project page: https://osf.io/ums45/.
+
+\subsection{Coding Example}
+\begin{tabular} {c c c c}
+	\hline person & chat & spoken obj & ref\_pres\_predicted \\
+    \hline parent &	want a bite of banana ?	 & banana &  1\\
+    child & orange . & orange & 0\\
+    parent	& that's all the orange we have . & orange & 0	\\
+    parent & that's it . & & \\
+\end{tabular}
+
 \section{Experimental Results}
 
 ```{r}
@@ -130,7 +153,7 @@ apa_table(gm_click, format.args = list(na_string = ""), font_size = "footnotesiz
 
 \subsubsection{Speaking}
 
-To examine speaking, we ran a mixed-effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants used labels more for words that received more training, with partners who had more knowledge, and in the condition where speech's efficiency was higher. The full results of this model are presented in Table \ref{tab:labelTable}.
+To examine speaking, we ran a mixed-effects logistic regression to predict whether speakers chose to speak during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants used labels more for words that received more training, with partners who had more knowledge, and in the condition where the utility of speech was higher. The full results of this model are presented in Table \ref{tab:labelTable}.
 
 
 ```{r label, results="asis", cache = T}
@@ -183,32 +206,6 @@ apa_table(gm_teach, format.args = list(na_string = ""), font_size = "footnotesiz
             caption = "Propensity to use teaching as a strategy, specified as \\texttt{teach $\\sim$ exposureRate * partnersExposure + appearanceNum * partnersExposure + utilityCondition + (1 | subj) + (1 | realLabel)}.", escape = FALSE)
 ```
 
-\section{Corpus Referential Talk and Gesture Coding Supplemental}
-
-Using the session transcripts, we coded all the concrete referents (in either speech or gesture) throughout the session that were produced by the parent or child. We further coded whether a referent was likely to be physically present, based primarily on transcript context. Coding was led by Madeline Meyers. A full coding manual can be found on the Open Science Foundation project page: https://osf.io/d9gkw/
-
-\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
-
-\subsection{Coding A Referent}
-
-In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a single utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
-
-Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
-
-\subsection{Coding for Presentness}
-
-Not all concrete referents that are mentioned in speech are actually present in the environment. Using contextual information in the transcripts, we thus also coded whether each referent was likely to be present or not. Key contextual features included whether the same referent had been recently gestured to, question forms (e.g., "Where is the X?"), and semantic information about presentness ("Look at that?"). Every referent in an utterance is coded as "1" if present or "0" if not present. A subset of these codes were also done using video data to establish the reliability of our presentness coding. Further information can be found in the full coding manual on the Open Science Foundation project page: https://osf.io/d9gkw/.
-
-\textcolor{red}{ADD FINAL LINK FOR FULL CODING MANUAL}.
-
-\subsection{Coding Example}
-\begin{tabular} {c c c c}
-	\hline person & chat & spoken obj & ref\_pres\_predicted \\
-    \hline parent &	want a bite of banana ?	 & banana &  1\\
-    child & orange . & orange & 0\\
-    parent	& that's all the orange we have . & orange & 0	\\
-    parent & that's it . & & \\
-\end{tabular}
 
 \section{Estimating model parameters}
 
@@ -271,9 +268,9 @@ ggplot(mean_data,
   labs(y = "# participants")
 ```
 
-We used each the posterior mean of each participant's parameter distributions, as well as the likelihood of of observing each participant's data given these parameters to estimate the population-level parameters. To do this we used 10,000 steps of Metropolis-Hastings sampling after 2,000 burn-in samples. To help the sampler converge, instead of using the prior distribution as the proposal function, we used a $\text{Normal}$ distribution centered at the last sample with a standard deviation if .1. 
+We used the posterior mean of each participant's parameter distributions, as well as the likelihood of observing each participant's data given these parameters to estimate the population-level parameters. To do this we used 10,000 steps of Metropolis-Hastings sampling after 2,000 burn-in samples. To help the sampler converge, instead of using the prior distribution as the proposal function, we used a $\text{Normal}$ distribution centered at the last sample with a standard deviation if .1. 
 
-At this group-level, we used theoretically-motivated priors. The rationality parameter $\alpha$ controls the sensitivity of the model to differences in utility and can range over the non-negative real numbers $\left[0,\infty\right)$. A rationality value of 1 corresponds to probability matching--in which actions are chosen according to the @luce1959 Choice rule, and larger values correspond to increasingly great moves towards maximizing. For this chose a distribution of the prior with a mean of 1, but an Exponential shape with a long right tail. This distribution makes very high levels of rationality unlikely but not impossible: 
+At this group-level, we used theoretically-motivated priors. The rationality parameter $\alpha$ controls the sensitivity of the model to differences in utility and can range over the non-negative real numbers $\left[0,\infty\right)$. A rationality value of 1 corresponds to probability matching--in which actions are chosen according to the @luce1959 Choice rule, and larger values correspond to increasingly great moves towards maximizing. For this parameter, we chose a distribution of the prior with a mean of 1, but an Exponential shape with a long right tail. This distribution makes very high levels of rationality unlikely but not impossible: 
 
 $$P\left(\alpha\right) \sim \text{Gamma}\left(1,1\right)$$
 
@@ -281,7 +278,7 @@ The discounting parameter $\gamma$ controls how much the model values utility it
 
 $$P\left(logit\left(\gamma\right)\right) \sim \text{Normal}\left(0,1\right)$$
 
-Importantly, because the model's parameters were estimated many trials of behavior from hundreds of participants, the priors are dwarfed by the likelihoods in estimating the parameters' posterior distributions. The estimates reported below are thus robust to many other prior choices. This sampling procedure was identical for all models described in the main paper. All code is available in the project page: https://osf.io/d9gkw/, as are all the samples generated in these sampling procedures.
+Importantly, because the model's parameters were estimated from many trials of behavior from hundreds of participants, the priors are dwarfed by the likelihoods in estimating the parameters' posterior distributions. The estimates reported below are thus robust to many other prior choices. This sampling procedure was identical for all models described in the main paper. All code is available in the project page: https://osf.io/d9gkw/, as are all the samples generated in these sampling procedures.
 
 \newpage
 
