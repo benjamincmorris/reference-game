@@ -3,7 +3,7 @@ title             : "Communicative pressure on caregivers leads to language inpu
 shorttitle        : "Learning form communicative input"
 
 author: 
-  - name          : "Benjamin C. Morris"
+  - name          : "Ben Morris"
     affiliation   : "1"
     corresponding : yes    # Define only one corresponding author
     address       : "Department of Psychology, University of Chicago, 5848 S University Ave, Chicago, IL 60637"

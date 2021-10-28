@@ -1,6 +1,6 @@
 ---
 title: "\\LARGE Communicative pressure on caregivers leads to language input that supports children's word learning"
-author: "\\large \\emph{Benjamin C. Morris and Daniel Yurovsky}"
+author: "\\large \\emph{Ben Morris and Daniel Yurovsky}"
 header-includes:
   - \usepackage[section]{placeins}
   - \usepackage{float}
