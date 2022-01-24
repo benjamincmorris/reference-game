@@ -14,7 +14,7 @@ documentclass: article
 bibliography: ../reference-game.bib
 fontsize: 11pt
 geometry: margin=1in
-csl               : "../apa7.csl"
+csl: "../apa7.csl"
 ---
 
 ```{r load-libraries, message=FALSE, warning=FALSE, include = F}
@@ -55,7 +55,7 @@ Using the session transcripts, we coded all the concrete referents (in either sp
 
 \subsection{Coding A Referent}
 
-In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a single utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance-- for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
+In our coding, we aimed to capture any referential communication about concrete in gesture or speech. A concrete noun can roughly be thought of as any noun that could be pointed to if it was present. Note that a single utterance may have multiple referents. For gesture, any deictic gesture toward an identifiable referent definitionally refers to a concrete noun. For references in spoken language, note that the referent sometimes differs from the word in the utterance--for example, using a nickname like "bidiba" to consistently refer to a blanket would be coded as "blanket."
 
 Conversely, non-concrete nouns can roughly be thought of as any noun that cannot be pointed to, such as abstract concepts. These nouns were not included. Gestures that could not be readily identified or that gestured to vague locations (e.g., "over there" while gesturing) also did not receive a referent code.
 
@@ -124,7 +124,7 @@ apa_table(gm_known, format.args = list(na_string = ""), font_size = "footnotesiz
 
 Our key analyses concerned participants choice of communicative strategy. In each trial, participants were able to choose one of 3 communicative strategies: point, speak, or teach We expected flexible trade-off between the use of each strategy given their relative utilities, participants' knowledge of the lexicon, and the partners' knowledge of the lexicon. To test our predictions about each communicative behavior (gesture, speech, and teaching), we conducted separate logistic mixed-effects models for each behavior, reported below. The mixed effects model for each communicative behavior has an identical effect structure for comparability. Each model included a random effect of subject and item. It should be noted that these three behaviors are mutually exhaustive.
 
-\subsubsection{Poiting}
+\subsubsection{Pointing}
 
 To examine pointing, we ran a mixed effects logistic regression to predict whether speakers chose to point during a given trial as a function of the target object's exposure rate during training, object instance in the game (first, second, or third), utility manipulation, and partner manipulation. Random effects terms for subject and object were included in the model. Consistent with our predictions, participants gestured more for words that received less training, with partners who had less knowledge, and in the condition where the utility of pointing was higher. The full results of this model are presented in Table \ref{tab:clickTable}.
 
@@ -213,7 +213,7 @@ In order to explain how people choose their communicative modality in our refere
 
 One way of determining the values for these parameters would be to use a Maximum Likelihood estimator to find the unique values that make the data most likely (provide the best fit). However, these point estimates would not give us a way of quantifying our uncertainty about the right parameters, nor would they correctly penalize the model correctly if only a very narrow range of the possible parameter values gave a good account for the data [see e.g. @pitt2002]. Instead, we used Empirical Bayesian methods to estimate the full posterior probabilities of model parameters conditioned on both parameter priors and the observed data. The values reported in the paper are estimated means for these posterior distributions.
 
-Ideally, we would like to condition on all of the data from all of the participants simultaneously. However, because of variability in the parameter values that gave good fits for different participants, the estimation algorithm did not converge in a tractable number of samples when all of the data points were considered simultaneously. To address this, we instead chose to estimate the model parameters hierarchically. We defined the generative process as one in which participants have their own individual $\alpha$ and $\gamma$ parameters drawn from a single population $\alpha$ and $\gamma$ distribution respectively as in the equation below (like random effects in a mixed-effects model). These group-level level rationality and discounting parameters are reported in the main text.
+Ideally, we would like to condition on all of the data from all of the participants simultaneously. However, because of variability in the parameter values that gave good fits for different participants, the estimation algorithm did not converge in a tractable number of samples when all of the data points were considered simultaneously. To address this, we instead chose to estimate the model parameters hierarchically. We defined the generative process as one in which participants have their own individual $\alpha$ and $\gamma$ parameters drawn from a single population $\alpha$ and $\gamma$ distribution respectively as in the equation below (like random effects in a mixed-effects model; \ref{eq:hierarchical-sampling}). These group-level level rationality and discounting parameters are reported in the main text.
 
 \begin{align*}
 P\left(\alpha,\gamma \vert D\right) &
@@ -270,13 +270,16 @@ ggplot(mean_data,
 
 We used the posterior mean of each participant's parameter distributions, as well as the likelihood of observing each participant's data given these parameters to estimate the population-level parameters. To do this we used 10,000 steps of Metropolis-Hastings sampling after 2,000 burn-in samples. To help the sampler converge, instead of using the prior distribution as the proposal function, we used a $\text{Normal}$ distribution centered at the last sample with a standard deviation if .1. 
 
-At this group-level, we used theoretically-motivated priors. The rationality parameter $\alpha$ controls the sensitivity of the model to differences in utility and can range over the non-negative real numbers $\left[0,\infty\right)$. A rationality value of 1 corresponds to probability matching--in which actions are chosen according to the @luce1959 Choice rule, and larger values correspond to increasingly great moves towards maximizing. For this parameter, we chose a distribution of the prior with a mean of 1, but an Exponential shape with a long right tail. This distribution makes very high levels of rationality unlikely but not impossible: 
+At this group-level, we used theoretically-motivated priors. The rationality parameter $\alpha$ controls the sensitivity of the model to differences in utility and can range over the non-negative real numbers $\left[0,\infty\right)$. A rationality value of 1 corresponds to probability matching--in which actions are chosen according to the @luce1959 Choice rule, and larger values correspond to increasingly great moves towards maximizing. For this parameter, we chose a distribution of the prior with a mean of 1, but an Exponential shape with a long right tail. This distribution makes very high levels of rationality unlikely but not impossible (\ref{eq:alpha}). 
 
-$$P\left(\alpha\right) \sim \text{Gamma}\left(1,1\right)$$
+\begin{equation}
+P\left(\alpha\right) \sim \text{Gamma}\left(1,1\right)
+\end{equation}
 
 The discounting parameter $\gamma$ controls how much the model values utility it will gain on the next step in its plan relative to the current step. This parameter can take all values between 0 and 1. As a mathematical convenience, we modeled the log odds ratio between the next trial and the previous trial with the $\text{logit}$ function rather than assigning this parameter a prior directly. Like the squashing function in neural network models, or the linking function in logistic regression, this allows us to instead sample from all real-number values and then transform to the $\left(0,1\right)$ range. We thus used a $\text{Normal}$ distribution with a mean of 0 in logit space, equivalent to a $\gamma$ of .5. 
-
-$$P\left(logit\left(\gamma\right)\right) \sim \text{Normal}\left(0,1\right)$$
+\begin{equation}
+P\left(logit\left(\gamma\right)\right) \sim \text{Normal}\left(0,1\right)
+\end{equation}
 
 Importantly, because the model's parameters were estimated from many trials of behavior from hundreds of participants, the priors are dwarfed by the likelihoods in estimating the parameters' posterior distributions. The estimates reported in the paper are thus robust to many other prior choices. This sampling procedure was identical for all models described in the main paper. All code is available in the project page: https://osf.io/d9gkw/, as are all the samples generated in these sampling procedures.
 

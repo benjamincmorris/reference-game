@@ -75,31 +75,34 @@ We next formally specify each step in the cycle and finally define how people fo
 ### Plan 
 
 When people plan, they compute the expected utility of each possible action ($a$) by combining the expected utility of that action now with the Discounted Expected Utility they will get in all future actions. The amount of discounting ($\gamma$) reflects how much people care about success now compared to success in the future. Because utilities depend on the communicative partner's vocabulary, people should integrate over all possible vocabularies in proportion to the probability that their belief assigns to that vocabulary ($\mathbb{E}_{v \sim b}$).
-$$
+
+\begin{equation}
 EU\left[a\right | b] = \mathbb{E}_{v \sim b} \left(U(a|v) + \gamma \,\mathbb{E}_{v',o',a'} \,\left( EU\left[a' | b'\right]\right)\right)
-$$
+\end{equation}
 
 ### Act 
 
 Next, people take an action as a function of its expected utility. Following other models in the Rational Speech Act framework, we use the Luce Choice Axiom, in which each choice is taken in probability proportional to its exponentiated utility [@frank2012; @luce1959]. This choice rule has a single parameter $\alpha$ that controls the noise in this choice--as $\alpha$ approaches 0, choice is random and as $\alpha$ approaches infinity, choice is optimal.
-$$
+
+\begin{equation}
 P\left(a|b\right) \propto \alpha \, e^{EU[a|b]}
-$$
+\end{equation}
 
 ### Update beliefs
 
 After taking an action, people observe ($o$) their partner's choice--sometimes they correctly select the intended object, and sometimes they do not. People then update their beliefs about the partner's vocabulary based on this observation. For simplicity, we assume that people think their partner should always select the correct target if they point to it, or if they teach, and similarly should always select the correct target if they produce its label and the label is in their partner's vocabulary. Otherwise, they assume that their partner will select the wrong object. People could of course have more complex inferential rules, e.g., assuming that if their partner does know a word they will choose among the set of objects whose labels they do not know [mutual exclusivity, @markman1988]. Empirically, however, our simple model appears to accord well with people's behavior.
-$$
+
+\begin{equation}
 b'(v') \propto P\left(o|v',a\right) \sum_{v \in V}P\left(v'|v,a\right)b\left(v\right)
-$$
+\end{equation}
 
 The critical feature of a repeated communication game is that people can change their partner’s vocabulary. In teaching, people pay the cost of both talking and pointing together, but can leverage their partner’s new knowledge on future trials. Note here that teaching has an upfront cost and the only benefit to be gained comes from using less costly communication modes later. There is no pedagogical goal--the model treats speakers as selfish agents aiming to maximize their own utilities by communicating successfully. We assume for simplicity that teaching is always successful in this very short game, that communicative partners do not forget words once they have learned them, and that no learning happens by inference from mutual exclusivity.
 
-$$
+\begin{equation}
 P\left(v'|v,a\right)= \begin{cases} 
 1 & \text{if } v_{w} \in v \& v' \;\; | \;\; a = \text{point+talk}\\ 
 0 & otherwise\end{cases}
-$$
+\end{equation}
 
 ### Initial Beliefs
 
